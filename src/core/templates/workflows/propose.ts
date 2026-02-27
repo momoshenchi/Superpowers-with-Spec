@@ -6,7 +6,7 @@
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
 
-export function getOpsxProposeSkillTemplate(): SkillTemplate {
+export function getSpProposeSkillTemplate(): SkillTemplate {
   return {
     name: 'superpowers-propose',
     description: 'Propose a new change with all artifacts generated in one step. Use when the user wants to quickly describe what they want to build and get a complete proposal with design, specs, and tasks ready for implementation.',
@@ -113,16 +113,19 @@ After completing all artifacts, summarize:
 **Task Granularity in tasks.md**
 - Each task should be bite-sized (2-5 minutes per step): write failing test → run it → implement minimal code → run tests → commit
 - Tasks must include exact file paths, complete code snippets (not 'add validation'), and exact commands with expected output
-- Follow DRY, YAGNI, TDD principles. Ensure frequent commits.`,
+- Follow DRY, YAGNI, TDD principles. Ensure frequent commits.
+
+## Related Skills
+- For structured plan writing methodology, see the \`writing-plans\` skill`,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
     metadata: { author: 'superpowers', version: '1.0' },
   };
 }
 
-export function getOpsxProposeCommandTemplate(): CommandTemplate {
+export function getSpProposeCommandTemplate(): CommandTemplate {
   return {
-    name: 'OPSX: Propose',
+    name: 'SP: Propose',
     description: 'Propose a new change - create it and generate all artifacts in one step',
     category: 'Workflow',
     tags: ['workflow', 'artifacts', 'experimental'],

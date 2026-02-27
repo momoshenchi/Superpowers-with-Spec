@@ -119,9 +119,9 @@ All artifacts complete. All tasks complete.
   };
 }
 
-export function getOpsxArchiveCommandTemplate(): CommandTemplate {
+export function getSpArchiveCommandTemplate(): CommandTemplate {
   return {
-    name: 'OPSX: Archive',
+    name: 'SP: Archive',
     description: 'Archive a completed change in the experimental workflow',
     category: 'Workflow',
     tags: ['workflow', 'archive', 'experimental'],

@@ -123,9 +123,9 @@ For other schemas, follow the \`instruction\` field from the CLI output.
   };
 }
 
-export function getOpsxContinueCommandTemplate(): CommandTemplate {
+export function getSpContinueCommandTemplate(): CommandTemplate {
   return {
-    name: 'OPSX: Continue',
+    name: 'SP: Continue',
     description: 'Continue working on a change - create the next artifact (Experimental)',
     category: 'Workflow',
     tags: ['workflow', 'artifacts', 'experimental'],

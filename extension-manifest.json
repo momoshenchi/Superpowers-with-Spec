@@ -1,0 +1,9 @@
+{
+  "name": "superpowers",
+  "version": "1.0.0",
+  "description": "Superpowers with Spec - AI coding skills, hooks, and agents",
+  "skills": "skills",
+  "hooks": "hooks",
+  "agents": "agents",
+  "commands": "commands"
+}
