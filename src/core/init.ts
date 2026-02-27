@@ -6,6 +6,7 @@
  */
 
 import path from 'path';
+import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 import ora from 'ora';
 import * as fs from 'fs';
@@ -568,6 +569,9 @@ export class InitCommand {
           removedCommandCount += await this.removeCommandFiles(projectPath, tool.value);
         }
 
+        // Copy bundled static assets (skills, and hooks/agents for Claude)
+        await this.copyBundledAssets(projectPath, tool);
+
         spinner.succeed(`Setup complete for ${tool.name}`);
 
         if (tool.wasConfigured) {
@@ -753,6 +757,49 @@ export class InitCommand {
     }
 
     return removed;
+  }
+
+  private async copyBundledAssets(
+    projectPath: string,
+    tool: { value: string; skillsDir: string }
+  ): Promise<void> {
+    const pkgRoot = path.resolve(fileURLToPath(import.meta.url), '../../..');
+
+    // Copy bundled static skills
+    const bundledSkillsDir = path.join(pkgRoot, 'skills');
+    if (fs.existsSync(bundledSkillsDir)) {
+      const destSkillsDir = path.join(projectPath, tool.skillsDir, 'skills');
+      await this.copyDir(bundledSkillsDir, destSkillsDir);
+    }
+
+    // Copy hooks and agents for Claude Code only
+    if (tool.value === 'claude') {
+      const bundledHooksDir = path.join(pkgRoot, 'hooks');
+      if (fs.existsSync(bundledHooksDir)) {
+        const destHooksDir = path.join(projectPath, '.claude', 'hooks');
+        await this.copyDir(bundledHooksDir, destHooksDir);
+      }
+
+      const bundledAgentsDir = path.join(pkgRoot, 'agents');
+      if (fs.existsSync(bundledAgentsDir)) {
+        const destAgentsDir = path.join(projectPath, '.claude', 'agents');
+        await this.copyDir(bundledAgentsDir, destAgentsDir);
+      }
+    }
+  }
+
+  private async copyDir(src: string, dest: string): Promise<void> {
+    await fs.promises.mkdir(dest, { recursive: true });
+    const entries = await fs.promises.readdir(src, { withFileTypes: true });
+    for (const entry of entries) {
+      const srcPath = path.join(src, entry.name);
+      const destPath = path.join(dest, entry.name);
+      if (entry.isDirectory()) {
+        await this.copyDir(srcPath, destPath);
+      } else {
+        await fs.promises.copyFile(srcPath, destPath);
+      }
+    }
   }
 
   private async removeCommandFiles(projectPath: string, toolId: string): Promise<number> {

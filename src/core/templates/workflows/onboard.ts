@@ -563,9 +563,9 @@ Exit gracefully.
 - **Adjust scope gently**—guide toward smaller tasks but respect user choice`;
 }
 
-export function getOpsxOnboardCommandTemplate(): CommandTemplate {
+export function getSpOnboardCommandTemplate(): CommandTemplate {
   return {
-    name: 'OPSX: Onboard',
+    name: 'SP: Onboard',
     description: 'Guided onboarding - walk through a complete Superpowers workflow cycle with narration',
     category: 'Workflow',
     tags: ['workflow', 'onboarding', 'tutorial', 'learning'],

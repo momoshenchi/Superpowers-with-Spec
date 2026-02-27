@@ -157,16 +157,20 @@ What would you like to do?
 This skill supports the "actions on a change" model:
 
 - **Can be invoked anytime**: Before all artifacts are done (if tasks exist), after partial implementation, interleaved with other actions
-- **Allows artifact updates**: If implementation reveals design issues, suggest updating artifacts - not phase-locked, work fluidly`,
+- **Allows artifact updates**: If implementation reveals design issues, suggest updating artifacts - not phase-locked, work fluidly
+
+## Related Skills
+- For batch execution with review checkpoints, see the \`executing-plans\` skill
+- For subagent-based parallel task execution, see the \`subagent-driven-development\` skill`,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
     metadata: { author: 'superpowers', version: '1.0' },
   };
 }
 
-export function getOpsxApplyCommandTemplate(): CommandTemplate {
+export function getSpApplyCommandTemplate(): CommandTemplate {
   return {
-    name: 'OPSX: Apply',
+    name: 'SP: Apply',
     description: 'Implement tasks from an Superpowers change (Experimental)',
     category: 'Workflow',
     tags: ['workflow', 'artifacts', 'experimental'],

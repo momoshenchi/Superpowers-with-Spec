@@ -143,9 +143,9 @@ Main specs are now updated. The change remains active - archive when implementat
   };
 }
 
-export function getOpsxSyncCommandTemplate(): CommandTemplate {
+export function getSpSyncCommandTemplate(): CommandTemplate {
   return {
-    name: 'OPSX: Sync',
+    name: 'SP: Sync',
     description: 'Sync delta specs from a change to main specs',
     category: 'Workflow',
     tags: ['workflow', 'specs', 'experimental'],

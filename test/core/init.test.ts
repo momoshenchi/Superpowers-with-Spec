@@ -741,6 +741,81 @@ describe('InitCommand - profile and detection features', () => {
   });
 });
 
+describe('InitCommand copyBundledAssets', () => {
+  let testDir: string;
+  let configTempDir: string;
+  let originalEnv: NodeJS.ProcessEnv;
+
+  beforeEach(async () => {
+    testDir = path.join(os.tmpdir(), `superpowers-bundled-test-${Date.now()}`);
+    await fs.mkdir(testDir, { recursive: true });
+    originalEnv = { ...process.env };
+    configTempDir = path.join(os.tmpdir(), `superpowers-config-bundled-${Date.now()}`);
+    await fs.mkdir(configTempDir, { recursive: true });
+    process.env.XDG_CONFIG_HOME = configTempDir;
+
+    vi.spyOn(console, 'log').mockImplementation(() => { });
+  });
+
+  afterEach(async () => {
+    process.env = originalEnv;
+    await fs.rm(testDir, { recursive: true, force: true });
+    await fs.rm(configTempDir, { recursive: true, force: true });
+    vi.restoreAllMocks();
+  });
+
+  it('should copy bundled static skills into Claude skills directory', async () => {
+    const initCommand = new InitCommand({ tools: 'claude', force: true });
+    await initCommand.execute(testDir);
+
+    const usingSuperpowersSkill = path.join(testDir, '.claude', 'skills', 'using-superpowers', 'SKILL.md');
+    expect(await fileExists(usingSuperpowersSkill)).toBe(true);
+  });
+
+  it('should copy bundled static skills into non-Claude tool skills directory', async () => {
+    const initCommand = new InitCommand({ tools: 'cursor', force: true });
+    await initCommand.execute(testDir);
+
+    const usingSuperpowersSkill = path.join(testDir, '.cursor', 'skills', 'using-superpowers', 'SKILL.md');
+    expect(await fileExists(usingSuperpowersSkill)).toBe(true);
+  });
+
+  it('should copy hooks into Claude .claude/hooks directory', async () => {
+    const initCommand = new InitCommand({ tools: 'claude', force: true });
+    await initCommand.execute(testDir);
+
+    const hooksDir = path.join(testDir, '.claude', 'hooks');
+    expect(await directoryExists(hooksDir)).toBe(true);
+  });
+
+  it('should copy agents into Claude .claude/agents directory', async () => {
+    const initCommand = new InitCommand({ tools: 'claude', force: true });
+    await initCommand.execute(testDir);
+
+    const agentsDir = path.join(testDir, '.claude', 'agents');
+    expect(await directoryExists(agentsDir)).toBe(true);
+  });
+
+  it('should NOT copy hooks for non-Claude tools', async () => {
+    const initCommand = new InitCommand({ tools: 'cursor', force: true });
+    await initCommand.execute(testDir);
+
+    const claudeHooksDir = path.join(testDir, '.claude', 'hooks');
+    expect(await directoryExists(claudeHooksDir)).toBe(false);
+
+    const cursorHooksDir = path.join(testDir, '.cursor', 'hooks');
+    expect(await directoryExists(cursorHooksDir)).toBe(false);
+  });
+
+  it('should NOT copy agents for non-Claude tools', async () => {
+    const initCommand = new InitCommand({ tools: 'cursor', force: true });
+    await initCommand.execute(testDir);
+
+    const claudeAgentsDir = path.join(testDir, '.claude', 'agents');
+    expect(await directoryExists(claudeAgentsDir)).toBe(false);
+  });
+});
+
 async function fileExists(filePath: string): Promise<boolean> {
   try {
     await fs.access(filePath);
