@@ -1,6 +1,6 @@
 # Customization
 
-OpenSpec provides three levels of customization:
+Superpowers provides three levels of customization:
 
 | Level | What it does | Best for |
 |-------|--------------|----------|
@@ -12,7 +12,7 @@ OpenSpec provides three levels of customization:
 
 ## Project Configuration
 
-The `openspec/config.yaml` file is the easiest way to customize OpenSpec for your team. It lets you:
+The `superpowers/config.yaml` file is the easiest way to customize Superpowers for your team. It lets you:
 
 - **Set a default schema** - Skip `--schema` on every command
 - **Inject project context** - AI sees your tech stack, conventions, etc.
@@ -21,13 +21,13 @@ The `openspec/config.yaml` file is the easiest way to customize OpenSpec for you
 ### Quick Setup
 
 ```bash
-openspec init
+superpowers init
 ```
 
 This walks you through creating a config interactively. Or create one manually:
 
 ```yaml
-# openspec/config.yaml
+# superpowers/config.yaml
 schema: spec-driven
 
 context: |
@@ -51,10 +51,10 @@ rules:
 
 ```bash
 # Without config
-openspec new change my-feature --schema spec-driven
+superpowers new change my-feature --schema spec-driven
 
 # With config - schema is automatic
-openspec new change my-feature
+superpowers new change my-feature
 ```
 
 **Context and rules injection:**
@@ -82,22 +82,22 @@ Tech stack: TypeScript, React, Node.js, PostgreSQL
 
 ### Schema Resolution Order
 
-When OpenSpec needs a schema, it checks in this order:
+When Superpowers needs a schema, it checks in this order:
 
 1. CLI flag: `--schema <name>`
-2. Change metadata (`.openspec.yaml` in the change folder)
-3. Project config (`openspec/config.yaml`)
+2. Change metadata (`.superpowers.yaml` in the change folder)
+3. Project config (`superpowers/config.yaml`)
 4. Default (`spec-driven`)
 
 ---
 
 ## Custom Schemas
 
-When project config isn't enough, create your own schema with a completely custom workflow. Custom schemas live in your project's `openspec/schemas/` directory and are version-controlled with your code.
+When project config isn't enough, create your own schema with a completely custom workflow. Custom schemas live in your project's `superpowers/schemas/` directory and are version-controlled with your code.
 
 ```text
 your-project/
-├── openspec/
+├── superpowers/
 │   ├── config.yaml        # Project config
 │   ├── schemas/           # Custom schemas live here
 │   │   └── my-workflow/
@@ -112,15 +112,15 @@ your-project/
 The fastest way to customize is to fork a built-in schema:
 
 ```bash
-openspec schema fork spec-driven my-workflow
+superpowers schema fork spec-driven my-workflow
 ```
 
-This copies the entire `spec-driven` schema to `openspec/schemas/my-workflow/` where you can edit it freely.
+This copies the entire `spec-driven` schema to `superpowers/schemas/my-workflow/` where you can edit it freely.
 
 **What you get:**
 
 ```text
-openspec/schemas/my-workflow/
+superpowers/schemas/my-workflow/
 ├── schema.yaml           # Workflow definition
 └── templates/
     ├── proposal.md       # Template for proposal artifact
@@ -137,10 +137,10 @@ For a completely fresh workflow:
 
 ```bash
 # Interactive
-openspec schema init research-first
+superpowers schema init research-first
 
 # Non-interactive
-openspec schema init rapid \
+superpowers schema init rapid \
   --description "Rapid iteration workflow" \
   --artifacts "proposal,tasks" \
   --default
@@ -151,7 +151,7 @@ openspec schema init rapid \
 A schema defines the artifacts in your workflow and how they depend on each other:
 
 ```yaml
-# openspec/schemas/my-workflow/schema.yaml
+# superpowers/schemas/my-workflow/schema.yaml
 name: my-workflow
 version: 1
 description: My team's custom workflow
@@ -226,7 +226,7 @@ Templates can include:
 Before using a custom schema, validate it:
 
 ```bash
-openspec schema validate my-workflow
+superpowers schema validate my-workflow
 ```
 
 This checks:
@@ -241,7 +241,7 @@ Once created, use your schema with:
 
 ```bash
 # Specify on command
-openspec new change feature --schema my-workflow
+superpowers new change feature --schema my-workflow
 
 # Or set as default in config.yaml
 schema: my-workflow
@@ -253,10 +253,10 @@ Not sure which schema is being used? Check with:
 
 ```bash
 # See where a specific schema resolves from
-openspec schema which my-workflow
+superpowers schema which my-workflow
 
 # List all available schemas
-openspec schema which --all
+superpowers schema which --all
 ```
 
 Output shows whether it's from your project, user directory, or the package:
@@ -264,12 +264,12 @@ Output shows whether it's from your project, user directory, or the package:
 ```text
 Schema: my-workflow
 Source: project
-Path: /path/to/project/openspec/schemas/my-workflow
+Path: /path/to/project/superpowers/schemas/my-workflow
 ```
 
 ---
 
-> **Note:** OpenSpec also supports user-level schemas at `~/.local/share/openspec/schemas/` for sharing across projects, but project-level schemas in `openspec/schemas/` are recommended since they're version-controlled with your code.
+> **Note:** Superpowers also supports user-level schemas at `~/.local/share/superpowers/schemas/` for sharing across projects, but project-level schemas in `superpowers/schemas/` are recommended since they're version-controlled with your code.
 
 ---
 
@@ -280,7 +280,7 @@ Path: /path/to/project/openspec/schemas/my-workflow
 A minimal workflow for quick iterations:
 
 ```yaml
-# openspec/schemas/rapid/schema.yaml
+# superpowers/schemas/rapid/schema.yaml
 name: rapid
 version: 1
 description: Fast iteration with minimal overhead
@@ -311,7 +311,7 @@ apply:
 Fork the default and add a review step:
 
 ```bash
-openspec schema fork spec-driven with-review
+superpowers schema fork spec-driven with-review
 ```
 
 Then edit `schema.yaml` to add:

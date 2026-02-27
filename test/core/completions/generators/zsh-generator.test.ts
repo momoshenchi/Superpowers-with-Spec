@@ -24,23 +24,23 @@ describe('ZshGenerator', () => {
       const commands: CommandDefinition[] = [
         {
           name: 'init',
-          description: 'Initialize OpenSpec',
+          description: 'Initialize Superpowers',
           flags: [],
         },
       ];
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('#compdef openspec');
-      expect(script).toContain('# Zsh completion script for OpenSpec CLI');
-      expect(script).toContain('_openspec() {');
+      expect(script).toContain('#compdef superpowers');
+      expect(script).toContain('# Zsh completion script for Superpowers CLI');
+      expect(script).toContain('_superpowers() {');
     });
 
     it('should include all commands in the command list', () => {
       const commands: CommandDefinition[] = [
         {
           name: 'init',
-          description: 'Initialize OpenSpec',
+          description: 'Initialize Superpowers',
           flags: [],
         },
         {
@@ -57,7 +57,7 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain("'init:Initialize OpenSpec'");
+      expect(script).toContain("'init:Initialize Superpowers'");
       expect(script).toContain("'validate:Validate specs'");
       expect(script).toContain("'show:Show a spec'");
     });
@@ -66,7 +66,7 @@ describe('ZshGenerator', () => {
       const commands: CommandDefinition[] = [
         {
           name: 'init',
-          description: 'Initialize OpenSpec',
+          description: 'Initialize Superpowers',
           flags: [],
         },
         {
@@ -78,8 +78,8 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_openspec_init() {');
-      expect(script).toContain('_openspec_validate() {');
+      expect(script).toContain('_superpowers_init() {');
+      expect(script).toContain('_superpowers_validate() {');
     });
 
     it('should handle commands with flags', () => {
@@ -200,8 +200,8 @@ describe('ZshGenerator', () => {
 
       expect(script).toContain("'show:Show a change'");
       expect(script).toContain("'list:List changes'");
-      expect(script).toContain('_openspec_change_show() {');
-      expect(script).toContain('_openspec_change_list() {');
+      expect(script).toContain('_superpowers_change_show() {');
+      expect(script).toContain('_superpowers_change_list() {');
     });
 
     it('should handle positional arguments for change-id', () => {
@@ -217,7 +217,7 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain("'*: :_openspec_complete_changes'");
+      expect(script).toContain("'*: :_superpowers_complete_changes'");
     });
 
     it('should handle positional arguments for spec-id', () => {
@@ -233,7 +233,7 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain("'*: :_openspec_complete_specs'");
+      expect(script).toContain("'*: :_superpowers_complete_specs'");
     });
 
     it('should handle positional arguments for change-or-spec-id', () => {
@@ -249,14 +249,14 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain("'*: :_openspec_complete_items'");
+      expect(script).toContain("'*: :_superpowers_complete_items'");
     });
 
     it('should handle positional arguments for paths', () => {
       const commands: CommandDefinition[] = [
         {
           name: 'init',
-          description: 'Initialize OpenSpec',
+          description: 'Initialize Superpowers',
           acceptsPositional: true,
           positionalType: 'path',
           flags: [],
@@ -301,7 +301,7 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_openspec_my_command() {');
+      expect(script).toContain('_superpowers_my_command() {');
     });
 
     it('should handle complex nested subcommands with flags', () => {
@@ -333,11 +333,11 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_openspec_spec() {');
-      expect(script).toContain('_openspec_spec_validate() {');
+      expect(script).toContain('_superpowers_spec() {');
+      expect(script).toContain('_superpowers_spec_validate() {');
       expect(script).toContain('--strict');
       expect(script).toContain('--json');
-      expect(script).toContain("'*: :_openspec_complete_specs'");
+      expect(script).toContain("'*: :_superpowers_complete_specs'");
     });
 
     it('should generate script that ends with compdef registration', () => {
@@ -351,7 +351,7 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script.trim().endsWith('compdef _openspec openspec')).toBe(true);
+      expect(script.trim().endsWith('compdef _superpowers superpowers')).toBe(true);
     });
 
     it('should handle empty command list', () => {
@@ -359,8 +359,8 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('#compdef openspec');
-      expect(script).toContain('_openspec() {');
+      expect(script).toContain('#compdef superpowers');
+      expect(script).toContain('_superpowers() {');
     });
 
     it('should handle commands with no flags', () => {
@@ -374,7 +374,7 @@ describe('ZshGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_openspec_view() {');
+      expect(script).toContain('_superpowers_view() {');
       expect(script).toContain('_arguments');
     });
   });

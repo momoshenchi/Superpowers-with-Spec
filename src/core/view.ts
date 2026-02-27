@@ -6,19 +6,19 @@ import { MarkdownParser } from './parsers/markdown-parser.js';
 
 export class ViewCommand {
   async execute(targetPath: string = '.'): Promise<void> {
-    const openspecDir = path.join(targetPath, 'openspec');
+    const superpowersDir = path.join(targetPath, 'superpowers');
     
-    if (!fs.existsSync(openspecDir)) {
-      console.error(chalk.red('No openspec directory found'));
+    if (!fs.existsSync(superpowersDir)) {
+      console.error(chalk.red('No superpowers directory found'));
       process.exit(1);
     }
 
-    console.log(chalk.bold('\nOpenSpec Dashboard\n'));
+    console.log(chalk.bold('\nSuperpowers Dashboard\n'));
     console.log('═'.repeat(60));
 
     // Get changes and specs data
-    const changesData = await this.getChangesData(openspecDir);
-    const specsData = await this.getSpecsData(openspecDir);
+    const changesData = await this.getChangesData(superpowersDir);
+    const specsData = await this.getSpecsData(superpowersDir);
 
     // Display summary metrics
     this.displaySummary(changesData, specsData);
@@ -75,15 +75,15 @@ export class ViewCommand {
     }
 
     console.log('\n' + '═'.repeat(60));
-    console.log(chalk.dim(`\nUse ${chalk.white('openspec list --changes')} or ${chalk.white('openspec list --specs')} for detailed views`));
+    console.log(chalk.dim(`\nUse ${chalk.white('superpowers list --changes')} or ${chalk.white('superpowers list --specs')} for detailed views`));
   }
 
-  private async getChangesData(openspecDir: string): Promise<{
+  private async getChangesData(superpowersDir: string): Promise<{
     draft: Array<{ name: string }>;
     active: Array<{ name: string; progress: { total: number; completed: number } }>;
     completed: Array<{ name: string }>;
   }> {
-    const changesDir = path.join(openspecDir, 'changes');
+    const changesDir = path.join(superpowersDir, 'changes');
 
     if (!fs.existsSync(changesDir)) {
       return { draft: [], active: [], completed: [] };
@@ -129,8 +129,8 @@ export class ViewCommand {
     return { draft, active, completed };
   }
 
-  private async getSpecsData(openspecDir: string): Promise<Array<{ name: string; requirementCount: number }>> {
-    const specsDir = path.join(openspecDir, 'specs');
+  private async getSpecsData(superpowersDir: string): Promise<Array<{ name: string; requirementCount: number }>> {
+    const specsDir = path.join(superpowersDir, 'specs');
     
     if (!fs.existsSync(specsDir)) {
       return [];

@@ -8,7 +8,7 @@ import type { SkillTemplate, CommandTemplate } from '../types.js';
 
 export function getArchiveChangeSkillTemplate(): SkillTemplate {
   return {
-    name: 'openspec-archive-change',
+    name: 'superpowers-archive-change',
     description: 'Archive a completed change in the experimental workflow. Use when the user wants to finalize and archive a change after implementation is complete.',
     instructions: `Archive a completed change in the experimental workflow.
 
@@ -18,7 +18,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`superpowers list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show only active changes (not already archived).
    Include the schema used for each change if available.
@@ -27,7 +27,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 2. **Check artifact completion status**
 
-   Run \`openspec status --change "<name>" --json\` to check artifact completion.
+   Run \`superpowers status --change "<name>" --json\` to check artifact completion.
 
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used
@@ -53,10 +53,10 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 4. **Assess delta spec sync state**
 
-   Check for delta specs at \`openspec/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
+   Check for delta specs at \`superpowers/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
 
    **If delta specs exist:**
-   - Compare each delta spec with its corresponding main spec at \`openspec/specs/<capability>/spec.md\`
+   - Compare each delta spec with its corresponding main spec at \`superpowers/specs/<capability>/spec.md\`
    - Determine what changes would be applied (adds, modifications, removals, renames)
    - Show a combined summary before prompting
 
@@ -64,13 +64,13 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
    - If changes needed: "Sync now (recommended)", "Archive without syncing"
    - If already synced: "Archive now", "Sync anyway", "Cancel"
 
-   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke openspec-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
+   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke superpowers-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
 
 5. **Perform the archive**
 
    Create the archive directory if it doesn't exist:
    \`\`\`bash
-   mkdir -p openspec/changes/archive
+   mkdir -p superpowers/changes/archive
    \`\`\`
 
    Generate target name using current date: \`YYYY-MM-DD-<change-name>\`
@@ -80,7 +80,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
    - If no: Move the change directory to archive
 
    \`\`\`bash
-   mv openspec/changes/<name> openspec/changes/archive/YYYY-MM-DD-<name>
+   mv superpowers/changes/<name> superpowers/changes/archive/YYYY-MM-DD-<name>
    \`\`\`
 
 6. **Display summary**
@@ -99,7 +99,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 **Change:** <change-name>
 **Schema:** <schema-name>
-**Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Archived to:** superpowers/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** ✓ Synced to main specs (or "No delta specs" or "Sync skipped")
 
 All artifacts complete. All tasks complete.
@@ -107,15 +107,15 @@ All artifacts complete. All tasks complete.
 
 **Guardrails**
 - Always prompt for change selection if not provided
-- Use artifact graph (openspec status --json) for completion checking
+- Use artifact graph (superpowers status --json) for completion checking
 - Don't block archive on warnings - just inform and confirm
-- Preserve .openspec.yaml when moving to archive (it moves with the directory)
+- Preserve .superpowers.yaml when moving to archive (it moves with the directory)
 - Show clear summary of what happened
-- If sync is requested, use openspec-sync-specs approach (agent-driven)
+- If sync is requested, use superpowers-sync-specs approach (agent-driven)
 - If delta specs exist, always run the sync assessment and show the combined summary before prompting`,
     license: 'MIT',
-    compatibility: 'Requires openspec CLI.',
-    metadata: { author: 'openspec', version: '1.0' },
+    compatibility: 'Requires superpowers CLI.',
+    metadata: { author: 'superpowers', version: '1.0' },
   };
 }
 
@@ -127,13 +127,13 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
     tags: ['workflow', 'archive', 'experimental'],
     content: `Archive a completed change in the experimental workflow.
 
-**Input**: Optionally specify a change name after \`/opsx:archive\` (e.g., \`/opsx:archive add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+**Input**: Optionally specify a change name after \`/sp:archive\` (e.g., \`/sp:archive add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
 **Steps**
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`openspec list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`superpowers list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show only active changes (not already archived).
    Include the schema used for each change if available.
@@ -142,7 +142,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 2. **Check artifact completion status**
 
-   Run \`openspec status --change "<name>" --json\` to check artifact completion.
+   Run \`superpowers status --change "<name>" --json\` to check artifact completion.
 
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used
@@ -168,10 +168,10 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 4. **Assess delta spec sync state**
 
-   Check for delta specs at \`openspec/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
+   Check for delta specs at \`superpowers/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
 
    **If delta specs exist:**
-   - Compare each delta spec with its corresponding main spec at \`openspec/specs/<capability>/spec.md\`
+   - Compare each delta spec with its corresponding main spec at \`superpowers/specs/<capability>/spec.md\`
    - Determine what changes would be applied (adds, modifications, removals, renames)
    - Show a combined summary before prompting
 
@@ -179,13 +179,13 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
    - If changes needed: "Sync now (recommended)", "Archive without syncing"
    - If already synced: "Archive now", "Sync anyway", "Cancel"
 
-   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke openspec-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
+   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke superpowers-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
 
 5. **Perform the archive**
 
    Create the archive directory if it doesn't exist:
    \`\`\`bash
-   mkdir -p openspec/changes/archive
+   mkdir -p superpowers/changes/archive
    \`\`\`
 
    Generate target name using current date: \`YYYY-MM-DD-<change-name>\`
@@ -195,7 +195,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
    - If no: Move the change directory to archive
 
    \`\`\`bash
-   mv openspec/changes/<name> openspec/changes/archive/YYYY-MM-DD-<name>
+   mv superpowers/changes/<name> superpowers/changes/archive/YYYY-MM-DD-<name>
    \`\`\`
 
 6. **Display summary**
@@ -214,7 +214,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 **Change:** <change-name>
 **Schema:** <schema-name>
-**Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Archived to:** superpowers/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** ✓ Synced to main specs
 
 All artifacts complete. All tasks complete.
@@ -227,7 +227,7 @@ All artifacts complete. All tasks complete.
 
 **Change:** <change-name>
 **Schema:** <schema-name>
-**Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Archived to:** superpowers/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** No delta specs
 
 All artifacts complete. All tasks complete.
@@ -240,7 +240,7 @@ All artifacts complete. All tasks complete.
 
 **Change:** <change-name>
 **Schema:** <schema-name>
-**Archived to:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Archived to:** superpowers/changes/archive/YYYY-MM-DD-<name>/
 **Specs:** Sync skipped (user chose to skip)
 
 **Warnings:**
@@ -257,7 +257,7 @@ Review the archive if this was not intentional.
 ## Archive Failed
 
 **Change:** <change-name>
-**Target:** openspec/changes/archive/YYYY-MM-DD-<name>/
+**Target:** superpowers/changes/archive/YYYY-MM-DD-<name>/
 
 Target archive directory already exists.
 
@@ -269,11 +269,11 @@ Target archive directory already exists.
 
 **Guardrails**
 - Always prompt for change selection if not provided
-- Use artifact graph (openspec status --json) for completion checking
+- Use artifact graph (superpowers status --json) for completion checking
 - Don't block archive on warnings - just inform and confirm
-- Preserve .openspec.yaml when moving to archive (it moves with the directory)
+- Preserve .superpowers.yaml when moving to archive (it moves with the directory)
 - Show clear summary of what happened
-- If sync is requested, use the Skill tool to invoke \`openspec-sync-specs\` (agent-driven)
+- If sync is requested, use the Skill tool to invoke \`superpowers-sync-specs\` (agent-driven)
 - If delta specs exist, always run the sync assessment and show the combined summary before prompting`
   };
 }
