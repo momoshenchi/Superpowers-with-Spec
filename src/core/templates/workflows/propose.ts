@@ -108,7 +108,12 @@ After completing all artifacts, summarize:
 - Always read dependency artifacts before creating a new one
 - If context is critically unclear, ask the user - but prefer making reasonable decisions to keep momentum
 - If a change with that name already exists, ask if user wants to continue it or create a new one
-- Verify each artifact file exists after writing before proceeding to next`,
+- Verify each artifact file exists after writing before proceeding to next
+
+**Task Granularity in tasks.md**
+- Each task should be bite-sized (2-5 minutes per step): write failing test → run it → implement minimal code → run tests → commit
+- Tasks must include exact file paths, complete code snippets (not 'add validation'), and exact commands with expected output
+- Follow DRY, YAGNI, TDD principles. Ensure frequent commits.`,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
     metadata: { author: 'superpowers', version: '1.0' },

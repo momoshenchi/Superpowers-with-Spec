@@ -26,6 +26,8 @@ export function getExploreSkillTemplate(): SkillTemplate {
 - **Adaptive** - Follow interesting threads, pivot when new information emerges
 - **Patient** - Don't rush to conclusions, let the shape of the problem emerge
 - **Grounded** - Explore the actual codebase when relevant, don't just theorize
+- **One question at a time** - When exploring for creative work (features, components, functionality), prefer asking **one question at a time** and using **multiple choice questions when possible**
+- **YAGNI ruthlessly** - Apply YAGNI ruthlessly — remove unnecessary features from all designs
 
 ---
 
@@ -130,6 +132,10 @@ If the user mentions a change or you detect one is relevant:
    - "This changes scope. Update the proposal?"
 
 4. **The user decides** - Offer and move on. Don't pressure. Don't auto-capture.
+
+### Ending Discovery
+
+When transitioning to a proposal, always **propose 2-3 approaches with trade-offs** before settling on one. Let the user choose the direction before creating artifacts.
 
 ---
 

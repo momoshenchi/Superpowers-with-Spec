@@ -148,6 +148,9 @@ What would you like to do?
 - Update task checkbox immediately after completing each task
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles from CLI output, don't assume specific file names
+- Never start implementation on main/master branch without explicit user consent
+- Review the change proposal critically before starting — identify questions or concerns and raise them before proceeding
+- Default to executing in batches of 3 tasks. Between batches, report what was implemented and wait for feedback before continuing
 
 **Fluid Workflow Integration**
 
