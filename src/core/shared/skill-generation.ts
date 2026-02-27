@@ -55,17 +55,17 @@ export interface CommandTemplateEntry {
  */
 export function getSkillTemplates(workflowFilter?: readonly string[]): SkillTemplateEntry[] {
   const all: SkillTemplateEntry[] = [
-    { template: getExploreSkillTemplate(), dirName: 'openspec-explore', workflowId: 'explore' },
-    { template: getNewChangeSkillTemplate(), dirName: 'openspec-new-change', workflowId: 'new' },
-    { template: getContinueChangeSkillTemplate(), dirName: 'openspec-continue-change', workflowId: 'continue' },
-    { template: getApplyChangeSkillTemplate(), dirName: 'openspec-apply-change', workflowId: 'apply' },
-    { template: getFfChangeSkillTemplate(), dirName: 'openspec-ff-change', workflowId: 'ff' },
-    { template: getSyncSpecsSkillTemplate(), dirName: 'openspec-sync-specs', workflowId: 'sync' },
-    { template: getArchiveChangeSkillTemplate(), dirName: 'openspec-archive-change', workflowId: 'archive' },
-    { template: getBulkArchiveChangeSkillTemplate(), dirName: 'openspec-bulk-archive-change', workflowId: 'bulk-archive' },
-    { template: getVerifyChangeSkillTemplate(), dirName: 'openspec-verify-change', workflowId: 'verify' },
-    { template: getOnboardSkillTemplate(), dirName: 'openspec-onboard', workflowId: 'onboard' },
-    { template: getOpsxProposeSkillTemplate(), dirName: 'openspec-propose', workflowId: 'propose' },
+    { template: getExploreSkillTemplate(), dirName: 'superpowers-explore', workflowId: 'explore' },
+    { template: getNewChangeSkillTemplate(), dirName: 'superpowers-new-change', workflowId: 'new' },
+    { template: getContinueChangeSkillTemplate(), dirName: 'superpowers-continue-change', workflowId: 'continue' },
+    { template: getApplyChangeSkillTemplate(), dirName: 'superpowers-apply-change', workflowId: 'apply' },
+    { template: getFfChangeSkillTemplate(), dirName: 'superpowers-ff-change', workflowId: 'ff' },
+    { template: getSyncSpecsSkillTemplate(), dirName: 'superpowers-sync-specs', workflowId: 'sync' },
+    { template: getArchiveChangeSkillTemplate(), dirName: 'superpowers-archive-change', workflowId: 'archive' },
+    { template: getBulkArchiveChangeSkillTemplate(), dirName: 'superpowers-bulk-archive-change', workflowId: 'bulk-archive' },
+    { template: getVerifyChangeSkillTemplate(), dirName: 'superpowers-verify-change', workflowId: 'verify' },
+    { template: getOnboardSkillTemplate(), dirName: 'superpowers-onboard', workflowId: 'onboard' },
+    { template: getOpsxProposeSkillTemplate(), dirName: 'superpowers-propose', workflowId: 'propose' },
   ];
 
   if (!workflowFilter) return all;
@@ -121,7 +121,7 @@ export function getCommandContents(workflowFilter?: readonly string[]): CommandC
  * Generates skill file content with YAML frontmatter.
  *
  * @param template - The skill template
- * @param generatedByVersion - The OpenSpec version to embed in the file
+ * @param generatedByVersion - The Superpowers version to embed in the file
  * @param transformInstructions - Optional callback to transform the instructions content
  */
 export function generateSkillContent(
@@ -137,9 +137,9 @@ export function generateSkillContent(
 name: ${template.name}
 description: ${template.description}
 license: ${template.license || 'MIT'}
-compatibility: ${template.compatibility || 'Requires openspec CLI.'}
+compatibility: ${template.compatibility || 'Requires superpowers CLI.'}
 metadata:
-  author: ${template.metadata?.author || 'openspec'}
+  author: ${template.metadata?.author || 'superpowers'}
   version: "${template.metadata?.version || '1.0'}"
   generatedBy: "${generatedByVersion}"
 ---

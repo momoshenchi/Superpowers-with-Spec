@@ -8,8 +8,8 @@ import {
   detectLegacyConfigFiles,
   detectLegacySlashCommands,
   detectLegacyStructureFiles,
-  hasOpenSpecMarkers,
-  isOnlyOpenSpecContent,
+  hasSuperpowersMarkers,
+  isOnlySuperpowersContent,
   removeMarkerBlock,
   cleanupLegacyArtifacts,
   formatCleanupSummary,
@@ -19,117 +19,117 @@ import {
   LEGACY_CONFIG_FILES,
   LEGACY_SLASH_COMMAND_PATHS,
 } from '../../src/core/legacy-cleanup.js';
-import { OPENSPEC_MARKERS } from '../../src/core/config.js';
+import { SUPERPOWERS_MARKERS } from '../../src/core/config.js';
 import { CommandAdapterRegistry } from '../../src/core/command-generation/registry.js';
 
 describe('legacy-cleanup', () => {
   let testDir: string;
 
   beforeEach(async () => {
-    testDir = path.join(os.tmpdir(), `openspec-legacy-test-${randomUUID()}`);
+    testDir = path.join(os.tmpdir(), `superpowers-legacy-test-${randomUUID()}`);
     await fs.mkdir(testDir, { recursive: true });
-    // Create openspec directory structure
-    await fs.mkdir(path.join(testDir, 'openspec'), { recursive: true });
+    // Create superpowers directory structure
+    await fs.mkdir(path.join(testDir, 'superpowers'), { recursive: true });
   });
 
   afterEach(async () => {
     await fs.rm(testDir, { recursive: true, force: true });
   });
 
-  describe('hasOpenSpecMarkers', () => {
+  describe('hasSuperpowersMarkers', () => {
     it('should return true when both markers are present', () => {
       const content = `Some content
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}
 More content`;
-      expect(hasOpenSpecMarkers(content)).toBe(true);
+      expect(hasSuperpowersMarkers(content)).toBe(true);
     });
 
     it('should return false when start marker is missing', () => {
       const content = `Some content
-OpenSpec content
-${OPENSPEC_MARKERS.end}`;
-      expect(hasOpenSpecMarkers(content)).toBe(false);
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`;
+      expect(hasSuperpowersMarkers(content)).toBe(false);
     });
 
     it('should return false when end marker is missing', () => {
-      const content = `${OPENSPEC_MARKERS.start}
-OpenSpec content
+      const content = `${SUPERPOWERS_MARKERS.start}
+Superpowers content
 Some content`;
-      expect(hasOpenSpecMarkers(content)).toBe(false);
+      expect(hasSuperpowersMarkers(content)).toBe(false);
     });
 
     it('should return false when no markers are present', () => {
       const content = 'Plain content without markers';
-      expect(hasOpenSpecMarkers(content)).toBe(false);
+      expect(hasSuperpowersMarkers(content)).toBe(false);
     });
   });
 
-  describe('isOnlyOpenSpecContent', () => {
+  describe('isOnlySuperpowersContent', () => {
     it('should return true when content is only markers and whitespace outside', () => {
-      const content = `${OPENSPEC_MARKERS.start}
-OpenSpec content here
-${OPENSPEC_MARKERS.end}`;
-      expect(isOnlyOpenSpecContent(content)).toBe(true);
+      const content = `${SUPERPOWERS_MARKERS.start}
+Superpowers content here
+${SUPERPOWERS_MARKERS.end}`;
+      expect(isOnlySuperpowersContent(content)).toBe(true);
     });
 
     it('should return true with whitespace before and after markers', () => {
       const content = `
 
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}
 
 `;
-      expect(isOnlyOpenSpecContent(content)).toBe(true);
+      expect(isOnlySuperpowersContent(content)).toBe(true);
     });
 
     it('should return false when content exists before markers', () => {
       const content = `User content here
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}`;
-      expect(isOnlyOpenSpecContent(content)).toBe(false);
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`;
+      expect(isOnlySuperpowersContent(content)).toBe(false);
     });
 
     it('should return false when content exists after markers', () => {
-      const content = `${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}
+      const content = `${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}
 User content here`;
-      expect(isOnlyOpenSpecContent(content)).toBe(false);
+      expect(isOnlySuperpowersContent(content)).toBe(false);
     });
 
     it('should return false when markers are missing', () => {
       const content = 'Plain content without markers';
-      expect(isOnlyOpenSpecContent(content)).toBe(false);
+      expect(isOnlySuperpowersContent(content)).toBe(false);
     });
 
     it('should return false when end marker comes before start marker', () => {
-      const content = `${OPENSPEC_MARKERS.end}
+      const content = `${SUPERPOWERS_MARKERS.end}
 Content
-${OPENSPEC_MARKERS.start}`;
-      expect(isOnlyOpenSpecContent(content)).toBe(false);
+${SUPERPOWERS_MARKERS.start}`;
+      expect(isOnlySuperpowersContent(content)).toBe(false);
     });
   });
 
   describe('removeMarkerBlock', () => {
     it('should remove marker block and preserve content before', () => {
       const content = `User content before
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}`;
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`;
       const result = removeMarkerBlock(content);
       expect(result).toBe('User content before\n');
-      expect(result).not.toContain(OPENSPEC_MARKERS.start);
-      expect(result).not.toContain(OPENSPEC_MARKERS.end);
+      expect(result).not.toContain(SUPERPOWERS_MARKERS.start);
+      expect(result).not.toContain(SUPERPOWERS_MARKERS.end);
     });
 
     it('should remove marker block and preserve content after', () => {
-      const content = `${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}
+      const content = `${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}
 User content after`;
       const result = removeMarkerBlock(content);
       expect(result).toBe('User content after\n');
@@ -137,23 +137,23 @@ User content after`;
 
     it('should remove marker block and preserve content before and after', () => {
       const content = `User content before
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}
 User content after`;
       const result = removeMarkerBlock(content);
       expect(result).toContain('User content before');
       expect(result).toContain('User content after');
-      expect(result).not.toContain(OPENSPEC_MARKERS.start);
+      expect(result).not.toContain(SUPERPOWERS_MARKERS.start);
     });
 
     it('should clean up double blank lines', () => {
       const content = `Line 1
 
 
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}
 
 
 Line 2`;
@@ -162,9 +162,9 @@ Line 2`;
     });
 
     it('should return empty string when only markers remain', () => {
-      const content = `${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}`;
+      const content = `${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`;
       const result = removeMarkerBlock(content);
       expect(result).toBe('');
     });
@@ -177,26 +177,26 @@ ${OPENSPEC_MARKERS.end}`;
     });
 
     it('should return original content when markers are in wrong order', () => {
-      const content = `${OPENSPEC_MARKERS.end}
+      const content = `${SUPERPOWERS_MARKERS.end}
 Content
-${OPENSPEC_MARKERS.start}`;
+${SUPERPOWERS_MARKERS.start}`;
       const result = removeMarkerBlock(content);
-      expect(result).toContain(OPENSPEC_MARKERS.end);
-      expect(result).toContain(OPENSPEC_MARKERS.start);
+      expect(result).toContain(SUPERPOWERS_MARKERS.end);
+      expect(result).toContain(SUPERPOWERS_MARKERS.start);
     });
 
     it('should ignore inline mentions of markers and only remove actual block', () => {
-      const content = `Intro referencing ${OPENSPEC_MARKERS.start} and ${OPENSPEC_MARKERS.end} inline.
+      const content = `Intro referencing ${SUPERPOWERS_MARKERS.start} and ${SUPERPOWERS_MARKERS.end} inline.
 
-${OPENSPEC_MARKERS.start}
+${SUPERPOWERS_MARKERS.start}
 Managed content here
-${OPENSPEC_MARKERS.end}
+${SUPERPOWERS_MARKERS.end}
 After content`;
       const result = removeMarkerBlock(content);
       // Inline mentions preserved
       expect(result).toContain('Intro referencing');
-      expect(result).toContain(OPENSPEC_MARKERS.start);
-      expect(result).toContain(OPENSPEC_MARKERS.end);
+      expect(result).toContain(SUPERPOWERS_MARKERS.start);
+      expect(result).toContain(SUPERPOWERS_MARKERS.end);
       // Managed content removed
       expect(result).not.toContain('Managed content here');
       expect(result).toContain('After content');
@@ -204,11 +204,11 @@ After content`;
   });
 
   describe('detectLegacyConfigFiles', () => {
-    it('should detect CLAUDE.md with OpenSpec markers and put in update list', async () => {
+    it('should detect CLAUDE.md with Superpowers markers and put in update list', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
-      await fs.writeFile(claudePath, `${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}`);
+      await fs.writeFile(claudePath, `${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`);
 
       const result = await detectLegacyConfigFiles(testDir);
       expect(result.allFiles).toContain('CLAUDE.md');
@@ -219,16 +219,16 @@ ${OPENSPEC_MARKERS.end}`);
     it('should detect files with mixed content and put in update list', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       await fs.writeFile(claudePath, `User instructions here
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}`);
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`);
 
       const result = await detectLegacyConfigFiles(testDir);
       expect(result.allFiles).toContain('CLAUDE.md');
       expect(result.filesToUpdate).toContain('CLAUDE.md');
     });
 
-    it('should not detect files without OpenSpec markers', async () => {
+    it('should not detect files without Superpowers markers', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       await fs.writeFile(claudePath, 'Plain instructions without markers');
 
@@ -238,9 +238,9 @@ ${OPENSPEC_MARKERS.end}`);
 
     it('should detect multiple config files', async () => {
       // Create multiple config files with markers
-      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${OPENSPEC_MARKERS.start}\nContent\n${OPENSPEC_MARKERS.end}`);
-      await fs.writeFile(path.join(testDir, 'CLINE.md'), `${OPENSPEC_MARKERS.start}\nContent\n${OPENSPEC_MARKERS.end}`);
-      await fs.writeFile(path.join(testDir, 'QODER.md'), `${OPENSPEC_MARKERS.start}\nContent\n${OPENSPEC_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${SUPERPOWERS_MARKERS.start}\nContent\n${SUPERPOWERS_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'CLINE.md'), `${SUPERPOWERS_MARKERS.start}\nContent\n${SUPERPOWERS_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'QODER.md'), `${SUPERPOWERS_MARKERS.start}\nContent\n${SUPERPOWERS_MARKERS.end}`);
 
       const result = await detectLegacyConfigFiles(testDir);
       expect(result.allFiles).toHaveLength(3);
@@ -260,50 +260,50 @@ ${OPENSPEC_MARKERS.end}`);
 
   describe('detectLegacySlashCommands', () => {
     it('should detect legacy Claude slash command directory', async () => {
-      const dirPath = path.join(testDir, '.claude', 'commands', 'openspec');
+      const dirPath = path.join(testDir, '.claude', 'commands', 'superpowers');
       await fs.mkdir(dirPath, { recursive: true });
       await fs.writeFile(path.join(dirPath, 'proposal.md'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.directories).toContain('.claude/commands/openspec');
+      expect(result.directories).toContain('.claude/commands/superpowers');
     });
 
     it('should detect legacy Cursor slash command files', async () => {
       const dirPath = path.join(testDir, '.cursor', 'commands');
       await fs.mkdir(dirPath, { recursive: true });
-      await fs.writeFile(path.join(dirPath, 'openspec-proposal.md'), 'content');
-      await fs.writeFile(path.join(dirPath, 'openspec-apply.md'), 'content');
+      await fs.writeFile(path.join(dirPath, 'superpowers-proposal.md'), 'content');
+      await fs.writeFile(path.join(dirPath, 'superpowers-apply.md'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.files).toContain('.cursor/commands/openspec-proposal.md');
-      expect(result.files).toContain('.cursor/commands/openspec-apply.md');
+      expect(result.files).toContain('.cursor/commands/superpowers-proposal.md');
+      expect(result.files).toContain('.cursor/commands/superpowers-apply.md');
     });
 
     it('should detect legacy Windsurf workflow files', async () => {
       const dirPath = path.join(testDir, '.windsurf', 'workflows');
       await fs.mkdir(dirPath, { recursive: true });
-      await fs.writeFile(path.join(dirPath, 'openspec-archive.md'), 'content');
+      await fs.writeFile(path.join(dirPath, 'superpowers-archive.md'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.files).toContain('.windsurf/workflows/openspec-archive.md');
+      expect(result.files).toContain('.windsurf/workflows/superpowers-archive.md');
     });
 
     it('should detect multiple tool directories and files', async () => {
       // Create directory-based
-      await fs.mkdir(path.join(testDir, '.claude', 'commands', 'openspec'), { recursive: true });
-      await fs.mkdir(path.join(testDir, '.qoder', 'commands', 'openspec'), { recursive: true });
+      await fs.mkdir(path.join(testDir, '.claude', 'commands', 'superpowers'), { recursive: true });
+      await fs.mkdir(path.join(testDir, '.qoder', 'commands', 'superpowers'), { recursive: true });
 
       // Create file-based
       await fs.mkdir(path.join(testDir, '.cursor', 'commands'), { recursive: true });
-      await fs.writeFile(path.join(testDir, '.cursor', 'commands', 'openspec-proposal.md'), 'content');
+      await fs.writeFile(path.join(testDir, '.cursor', 'commands', 'superpowers-proposal.md'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.directories).toContain('.claude/commands/openspec');
-      expect(result.directories).toContain('.qoder/commands/openspec');
-      expect(result.files).toContain('.cursor/commands/openspec-proposal.md');
+      expect(result.directories).toContain('.claude/commands/superpowers');
+      expect(result.directories).toContain('.qoder/commands/superpowers');
+      expect(result.files).toContain('.cursor/commands/superpowers-proposal.md');
     });
 
-    it('should not detect non-openspec files', async () => {
+    it('should not detect non-superpowers files', async () => {
       const dirPath = path.join(testDir, '.cursor', 'commands');
       await fs.mkdir(dirPath, { recursive: true });
       await fs.writeFile(path.join(dirPath, 'other-command.md'), 'content');
@@ -321,73 +321,73 @@ ${OPENSPEC_MARKERS.end}`);
     it('should detect TOML-based slash commands for Qwen', async () => {
       const dirPath = path.join(testDir, '.qwen', 'commands');
       await fs.mkdir(dirPath, { recursive: true });
-      await fs.writeFile(path.join(dirPath, 'openspec-proposal.toml'), 'content');
+      await fs.writeFile(path.join(dirPath, 'superpowers-proposal.toml'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.files).toContain('.qwen/commands/openspec-proposal.toml');
+      expect(result.files).toContain('.qwen/commands/superpowers-proposal.toml');
     });
 
     it('should detect Continue prompt files', async () => {
       const dirPath = path.join(testDir, '.continue', 'prompts');
       await fs.mkdir(dirPath, { recursive: true });
-      await fs.writeFile(path.join(dirPath, 'openspec-apply.prompt'), 'content');
+      await fs.writeFile(path.join(dirPath, 'superpowers-apply.prompt'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.files).toContain('.continue/prompts/openspec-apply.prompt');
+      expect(result.files).toContain('.continue/prompts/superpowers-apply.prompt');
     });
 
-    it('should detect legacy OpenCode opsx-* command files', async () => {
+    it('should detect legacy OpenCode sp-* command files', async () => {
       const dirPath = path.join(testDir, '.opencode', 'command');
       await fs.mkdir(dirPath, { recursive: true });
-      await fs.writeFile(path.join(dirPath, 'opsx-propose.md'), 'content');
+      await fs.writeFile(path.join(dirPath, 'sp-propose.md'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.files).toContain('.opencode/command/opsx-propose.md');
+      expect(result.files).toContain('.opencode/command/sp-propose.md');
     });
 
-    it('should detect legacy OpenCode openspec-* command files', async () => {
+    it('should detect legacy OpenCode superpowers-* command files', async () => {
       const dirPath = path.join(testDir, '.opencode', 'command');
       await fs.mkdir(dirPath, { recursive: true });
-      await fs.writeFile(path.join(dirPath, 'openspec-new.md'), 'content');
+      await fs.writeFile(path.join(dirPath, 'superpowers-new.md'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.files).toContain('.opencode/command/openspec-new.md');
+      expect(result.files).toContain('.opencode/command/superpowers-new.md');
     });
 
-    it('should detect both opsx-* and openspec-* OpenCode command files', async () => {
+    it('should detect both sp-* and superpowers-* OpenCode command files', async () => {
       const dirPath = path.join(testDir, '.opencode', 'command');
       await fs.mkdir(dirPath, { recursive: true });
-      await fs.writeFile(path.join(dirPath, 'opsx-propose.md'), 'content');
-      await fs.writeFile(path.join(dirPath, 'openspec-new.md'), 'content');
+      await fs.writeFile(path.join(dirPath, 'sp-propose.md'), 'content');
+      await fs.writeFile(path.join(dirPath, 'superpowers-new.md'), 'content');
 
       const result = await detectLegacySlashCommands(testDir);
-      expect(result.files).toContain('.opencode/command/opsx-propose.md');
-      expect(result.files).toContain('.opencode/command/openspec-new.md');
+      expect(result.files).toContain('.opencode/command/sp-propose.md');
+      expect(result.files).toContain('.opencode/command/superpowers-new.md');
     });
   });
 
   describe('detectLegacyStructureFiles', () => {
-    it('should detect openspec/AGENTS.md', async () => {
-      const agentsPath = path.join(testDir, 'openspec', 'AGENTS.md');
+    it('should detect superpowers/AGENTS.md', async () => {
+      const agentsPath = path.join(testDir, 'superpowers', 'AGENTS.md');
       await fs.writeFile(agentsPath, '# AGENTS.md content');
 
       const result = await detectLegacyStructureFiles(testDir);
       expect(result.hasOpenspecAgents).toBe(true);
     });
 
-    it('should detect openspec/project.md', async () => {
-      const projectPath = path.join(testDir, 'openspec', 'project.md');
+    it('should detect superpowers/project.md', async () => {
+      const projectPath = path.join(testDir, 'superpowers', 'project.md');
       await fs.writeFile(projectPath, '# Project content');
 
       const result = await detectLegacyStructureFiles(testDir);
       expect(result.hasProjectMd).toBe(true);
     });
 
-    it('should detect root AGENTS.md with OpenSpec markers', async () => {
+    it('should detect root AGENTS.md with Superpowers markers', async () => {
       const agentsPath = path.join(testDir, 'AGENTS.md');
-      await fs.writeFile(agentsPath, `${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}`);
+      await fs.writeFile(agentsPath, `${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`);
 
       const result = await detectLegacyStructureFiles(testDir);
       expect(result.hasRootAgentsWithMarkers).toBe(true);
@@ -416,7 +416,7 @@ ${OPENSPEC_MARKERS.end}`);
     });
 
     it('should return hasLegacyArtifacts: true when config files are found', async () => {
-      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${OPENSPEC_MARKERS.start}\nContent\n${OPENSPEC_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${SUPERPOWERS_MARKERS.start}\nContent\n${SUPERPOWERS_MARKERS.end}`);
 
       const result = await detectLegacyArtifacts(testDir);
       expect(result.hasLegacyArtifacts).toBe(true);
@@ -424,15 +424,15 @@ ${OPENSPEC_MARKERS.end}`);
     });
 
     it('should return hasLegacyArtifacts: true when slash commands are found', async () => {
-      await fs.mkdir(path.join(testDir, '.claude', 'commands', 'openspec'), { recursive: true });
+      await fs.mkdir(path.join(testDir, '.claude', 'commands', 'superpowers'), { recursive: true });
 
       const result = await detectLegacyArtifacts(testDir);
       expect(result.hasLegacyArtifacts).toBe(true);
-      expect(result.slashCommandDirs).toContain('.claude/commands/openspec');
+      expect(result.slashCommandDirs).toContain('.claude/commands/superpowers');
     });
 
-    it('should return hasLegacyArtifacts: true when openspec/AGENTS.md is found', async () => {
-      await fs.writeFile(path.join(testDir, 'openspec', 'AGENTS.md'), 'content');
+    it('should return hasLegacyArtifacts: true when superpowers/AGENTS.md is found', async () => {
+      await fs.writeFile(path.join(testDir, 'superpowers', 'AGENTS.md'), 'content');
 
       const result = await detectLegacyArtifacts(testDir);
       expect(result.hasLegacyArtifacts).toBe(true);
@@ -440,7 +440,7 @@ ${OPENSPEC_MARKERS.end}`);
     });
 
     it('should detect project.md for migration hint (it is preserved, not deleted)', async () => {
-      await fs.writeFile(path.join(testDir, 'openspec', 'project.md'), 'content');
+      await fs.writeFile(path.join(testDir, 'superpowers', 'project.md'), 'content');
 
       const result = await detectLegacyArtifacts(testDir);
       // project.md triggers hasLegacyArtifacts to show migration hint
@@ -450,24 +450,24 @@ ${OPENSPEC_MARKERS.end}`);
 
     it('should combine all detection results', async () => {
       // Create various legacy artifacts
-      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${OPENSPEC_MARKERS.start}\nContent\n${OPENSPEC_MARKERS.end}`);
-      await fs.mkdir(path.join(testDir, '.claude', 'commands', 'openspec'), { recursive: true });
-      await fs.writeFile(path.join(testDir, 'openspec', 'AGENTS.md'), 'content');
-      await fs.writeFile(path.join(testDir, 'openspec', 'project.md'), 'content');
+      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${SUPERPOWERS_MARKERS.start}\nContent\n${SUPERPOWERS_MARKERS.end}`);
+      await fs.mkdir(path.join(testDir, '.claude', 'commands', 'superpowers'), { recursive: true });
+      await fs.writeFile(path.join(testDir, 'superpowers', 'AGENTS.md'), 'content');
+      await fs.writeFile(path.join(testDir, 'superpowers', 'project.md'), 'content');
 
       const result = await detectLegacyArtifacts(testDir);
       expect(result.hasLegacyArtifacts).toBe(true);
       expect(result.configFiles).toContain('CLAUDE.md');
-      expect(result.slashCommandDirs).toContain('.claude/commands/openspec');
+      expect(result.slashCommandDirs).toContain('.claude/commands/superpowers');
       expect(result.hasOpenspecAgents).toBe(true);
       expect(result.hasProjectMd).toBe(true);
     });
   });
 
   describe('cleanupLegacyArtifacts', () => {
-    it('should remove markers from config files that have only OpenSpec content (never delete)', async () => {
+    it('should remove markers from config files that have only Superpowers content (never delete)', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
-      await fs.writeFile(claudePath, `${OPENSPEC_MARKERS.start}\nContent\n${OPENSPEC_MARKERS.end}`);
+      await fs.writeFile(claudePath, `${SUPERPOWERS_MARKERS.start}\nContent\n${SUPERPOWERS_MARKERS.end}`);
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
@@ -479,16 +479,16 @@ ${OPENSPEC_MARKERS.end}`);
       await expect(fs.access(claudePath)).resolves.not.toThrow();
       // File should be empty or have markers removed
       const content = await fs.readFile(claudePath, 'utf-8');
-      expect(content).not.toContain(OPENSPEC_MARKERS.start);
-      expect(content).not.toContain(OPENSPEC_MARKERS.end);
+      expect(content).not.toContain(SUPERPOWERS_MARKERS.start);
+      expect(content).not.toContain(SUPERPOWERS_MARKERS.end);
     });
 
     it('should remove marker block from files with mixed content', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       await fs.writeFile(claudePath, `User instructions
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}`);
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`);
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
@@ -496,18 +496,18 @@ ${OPENSPEC_MARKERS.end}`);
       expect(result.modifiedFiles).toContain('CLAUDE.md');
       const content = await fs.readFile(claudePath, 'utf-8');
       expect(content).toContain('User instructions');
-      expect(content).not.toContain(OPENSPEC_MARKERS.start);
+      expect(content).not.toContain(SUPERPOWERS_MARKERS.start);
     });
 
     it('should delete legacy slash command directories', async () => {
-      const dirPath = path.join(testDir, '.claude', 'commands', 'openspec');
+      const dirPath = path.join(testDir, '.claude', 'commands', 'superpowers');
       await fs.mkdir(dirPath, { recursive: true });
       await fs.writeFile(path.join(dirPath, 'proposal.md'), 'content');
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
 
-      expect(result.deletedDirs).toContain('.claude/commands/openspec');
+      expect(result.deletedDirs).toContain('.claude/commands/superpowers');
       await expect(fs.access(dirPath)).rejects.toThrow();
       // Parent directory should still exist
       await expect(fs.access(path.join(testDir, '.claude', 'commands'))).resolves.not.toThrow();
@@ -516,47 +516,47 @@ ${OPENSPEC_MARKERS.end}`);
     it('should delete legacy slash command files', async () => {
       const dirPath = path.join(testDir, '.cursor', 'commands');
       await fs.mkdir(dirPath, { recursive: true });
-      const filePath = path.join(dirPath, 'openspec-proposal.md');
+      const filePath = path.join(dirPath, 'superpowers-proposal.md');
       await fs.writeFile(filePath, 'content');
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
 
-      expect(result.deletedFiles).toContain('.cursor/commands/openspec-proposal.md');
+      expect(result.deletedFiles).toContain('.cursor/commands/superpowers-proposal.md');
       await expect(fs.access(filePath)).rejects.toThrow();
     });
 
-    it('should delete openspec/AGENTS.md', async () => {
-      const agentsPath = path.join(testDir, 'openspec', 'AGENTS.md');
+    it('should delete superpowers/AGENTS.md', async () => {
+      const agentsPath = path.join(testDir, 'superpowers', 'AGENTS.md');
       await fs.writeFile(agentsPath, 'content');
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
 
-      expect(result.deletedFiles).toContain('openspec/AGENTS.md');
+      expect(result.deletedFiles).toContain('superpowers/AGENTS.md');
       await expect(fs.access(agentsPath)).rejects.toThrow();
-      // openspec directory should still exist
-      await expect(fs.access(path.join(testDir, 'openspec'))).resolves.not.toThrow();
+      // superpowers directory should still exist
+      await expect(fs.access(path.join(testDir, 'superpowers'))).resolves.not.toThrow();
     });
 
-    it('should NOT delete openspec/project.md', async () => {
-      const projectPath = path.join(testDir, 'openspec', 'project.md');
+    it('should NOT delete superpowers/project.md', async () => {
+      const projectPath = path.join(testDir, 'superpowers', 'project.md');
       await fs.writeFile(projectPath, 'User project content');
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
 
       expect(result.projectMdNeedsMigration).toBe(true);
-      expect(result.deletedFiles).not.toContain('openspec/project.md');
+      expect(result.deletedFiles).not.toContain('superpowers/project.md');
       await expect(fs.access(projectPath)).resolves.not.toThrow();
     });
 
     it('should handle root AGENTS.md with mixed content', async () => {
       const agentsPath = path.join(testDir, 'AGENTS.md');
       await fs.writeFile(agentsPath, `User content
-${OPENSPEC_MARKERS.start}
-OpenSpec content
-${OPENSPEC_MARKERS.end}`);
+${SUPERPOWERS_MARKERS.start}
+Superpowers content
+${SUPERPOWERS_MARKERS.end}`);
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
@@ -564,12 +564,12 @@ ${OPENSPEC_MARKERS.end}`);
       expect(result.modifiedFiles).toContain('AGENTS.md');
       const content = await fs.readFile(agentsPath, 'utf-8');
       expect(content).toContain('User content');
-      expect(content).not.toContain(OPENSPEC_MARKERS.start);
+      expect(content).not.toContain(SUPERPOWERS_MARKERS.start);
     });
 
-    it('should remove markers from root AGENTS.md even when only OpenSpec content (never delete)', async () => {
+    it('should remove markers from root AGENTS.md even when only Superpowers content (never delete)', async () => {
       const agentsPath = path.join(testDir, 'AGENTS.md');
-      await fs.writeFile(agentsPath, `${OPENSPEC_MARKERS.start}\nOpenSpec content\n${OPENSPEC_MARKERS.end}`);
+      await fs.writeFile(agentsPath, `${SUPERPOWERS_MARKERS.start}\nSuperpowers content\n${SUPERPOWERS_MARKERS.end}`);
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
@@ -622,13 +622,13 @@ ${OPENSPEC_MARKERS.end}`);
       const result = {
         deletedFiles: [],
         modifiedFiles: [],
-        deletedDirs: ['.claude/commands/openspec'],
+        deletedDirs: ['.claude/commands/superpowers'],
         projectMdNeedsMigration: false,
         errors: [],
       };
 
       const summary = formatCleanupSummary(result);
-      expect(summary).toContain('✓ Removed .claude/commands/openspec/ (replaced by /opsx:*)');
+      expect(summary).toContain('✓ Removed .claude/commands/superpowers/ (replaced by /sp:*)');
     });
 
     it('should format modified files', () => {
@@ -641,7 +641,7 @@ ${OPENSPEC_MARKERS.end}`);
       };
 
       const summary = formatCleanupSummary(result);
-      expect(summary).toContain('✓ Removed OpenSpec markers from AGENTS.md');
+      expect(summary).toContain('✓ Removed Superpowers markers from AGENTS.md');
     });
 
     it('should include migration hint for project.md', () => {
@@ -655,7 +655,7 @@ ${OPENSPEC_MARKERS.end}`);
 
       const summary = formatCleanupSummary(result);
       expect(summary).toContain('Needs your attention');
-      expect(summary).toContain('openspec/project.md');
+      expect(summary).toContain('superpowers/project.md');
       expect(summary).toContain('config.yaml');
     });
 
@@ -701,7 +701,7 @@ ${OPENSPEC_MARKERS.end}`);
       };
 
       const summary = formatDetectionSummary(detection);
-      expect(summary).toContain('Upgrading to the new OpenSpec');
+      expect(summary).toContain('Upgrading to the new Superpowers');
       expect(summary).toContain('agent skills');
       expect(summary).toContain('keeping everything working');
     });
@@ -749,7 +749,7 @@ ${OPENSPEC_MARKERS.end}`);
       const detection = {
         configFiles: [],
         configFilesToUpdate: [],
-        slashCommandDirs: ['.claude/commands/openspec'],
+        slashCommandDirs: ['.claude/commands/superpowers'],
         slashCommandFiles: [],
         hasOpenspecAgents: false,
         hasProjectMd: false,
@@ -759,7 +759,7 @@ ${OPENSPEC_MARKERS.end}`);
 
       const summary = formatDetectionSummary(detection);
       expect(summary).toContain('Files to remove');
-      expect(summary).toContain('• .claude/commands/openspec/');
+      expect(summary).toContain('• .claude/commands/superpowers/');
     });
 
     it('should format slash command files', () => {
@@ -767,7 +767,7 @@ ${OPENSPEC_MARKERS.end}`);
         configFiles: [],
         configFilesToUpdate: [],
         slashCommandDirs: [],
-        slashCommandFiles: ['.cursor/commands/openspec-proposal.md'],
+        slashCommandFiles: ['.cursor/commands/superpowers-proposal.md'],
         hasOpenspecAgents: false,
         hasProjectMd: false,
         hasRootAgentsWithMarkers: false,
@@ -776,10 +776,10 @@ ${OPENSPEC_MARKERS.end}`);
 
       const summary = formatDetectionSummary(detection);
       expect(summary).toContain('Files to remove');
-      expect(summary).toContain('• .cursor/commands/openspec-proposal.md');
+      expect(summary).toContain('• .cursor/commands/superpowers-proposal.md');
     });
 
-    it('should format openspec/AGENTS.md', () => {
+    it('should format superpowers/AGENTS.md', () => {
       const detection = {
         configFiles: [],
         configFilesToUpdate: [],
@@ -793,7 +793,7 @@ ${OPENSPEC_MARKERS.end}`);
 
       const summary = formatDetectionSummary(detection);
       expect(summary).toContain('Files to remove');
-      expect(summary).toContain('• openspec/AGENTS.md');
+      expect(summary).toContain('• superpowers/AGENTS.md');
     });
 
     it('should include attention section for project.md', () => {
@@ -810,7 +810,7 @@ ${OPENSPEC_MARKERS.end}`);
 
       const summary = formatDetectionSummary(detection);
       expect(summary).toContain('Needs your attention');
-      expect(summary).toContain('• openspec/project.md');
+      expect(summary).toContain('• superpowers/project.md');
       expect(summary).toContain('won\'t delete this file');
       expect(summary).toContain('config.yaml');
       expect(summary).toContain('"context:"');
@@ -833,14 +833,14 @@ ${OPENSPEC_MARKERS.end}`);
       expect(summary).toContain('Files to update');
       expect(summary).toContain('CLAUDE.md');
       expect(summary).toContain('Needs your attention');
-      expect(summary).toContain('openspec/project.md');
+      expect(summary).toContain('superpowers/project.md');
     });
 
     it('should group both removals and updates correctly', () => {
       const detection = {
         configFiles: ['CLAUDE.md', 'CLINE.md'],
         configFilesToUpdate: ['CLAUDE.md', 'CLINE.md'],
-        slashCommandDirs: ['.claude/commands/openspec'],
+        slashCommandDirs: ['.claude/commands/superpowers'],
         slashCommandFiles: [],
         hasOpenspecAgents: true,
         hasProjectMd: false,
@@ -852,9 +852,9 @@ ${OPENSPEC_MARKERS.end}`);
       // Check both sections exist
       expect(summary).toContain('Files to remove');
       expect(summary).toContain('Files to update');
-      // Check removals (only slash commands and openspec/AGENTS.md)
-      expect(summary).toContain('• .claude/commands/openspec/');
-      expect(summary).toContain('• openspec/AGENTS.md');
+      // Check removals (only slash commands and superpowers/AGENTS.md)
+      expect(summary).toContain('• .claude/commands/superpowers/');
+      expect(summary).toContain('• superpowers/AGENTS.md');
       // Check updates (all config files)
       expect(summary).toContain('• CLAUDE.md');
       expect(summary).toContain('• CLINE.md');
@@ -881,7 +881,7 @@ ${OPENSPEC_MARKERS.end}`);
     it('should return migration hint message', () => {
       const hint = formatProjectMdMigrationHint();
       expect(hint).toContain('Needs your attention');
-      expect(hint).toContain('openspec/project.md');
+      expect(hint).toContain('superpowers/project.md');
       expect(hint).toContain('won\'t delete this file');
       expect(hint).toContain('config.yaml');
       expect(hint).toContain('"context:"');
@@ -895,7 +895,7 @@ ${OPENSPEC_MARKERS.end}`);
 
     it('should explain the new context section benefits', () => {
       const hint = formatProjectMdMigrationHint();
-      expect(hint).toContain('included in every OpenSpec request');
+      expect(hint).toContain('included in every Superpowers request');
       expect(hint).toContain('reliably');
     });
   });
@@ -917,17 +917,17 @@ ${OPENSPEC_MARKERS.end}`);
     it('should include expected tool patterns', () => {
       expect(LEGACY_SLASH_COMMAND_PATHS['claude']).toEqual({
         type: 'directory',
-        path: '.claude/commands/openspec',
+        path: '.claude/commands/superpowers',
       });
 
       expect(LEGACY_SLASH_COMMAND_PATHS['cursor']).toEqual({
         type: 'files',
-        pattern: '.cursor/commands/openspec-*.md',
+        pattern: '.cursor/commands/superpowers-*.md',
       });
 
       expect(LEGACY_SLASH_COMMAND_PATHS['windsurf']).toEqual({
         type: 'files',
-        pattern: '.windsurf/workflows/openspec-*.md',
+        pattern: '.windsurf/workflows/superpowers-*.md',
       });
     });
 
@@ -949,7 +949,7 @@ ${OPENSPEC_MARKERS.end}`);
       const detection = {
         configFiles: [],
         configFilesToUpdate: [],
-        slashCommandDirs: ['.claude/commands/openspec'],
+        slashCommandDirs: ['.claude/commands/superpowers'],
         slashCommandFiles: [],
         hasOpenspecAgents: false,
         hasProjectMd: false,
@@ -967,7 +967,7 @@ ${OPENSPEC_MARKERS.end}`);
         configFiles: [],
         configFilesToUpdate: [],
         slashCommandDirs: [],
-        slashCommandFiles: ['.cursor/commands/openspec-proposal.md'],
+        slashCommandFiles: ['.cursor/commands/superpowers-proposal.md'],
         hasOpenspecAgents: false,
         hasProjectMd: false,
         hasRootAgentsWithMarkers: false,
@@ -983,8 +983,8 @@ ${OPENSPEC_MARKERS.end}`);
       const detection = {
         configFiles: [],
         configFilesToUpdate: [],
-        slashCommandDirs: ['.claude/commands/openspec', '.qoder/commands/openspec'],
-        slashCommandFiles: ['.cursor/commands/openspec-apply.md', '.windsurf/workflows/openspec-archive.md'],
+        slashCommandDirs: ['.claude/commands/superpowers', '.qoder/commands/superpowers'],
+        slashCommandFiles: ['.cursor/commands/superpowers-apply.md', '.windsurf/workflows/superpowers-archive.md'],
         hasOpenspecAgents: false,
         hasProjectMd: false,
         hasRootAgentsWithMarkers: false,
@@ -1005,9 +1005,9 @@ ${OPENSPEC_MARKERS.end}`);
         configFilesToUpdate: [],
         slashCommandDirs: [],
         slashCommandFiles: [
-          '.cursor/commands/openspec-proposal.md',
-          '.cursor/commands/openspec-apply.md',
-          '.cursor/commands/openspec-archive.md',
+          '.cursor/commands/superpowers-proposal.md',
+          '.cursor/commands/superpowers-apply.md',
+          '.cursor/commands/superpowers-archive.md',
         ],
         hasOpenspecAgents: false,
         hasProjectMd: false,
@@ -1041,7 +1041,7 @@ ${OPENSPEC_MARKERS.end}`);
         configFiles: [],
         configFilesToUpdate: [],
         slashCommandDirs: [],
-        slashCommandFiles: ['.qwen/commands/openspec-proposal.toml'],
+        slashCommandFiles: ['.qwen/commands/superpowers-proposal.toml'],
         hasOpenspecAgents: false,
         hasProjectMd: false,
         hasRootAgentsWithMarkers: false,
@@ -1058,7 +1058,7 @@ ${OPENSPEC_MARKERS.end}`);
         configFiles: [],
         configFilesToUpdate: [],
         slashCommandDirs: [],
-        slashCommandFiles: ['.continue/prompts/openspec-apply.prompt'],
+        slashCommandFiles: ['.continue/prompts/superpowers-apply.prompt'],
         hasOpenspecAgents: false,
         hasProjectMd: false,
         hasRootAgentsWithMarkers: false,
@@ -1075,7 +1075,7 @@ ${OPENSPEC_MARKERS.end}`);
         configFiles: [],
         configFilesToUpdate: [],
         slashCommandDirs: [],
-        slashCommandFiles: ['.github/prompts/openspec-apply.prompt.md'],
+        slashCommandFiles: ['.github/prompts/superpowers-apply.prompt.md'],
         hasOpenspecAgents: false,
         hasProjectMd: false,
         hasRootAgentsWithMarkers: false,
@@ -1087,12 +1087,12 @@ ${OPENSPEC_MARKERS.end}`);
       expect(tools).toHaveLength(1);
     });
 
-    it('should handle opencode opsx-* legacy files', () => {
+    it('should handle opencode sp-* legacy files', () => {
       const detection = {
         configFiles: [],
         configFilesToUpdate: [],
         slashCommandDirs: [],
-        slashCommandFiles: ['.opencode/command/opsx-propose.md'],
+        slashCommandFiles: ['.opencode/command/sp-propose.md'],
         hasOpenspecAgents: false,
         hasProjectMd: false,
         hasRootAgentsWithMarkers: false,
@@ -1104,12 +1104,12 @@ ${OPENSPEC_MARKERS.end}`);
       expect(tools).toHaveLength(1);
     });
 
-    it('should handle opencode openspec-* legacy files', () => {
+    it('should handle opencode superpowers-* legacy files', () => {
       const detection = {
         configFiles: [],
         configFilesToUpdate: [],
         slashCommandDirs: [],
-        slashCommandFiles: ['.opencode/command/openspec-new.md'],
+        slashCommandFiles: ['.opencode/command/superpowers-new.md'],
         hasOpenspecAgents: false,
         hasProjectMd: false,
         hasRootAgentsWithMarkers: false,
@@ -1121,14 +1121,14 @@ ${OPENSPEC_MARKERS.end}`);
       expect(tools).toHaveLength(1);
     });
 
-    it('should deduplicate opencode when both opsx-* and openspec-* files exist', () => {
+    it('should deduplicate opencode when both sp-* and superpowers-* files exist', () => {
       const detection = {
         configFiles: [],
         configFilesToUpdate: [],
         slashCommandDirs: [],
         slashCommandFiles: [
-          '.opencode/command/opsx-propose.md',
-          '.opencode/command/openspec-new.md',
+          '.opencode/command/sp-propose.md',
+          '.opencode/command/superpowers-new.md',
         ],
         hasOpenspecAgents: false,
         hasProjectMd: false,

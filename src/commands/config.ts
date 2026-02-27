@@ -20,7 +20,7 @@ import {
   DEFAULT_CONFIG,
 } from '../core/config-schema.js';
 import { CORE_WORKFLOWS, ALL_WORKFLOWS, getProfileWorkflows } from '../core/profiles.js';
-import { OPENSPEC_DIR_NAME } from '../core/config.js';
+import { SUPERPOWERS_DIR_NAME } from '../core/config.js';
 import { hasProjectConfigDrift } from '../core/profile-sync-drift.js';
 
 type ProfileAction = 'both' | 'delivery' | 'workflows' | 'keep';
@@ -84,7 +84,7 @@ const WORKFLOW_PROMPT_META: Record<string, WorkflowPromptMeta> = {
   },
   onboard: {
     name: 'Onboard',
-    description: 'Guided onboarding flow for OpenSpec',
+    description: 'Guided onboarding flow for Superpowers',
   },
 };
 
@@ -191,14 +191,14 @@ function maybeWarnConfigDrift(
   state: ProfileState,
   colorize: (message: string) => string
 ): void {
-  const openspecDir = path.join(projectDir, OPENSPEC_DIR_NAME);
-  if (!fs.existsSync(openspecDir)) {
+  const superpowersDir = path.join(projectDir, SUPERPOWERS_DIR_NAME);
+  if (!fs.existsSync(superpowersDir)) {
     return;
   }
   if (!hasProjectConfigDrift(projectDir, state.workflows, state.delivery)) {
     return;
   }
-  console.log(colorize('Warning: Global config is not applied to this project. Run `openspec update` to sync.'));
+  console.log(colorize('Warning: Global config is not applied to this project. Run `superpowers update` to sync.'));
 }
 
 /**
@@ -209,7 +209,7 @@ function maybeWarnConfigDrift(
 export function registerConfigCommand(program: Command): void {
   const configCmd = program
     .command('config')
-    .description('View and modify global OpenSpec configuration')
+    .description('View and modify global Superpowers configuration')
     .option('--scope <scope>', 'Config scope (only "global" supported currently)')
     .hook('preAction', (thisCommand) => {
       const opts = thisCommand.opts();
@@ -299,7 +299,7 @@ export function registerConfigCommand(program: Command): void {
       if (!keyValidation.valid && !allowUnknown) {
         const reason = keyValidation.reason ? ` ${keyValidation.reason}.` : '';
         console.error(`Error: Invalid configuration key "${key}".${reason}`);
-        console.error('Use "openspec config list" to see available keys.');
+        console.error('Use "superpowers config list" to see available keys.');
         console.error('Pass --allow-unknown to bypass this check.');
         process.exitCode = 1;
         return;
@@ -354,7 +354,7 @@ export function registerConfigCommand(program: Command): void {
     .action(async (options: { all?: boolean; yes?: boolean }) => {
       if (!options.all) {
         console.error('Error: --all flag is required for reset');
-        console.error('Usage: openspec config reset --all [-y]');
+        console.error('Usage: superpowers config reset --all [-y]');
         process.exitCode = 1;
         return;
       }
@@ -454,14 +454,14 @@ export function registerConfigCommand(program: Command): void {
     .command('profile [preset]')
     .description('Configure workflow profile (interactive picker or preset shortcut)')
     .action(async (preset?: string) => {
-      // Preset shortcut: `openspec config profile core`
+      // Preset shortcut: `superpowers config profile core`
       if (preset === 'core') {
         const config = getGlobalConfig();
         config.profile = 'core';
         config.workflows = [...CORE_WORKFLOWS];
         // Preserve delivery setting
         saveGlobalConfig(config);
-        console.log('Config updated. Run `openspec update` in your projects to apply.');
+        console.log('Config updated. Run `superpowers update` in your projects to apply.');
         return;
       }
 
@@ -473,7 +473,7 @@ export function registerConfigCommand(program: Command): void {
 
       // Non-interactive check
       if (!process.stdout.isTTY) {
-        console.error('Interactive mode required. Use `openspec config profile core` or set config via environment/flags.');
+        console.error('Interactive mode required. Use `superpowers config profile core` or set config via environment/flags.');
         process.exitCode = 1;
         return;
       }
@@ -611,10 +611,10 @@ export function registerConfigCommand(program: Command): void {
         config.workflows = nextState.workflows;
         saveGlobalConfig(config);
 
-        // Check if inside an OpenSpec project
+        // Check if inside an Superpowers project
         const projectDir = process.cwd();
-        const openspecDir = path.join(projectDir, OPENSPEC_DIR_NAME);
-        if (fs.existsSync(openspecDir)) {
+        const superpowersDir = path.join(projectDir, SUPERPOWERS_DIR_NAME);
+        if (fs.existsSync(superpowersDir)) {
           const applyNow = await confirm({
             message: 'Apply changes to this project now?',
             default: true,
@@ -622,17 +622,17 @@ export function registerConfigCommand(program: Command): void {
 
           if (applyNow) {
             try {
-              execSync('npx openspec update', { stdio: 'inherit', cwd: projectDir });
-              console.log('Run `openspec update` in your other projects to apply.');
+              execSync('npx superpowers update', { stdio: 'inherit', cwd: projectDir });
+              console.log('Run `superpowers update` in your other projects to apply.');
             } catch {
-              console.error('`openspec update` failed. Please run it manually to apply the profile changes.');
+              console.error('`superpowers update` failed. Please run it manually to apply the profile changes.');
               process.exitCode = 1;
             }
             return;
           }
         }
 
-        console.log('Config updated. Run `openspec update` in your projects to apply.');
+        console.log('Config updated. Run `superpowers update` in your projects to apply.');
       } catch (error) {
         if (isPromptCancellationError(error)) {
           console.log('Config profile cancelled.');

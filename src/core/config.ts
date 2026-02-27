@@ -1,11 +1,11 @@
-export const OPENSPEC_DIR_NAME = 'openspec';
+export const SUPERPOWERS_DIR_NAME = 'superpowers';
 
-export const OPENSPEC_MARKERS = {
-  start: '<!-- OPENSPEC:START -->',
-  end: '<!-- OPENSPEC:END -->'
+export const SUPERPOWERS_MARKERS = {
+  start: '<!-- SUPERPOWERS:START -->',
+  end: '<!-- SUPERPOWERS:END -->'
 };
 
-export interface OpenSpecConfig {
+export interface SuperpowersConfig {
   aiTools: string[];
 }
 

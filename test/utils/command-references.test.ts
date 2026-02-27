@@ -4,24 +4,24 @@ import { transformToHyphenCommands } from '../../src/utils/command-references.js
 describe('transformToHyphenCommands', () => {
   describe('basic transformations', () => {
     it('should transform single command reference', () => {
-      expect(transformToHyphenCommands('/opsx:new')).toBe('/opsx-new');
+      expect(transformToHyphenCommands('/sp:new')).toBe('/sp-new');
     });
 
     it('should transform multiple command references', () => {
-      const input = '/opsx:new and /opsx:apply';
-      const expected = '/opsx-new and /opsx-apply';
+      const input = '/sp:new and /sp:apply';
+      const expected = '/sp-new and /sp-apply';
       expect(transformToHyphenCommands(input)).toBe(expected);
     });
 
     it('should transform command reference in context', () => {
-      const input = 'Use /opsx:apply to implement tasks';
-      const expected = 'Use /opsx-apply to implement tasks';
+      const input = 'Use /sp:apply to implement tasks';
+      const expected = 'Use /sp-apply to implement tasks';
       expect(transformToHyphenCommands(input)).toBe(expected);
     });
 
     it('should handle backtick-quoted commands', () => {
-      const input = 'Run `/opsx:continue` to proceed';
-      const expected = 'Run `/opsx-continue` to proceed';
+      const input = 'Run `/sp:continue` to proceed';
+      const expected = 'Run `/sp-continue` to proceed';
       expect(transformToHyphenCommands(input)).toBe(expected);
     });
   });
@@ -37,25 +37,25 @@ describe('transformToHyphenCommands', () => {
     });
 
     it('should not transform similar but non-matching patterns', () => {
-      const input = '/ops:new opsx: /other:command';
+      const input = '/ops:new sp: /other:command';
       expect(transformToHyphenCommands(input)).toBe(input);
     });
 
     it('should handle multiple occurrences on same line', () => {
-      const input = '/opsx:new /opsx:continue /opsx:apply';
-      const expected = '/opsx-new /opsx-continue /opsx-apply';
+      const input = '/sp:new /sp:continue /sp:apply';
+      const expected = '/sp-new /sp-continue /sp-apply';
       expect(transformToHyphenCommands(input)).toBe(expected);
     });
   });
 
   describe('multiline content', () => {
     it('should transform references across multiple lines', () => {
-      const input = `Use /opsx:new to start
-Then /opsx:continue to proceed
-Finally /opsx:apply to implement`;
-      const expected = `Use /opsx-new to start
-Then /opsx-continue to proceed
-Finally /opsx-apply to implement`;
+      const input = `Use /sp:new to start
+Then /sp:continue to proceed
+Finally /sp:apply to implement`;
+      const expected = `Use /sp-new to start
+Then /sp-continue to proceed
+Finally /sp-apply to implement`;
       expect(transformToHyphenCommands(input)).toBe(expected);
     });
   });
@@ -75,8 +75,8 @@ Finally /opsx-apply to implement`;
     ];
 
     for (const cmd of commands) {
-      it(`should transform /opsx:${cmd}`, () => {
-        expect(transformToHyphenCommands(`/opsx:${cmd}`)).toBe(`/opsx-${cmd}`);
+      it(`should transform /sp:${cmd}`, () => {
+        expect(transformToHyphenCommands(`/sp:${cmd}`)).toBe(`/sp-${cmd}`);
       });
     }
   });

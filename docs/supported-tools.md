@@ -1,50 +1,50 @@
 # Supported Tools
 
-OpenSpec works with many AI coding assistants. When you run `openspec init`, OpenSpec configures selected tools using your active profile/workflow selection and delivery mode.
+Superpowers works with many AI coding assistants. When you run `superpowers init`, Superpowers configures selected tools using your active profile/workflow selection and delivery mode.
 
 ## How It Works
 
-For each selected tool, OpenSpec can install:
+For each selected tool, Superpowers can install:
 
-1. **Skills** (if delivery includes skills): `.../skills/openspec-*/SKILL.md`
-2. **Commands** (if delivery includes commands): tool-specific `opsx-*` command files
+1. **Skills** (if delivery includes skills): `.../skills/superpowers-*/SKILL.md`
+2. **Commands** (if delivery includes commands): tool-specific `sp-*` command files
 
-By default, OpenSpec uses the `core` profile, which includes:
+By default, Superpowers uses the `core` profile, which includes:
 - `propose`
 - `explore`
 - `apply`
 - `archive`
 
-You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard`) via `openspec config profile`, then run `openspec update`.
+You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard`) via `superpowers config profile`, then run `superpowers update`.
 
 ## Tool Directory Reference
 
 | Tool (ID) | Skills path pattern | Command path pattern |
 |-----------|---------------------|----------------------|
-| Amazon Q Developer (`amazon-q`) | `.amazonq/skills/openspec-*/SKILL.md` | `.amazonq/prompts/opsx-<id>.md` |
-| Antigravity (`antigravity`) | `.agent/skills/openspec-*/SKILL.md` | `.agent/workflows/opsx-<id>.md` |
-| Auggie (`auggie`) | `.augment/skills/openspec-*/SKILL.md` | `.augment/commands/opsx-<id>.md` |
-| Claude Code (`claude`) | `.claude/skills/openspec-*/SKILL.md` | `.claude/commands/opsx/<id>.md` |
-| Cline (`cline`) | `.cline/skills/openspec-*/SKILL.md` | `.clinerules/workflows/opsx-<id>.md` |
-| CodeBuddy (`codebuddy`) | `.codebuddy/skills/openspec-*/SKILL.md` | `.codebuddy/commands/opsx/<id>.md` |
-| Codex (`codex`) | `.codex/skills/openspec-*/SKILL.md` | `$CODEX_HOME/prompts/opsx-<id>.md`\* |
-| Continue (`continue`) | `.continue/skills/openspec-*/SKILL.md` | `.continue/prompts/opsx-<id>.prompt` |
-| CoStrict (`costrict`) | `.cospec/skills/openspec-*/SKILL.md` | `.cospec/openspec/commands/opsx-<id>.md` |
-| Crush (`crush`) | `.crush/skills/openspec-*/SKILL.md` | `.crush/commands/opsx/<id>.md` |
-| Cursor (`cursor`) | `.cursor/skills/openspec-*/SKILL.md` | `.cursor/commands/opsx-<id>.md` |
-| Factory Droid (`factory`) | `.factory/skills/openspec-*/SKILL.md` | `.factory/commands/opsx-<id>.md` |
-| Gemini CLI (`gemini`) | `.gemini/skills/openspec-*/SKILL.md` | `.gemini/commands/opsx/<id>.toml` |
-| GitHub Copilot (`github-copilot`) | `.github/skills/openspec-*/SKILL.md` | `.github/prompts/opsx-<id>.prompt.md`\*\* |
-| iFlow (`iflow`) | `.iflow/skills/openspec-*/SKILL.md` | `.iflow/commands/opsx-<id>.md` |
-| Kilo Code (`kilocode`) | `.kilocode/skills/openspec-*/SKILL.md` | `.kilocode/workflows/opsx-<id>.md` |
-| Kiro (`kiro`) | `.kiro/skills/openspec-*/SKILL.md` | `.kiro/prompts/opsx-<id>.prompt.md` |
-| OpenCode (`opencode`) | `.opencode/skills/openspec-*/SKILL.md` | `.opencode/commands/opsx-<id>.md` |
-| Pi (`pi`) | `.pi/skills/openspec-*/SKILL.md` | `.pi/prompts/opsx-<id>.md` |
-| Qoder (`qoder`) | `.qoder/skills/openspec-*/SKILL.md` | `.qoder/commands/opsx/<id>.md` |
-| Qwen Code (`qwen`) | `.qwen/skills/openspec-*/SKILL.md` | `.qwen/commands/opsx-<id>.toml` |
-| RooCode (`roocode`) | `.roo/skills/openspec-*/SKILL.md` | `.roo/commands/opsx-<id>.md` |
-| Trae (`trae`) | `.trae/skills/openspec-*/SKILL.md` | Not generated (no command adapter; use skill-based `/openspec-*` invocations) |
-| Windsurf (`windsurf`) | `.windsurf/skills/openspec-*/SKILL.md` | `.windsurf/workflows/opsx-<id>.md` |
+| Amazon Q Developer (`amazon-q`) | `.amazonq/skills/superpowers-*/SKILL.md` | `.amazonq/prompts/sp-<id>.md` |
+| Antigravity (`antigravity`) | `.agent/skills/superpowers-*/SKILL.md` | `.agent/workflows/sp-<id>.md` |
+| Auggie (`auggie`) | `.augment/skills/superpowers-*/SKILL.md` | `.augment/commands/sp-<id>.md` |
+| Claude Code (`claude`) | `.claude/skills/superpowers-*/SKILL.md` | `.claude/commands/sp/<id>.md` |
+| Cline (`cline`) | `.cline/skills/superpowers-*/SKILL.md` | `.clinerules/workflows/sp-<id>.md` |
+| CodeBuddy (`codebuddy`) | `.codebuddy/skills/superpowers-*/SKILL.md` | `.codebuddy/commands/sp/<id>.md` |
+| Codex (`codex`) | `.codex/skills/superpowers-*/SKILL.md` | `$CODEX_HOME/prompts/sp-<id>.md`\* |
+| Continue (`continue`) | `.continue/skills/superpowers-*/SKILL.md` | `.continue/prompts/sp-<id>.prompt` |
+| CoStrict (`costrict`) | `.cospec/skills/superpowers-*/SKILL.md` | `.cospec/superpowers/commands/sp-<id>.md` |
+| Crush (`crush`) | `.crush/skills/superpowers-*/SKILL.md` | `.crush/commands/sp/<id>.md` |
+| Cursor (`cursor`) | `.cursor/skills/superpowers-*/SKILL.md` | `.cursor/commands/sp-<id>.md` |
+| Factory Droid (`factory`) | `.factory/skills/superpowers-*/SKILL.md` | `.factory/commands/sp-<id>.md` |
+| Gemini CLI (`gemini`) | `.gemini/skills/superpowers-*/SKILL.md` | `.gemini/commands/sp/<id>.toml` |
+| GitHub Copilot (`github-copilot`) | `.github/skills/superpowers-*/SKILL.md` | `.github/prompts/sp-<id>.prompt.md`\*\* |
+| iFlow (`iflow`) | `.iflow/skills/superpowers-*/SKILL.md` | `.iflow/commands/sp-<id>.md` |
+| Kilo Code (`kilocode`) | `.kilocode/skills/superpowers-*/SKILL.md` | `.kilocode/workflows/sp-<id>.md` |
+| Kiro (`kiro`) | `.kiro/skills/superpowers-*/SKILL.md` | `.kiro/prompts/sp-<id>.prompt.md` |
+| OpenCode (`opencode`) | `.opencode/skills/superpowers-*/SKILL.md` | `.opencode/commands/sp-<id>.md` |
+| Pi (`pi`) | `.pi/skills/superpowers-*/SKILL.md` | `.pi/prompts/sp-<id>.md` |
+| Qoder (`qoder`) | `.qoder/skills/superpowers-*/SKILL.md` | `.qoder/commands/sp/<id>.md` |
+| Qwen Code (`qwen`) | `.qwen/skills/superpowers-*/SKILL.md` | `.qwen/commands/sp-<id>.toml` |
+| RooCode (`roocode`) | `.roo/skills/superpowers-*/SKILL.md` | `.roo/commands/sp-<id>.md` |
+| Trae (`trae`) | `.trae/skills/superpowers-*/SKILL.md` | Not generated (no command adapter; use skill-based `/superpowers-*` invocations) |
+| Windsurf (`windsurf`) | `.windsurf/skills/superpowers-*/SKILL.md` | `.windsurf/workflows/sp-<id>.md` |
 
 \* Codex commands are installed in the global Codex home (`$CODEX_HOME/prompts/` if set, otherwise `~/.codex/prompts/`), not your project directory.
 
@@ -56,23 +56,23 @@ For CI/CD or scripted setup, use `--tools` (and optionally `--profile`):
 
 ```bash
 # Configure specific tools
-openspec init --tools claude,cursor
+superpowers init --tools claude,cursor
 
 # Configure all supported tools
-openspec init --tools all
+superpowers init --tools all
 
 # Skip tool configuration
-openspec init --tools none
+superpowers init --tools none
 
 # Override profile for this init run
-openspec init --profile core
+superpowers init --profile core
 ```
 
 **Available tool IDs (`--tools`):** `amazon-q`, `antigravity`, `auggie`, `claude`, `cline`, `codex`, `codebuddy`, `continue`, `costrict`, `crush`, `cursor`, `factory`, `gemini`, `github-copilot`, `iflow`, `kilocode`, `kiro`, `opencode`, `pi`, `qoder`, `qwen`, `roocode`, `trae`, `windsurf`
 
 ## Workflow-Dependent Installation
 
-OpenSpec installs workflow artifacts based on selected workflows:
+Superpowers installs workflow artifacts based on selected workflows:
 
 - **Core profile (default):** `propose`, `explore`, `apply`, `archive`
 - **Custom selection:** any subset of all workflow IDs:
@@ -82,19 +82,19 @@ In other words, skill/command counts are profile-dependent and delivery-dependen
 
 ## Generated Skill Names
 
-When selected by profile/workflow config, OpenSpec generates these skills:
+When selected by profile/workflow config, Superpowers generates these skills:
 
-- `openspec-propose`
-- `openspec-explore`
-- `openspec-new-change`
-- `openspec-continue-change`
-- `openspec-apply-change`
-- `openspec-ff-change`
-- `openspec-sync-specs`
-- `openspec-archive-change`
-- `openspec-bulk-archive-change`
-- `openspec-verify-change`
-- `openspec-onboard`
+- `superpowers-propose`
+- `superpowers-explore`
+- `superpowers-new-change`
+- `superpowers-continue-change`
+- `superpowers-apply-change`
+- `superpowers-ff-change`
+- `superpowers-sync-specs`
+- `superpowers-archive-change`
+- `superpowers-bulk-archive-change`
+- `superpowers-verify-change`
+- `superpowers-onboard`
 
 See [Commands](commands.md) for command behavior and [CLI](cli.md) for `init`/`update` options.
 

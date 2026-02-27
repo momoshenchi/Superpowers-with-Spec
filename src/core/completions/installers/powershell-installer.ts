@@ -15,8 +15,8 @@ export class PowerShellInstaller {
    * Markers for PowerShell profile configuration management
    */
   private readonly PROFILE_MARKERS = {
-    start: '# OPENSPEC:START',
-    end: '# OPENSPEC:END',
+    start: '# SUPERPOWERS:START',
+    end: '# SUPERPOWERS:END',
   };
 
   constructor(homeDir: string = os.homedir()) {
@@ -77,7 +77,7 @@ export class PowerShellInstaller {
   getInstallationPath(): string {
     const profilePath = this.getProfilePath();
     const profileDir = path.dirname(profilePath);
-    return path.join(profileDir, 'OpenSpecCompletion.ps1');
+    return path.join(profileDir, 'SuperpowersCompletion.ps1');
   }
 
   /**
@@ -108,7 +108,7 @@ export class PowerShellInstaller {
    */
   private generateProfileConfig(scriptPath: string): string {
     return [
-      '# OpenSpec shell completions configuration',
+      '# Superpowers shell completions configuration',
       `if (Test-Path "${scriptPath}") {`,
       `    . "${scriptPath}"`,
       '}',
@@ -144,16 +144,16 @@ export class PowerShellInstaller {
           continue; // Already configured, skip
         }
 
-        // Add OpenSpec completion configuration with markers
-        const openspecBlock = [
+        // Add Superpowers completion configuration with markers
+        const superpowersBlock = [
           '',
-          '# OPENSPEC:START - OpenSpec completion (managed block, do not edit manually)',
+          '# SUPERPOWERS:START - Superpowers completion (managed block, do not edit manually)',
           scriptLine,
-          '# OPENSPEC:END',
+          '# SUPERPOWERS:END',
           '',
         ].join('\n');
 
-        const newContent = profileContent + openspecBlock;
+        const newContent = profileContent + superpowersBlock;
         await fs.writeFile(profilePath, newContent, 'utf-8');
         anyConfigured = true;
       } catch (error) {
@@ -185,13 +185,13 @@ export class PowerShellInstaller {
           continue; // Profile doesn't exist, nothing to remove
         }
 
-        // Remove OPENSPEC:START -> OPENSPEC:END block
-        const startMarker = '# OPENSPEC:START';
-        const endMarker = '# OPENSPEC:END';
+        // Remove SUPERPOWERS:START -> SUPERPOWERS:END block
+        const startMarker = '# SUPERPOWERS:START';
+        const endMarker = '# SUPERPOWERS:END';
         const startIndex = profileContent.indexOf(startMarker);
 
         if (startIndex === -1) {
-          continue; // No OpenSpec block found
+          continue; // No Superpowers block found
         }
 
         const endIndex = profileContent.indexOf(endMarker, startIndex);
@@ -308,7 +308,7 @@ export class PowerShellInstaller {
       '',
       `To enable completions, add the following to your PowerShell profile (${profilePath}):`,
       '',
-      '  # Source OpenSpec completions',
+      '  # Source Superpowers completions',
       `  if (Test-Path "${installedPath}") {`,
       `      . "${installedPath}"`,
       '  }',
