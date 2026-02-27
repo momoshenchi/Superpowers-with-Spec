@@ -21,6 +21,55 @@ const POSTHOG_HOST = 'https://edge.superpowers.dev';
 let posthogClient: PostHog | null = null;
 let anonymousId: string | null = null;
 
+type TelemetryFetchResponse = {
+  status: number;
+  text: () => Promise<string>;
+  json: () => Promise<unknown>;
+  headers: { get: (_name: string) => string | null };
+};
+
+/**
+ * Create a resilient fetch adapter for telemetry.
+ *
+ * PostHog SDK logs network flush errors to stderr internally. For CLI UX we
+ * silently drop telemetry when DNS/network fails so command output stays clean.
+ */
+function createTelemetryFetch() {
+  return async (url: string, options: {
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH';
+    mode?: 'no-cors';
+    credentials?: 'omit';
+    headers: { [key: string]: string };
+    body?: string | Blob;
+    signal?: AbortSignal;
+  }): Promise<TelemetryFetchResponse> => {
+    try {
+      const response = await fetch(url, {
+        method: options.method,
+        mode: options.mode,
+        credentials: options.credentials,
+        headers: options.headers,
+        body: options.body as string | undefined,
+        signal: options.signal,
+      });
+
+      return {
+        status: response.status,
+        text: async () => response.text(),
+        json: async () => response.json(),
+        headers: { get: (name: string) => response.headers.get(name) },
+      };
+    } catch {
+      return {
+        status: 200,
+        text: async () => '',
+        json: async () => ({}),
+        headers: { get: () => null },
+      };
+    }
+  };
+}
+
 /**
  * Check if telemetry is enabled.
  *
@@ -81,6 +130,7 @@ function getClient(): PostHog {
       host: POSTHOG_HOST,
       flushAt: 1, // Send immediately, don't batch
       flushInterval: 0, // No timer-based flushing
+      fetch: createTelemetryFetch(),
     });
   }
   return posthogClient;

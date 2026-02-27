@@ -1,7 +1,7 @@
 {
   "name": "superpowers-spec",
-  "version": "1.2.0",
-  "description": "AI-native system for spec-driven development",
+  "version": "1.0.0",
+  "description": "AI-native system for spec-driven development and test-driven development ",
   "keywords": [
     "superpowers",
     "specs",
@@ -9,13 +9,13 @@
     "ai",
     "development"
   ],
-  "homepage": "https://github.com/Fission-AI/Superpowers",
+  "homepage": "https://github.com/momoshenchi/Superpowers-with-Spec",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fission-AI/Superpowers"
+    "url": "https://github.com/momoshenchi/Superpowers-with-Spec"
   },
   "license": "MIT",
-  "author": "Superpowers Contributors",
+  "author": "momoshenchi",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -42,7 +42,7 @@
     "lint": "eslint src/",
     "build": "node build.js",
     "dev": "tsc --watch",
-    "dev:cli": "pnpm build && node bin/superpowers.js",
+    "dev:cli": "pnpm run build && node bin/superpowers.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
