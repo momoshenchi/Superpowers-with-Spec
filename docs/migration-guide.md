@@ -591,5 +591,5 @@ project/
 ## Getting Help
 
 - **Discord**: [discord.gg/YctCnvvshC](https://discord.gg/YctCnvvshC)
-- **GitHub Issues**: [github.com/Fission-AI/Superpowers/issues](https://github.com/Fission-AI/Superpowers/issues)
+- **GitHub Issues**: [github.com/momoshenchi/Superpowers-with-Spec/issues](https://github.com/momoshenchi/Superpowers-with-Spec/issues)
 - **Documentation**: [docs/sp.md](sp.md) for the full OPSX reference

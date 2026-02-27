@@ -6,7 +6,7 @@ The Nix ecosystem has specific patterns for packaging Node.js/pnpm projects that
 
 ## Goals
 
-- Enable Superpowers to be run directly via `nix run github:Fission-AI/Superpowers`
+- Enable Superpowers to be run directly via `nix run github:momoshenchi/Superpowers-with-Spec`
 - Support all major platforms (Linux x86/ARM, macOS x86/ARM)
 - Use existing pnpm-lock.yaml for reproducible builds
 - Provide development environment for Nix users

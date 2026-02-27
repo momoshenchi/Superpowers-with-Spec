@@ -717,8 +717,8 @@ export class InitCommand {
 
     // Links
     console.log();
-    console.log(`Learn more: ${chalk.cyan('https://github.com/Fission-AI/Superpowers')}`);
-    console.log(`Feedback:   ${chalk.cyan('https://github.com/Fission-AI/Superpowers/issues')}`);
+    console.log(`Learn more: ${chalk.cyan('https://github.com/momoshenchi/Superpowers-with-Spec')}`);
+    console.log(`Feedback:   ${chalk.cyan('https://github.com/momoshenchi/Superpowers-with-Spec/issues')}`);
 
     // Restart instruction if any tools were configured
     if (results.createdTools.length > 0 || results.refreshedTools.length > 0) {

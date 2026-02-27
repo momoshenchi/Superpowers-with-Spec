@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/Fission-AI/Superpowers">
+  <a href="https://github.com/momoshenchi/Superpowers-with-Spec">
     <picture>
       <source srcset="assets/superpowers_bg.png">
       <img src="assets/superpowers_bg.png" alt="Superpowers logo">
@@ -8,8 +8,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Fission-AI/Superpowers/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Fission-AI/Superpowers/actions/workflows/ci.yml/badge.svg" /></a>
-  <a href="https://www.npmjs.com/package/@fission-ai/superpowers"><img alt="npm version" src="https://img.shields.io/npm/v/@fission-ai/superpowers?style=flat-square" /></a>
+  <a href="https://github.com/momoshenchi/Superpowers-with-Spec/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/momoshenchi/Superpowers-with-Spec/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://www.npmjs.com/package/superpowers-spec"><img alt="npm version" src="https://img.shields.io/npm/v/superpowers-spec?style=flat-square" /></a>
   <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" /></a>
   <a href="https://discord.gg/YctCnvvshC"><img alt="Discord" src="https://img.shields.io/discord/1411657095639601154?style=flat-square&logo=discord&logoColor=white&label=Discord&suffix=%20online" /></a>
 </p>
@@ -17,9 +17,9 @@
 <details>
 <summary><strong>The most loved spec framework.</strong></summary>
 
-[![Stars](https://img.shields.io/github/stars/Fission-AI/Superpowers?style=flat-square&label=Stars)](https://github.com/Fission-AI/Superpowers/stargazers)
-[![Downloads](https://img.shields.io/npm/dm/@fission-ai/superpowers?style=flat-square&label=Downloads/mo)](https://www.npmjs.com/package/@fission-ai/superpowers)
-[![Contributors](https://img.shields.io/github/contributors/Fission-AI/Superpowers?style=flat-square&label=Contributors)](https://github.com/Fission-AI/Superpowers/graphs/contributors)
+[![Stars](https://img.shields.io/github/stars/momoshenchi/Superpowers-with-Spec?style=flat-square&label=Stars)](https://github.com/momoshenchi/Superpowers-with-Spec/stargazers)
+[![Downloads](https://img.shields.io/npm/dm/superpowers-spec?style=flat-square&label=Downloads/mo)](https://www.npmjs.com/package/superpowers-spec)
+[![Contributors](https://img.shields.io/github/contributors/momoshenchi/Superpowers-with-Spec?style=flat-square&label=Contributors)](https://github.com/momoshenchi/Superpowers-with-Spec/graphs/contributors)
 
 </details>
 <p></p>
@@ -88,7 +88,7 @@ AI:  Archived to superpowers/changes/archive/2025-01-23-add-dark-mode/
 Install Superpowers globally:
 
 ```bash
-npm install -g @fission-ai/superpowers@latest
+npm install -g superpowers-spec@latest
 ```
 
 Then navigate to your project directory and initialize:
@@ -141,7 +141,7 @@ AI coding assistants are powerful but unpredictable when requirements live only 
 **Upgrade the package**
 
 ```bash
-npm install -g @fission-ai/superpowers@latest
+npm install -g superpowers-spec@latest
 ```
 
 **Refresh agent instructions**

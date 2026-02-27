@@ -1,6 +1,6 @@
 ## Why
 
-Superpowers users on NixOS or using the Nix package manager cannot easily install or run Superpowers without going through npm. Adding a Nix flake makes Superpowers a first-class citizen in the Nix ecosystem, enabling users to run `nix run github:Fission-AI/Superpowers -- init` or include Superpowers in their development environments declaratively.
+Superpowers users on NixOS or using the Nix package manager cannot easily install or run Superpowers without going through npm. Adding a Nix flake makes Superpowers a first-class citizen in the Nix ecosystem, enabling users to run `nix run github:momoshenchi/Superpowers-with-Spec -- init` or include Superpowers in their development environments declaratively.
 
 ## What Changes
 

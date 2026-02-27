@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   prepare:
-    if: github.repository == 'Fission-AI/Superpowers'
+    if: github.repository == 'momoshenchi/Superpowers-with-Spec'
     runs-on: ubuntu-latest
     steps:
       # Generate GitHub App token first - used for checkout and changesets

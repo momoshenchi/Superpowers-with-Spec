@@ -153,7 +153,7 @@ superpowers update [path] [options]
 
 ```bash
 # Update instruction files after npm upgrade
-npm update @fission-ai/superpowers
+npm update superpowers-spec
 superpowers update
 ```
 
@@ -743,7 +743,7 @@ superpowers schema which spec-driven
 
 ```
 spec-driven resolves from: package
-  Source: /usr/local/lib/node_modules/@fission-ai/superpowers/schemas/spec-driven
+  Source: /usr/local/lib/node_modules/superpowers-spec/schemas/spec-driven
 ```
 
 **Schema precedence:**
