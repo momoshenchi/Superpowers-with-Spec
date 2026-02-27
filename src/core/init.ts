@@ -763,7 +763,8 @@ export class InitCommand {
     projectPath: string,
     tool: { value: string; skillsDir: string }
   ): Promise<void> {
-    const pkgRoot = path.resolve(fileURLToPath(import.meta.url), '../../..');
+    // Resolve package root from dist/core/init.js → dist/core → dist → package root
+    const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
     // Copy bundled static skills
     const bundledSkillsDir = path.join(pkgRoot, 'skills');
