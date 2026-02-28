@@ -57,7 +57,7 @@
 - [x] 9.2 Test `nix run . -- --version` works
 - [x] 9.3 Test `nix develop` provides correct environment
 - [ ] 9.4 Test on macOS if available
-- [ ] 9.5 Test `nix run github:Fission-AI/Superpowers -- init` after merge to main
+- [ ] 9.5 Test `nix run github:momoshenchi/Superpowers-with-Spec -- init` after merge to main
 
 ## 10. Documentation
 

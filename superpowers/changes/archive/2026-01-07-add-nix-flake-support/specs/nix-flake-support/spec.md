@@ -25,12 +25,12 @@ The system SHALL provide a Nix flake that builds Superpowers for multiple platfo
 The system SHALL allow users to run Superpowers directly from GitHub without installing.
 
 #### Scenario: Run init command from GitHub
-- **WHEN** user runs `nix run github:Fission-AI/Superpowers -- init`
+- **WHEN** user runs `nix run github:momoshenchi/Superpowers-with-Spec -- init`
 - **THEN** system downloads and builds Superpowers
 - **AND** executes `superpowers init` command
 
 #### Scenario: Run any Superpowers command
-- **WHEN** user runs `nix run github:Fission-AI/Superpowers -- <command> <args>`
+- **WHEN** user runs `nix run github:momoshenchi/Superpowers-with-Spec -- <command> <args>`
 - **THEN** system executes `superpowers <command> <args>`
 
 ### Requirement: pnpm dependency management

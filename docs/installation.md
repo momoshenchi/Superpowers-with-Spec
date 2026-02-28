@@ -9,25 +9,25 @@
 ### npm
 
 ```bash
-npm install -g @fission-ai/superpowers@latest
+npm install -g superpowers-spec@latest
 ```
 
 ### pnpm
 
 ```bash
-pnpm add -g @fission-ai/superpowers@latest
+pnpm add -g superpowers-spec@latest
 ```
 
 ### yarn
 
 ```bash
-yarn global add @fission-ai/superpowers@latest
+yarn global add superpowers-spec@latest
 ```
 
 ### bun
 
 ```bash
-bun add -g @fission-ai/superpowers@latest
+bun add -g superpowers-spec@latest
 ```
 
 ## Nix
@@ -35,13 +35,13 @@ bun add -g @fission-ai/superpowers@latest
 Run Superpowers directly without installation:
 
 ```bash
-nix run github:Fission-AI/Superpowers -- init
+nix run github:momoshenchi/Superpowers-with-Spec -- init
 ```
 
 Or install to your profile:
 
 ```bash
-nix profile install github:Fission-AI/Superpowers
+nix profile install github:momoshenchi/Superpowers-with-Spec
 ```
 
 Or add to your development environment in `flake.nix`:
@@ -50,7 +50,7 @@ Or add to your development environment in `flake.nix`:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    superpowers.url = "github:Fission-AI/Superpowers";
+    superpowers.url = "github:momoshenchi/Superpowers-with-Spec";
   };
 
   outputs = { nixpkgs, superpowers, ... }: {

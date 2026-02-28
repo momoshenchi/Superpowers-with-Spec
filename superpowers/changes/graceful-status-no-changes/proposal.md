@@ -1,6 +1,6 @@
 ## Why
 
-When `superpowers status` is called without `--change` and no changes exist (e.g., during onboarding on a freshly initialized project), the CLI throws a fatal error: `No changes found. Create one with: superpowers new change <name>`. This breaks the onboarding flow because AI agents may call `superpowers status` before any change has been created, causing the agent to halt or report failure. Fixes [#714](https://github.com/Fission-AI/Superpowers/issues/714).
+When `superpowers status` is called without `--change` and no changes exist (e.g., during onboarding on a freshly initialized project), the CLI throws a fatal error: `No changes found. Create one with: superpowers new change <name>`. This breaks the onboarding flow because AI agents may call `superpowers status` before any change has been created, causing the agent to halt or report failure. Fixes [#714](https://github.com/momoshenchi/Superpowers-with-Spec/issues/714).
 
 ## What Changes
 

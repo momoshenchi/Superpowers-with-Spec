@@ -1,3 +1,3 @@
-# @fission-ai/superpowers
+# superpowers-spec
 
 

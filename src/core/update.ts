@@ -272,7 +272,7 @@ export class UpdateCommand {
       console.log('  /sp:continue  Create the next artifact');
       console.log('  /sp:apply     Implement tasks');
       console.log();
-      console.log(`Learn more: ${chalk.cyan('https://github.com/Fission-AI/Superpowers')}`);
+      console.log(`Learn more: ${chalk.cyan('https://github.com/momoshenchi/Superpowers-with-Spec')}`);
     }
 
     const configuredAndNewTools = [...new Set([...configuredTools, ...newlyConfiguredTools])];

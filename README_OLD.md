@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/Fission-AI/Superpowers">
+  <a href="https://github.com/momoshenchi/Superpowers-with-Spec">
     <picture>
       <source srcset="assets/superpowers_pixel_dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="assets/superpowers_pixel_light.svg" media="(prefers-color-scheme: light)">
@@ -10,9 +10,9 @@
 </p>
 <p align="center">Spec-driven development for AI coding assistants.</p>
 <p align="center">
-  <a href="https://github.com/Fission-AI/Superpowers/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Fission-AI/Superpowers/actions/workflows/ci.yml/badge.svg" /></a>
-  <a href="https://www.npmjs.com/package/@fission-ai/superpowers"><img alt="npm version" src="https://img.shields.io/npm/v/@fission-ai/superpowers?style=flat-square" /></a>
-  <a href="https://nodejs.org/"><img alt="node version" src="https://img.shields.io/node/v/@fission-ai/superpowers?style=flat-square" /></a>
+  <a href="https://github.com/momoshenchi/Superpowers-with-Spec/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/momoshenchi/Superpowers-with-Spec/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://www.npmjs.com/package/superpowers-spec"><img alt="npm version" src="https://img.shields.io/npm/v/superpowers-spec?style=flat-square" /></a>
+  <a href="https://nodejs.org/"><img alt="node version" src="https://img.shields.io/node/v/superpowers-spec?style=flat-square" /></a>
   <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" /></a>
   <a href="https://conventionalcommits.org"><img alt="Conventional Commits" src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square" /></a>
   <a href="https://discord.gg/YctCnvvshC"><img alt="Discord" src="https://img.shields.io/badge/Discord-Join%20the%20community-5865F2?logo=discord&logoColor=white&style=flat-square" /></a>
@@ -143,7 +143,7 @@ These tools automatically read workflow instructions from `superpowers/AGENTS.md
 **Option A: Using npm**
 
 ```bash
-npm install -g @fission-ai/superpowers@latest
+npm install -g superpowers-spec@latest
 ```
 
 Verify installation:
@@ -155,12 +155,12 @@ superpowers --version
 
 Run Superpowers directly without installation:
 ```bash
-nix run github:Fission-AI/Superpowers -- init
+nix run github:momoshenchi/Superpowers-with-Spec -- init
 ```
 
 Or install to your profile:
 ```bash
-nix profile install github:Fission-AI/Superpowers
+nix profile install github:momoshenchi/Superpowers-with-Spec
 ```
 
 Or add to your development environment in `flake.nix`:
@@ -168,7 +168,7 @@ Or add to your development environment in `flake.nix`:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    superpowers.url = "github:Fission-AI/Superpowers";
+    superpowers.url = "github:momoshenchi/Superpowers-with-Spec";
   };
 
   outputs = { nixpkgs, superpowers, ... }: {
@@ -403,7 +403,7 @@ Run `superpowers update` whenever someone switches tools so your agents pick up 
 
 1. **Upgrade the package**
    ```bash
-   npm install -g @fission-ai/superpowers@latest
+   npm install -g superpowers-spec@latest
    ```
 2. **Refresh agent instructions**
    - Run `superpowers update` inside each project to regenerate AI guidance and ensure the latest slash commands are active.
