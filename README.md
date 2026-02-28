@@ -20,6 +20,30 @@ This repository is a fork/evolution focused on:
 - **Superpowers-style productivity**: reusable skills that guide agent behavior in real coding sessions
 - **Tool-agnostic setup**: generated skills/commands for many coding agents (including Codex)
 
+## See it in action
+
+```text
+You: /sp:propose add-dark-mode
+AI:  Created superpowers/changes/add-dark-mode/
+     ✓ proposal.md — why we're doing this, what's changing
+     ✓ specs/       — requirements and scenarios
+     ✓ design.md    — technical approach
+     ✓ tasks.md     — implementation checklist
+     Ready for implementation!
+
+You: /sp:apply
+AI:  Implementing tasks...
+     ✓ 1.1 Add theme context provider
+     ✓ 1.2 Create toggle component
+     ✓ 2.1 Add CSS variables
+     ✓ 2.2 Wire up localStorage
+     All tasks complete!
+
+You: /sp:archive
+AI:  Archived to superpowers/changes/archive/2025-01-23-add-dark-mode/
+     Specs updated. Ready for the next feature.
+```
+
 ## Quickstart
 ```bash
 npm i -g superpowers-spec@latest && superpowers --version
