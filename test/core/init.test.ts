@@ -397,7 +397,7 @@ describe('InitCommand', () => {
           ) {
             throw new Error('EACCES: permission denied');
           }
-          return originalWriteFile.call(fs, filePath, ...args);
+          return Reflect.apply(originalWriteFile as (...allArgs: any[]) => Promise<void>, fs, [filePath, ...args]);
         }
       );
 
@@ -793,6 +793,22 @@ describe('InitCommand copyBundledAssets', () => {
     await initCommand.execute(testDir);
 
     const agentsDir = path.join(testDir, '.claude', 'agents');
+    expect(await directoryExists(agentsDir)).toBe(true);
+  });
+
+  it('should copy hooks into Codex .codex/hooks directory', async () => {
+    const initCommand = new InitCommand({ tools: 'codex', force: true });
+    await initCommand.execute(testDir);
+
+    const hooksDir = path.join(testDir, '.codex', 'hooks');
+    expect(await directoryExists(hooksDir)).toBe(true);
+  });
+
+  it('should copy agents into Codex .codex/agents directory', async () => {
+    const initCommand = new InitCommand({ tools: 'codex', force: true });
+    await initCommand.execute(testDir);
+
+    const agentsDir = path.join(testDir, '.codex', 'agents');
     expect(await directoryExists(agentsDir)).toBe(true);
   });
 

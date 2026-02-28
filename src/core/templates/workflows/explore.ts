@@ -294,9 +294,7 @@ But this summary is optional. Sometimes the thinking IS the value.
 - **Do explore the codebase** - Ground discussions in reality
 - **Do question assumptions** - Including the user's and your own
 
-## Related Skills
-- For deeper brainstorming methodology, see the \`brainstorming\` skill
-- For structured plan writing, see the \`writing-plans\` skill`,
+`,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
     metadata: { author: 'superpowers', version: '1.0' },

@@ -66,11 +66,11 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Dynamic instruction from CLI
 
 6. **Implement tasks (loop until done or blocked)**
+  
+   In most cases, test-driven development should be used. please refer to the \`test-driven-development\` skill.
 
    For each pending task:
    - Show which task is being worked on
-   - Make the code changes required
-   - Keep changes minimal and focused
    - Mark task complete in the tasks file: \`- [ ]\` → \`- [x]\`
    - Continue to next task
 
@@ -144,7 +144,7 @@ What would you like to do?
 - Always read context files before starting (from the apply instructions output)
 - If task is ambiguous, pause and ask before implementing
 - If implementation reveals issues, pause and suggest artifact updates
-- Keep code changes minimal and scoped to each task
+- Before claiming a task is completed, please refer to \`verification-before-completion\` skill
 - Update task checkbox immediately after completing each task
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles from CLI output, don't assume specific file names
@@ -159,9 +159,7 @@ This skill supports the "actions on a change" model:
 - **Can be invoked anytime**: Before all artifacts are done (if tasks exist), after partial implementation, interleaved with other actions
 - **Allows artifact updates**: If implementation reveals design issues, suggest updating artifacts - not phase-locked, work fluidly
 
-## Related Skills
-- For batch execution with review checkpoints, see the \`executing-plans\` skill
-- For subagent-based parallel task execution, see the \`subagent-driven-development\` skill`,
+`,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
     metadata: { author: 'superpowers', version: '1.0' },

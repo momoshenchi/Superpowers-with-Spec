@@ -773,17 +773,19 @@ export class InitCommand {
       await this.copyDir(bundledSkillsDir, destSkillsDir);
     }
 
-    // Copy hooks and agents for Claude Code only
-    if (tool.value === 'claude') {
+    // Copy hooks and agents for tools that support them (Claude Code and Codex)
+    if (tool.value === 'claude' || tool.value === 'codex') {
+      const toolRoot = path.join(projectPath, tool.skillsDir);
+
       const bundledHooksDir = path.join(pkgRoot, 'hooks');
       if (fs.existsSync(bundledHooksDir)) {
-        const destHooksDir = path.join(projectPath, '.claude', 'hooks');
+        const destHooksDir = path.join(toolRoot, 'hooks');
         await this.copyDir(bundledHooksDir, destHooksDir);
       }
 
       const bundledAgentsDir = path.join(pkgRoot, 'agents');
       if (fs.existsSync(bundledAgentsDir)) {
-        const destAgentsDir = path.join(projectPath, '.claude', 'agents');
+        const destAgentsDir = path.join(toolRoot, 'agents');
         await this.copyDir(bundledAgentsDir, destAgentsDir);
       }
     }

@@ -47,9 +47,6 @@ npm run lint
 The `skills/` directory contains static skill files that are copied into AI tool directories when running `superpowers init`. These skills teach the AI assistant how to perform structured workflows:
 
 - `using-superpowers` — Core entry skill (check skills before any response)
-- `brainstorming` — Collaborative design exploration
-- `writing-plans` — Implementation plan writing
-- `executing-plans` — Plan execution with review checkpoints
 - `systematic-debugging` — Four-phase root cause debugging
 - `test-driven-development` — TDD red-green-refactor cycle
 - `subagent-driven-development` — Parallel subagent task execution

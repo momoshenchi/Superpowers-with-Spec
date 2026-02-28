@@ -12,7 +12,7 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 ## When to Use
 
 **Use when:**
-- You have an implementation plan with independent tasks
+- You have an independent tasks
 - Tasks can be worked on sequentially without tight coupling
 - You want to stay in the current session (vs. parallel agents)
 
@@ -47,7 +47,8 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 
 After all tasks:
 1. Dispatch final code reviewer for entire implementation
-2. Use `/sp:archive` to complete the development branch
+2. Use `superpowers: verification-before-completion` to verify everything is ready for completion
+3. Use `superpowers: finishing-a-development-branch` to complete the development branch
 
 ## Prompt Templates
 
@@ -76,7 +77,7 @@ Each subagent dispatch needs:
 - Implementer (same subagent) fixes them
 - Reviewer reviews again
 - Repeat until approved
-
+ß
 ## Integration
 
 **Required:**

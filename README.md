@@ -1,202 +1,152 @@
-<p align="center">
-  <a href="https://github.com/momoshenchi/Superpowers-with-Spec">
-    <picture>
-      <source srcset="assets/superpowers_bg.png">
-      <img src="assets/superpowers_bg.png" alt="Superpowers logo">
-    </picture>
-  </a>
-</p>
+# Superpowers with Spec
 
-<p align="center">
-  <a href="https://github.com/momoshenchi/Superpowers-with-Spec/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/momoshenchi/Superpowers-with-Spec/actions/workflows/ci.yml/badge.svg" /></a>
-  <a href="https://www.npmjs.com/package/superpowers-spec"><img alt="npm version" src="https://img.shields.io/npm/v/superpowers-spec?style=flat-square" /></a>
-  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" /></a>
-  <a href="https://discord.gg/YctCnvvshC"><img alt="Discord" src="https://img.shields.io/discord/1411657095639601154?style=flat-square&logo=discord&logoColor=white&label=Discord&suffix=%20online" /></a>
-</p>
+Superpowers with Spec is an AI-native CLI for spec-driven development.
 
-<details>
-<summary><strong>The most loved spec framework.</strong></summary>
+It combines:
 
-[![Stars](https://img.shields.io/github/stars/momoshenchi/Superpowers-with-Spec?style=flat-square&label=Stars)](https://github.com/momoshenchi/Superpowers-with-Spec/stargazers)
-[![Downloads](https://img.shields.io/npm/dm/superpowers-spec?style=flat-square&label=Downloads/mo)](https://www.npmjs.com/package/superpowers-spec)
-[![Contributors](https://img.shields.io/github/contributors/momoshenchi/Superpowers-with-Spec?style=flat-square&label=Contributors)](https://github.com/momoshenchi/Superpowers-with-Spec/graphs/contributors)
+- OpenSpec's structured artifact workflow and CLI foundations: proposal/design/tasks/spec lifecycle
+- Superpowers' practical skill library for brainstorming, planning, execution, debugging, and verification
 
-</details>
-<p></p>
-Our philosophy:
+Project base references:
 
-```text
-→ fluid not rigid
-→ iterative not waterfall
-→ easy not complex
-→ built for brownfield not just greenfield
-→ scalable from personal projects to enterprises
+- OpenSpec: https://github.com/Fission-AI/OpenSpec
+- Superpowers skills: https://github.com/obra/superpowers
+
+## What this project is
+
+This repository is a fork/evolution focused on:
+
+- **OpenSpec-style rigor**: explicit artifacts, traceable changes, predictable implementation flow
+- **Superpowers-style productivity**: reusable skills that guide agent behavior in real coding sessions
+- **Tool-agnostic setup**: generated skills/commands for many coding agents (including Codex)
+
+## Quickstart
+```bash
+npm i -g superpowers-spec@latest && superpowers --version
 ```
 
-> [!TIP]
-> **New workflow now available!** We've rebuilt Superpowers with a new artifact-guided workflow.
->
-> Run `/sp:propose "your idea"` to get started. → [Learn more here](docs/sp.md)
-
-<p align="center">
-  Follow <a href="https://x.com/0xTab">@0xTab on X</a> for updates · Join the <a href="https://discord.gg/YctCnvvshC">Superpowers Discord</a> for help and questions.
-</p>
-
-### Teams
-
-Using Superpowers in a team? [Email here](mailto:teams@superpowers.dev) for access to our Slack channel.
-
-<!-- TODO: Add GIF demo of /sp:propose → /sp:archive workflow -->
-
-## See it in action
-
-```text
-You: /sp:propose add-dark-mode
-AI:  Created superpowers/changes/add-dark-mode/
-     ✓ proposal.md — why we're doing this, what's changing
-     ✓ specs/       — requirements and scenarios
-     ✓ design.md    — technical approach
-     ✓ tasks.md     — implementation checklist
-     Ready for implementation!
-
-You: /sp:apply
-AI:  Implementing tasks...
-     ✓ 1.1 Add theme context provider
-     ✓ 1.2 Create toggle component
-     ✓ 2.1 Add CSS variables
-     ✓ 2.2 Wire up localStorage
-     All tasks complete!
-
-You: /sp:archive
-AI:  Archived to superpowers/changes/archive/2025-01-23-add-dark-mode/
-     Specs updated. Ready for the next feature.
-```
-
-<details>
-<summary><strong>Superpowers Dashboard</strong></summary>
-
-<p align="center">
-  <img src="assets/superpowers_dashboard.png" alt="Superpowers dashboard preview" width="90%">
-</p>
-
-</details>
-
-## Quick Start
-
-**Requires Node.js 20.19.0 or higher.**
-
-Install Superpowers globally:
+Inside your target project:
 
 ```bash
-npm install -g superpowers-spec@latest
-```
-
-Then navigate to your project directory and initialize:
-
-```bash
-cd your-project
 superpowers init
 ```
 
-Now tell your AI: `/sp:propose <what-you-want-to-build>`
 
-If you want the expanded workflow (`/sp:new`, `/sp:continue`, `/sp:ff`, `/sp:verify`, `/sp:sync`, `/sp:bulk-archive`, `/sp:onboard`), select it with `superpowers config profile` and apply with `superpowers update`.
+## Core concepts
 
-> [!NOTE]
-> Not sure if your tool is supported? [View the full list](docs/supported-tools.md) – we support 20+ tools and growing.
->
-> Also works with pnpm, yarn, bun, and nix. [See installation options](docs/installation.md).
+Superpowers with Spec manages change artifacts under `superpowers/`:
 
-## Docs
+- `superpowers/changes/<change>/proposal.md`
+- `superpowers/changes/<change>/design.md`
+- `superpowers/changes/<change>/tasks.md`
+- `superpowers/changes/<change>/specs/...`
 
-→ **[Getting Started](docs/getting-started.md)**: first steps<br>
-→ **[Workflows](docs/workflows.md)**: combos and patterns<br>
-→ **[Commands](docs/commands.md)**: slash commands & skills<br>
-→ **[CLI](docs/cli.md)**: terminal reference<br>
-→ **[Supported Tools](docs/supported-tools.md)**: tool integrations & install paths<br>
-→ **[Concepts](docs/concepts.md)**: how it all fits<br>
-→ **[Multi-Language](docs/multi-language.md)**: multi-language support<br>
-→ **[Customization](docs/customization.md)**: make it yours
+And installs agent-facing assets under tool directories (for example):
 
+- `.claude/skills`, `.claude/commands`, `.claude/hooks`, `.claude/agents`
+- `.codex/skills`, global Codex prompts under `~/.codex/prompts`, plus `.codex/hooks` and `.codex/agents`
 
-## Why Superpowers?
+## Requirements
 
-AI coding assistants are powerful but unpredictable when requirements live only in chat history. Superpowers adds a lightweight spec layer so you agree on what to build before any code is written.
+- Node.js >= 20.19.0
+- pnpm (recommended) or npm
 
-- **Agree before you build** — human and AI align on specs before code gets written
-- **Stay organized** — each change gets its own folder with proposal, specs, design, and tasks
-- **Work fluidly** — update any artifact anytime, no rigid phase gates
-- **Use your tools** — works with 20+ AI assistants via slash commands
+## Local development
 
-### How we compare
-
-**vs. [Spec Kit](https://github.com/github/spec-kit)** (GitHub) — Thorough but heavyweight. Rigid phase gates, lots of Markdown, Python setup. Superpowers is lighter and lets you iterate freely.
-
-**vs. [Kiro](https://kiro.dev)** (AWS) — Powerful but you're locked into their IDE and limited to Claude models. Superpowers works with the tools you already use.
-
-**vs. nothing** — AI coding without specs means vague prompts and unpredictable results. Superpowers brings predictability without the ceremony.
-
-## Updating Superpowers
-
-**Upgrade the package**
+Install dependencies:
 
 ```bash
-npm install -g superpowers-spec@latest
+pnpm install
 ```
 
-**Refresh agent instructions**
-
-Run this inside each project to regenerate AI guidance and ensure the latest slash commands are active:
+Build:
 
 ```bash
-superpowers update
+pnpm run build
 ```
 
-## Usage Notes
+Run tests:
 
-**Model selection**: Superpowers works best with high-reasoning models. We recommend Opus 4.5 and GPT 5.2 for both planning and implementation.
+```bash
+pnpm test
+```
 
-**Context hygiene**: Superpowers benefits from a clean context window. Clear your context before starting implementation and maintain good context hygiene throughout your session.
+Lint:
 
-## Contributing
+```bash
+pnpm run lint
+```
 
-**Small fixes** — Bug fixes, typo corrections, and minor improvements can be submitted directly as PRs.
+Run CLI locally from repo:
 
-**Larger changes** — For new features, significant refactors, or architectural changes, please submit an Superpowers change proposal first so we can align on intent and goals before implementation begins.
+```bash
+node bin/superpowers.js --help
+node bin/superpowers.js --version
+```
 
-When writing proposals, keep the Superpowers philosophy in mind: we serve a wide variety of users across different coding agents, models, and use cases. Changes should work well for everyone.
+## Initialize in a project
 
-**AI-generated code is welcome** — as long as it's been tested and verified. PRs containing AI-generated code should mention the coding agent and model used (e.g., "Generated with Claude Code using claude-opus-4-5-20251101").
+Inside your target project:
 
-### Development
+```bash
+superpowers init
+```
 
-- Install dependencies: `pnpm install`
-- Build: `pnpm run build`
-- Test: `pnpm test`
-- Develop CLI locally: `pnpm run dev` or `pnpm run dev:cli`
-- Conventional commits (one-line): `type(scope): subject`
+Or non-interactive:
 
-## Other
+```bash
+superpowers init --tools codex
+superpowers init --tools claude,cursor
+superpowers init --tools all
+```
 
-<details>
-<summary><strong>Telemetry</strong></summary>
+## Main commands
 
-Superpowers collects anonymous usage stats.
+- `superpowers init` — initialize project and tool assets
+- `superpowers update` — refresh installed skills/commands from current profile
+- `superpowers list` — list changes (or specs with flags)
+- `superpowers show` — show artifacts/specs
+- `superpowers validate` — validate artifacts/specs
+- `superpowers config profile` — switch workflow profile
 
-We collect only command names and version to understand usage patterns. No arguments, paths, content, or PII. Automatically disabled in CI.
+## Repository structure
 
-**Opt-out:** `export SUPERPOWERS_TELEMETRY=0` or `export DO_NOT_TRACK=1`
+- `src/` — TypeScript source
+- `skills/` — bundled static skills copied to tool directories
+- `hooks/` — bundled hook files
+- `agents/` — bundled agent definitions
+- `schemas/` — schema templates and validation schema
+- `test/` — Vitest test suite
 
-</details>
+## Publish to npm
 
-<details>
-<summary><strong>Maintainers & Advisors</strong></summary>
+Before publish:
 
-See [MAINTAINERS.md](MAINTAINERS.md) for the list of core maintainers and advisors who help guide the project.
+```bash
+pnpm run build
+pnpm test
+pnpm run check:pack-version
+```
 
-</details>
+Publish flow:
 
+```bash
+pnpm changeset
+pnpm changeset version
+pnpm run release:ci
+```
 
+Package metadata is in `package.json` (current package name: `superpowers-spec`).
+
+## Telemetry
+
+Anonymous command telemetry is enabled by default and can be disabled via:
+
+```bash
+export SUPERPOWERS_TELEMETRY=0
+# or
+export DO_NOT_TRACK=1
+```
 
 ## License
 

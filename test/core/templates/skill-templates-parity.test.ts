@@ -30,10 +30,10 @@ import {
 import { generateSkillContent } from '../../../src/core/shared/skill-generation.js';
 
 const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
-  getExploreSkillTemplate: 'b726b91732703a521542b1aaec67111254e030e2e90c671ae873594d760dc4ef',
+  getExploreSkillTemplate: '20c84bc0bc8300855bb7049728fb1086d1e442dea4fa61f33b106d7f3a42d235',
   getNewChangeSkillTemplate: '6f82fabd296e8bf0c10b030fe74f19242a1afd77ea2d58cbc25dec03b8795658',
   getContinueChangeSkillTemplate: '2a9c08437286d47848cfe0b23ad9925a7037592fbca817cd22c8ed0eed0b4dcc',
-  getApplyChangeSkillTemplate: '121836c9e8decefd72dbae4844af89e6ed4aa8ec631e053faf634fe69b5e3242',
+  getApplyChangeSkillTemplate: '28c997aa2482b37456110f80059bb0ae3a48975df24f28f491060cd8c8a6141d',
   getFfChangeSkillTemplate: 'f8adab19cc05826798888927f072db525bfa7c7e4fe682a1386c4699fa03a4a4',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'fbd64a8d1b671edc603ae0a6296b249351d6bf6fd8b7ef9ee2b205675474f1a9',
@@ -50,23 +50,23 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getSpOnboardCommandTemplate: 'df6581a77ce94c4e699030f76d58ed2d7ccc8bc9ae38b8fa4e5d9ad6c98e10ef',
   getSpBulkArchiveCommandTemplate: 'f8ad96bf71f2c8e5c5c24d31d25054974e24219ee910aa1ddee25ce9f3c843c1',
   getSpVerifyCommandTemplate: '98f3a409cf2b7003badc4d482d44b30e04be9f915391681aec13f65e6c142a73',
-  getSpProposeSkillTemplate: 'daabb21941ae302b3e8974d8c9b2713389c0c47d36f6388b1da7d7481d845bff',
+  getSpProposeSkillTemplate: '46f553c75929a2856f611dda2895e79510c453bd43e7cc855124356abbe0dd49',
   getSpProposeCommandTemplate: 'df9aa392d647ea5202c52529b32b0a1ff54263c33963c6a2304fadd211163c51',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
-  'superpowers-explore': '2a315019f73dee7de96a75cec6e42b49b84ffa32a8d413b7925445a128e4a438',
+  'superpowers-explore': 'dfe6acac65d333da8de5e5e17ff73910b178699cd76202860563118b6786f310',
   'superpowers-new-change': 'd9dbf94db2d654fa1bab522296083187acea9cf02d63dc707539ca977932cad5',
   'superpowers-continue-change': '87d0a16a702ce3cf3b2e71629c1b8582881b39895ee53e4086819160a53989a7',
-  'superpowers-apply-change': '6e666bb9294d123648c9b2587d9288a5316f3891772eaa030840ac1b205685b9',
+  'superpowers-apply-change': '8ada150571c31d4a1164feb60eb3d0567b1b3e765250b36165816d1b368e0fdd',
   'superpowers-ff-change': '5de1af276ae90282b4cdd0cc8381acb8653c14d105be92c22a4dce91d7bda833',
   'superpowers-sync-specs': '54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2',
   'superpowers-archive-change': 'e8faff6d5fca2d3b4b384090e985226876eb535fe567678436932f594ac84c77',
   'superpowers-bulk-archive-change': '62e0d64f3b80cf3f7c29073dcd4842c00a2c55d139eb3f7b52bdd3aa59cfecd0',
   'superpowers-verify-change': 'ecffb65daad86d0bacf90beca636d7da07d5bb59c347a26ce69ad438f71923ed',
   'superpowers-onboard': '394dcbbe5985e66cf083368a0eee1a6fb2d3ea64864de6abbee664a8a4b94e5b',
-  'superpowers-propose': 'cbb1adc4cb0699e7d3928abd8fe9098f19a575713cfda04bcb28c4cddf0e53a5',
+  'superpowers-propose': '78c48540e820abbad996c254f84472a5c0860116b43fda438bdb56a2f4010583',
 };
 
 function stableStringify(value: unknown): string {

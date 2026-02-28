@@ -115,8 +115,7 @@ After completing all artifacts, summarize:
 - Tasks must include exact file paths, complete code snippets (not 'add validation'), and exact commands with expected output
 - Follow DRY, YAGNI, TDD principles. Ensure frequent commits.
 
-## Related Skills
-- For structured plan writing methodology, see the \`writing-plans\` skill`,
+`,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
     metadata: { author: 'superpowers', version: '1.0' },
