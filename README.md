@@ -31,6 +31,15 @@ Inside your target project:
 superpowers init
 ```
 
+### Main commands
+
+- `superpowers init` — initialize project and tool assets
+- `superpowers update` — refresh installed skills/commands from current profile
+- `superpowers list` — list changes (or specs with flags)
+- `superpowers show` — show artifacts/specs
+- `superpowers validate` — validate artifacts/specs
+- `superpowers config profile` — switch workflow profile
+
 
 ## Core concepts
 
@@ -46,12 +55,12 @@ And installs agent-facing assets under tool directories (for example):
 - `.claude/skills`, `.claude/commands`, `.claude/hooks`, `.claude/agents`
 - `.codex/skills`, global Codex prompts under `~/.codex/prompts`, plus `.codex/hooks` and `.codex/agents`
 
-## Requirements
+## Local development
+
+### Requirements
 
 - Node.js >= 20.19.0
 - pnpm (recommended) or npm
-
-## Local development
 
 Install dependencies:
 
@@ -100,14 +109,6 @@ superpowers init --tools claude,cursor
 superpowers init --tools all
 ```
 
-## Main commands
-
-- `superpowers init` — initialize project and tool assets
-- `superpowers update` — refresh installed skills/commands from current profile
-- `superpowers list` — list changes (or specs with flags)
-- `superpowers show` — show artifacts/specs
-- `superpowers validate` — validate artifacts/specs
-- `superpowers config profile` — switch workflow profile
 
 ## Repository structure
 
