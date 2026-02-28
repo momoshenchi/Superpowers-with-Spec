@@ -656,4 +656,4 @@ superpowers schema validate my-workflow
 
 This is rough. That's intentional — we're learning what works.
 
-Found a bug? Have ideas? Join us on [Discord](https://discord.gg/YctCnvvshC) or open an issue on [GitHub](https://github.com/momoshenchi/Superpowers-with-Spec/issues).
+Found a bug? Have ideas? Open an issue on [GitHub](https://github.com/momoshenchi/Superpowers-with-Spec/issues).
