@@ -4,7 +4,7 @@ Superpowers has a complete skill and slash command generation system. Skills are
 
 Existing skills follow a consistent pattern:
 - `getXxxSkillTemplate()` returns the skill with name, description, instructions
-- `getOpsxXxxCommandTemplate()` returns the slash command with name, description, category, tags, content
+- `getSpXxxCommandTemplate()` returns the slash command with name, description, category, tags, content
 - Both are registered in their respective arrays in `skill-generation.ts`
 
 ## Goals / Non-Goals

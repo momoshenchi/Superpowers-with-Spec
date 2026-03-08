@@ -2,7 +2,7 @@
 
 ## Problem
 
-Currently, there is **no way to regenerate artifacts** in the OPSX workflow:
+Currently, there is **no way to regenerate artifacts** in the SP workflow:
 
 - `/sp:apply` just reads whatever's on disk
 - `/sp:continue` only creates the NEXT artifact - won't touch existing ones

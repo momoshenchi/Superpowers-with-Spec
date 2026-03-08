@@ -13,7 +13,7 @@ A user requested: "Can we get a :verify that will ensure that the implementation
 ## What Changes
 
 - Add `getVerifyChangeSkillTemplate()` function to `skill-templates.ts`
-- Add `getOpsxVerifyCommandTemplate()` function to `skill-templates.ts`
+- Add `getSpVerifyCommandTemplate()` function to `skill-templates.ts`
 - Integrate verify skill into `artifactExperimentalSetupCommand` in `artifact-workflow.ts`
 - Add verify to the skills and commands arrays in the setup command
 - Update help text to include `/sp:verify` in the list of available commands

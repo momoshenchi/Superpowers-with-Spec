@@ -628,7 +628,7 @@ The intent is the same across tools, but how commands are surfaced can differ by
 
 ## Legacy Commands
 
-These commands use the older "all-at-once" workflow. They still work but OPSX commands are recommended.
+These commands use the older "all-at-once" workflow. They still work but SP commands are recommended.
 
 | Command | What it does |
 |---------|--------------|
@@ -640,9 +640,6 @@ These commands use the older "all-at-once" workflow. They still work but OPSX co
 - Existing projects using the old workflow
 - Simple changes where you don't need incremental artifact creation
 - Preference for the all-or-nothing approach
-
-**Migrating to OPSX:**
-Legacy changes can be continued with OPSX commands. The artifact structure is compatible.
 
 ---
 

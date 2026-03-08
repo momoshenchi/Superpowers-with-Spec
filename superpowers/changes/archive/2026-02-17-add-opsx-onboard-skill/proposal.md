@@ -22,6 +22,6 @@ Users who run `superpowers init` are left with files but no clear path to actual
 
 ## Impact
 
-- `src/core/templates/skill-templates.ts`: Add `getOnboardSkillTemplate()` and `getOpsxOnboardCommandTemplate()` functions
+- `src/core/templates/skill-templates.ts`: Add `getOnboardSkillTemplate()` and `getSpOnboardCommandTemplate()` functions
 - `src/core/shared/skill-generation.ts`: Register the new skill and command templates in `getSkillTemplates()` and `getCommandTemplates()`
 - Users running `superpowers init` or `superpowers update` will get the new skill/command files generated

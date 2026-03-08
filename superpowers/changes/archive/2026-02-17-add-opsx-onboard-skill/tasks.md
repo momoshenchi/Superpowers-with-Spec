@@ -8,7 +8,7 @@
 
 ## 2. Add Command Template
 
-- [x] 2.1 Add `getOpsxOnboardCommandTemplate()` function to `src/core/templates/skill-templates.ts` returning CommandTemplate with same instruction content as skill
+- [x] 2.1 Add `getSpOnboardCommandTemplate()` function to `src/core/templates/skill-templates.ts` returning CommandTemplate with same instruction content as skill
 
 ## 3. Register Templates
 

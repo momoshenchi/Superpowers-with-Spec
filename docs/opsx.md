@@ -1,10 +1,10 @@
-# OPSX Workflow
+# SP Workflow
 
 > Feedback welcome on [Discord](https://discord.gg/YctCnvvshC).
 
 ## What Is It?
 
-OPSX is now the standard workflow for Superpowers.
+SP is now the standard workflow for Superpowers.
 
 It's a **fluid, iterative workflow** for Superpowers changes. No more rigid phases — just actions you can take anytime.
 
@@ -17,7 +17,7 @@ The legacy Superpowers workflow works, but it's **locked down**:
 - **Fixed structure** — same workflow for everyone, no customization
 - **Black box** — when AI output is bad, you can't tweak the prompts
 
-**OPSX opens it up.** Now anyone can:
+**SP opens it up.** Now anyone can:
 
 1. **Experiment with instructions** — edit a template, see if the AI does better
 2. **Test granularly** — validate each artifact's instructions independently
@@ -25,7 +25,7 @@ The legacy Superpowers workflow works, but it's **locked down**:
 4. **Iterate quickly** — change a template, test immediately, no rebuild
 
 ```
-Legacy workflow:                      OPSX:
+Legacy workflow:                      SP:
 ┌────────────────────────┐           ┌────────────────────────┐
 │  Hardcoded in package  │           │  schema.yaml           │◄── You edit this
 │  (can't change)        │           │  templates/*.md        │◄── Or this
@@ -41,14 +41,14 @@ Legacy workflow:                      OPSX:
 - **Power users** — tweak prompts to get better AI outputs for your codebase
 - **Superpowers contributors** — experiment with new approaches without releases
 
-We're all still learning what works best. OPSX lets us learn together.
+We're all still learning what works best. SP lets us learn together.
 
 ## The User Experience
 
 **The problem with linear workflows:**
 You're "in planning phase", then "in implementation phase", then "done". But real work doesn't work that way. You implement something, realize your design was wrong, need to update specs, continue implementing. Linear phases fight against how work actually happens.
 
-**OPSX approach:**
+**SP approach:**
 - **Actions, not phases** — create, implement, update, archive — do any of them anytime
 - **Dependencies are enablers** — they show what's possible, not what's required next
 
@@ -301,18 +301,18 @@ Think of it like git branches:
 
 ## What's Different?
 
-| | Legacy (`/superpowers:proposal`) | OPSX (`/sp:*`) |
+| | Legacy (`/superpowers:proposal`) | SP (`/sp:*`) |
 |---|---|---|
 | **Structure** | One big proposal document | Discrete artifacts with dependencies |
 | **Workflow** | Linear phases: plan → implement → archive | Fluid actions — do anything anytime |
 | **Iteration** | Awkward to go back | Update artifacts as you learn |
 | **Customization** | Fixed structure | Schema-driven (define your own artifacts) |
 
-**The key insight:** work isn't linear. OPSX stops pretending it is.
+**The key insight:** work isn't linear. SP stops pretending it is.
 
 ## Architecture Deep Dive
 
-This section explains how OPSX works under the hood and how it compares to the legacy workflow.
+This section explains how SP works under the hood and how it compares to the legacy workflow.
 Examples in this section use the expanded command set (`new`, `continue`, etc.); default `core` users can map the same flow to `propose → apply → archive`.
 
 ### Philosophy: Phases vs Actions
@@ -339,7 +339,7 @@ Examples in this section use the expanded command set (`new`, `continue`, etc.);
 
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            OPSX WORKFLOW                                     │
+│                            SP WORKFLOW                                     │
 │                      (Fluid Actions, Iterative)                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
@@ -382,11 +382,11 @@ Examples in this section use the expanded command set (`new`, `continue`, etc.);
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**OPSX** uses external schemas and a dependency graph engine:
+**SP** uses external schemas and a dependency graph engine:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         OPSX COMPONENTS                                      │
+│                         SP COMPONENTS                                      │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │   Schema Definitions (YAML)                                                 │
@@ -481,7 +481,7 @@ Artifacts form a directed acyclic graph (DAG). Dependencies are **enablers**, no
   Agent creates ALL artifacts in one go
 ```
 
-**OPSX** — agent queries for rich context:
+**SP** — agent queries for rich context:
 
 ```
   User: "/sp:continue"
@@ -538,7 +538,7 @@ Artifacts form a directed acyclic graph (DAG). Dependencies are **enablers**, no
        └── Creates ALL artifacts at once
 ```
 
-**OPSX** — natural iteration:
+**SP** — natural iteration:
 
 ```
   /sp:new ───► /sp:continue ───► /sp:apply ───► /sp:archive
@@ -612,7 +612,7 @@ artifacts:
 
 ### Summary
 
-| Aspect | Legacy | OPSX |
+| Aspect | Legacy | SP |
 |--------|----------|------|
 | **Templates** | Hardcoded TypeScript | External YAML + Markdown |
 | **Dependencies** | None (all at once) | DAG with topological sort |

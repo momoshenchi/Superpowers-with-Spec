@@ -82,7 +82,7 @@ After completing the steps, summarize:
 export function getSpNewCommandTemplate(): CommandTemplate {
   return {
     name: 'SP: New',
-    description: 'Start a new change using the experimental artifact workflow (OPSX)',
+    description: 'Start a new change using the experimental artifact workflow (SP)',
     category: 'Workflow',
     tags: ['workflow', 'artifacts', 'experimental'],
     content: `Start a new change using the experimental artifact-driven approach.

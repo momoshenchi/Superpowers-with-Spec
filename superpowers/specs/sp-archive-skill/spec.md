@@ -1,4 +1,10 @@
-## ADDED Requirements
+# SP Archive Skill Spec
+
+## Purpose
+
+Define the expected behavior for the `/sp:archive` skill, including readiness checks, spec sync prompting, archive execution, and user-facing output.
+
+## Requirements
 
 ### Requirement: SP Archive Skill
 

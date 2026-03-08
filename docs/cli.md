@@ -123,7 +123,7 @@ superpowers/
 
 .claude/skills/         # Claude Code skills (if claude selected)
 .cursor/skills/         # Cursor skills (if cursor selected)
-.cursor/commands/       # Cursor OPSX commands (if delivery includes commands)
+.cursor/commands/       # Cursor SP commands (if delivery includes commands)
 ... (other tool configs)
 ```
 
@@ -401,7 +401,7 @@ superpowers archive update-ci-config --skip-specs
 
 ## Workflow Commands
 
-These commands support the artifact-driven OPSX workflow. They're useful for both humans checking progress and agents determining next steps.
+These commands support the artifact-driven SP workflow. They're useful for both humans checking progress and agents determining next steps.
 
 ### `superpowers status`
 

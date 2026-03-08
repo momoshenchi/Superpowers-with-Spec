@@ -2,7 +2,7 @@
 
 ## 1. Skill Template Functions
 - [x] 1.1 Add `getVerifyChangeSkillTemplate()` to skill-templates.ts
-- [x] 1.2 Add `getOpsxVerifyCommandTemplate()` to skill-templates.ts
+- [x] 1.2 Add `getSpVerifyCommandTemplate()` to skill-templates.ts
 
 ## 2. Integration with artifact-experimental-setup
 - [x] 2.1 Import verify template functions in artifact-workflow.ts

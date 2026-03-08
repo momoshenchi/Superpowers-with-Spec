@@ -28,7 +28,7 @@ Add two template functions to `src/core/templates/skill-templates.ts`:
 
 ```typescript
 export function getVerifyChangeSkillTemplate(): SkillTemplate
-export function getOpsxVerifyCommandTemplate(): CommandTemplate
+export function getSpVerifyCommandTemplate(): CommandTemplate
 ```
 
 These return the skill definition (for Agent Skills) and slash command definition (for explicit invocation).

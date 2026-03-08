@@ -1,5 +1,9 @@
-## ADDED Requirements
+# sp-onboard-skill Specification
 
+## Purpose
+Define `/sp:onboard` behavior for guiding users through an end-to-end Superpowers workflow on their real codebase.
+
+## Requirements
 ### Requirement: SP Onboard Skill
 
 The system SHALL provide an `/sp:onboard` skill that guides users through their first complete Superpowers workflow cycle with narration and real codebase work.
@@ -160,3 +164,4 @@ The skill SHALL handle users who want to stop mid-way.
 - **WHEN** user says they just want to see the commands
 - **THEN** agent provides command cheat sheet
 - **AND** exits gracefully with encouragement to try `/sp:new`
+
