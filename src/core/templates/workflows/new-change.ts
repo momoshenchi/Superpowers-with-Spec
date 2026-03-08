@@ -9,8 +9,8 @@ import type { SkillTemplate, CommandTemplate } from '../types.js';
 export function getNewChangeSkillTemplate(): SkillTemplate {
   return {
     name: 'superpowers-new-change',
-    description: 'Start a new Superpowers change using the experimental artifact workflow. Use when the user wants to create a new feature, fix, or modification with a structured step-by-step approach.',
-    instructions: `Start a new change using the experimental artifact-driven approach.
+    description: 'Start a new Superpowers change using the artifact workflow. Use when the user wants to create a new feature, fix, or modification with a structured step-by-step approach.',
+    instructions: `Start a new change using the  artifact-driven approach.
 
 **Input**: The user's request should include a change name (kebab-case) OR a description of what they want to build.
 
@@ -82,10 +82,10 @@ After completing the steps, summarize:
 export function getSpNewCommandTemplate(): CommandTemplate {
   return {
     name: 'SP: New',
-    description: 'Start a new change using the experimental artifact workflow (SP)',
+    description: 'Start a new change using the  artifact workflow (SP)',
     category: 'Workflow',
-    tags: ['workflow', 'artifacts', 'experimental'],
-    content: `Start a new change using the experimental artifact-driven approach.
+    tags: ['workflow', 'artifacts'],
+    content: `Start a new change using the  artifact-driven approach.
 
 **Input**: The argument after \`/sp:new\` is the change name (kebab-case), OR a description of what the user wants to build.
 

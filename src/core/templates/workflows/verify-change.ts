@@ -178,7 +178,7 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
     name: 'SP: Verify',
     description: 'Verify implementation matches change artifacts before archiving',
     category: 'Workflow',
-    tags: ['workflow', 'verify', 'experimental'],
+    tags: ['workflow', 'verify'],
     content: `Verify that an implementation matches the change artifacts (specs, tasks, design).
 
 **Input**: Optionally specify a change name after \`/sp:verify\` (e.g., \`/sp:verify add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.

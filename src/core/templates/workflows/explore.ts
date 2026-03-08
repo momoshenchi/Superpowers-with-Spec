@@ -306,7 +306,7 @@ export function getSpExploreCommandTemplate(): CommandTemplate {
     name: 'SP: Explore',
     description: 'Enter explore mode - think through ideas, investigate problems, clarify requirements',
     category: 'Workflow',
-    tags: ['workflow', 'explore', 'experimental', 'thinking'],
+    tags: ['workflow', 'explore','thinking', 'brainstorming'],
     content: `Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
 
 **IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first and create a change proposal. You MAY create Superpowers artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.

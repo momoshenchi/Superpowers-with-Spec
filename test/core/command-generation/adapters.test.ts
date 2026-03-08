@@ -31,7 +31,7 @@ describe('command-generation/adapters', () => {
     name: 'Superpowers Explore',
     description: 'Enter explore mode for thinking',
     category: 'Workflow',
-    tags: ['workflow', 'explore', 'experimental'],
+    tags: ['workflow', 'explore', 'thinking'],
     body: 'This is the command body.\n\nWith multiple lines.',
   };
 
@@ -57,7 +57,7 @@ describe('command-generation/adapters', () => {
       expect(output).toContain('name: Superpowers Explore');
       expect(output).toContain('description: Enter explore mode for thinking');
       expect(output).toContain('category: Workflow');
-      expect(output).toContain('tags: [workflow, explore, experimental]');
+      expect(output).toContain('tags: [workflow, explore, thinking]');
       expect(output).toContain('---\n\n');
       expect(output).toContain('This is the command body.\n\nWith multiple lines.');
     });
@@ -119,7 +119,7 @@ describe('command-generation/adapters', () => {
       expect(output).toContain('name: Superpowers Explore');
       expect(output).toContain('description: Enter explore mode for thinking');
       expect(output).toContain('category: Workflow');
-      expect(output).toContain('tags: [workflow, explore, experimental]');
+      expect(output).toContain('tags: [workflow, explore, thinking]');
       expect(output).toContain('---\n\n');
       expect(output).toContain('This is the command body.');
     });
@@ -334,7 +334,7 @@ describe('command-generation/adapters', () => {
       expect(output).toContain('name: Superpowers Explore');
       expect(output).toContain('description: Enter explore mode for thinking');
       expect(output).toContain('category: Workflow');
-      expect(output).toContain('tags: [workflow, explore, experimental]');
+      expect(output).toContain('tags: [workflow, explore, thinking]');
       expect(output).toContain('---\n\n');
       expect(output).toContain('This is the command body.');
     });
@@ -499,7 +499,7 @@ describe('command-generation/adapters', () => {
       expect(output).toContain('name: Superpowers Explore');
       expect(output).toContain('description: Enter explore mode for thinking');
       expect(output).toContain('category: Workflow');
-      expect(output).toContain('tags: [workflow, explore, experimental]');
+      expect(output).toContain('tags: [workflow, explore, thinking]');
       expect(output).toContain('---\n\n');
       expect(output).toContain('This is the command body.');
     });

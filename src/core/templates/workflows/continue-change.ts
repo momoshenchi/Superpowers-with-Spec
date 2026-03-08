@@ -126,9 +126,9 @@ For other schemas, follow the \`instruction\` field from the CLI output.
 export function getSpContinueCommandTemplate(): CommandTemplate {
   return {
     name: 'SP: Continue',
-    description: 'Continue working on a change - create the next artifact (Experimental)',
+    description: 'Continue working on a change - create the next artifact',
     category: 'Workflow',
-    tags: ['workflow', 'artifacts', 'experimental'],
+    tags: ['workflow', 'artifacts' ],
     content: `Continue working on a change by creating the next artifact.
 
 **Input**: Optionally specify a change name after \`/sp:continue\` (e.g., \`/sp:continue add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.

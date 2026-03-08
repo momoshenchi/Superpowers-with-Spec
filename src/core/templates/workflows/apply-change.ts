@@ -169,9 +169,9 @@ This skill supports the "actions on a change" model:
 export function getSpApplyCommandTemplate(): CommandTemplate {
   return {
     name: 'SP: Apply',
-    description: 'Implement tasks from an Superpowers change (Experimental)',
+    description: 'Implement tasks from an Superpowers change',
     category: 'Workflow',
-    tags: ['workflow', 'artifacts', 'experimental'],
+    tags: ['workflow', 'artifacts'],
     content: `Implement tasks from an Superpowers change.
 
 **Input**: Optionally specify a change name (e.g., \`/sp:apply add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
