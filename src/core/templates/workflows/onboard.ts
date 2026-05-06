@@ -53,7 +53,7 @@ I'll walk you through a complete change cycle—from idea to implementation—us
 1. Pick a small, real task in your codebase
 2. Explore the problem briefly
 3. Create a change (the container for our work)
-4. Build the artifacts: proposal → specs → design → tasks
+4. Build the artifacts: proposal → specs → design → tasks → execution plan
 5. Implement the tasks
 6. Archive the completed change
 
@@ -176,7 +176,7 @@ Now let's create a change to hold our work.
 \`\`\`
 ## Creating a Change
 
-A "change" in Superpowers is a container for all the thinking and planning around a piece of work. It lives in \`superpowers/changes/<name>/\` and holds your artifacts—proposal, specs, design, tasks.
+A "change" in Superpowers is a container for all the thinking and planning around a piece of work. It lives in \`superpowers/changes/<name>/\` and holds your artifacts—proposal, specs, design, tasks, and execution plan.
 
 Let me create one for our task.
 \`\`\`
@@ -196,7 +196,8 @@ superpowers/changes/<name>/
 ├── proposal.md    ← Why we're doing this (empty, we'll fill it)
 ├── design.md      ← How we'll build it (empty)
 ├── specs/         ← Detailed requirements (empty)
-└── tasks.md       ← Implementation checklist (empty)
+├── tasks.md       ← Progress checklist (empty)
+└── execution-plan.md ← Detailed implementation plan (empty)
 \`\`\`
 
 Now let's fill in the first artifact—the proposal.
@@ -394,7 +395,22 @@ Save to \`superpowers/changes/<name>/tasks.md\`.
 
 ---
 
-## Phase 9: Apply (Implementation)
+## Phase 9: Execution Plan
+
+**EXPLAIN:**
+\`\`\`
+## Execution Plan
+
+Before implementation, we create \`execution-plan.md\`: the detailed implementation plan. \`tasks.md\` stays the progress checklist; \`execution-plan.md\` carries the file map, TDD steps, exact commands, and test-review gate.
+\`\`\`
+
+**DO:** Generate the execution plan from proposal, specs, design, and tasks, then save to \`superpowers/changes/<name>/execution-plan.md\`.
+
+**PAUSE** - Wait for user to confirm they're ready to implement.
+
+---
+
+## Phase 10: Apply (Implementation)
 
 **EXPLAIN:**
 \`\`\`
@@ -428,7 +444,7 @@ The change is implemented! One more step—let's archive it.
 
 ---
 
-## Phase 10: Archive
+## Phase 11: Archive
 
 **EXPLAIN:**
 \`\`\`
@@ -453,7 +469,7 @@ The change is now part of your project's history. The code is in your codebase, 
 
 ---
 
-## Phase 11: Recap & Next Steps
+## Phase 12: Recap & Next Steps
 
 \`\`\`
 ## Congratulations!
@@ -465,9 +481,10 @@ You just completed a full Superpowers cycle:
 3. **Proposal** - Captured WHY
 4. **Specs** - Defined WHAT in detail
 5. **Design** - Decided HOW
-6. **Tasks** - Broke it into steps
-7. **Apply** - Implemented the work
-8. **Archive** - Preserved the record
+6. **Tasks** - Created the progress checklist
+7. **Execution Plan** - Wrote the detailed implementation plan
+8. **Apply** - Implemented the work
+9. **Archive** - Preserved the record
 
 This same rhythm works for any size change—a small fix or a major feature.
 

@@ -182,6 +182,27 @@ describe('instruction-loader', () => {
       expect(instructions.unlocks).toContain('design');
     });
 
+    it('should include execution-plan template content and task dependency context', () => {
+      const changeDir = path.join(tempDir, 'superpowers', 'changes', 'my-change');
+      fs.mkdirSync(changeDir, { recursive: true });
+      fs.writeFileSync(path.join(changeDir, 'tasks.md'), '## Tasks\n- [ ] 1.1 Add tests');
+
+      const context = loadChangeContext(tempDir, 'my-change');
+      const instructions = generateInstructions(context, 'execution-plan');
+
+      expect(instructions.outputPath).toBe('execution-plan.md');
+      expect(instructions.dependencies).toEqual([
+        {
+          id: 'tasks',
+          done: true,
+          path: 'tasks.md',
+          description: 'Implementation checklist with trackable tasks',
+        },
+      ]);
+      expect(instructions.template).toContain('Expected: FAIL');
+      expect(instructions.template).toContain('Expected: PASS');
+    });
+
     it('should have empty dependencies for root artifact', () => {
       const context = loadChangeContext(tempDir, 'my-change');
       const instructions = generateInstructions(context, 'proposal');
@@ -573,6 +594,7 @@ rules:
       fs.writeFileSync(path.join(changeDir, 'specs', 'test.md'), '# Spec');
       fs.writeFileSync(path.join(changeDir, 'design.md'), '# Design');
       fs.writeFileSync(path.join(changeDir, 'tasks.md'), '# Tasks');
+      fs.writeFileSync(path.join(changeDir, 'execution-plan.md'), '# Execution Plan');
 
       const context = loadChangeContext(tempDir, 'my-change');
       const status = formatChangeStatus(context);

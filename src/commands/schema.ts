@@ -282,6 +282,12 @@ const DEFAULT_ARTIFACTS: Array<{
     generates: 'tasks.md',
     template: 'tasks.md',
   },
+  {
+    id: 'execution-plan',
+    description: 'Detailed implementation plan for executing the change',
+    generates: 'execution-plan.md',
+    template: 'execution-plan.md',
+  },
 ];
 
 /**
@@ -667,7 +673,7 @@ export function registerSchemaCommand(program: Command): void {
     .description('Create a new project-local schema')
     .option('--json', 'Output as JSON')
     .option('--description <text>', 'Schema description')
-    .option('--artifacts <list>', 'Comma-separated artifact IDs (proposal,specs,design,tasks)')
+    .option('--artifacts <list>', 'Comma-separated artifact IDs (proposal,specs,design,tasks,execution-plan)')
     .option('--default', 'Set as project default schema')
     .option('--no-default', 'Do not prompt to set as default')
     .option('--force', 'Overwrite existing schema')
@@ -825,6 +831,8 @@ export function registerSchemaCommand(program: Command): void {
             if (selectedArtifactIds.includes('design')) requires.push('design');
             else if (selectedArtifactIds.includes('specs')) requires.push('specs');
             artifact.requires = requires;
+          } else if (id === 'execution-plan' && selectedArtifactIds.includes('tasks')) {
+            artifact.requires = ['tasks'];
           }
 
           return artifact;
@@ -841,7 +849,7 @@ export function registerSchemaCommand(program: Command): void {
         // Add apply phase if tasks is included
         if (selectedArtifactIds.includes('tasks')) {
           schema.apply = {
-            requires: ['tasks'],
+            requires: selectedArtifactIds.includes('execution-plan') ? ['execution-plan'] : ['tasks'],
             tracks: 'tasks.md',
           };
         }
@@ -994,6 +1002,39 @@ Description and rationale.
 - [ ] Task 1
 - [ ] Task 2
 - [ ] Task 3
+`;
+
+    case 'execution-plan':
+      return `## File Structure
+
+- Create:
+  - <!-- \`path/to/new-file.ts\` -->
+- Modify:
+  - <!-- \`path/to/existing-file.ts\` -->
+- Test:
+  - <!-- \`test/path/to/test-file.test.ts\` -->
+
+## Task Plan
+
+### Task N: [Component or Behavior]
+
+**Files:**
+- Modify: \`path/to/existing-file.ts\`
+- Test: \`test/path/to/test-file.test.ts\`
+
+- [ ] **Step 1: Write the failing test**
+- [ ] **Step 2: Run test to verify it fails**
+<!-- 
+Run: \`pnpm exec vitest run test/path/to/test-file.test.ts\`
+Expected: FAIL for the missing behavior.
+-->
+- [ ] **Step 3: Review tests before production code**
+- [ ] **Step 4: Write minimal implementation**
+- [ ] **Step 5: Run verification**
+<!-- 
+Run: \`pnpm exec vitest run test/path/to/test-file.test.ts\`
+Expected: PASS.
+-->
 `;
 
     default:

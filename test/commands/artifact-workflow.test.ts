@@ -41,7 +41,7 @@ describe('artifact-workflow CLI commands', () => {
    */
   async function createTestChange(
     changeName: string,
-    artifacts: ('proposal' | 'design' | 'specs' | 'tasks')[] = []
+    artifacts: ('proposal' | 'design' | 'specs' | 'tasks' | 'execution-plan')[] = []
   ): Promise<string> {
     const changeDir = path.join(changesDir, changeName);
     await fs.mkdir(changeDir, { recursive: true });
@@ -68,6 +68,13 @@ describe('artifact-workflow CLI commands', () => {
       await fs.writeFile(path.join(changeDir, 'tasks.md'), '## Tasks\n- [ ] Task 1');
     }
 
+    if (artifacts.includes('execution-plan')) {
+      await fs.writeFile(
+        path.join(changeDir, 'execution-plan.md'),
+        '# Test Change Implementation Plan\n\n**Goal:** Implement the test change.'
+      );
+    }
+
     return changeDir;
   }
 
@@ -80,7 +87,7 @@ describe('artifact-workflow CLI commands', () => {
       const result = await runCLI(['status', '--change', 'scaffolded-change'], { cwd: tempDir });
       expect(result.exitCode).toBe(0);
       expect(result.stdout).toContain('scaffolded-change');
-      expect(result.stdout).toContain('0/4 artifacts complete');
+      expect(result.stdout).toContain('0/5 artifacts complete');
     });
 
     it('shows status for a change with proposal only', async () => {
@@ -91,7 +98,7 @@ describe('artifact-workflow CLI commands', () => {
       expect(result.exitCode).toBe(0);
       expect(result.stdout).toContain('minimal-change');
       expect(result.stdout).toContain('spec-driven');
-      expect(result.stdout).toContain('1/4 artifacts complete');
+      expect(result.stdout).toContain('1/5 artifacts complete');
     });
 
     it('shows status for a change with proposal and design', async () => {
@@ -99,7 +106,7 @@ describe('artifact-workflow CLI commands', () => {
 
       const result = await runCLI(['status', '--change', 'partial-change'], { cwd: tempDir });
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('2/4 artifacts complete');
+      expect(result.stdout).toContain('2/5 artifacts complete');
       expect(result.stdout).toContain('[x]');
     });
 
@@ -116,19 +123,101 @@ describe('artifact-workflow CLI commands', () => {
       expect(json.schemaName).toBe('spec-driven');
       expect(json.isComplete).toBe(false);
       expect(Array.isArray(json.artifacts)).toBe(true);
-      expect(json.artifacts).toHaveLength(4);
+      expect(json.artifacts).toHaveLength(5);
 
       const proposalArtifact = json.artifacts.find((a: any) => a.id === 'proposal');
       expect(proposalArtifact.status).toBe('done');
     });
 
     it('shows complete status when all artifacts are done', async () => {
-      await createTestChange('complete-change', ['proposal', 'design', 'specs', 'tasks']);
+      await createTestChange('complete-change', [
+        'proposal',
+        'design',
+        'specs',
+        'tasks',
+        'execution-plan',
+      ]);
 
       const result = await runCLI(['status', '--change', 'complete-change'], { cwd: tempDir });
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('4/4 artifacts complete');
+      expect(result.stdout).toContain('5/5 artifacts complete');
       expect(result.stdout).toContain('All artifacts complete!');
+    });
+
+    it('shows execution-plan blocked before tasks, ready after tasks, and done when execution-plan.md exists', async () => {
+      await createTestChange('execution-plan-status', ['proposal', 'design', 'specs']);
+
+      const blockedResult = await runCLI(
+        ['status', '--change', 'execution-plan-status', '--json'],
+        { cwd: tempDir }
+      );
+      expect(blockedResult.exitCode).toBe(0);
+      const blockedJson = JSON.parse(blockedResult.stdout);
+      const blockedExecutionPlan = blockedJson.artifacts.find((a: any) => a.id === 'execution-plan');
+      expect(blockedExecutionPlan).toMatchObject({
+        id: 'execution-plan',
+        outputPath: 'execution-plan.md',
+        status: 'blocked',
+        missingDeps: ['tasks'],
+      });
+
+      const changeDir = path.join(changesDir, 'execution-plan-status');
+      await fs.writeFile(path.join(changeDir, 'tasks.md'), '## Tasks\n- [ ] Task 1');
+
+      const readyResult = await runCLI(
+        ['status', '--change', 'execution-plan-status', '--json'],
+        { cwd: tempDir }
+      );
+      expect(readyResult.exitCode).toBe(0);
+      const readyJson = JSON.parse(readyResult.stdout);
+      const readyExecutionPlan = readyJson.artifacts.find((a: any) => a.id === 'execution-plan');
+      expect(readyExecutionPlan).toMatchObject({
+        id: 'execution-plan',
+        outputPath: 'execution-plan.md',
+        status: 'ready',
+      });
+
+      await fs.writeFile(
+        path.join(changeDir, 'execution-plan.md'),
+        '# Execution Plan\n\n**Goal:** Test path-safe completion detection.'
+      );
+
+      const doneResult = await runCLI(
+        ['status', '--change', 'execution-plan-status', '--json'],
+        { cwd: tempDir }
+      );
+      expect(doneResult.exitCode).toBe(0);
+      const doneJson = JSON.parse(doneResult.stdout);
+      const doneExecutionPlan = doneJson.artifacts.find((a: any) => a.id === 'execution-plan');
+      expect(doneExecutionPlan).toMatchObject({
+        id: 'execution-plan',
+        outputPath: 'execution-plan.md',
+        status: 'done',
+      });
+      expect(doneJson.isComplete).toBe(true);
+    });
+
+    it('outputs JSON status with execution-plan apply requirement', async () => {
+      await createTestChange('json-apply-requires', ['proposal', 'design', 'specs', 'tasks']);
+
+      const result = await runCLI(['status', '--change', 'json-apply-requires', '--json'], {
+        cwd: tempDir,
+      });
+      expect(result.exitCode).toBe(0);
+
+      const json = JSON.parse(result.stdout);
+      expect(json.applyRequires).toEqual(['execution-plan']);
+      expect(json.artifacts.map((artifact: any) => artifact.id)).toEqual([
+        'proposal',
+        'design',
+        'specs',
+        'tasks',
+        'execution-plan',
+      ]);
+      expect(json.artifacts.find((artifact: any) => artifact.id === 'execution-plan')).toMatchObject({
+        outputPath: 'execution-plan.md',
+        status: 'ready',
+      });
     });
 
     it('exits gracefully when no changes exist', async () => {
@@ -296,6 +385,7 @@ describe('artifact-workflow CLI commands', () => {
       expect(result.stdout).toContain('design:');
       expect(result.stdout).toContain('specs:');
       expect(result.stdout).toContain('tasks:');
+      expect(result.stdout).toContain('execution-plan:');
     });
 
     it('shows template paths for specified schema', async () => {
@@ -314,6 +404,9 @@ describe('artifact-workflow CLI commands', () => {
       expect(json.proposal).toBeDefined();
       expect(json.proposal.path).toContain('proposal.md');
       expect(json.proposal.source).toBe('package');
+      expect(normalizePaths(json['execution-plan'].path)).toContain(
+        normalizePaths(path.join('schemas', 'spec-driven', 'templates', 'execution-plan.md'))
+      );
     });
 
     it('errors for unknown schema', async () => {
@@ -372,8 +465,14 @@ describe('artifact-workflow CLI commands', () => {
   });
 
   describe('instructions apply command', () => {
-    it('shows apply instructions for spec-driven schema with tasks', async () => {
-      await createTestChange('apply-change', ['proposal', 'design', 'specs', 'tasks']);
+    it('shows apply instructions for spec-driven schema with tasks and execution plan', async () => {
+      await createTestChange('apply-change', [
+        'proposal',
+        'design',
+        'specs',
+        'tasks',
+        'execution-plan',
+      ]);
 
       const result = await runCLI(['instructions', 'apply', '--change', 'apply-change'], {
         cwd: tempDir,
@@ -386,7 +485,7 @@ describe('artifact-workflow CLI commands', () => {
     });
 
     it('shows blocked state when required artifacts are missing', async () => {
-      // Only create proposal - missing tasks (required by spec-driven apply block)
+      // Only create proposal - missing execution-plan (required by spec-driven apply block)
       await createTestChange('blocked-apply', ['proposal']);
 
       const result = await runCLI(['instructions', 'apply', '--change', 'blocked-apply'], {
@@ -394,11 +493,36 @@ describe('artifact-workflow CLI commands', () => {
       });
       expect(result.exitCode).toBe(0);
       expect(result.stdout).toContain('Blocked');
-      expect(result.stdout).toContain('Missing artifacts: tasks');
+      expect(result.stdout).toContain('Missing artifacts: execution-plan');
+    });
+
+    it('blocks apply when tasks exist but execution-plan.md is missing', async () => {
+      await createTestChange('blocked-execution-plan', ['proposal', 'design', 'specs', 'tasks']);
+
+      const result = await runCLI(
+        ['instructions', 'apply', '--change', 'blocked-execution-plan', '--json'],
+        { cwd: tempDir }
+      );
+      expect(result.exitCode).toBe(0);
+
+      const json = JSON.parse(result.stdout);
+      expect(json.state).toBe('blocked');
+      expect(json.missingArtifacts).toEqual(['execution-plan']);
+      expect(normalizePaths(json.contextFiles.tasks)).toContain(
+        normalizePaths(path.join('superpowers', 'changes', 'blocked-execution-plan', 'tasks.md'))
+      );
+      expect(json.contextFiles['execution-plan']).toBeUndefined();
+      expect(json.progress).toEqual({ total: 1, complete: 0, remaining: 1 });
     });
 
     it('outputs JSON for apply instructions', async () => {
-      await createTestChange('json-apply', ['proposal', 'design', 'specs', 'tasks']);
+      await createTestChange('json-apply', [
+        'proposal',
+        'design',
+        'specs',
+        'tasks',
+        'execution-plan',
+      ]);
 
       const result = await runCLI(
         ['instructions', 'apply', '--change', 'json-apply', '--json'],
@@ -412,10 +536,23 @@ describe('artifact-workflow CLI commands', () => {
       expect(json.state).toBe('ready');
       expect(json.contextFiles).toBeDefined();
       expect(typeof json.contextFiles).toBe('object');
+      expect(normalizePaths(json.contextFiles.tasks)).toContain(
+        normalizePaths(path.join('superpowers', 'changes', 'json-apply', 'tasks.md'))
+      );
+      expect(normalizePaths(json.contextFiles['execution-plan'])).toContain(
+        normalizePaths(path.join('superpowers', 'changes', 'json-apply', 'execution-plan.md'))
+      );
+      expect(json.progress).toEqual({ total: 1, complete: 0, remaining: 1 });
     });
 
     it('shows schema instruction from apply block', async () => {
-      await createTestChange('instr-apply', ['proposal', 'design', 'specs', 'tasks']);
+      await createTestChange('instr-apply', [
+        'proposal',
+        'design',
+        'specs',
+        'tasks',
+        'execution-plan',
+      ]);
 
       const result = await runCLI(['instructions', 'apply', '--change', 'instr-apply'], {
         cwd: tempDir,
@@ -431,6 +568,7 @@ describe('artifact-workflow CLI commands', () => {
         'design',
         'specs',
         'tasks',
+        'execution-plan',
       ]);
       // Overwrite tasks with all completed
       await fs.writeFile(
@@ -448,7 +586,13 @@ describe('artifact-workflow CLI commands', () => {
 
     it('uses spec-driven schema apply configuration', async () => {
       // Create a spec-driven style change with all artifacts
-      await createTestChange('apply-schema-test', ['proposal', 'design', 'specs', 'tasks']);
+      await createTestChange('apply-schema-test', [
+        'proposal',
+        'design',
+        'specs',
+        'tasks',
+        'execution-plan',
+      ]);
 
       const result = await runCLI(
         ['instructions', 'apply', '--change', 'apply-schema-test', '--schema', 'spec-driven'],
@@ -459,8 +603,14 @@ describe('artifact-workflow CLI commands', () => {
     });
 
     it('spec-driven schema uses apply block configuration', async () => {
-      // Verify that spec-driven schema uses its apply block (requires: [tasks])
-      await createTestChange('apply-config-test', ['proposal', 'design', 'specs', 'tasks']);
+      // Verify that spec-driven schema uses its apply block (requires: [execution-plan])
+      await createTestChange('apply-config-test', [
+        'proposal',
+        'design',
+        'specs',
+        'tasks',
+        'execution-plan',
+      ]);
 
       const result = await runCLI(
         ['instructions', 'apply', '--change', 'apply-config-test', '--json'],
@@ -469,9 +619,10 @@ describe('artifact-workflow CLI commands', () => {
       expect(result.exitCode).toBe(0);
 
       const json = JSON.parse(result.stdout);
-      // spec-driven schema has apply block with requires: [tasks], so should be ready
+      // spec-driven schema has apply block with requires: [execution-plan], so should be ready
       expect(json.schemaName).toBe('spec-driven');
       expect(json.state).toBe('ready');
+      expect(json.applyRequires).toEqual(['execution-plan']);
     });
 
     it('fallback: requires all artifacts when schema has no apply block', async () => {

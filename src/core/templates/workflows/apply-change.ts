@@ -40,10 +40,11 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    \`\`\`
 
    This returns:
-   - Context file paths (varies by schema - could be proposal/specs/design/tasks or spec/tests/implementation/docs)
+   - Context file paths (varies by schema - for spec-driven this includes proposal, specs, design, tasks, and execution-plan when present)
    - Progress (total, complete, remaining)
    - Task list with status
    - Dynamic instruction based on current state
+   - For spec-driven changes, \`tasks.md\` is the progress checklist and \`execution-plan.md\` is the detailed implementation context.
 
    **Handle states:**
    - If \`state: "blocked"\` (missing artifacts): show message, suggest using superpowers-continue-change
@@ -54,7 +55,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 
    Read the files listed in \`contextFiles\` from the apply instructions output.
    The files depend on the schema being used:
-   - **spec-driven**: proposal, specs, design, tasks
+   - **spec-driven**: proposal, specs, design, tasks, execution-plan
    - Other schemas: follow the contextFiles from CLI output
 
 5. **Show current progress**
@@ -67,12 +68,14 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 
 6. **Implement tasks (loop until done or blocked)**
   
-   In most cases, test-driven development should be used. please refer to the \`test-driven-development\` skill.
+   In most cases, test-driven development should be used. Please refer to the \`test-driven-development\` skill.
 
    For each pending task:
    - Show which task is being worked on
    - Mark task complete in the tasks file: \`- [ ]\` → \`- [x]\`
    - Continue to next task
+   - Do not stop after a fixed batch size unless a blocker, ambiguity, or user interruption appears.
+   - Keep switching directly to the next pending task so the run stays continuous.
 
    **Pause if:**
    - Task is unclear → ask for clarification
@@ -146,11 +149,13 @@ What would you like to do?
 - If implementation reveals issues, pause and suggest artifact updates
 - Before claiming a task is completed, please refer to \`verification-before-completion\` skill
 - Update task checkbox immediately after completing each task
+- Treat execution-plan.md as implementation context and tasks.md as the progress-tracking checklist.
+- Treat completion independently: \`tasks.md\` completion means the checklist is done; \`execution-plan.md\` completion means the implementation plan is ready.
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles from CLI output, don't assume specific file names
 - Never start implementation on main/master branch without explicit user consent
 - Review the change proposal critically before starting — identify questions or concerns and raise them before proceeding
-- Default to executing in batches of 3 tasks. Between batches, report what was implemented and wait for feedback before continuing
+- Keep the task loop continuous by default; only pause when blocked, unclear, or explicitly asked to stop
 
 **Fluid Workflow Integration**
 
@@ -216,7 +221,7 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
 
    Read the files listed in \`contextFiles\` from the apply instructions output.
    The files depend on the schema being used:
-   - **spec-driven**: proposal, specs, design, tasks
+   - **spec-driven**: proposal, specs, design, tasks, execution-plan
    - Other schemas: follow the contextFiles from CLI output
 
 5. **Show current progress**
@@ -308,6 +313,7 @@ What would you like to do?
 - If implementation reveals issues, pause and suggest artifact updates
 - Keep code changes minimal and scoped to each task
 - Update task checkbox immediately after completing each task
+- Treat execution-plan.md as implementation context and tasks.md as the progress-tracking checklist.
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles from CLI output, don't assume specific file names
 

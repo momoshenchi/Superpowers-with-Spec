@@ -14,8 +14,10 @@ export function getSpProposeSkillTemplate(): SkillTemplate {
 
 I'll create a change with artifacts:
 - proposal.md (what & why)
+- specs/<capability>/spec.md (requirements)
 - design.md (how)
-- tasks.md (implementation steps)
+- tasks.md (progress checklist)
+- execution-plan.md (detailed implementation plan)
 
 When ready to implement, run /sp:apply
 
@@ -45,7 +47,7 @@ When ready to implement, run /sp:apply
    superpowers status --change "<name>" --json
    \`\`\`
    Parse the JSON to get:
-   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["tasks"]\`)
+   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["execution-plan"]\`)
    - \`artifacts\`: list of all artifacts with their status and dependencies
 
 4. **Create artifacts in sequence until apply-ready**
@@ -132,8 +134,10 @@ export function getSpProposeCommandTemplate(): CommandTemplate {
 
 I'll create a change with artifacts:
 - proposal.md (what & why)
+- specs/<capability>/spec.md (requirements)
 - design.md (how)
-- tasks.md (implementation steps)
+- tasks.md (progress checklist)
+- execution-plan.md (detailed implementation plan)
 
 When ready to implement, run /sp:apply
 
@@ -163,7 +167,7 @@ When ready to implement, run /sp:apply
    superpowers status --change "<name>" --json
    \`\`\`
    Parse the JSON to get:
-   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["tasks"]\`)
+   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["execution-plan"]\`)
    - \`artifacts\`: list of all artifacts with their status and dependencies
 
 4. **Create artifacts in sequence until apply-ready**

@@ -33,6 +33,7 @@ export interface ApplyInstructions {
   };
   tasks: TaskItem[];
   state: 'blocked' | 'all_done' | 'ready';
+  applyRequires: string[];
   missingArtifacts?: string[];
   instruction: string;
 }

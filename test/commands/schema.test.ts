@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
+import { runCLI } from '../helpers/run-cli.js';
 
 describe('schema command', () => {
   let tempDir: string;
@@ -320,6 +321,122 @@ artifacts:
       expect(schema.artifacts[1].requires).toEqual(['proposal']);
       expect(schema.artifacts[2].requires).toEqual(['specs']);
       expect(schema.artifacts[3].requires).toEqual(['design']);
+    });
+
+    it('should scaffold execution-plan with task dependency and apply requirement', async () => {
+      const result = await runCLI(
+        [
+          'schema',
+          'init',
+          'execution-workflow',
+          '--description',
+          'Execution workflow',
+          '--artifacts',
+          'proposal,specs,design,tasks,execution-plan',
+          '--json',
+        ],
+        {
+          cwd: tempDir,
+          env: {
+            XDG_DATA_HOME: path.join(tempDir, 'xdg-data'),
+            XDG_CONFIG_HOME: path.join(tempDir, 'xdg-config'),
+          },
+        }
+      );
+      expect(result.exitCode).toBe(0);
+
+      const json = JSON.parse(result.stdout);
+      const schemaDir = path.join(tempDir, 'superpowers', 'schemas', 'execution-workflow');
+      expect(json.path.replace(/\\/g, '/')).toContain(
+        path.join('superpowers', 'schemas', 'execution-workflow').replace(/\\/g, '/')
+      );
+      expect(json.artifacts).toEqual(['proposal', 'specs', 'design', 'tasks', 'execution-plan']);
+
+      const { parseSchema } = await import('../../src/core/artifact-graph/schema.js');
+      const schemaPath = path.join(schemaDir, 'schema.yaml');
+      const schema = parseSchema(fs.readFileSync(schemaPath, 'utf-8'));
+      expect(schema.artifacts.map((artifact) => artifact.id)).toEqual([
+        'proposal',
+        'specs',
+        'design',
+        'tasks',
+        'execution-plan',
+      ]);
+      expect(schema.artifacts.find((artifact) => artifact.id === 'execution-plan')).toMatchObject({
+        generates: 'execution-plan.md',
+        template: 'execution-plan.md',
+        requires: ['tasks'],
+      });
+      expect(schema.apply).toMatchObject({
+        requires: ['execution-plan'],
+        tracks: 'tasks.md',
+      });
+      expect(fs.existsSync(path.join(schemaDir, 'templates', 'execution-plan.md'))).toBe(true);
+    });
+
+    it('should keep tasks as apply requirement when execution-plan is not selected', async () => {
+      const result = await runCLI(
+        [
+          'schema',
+          'init',
+          'tasks-workflow',
+          '--description',
+          'Tasks workflow',
+          '--artifacts',
+          'proposal,specs,design,tasks',
+          '--json',
+        ],
+        {
+          cwd: tempDir,
+          env: {
+            XDG_DATA_HOME: path.join(tempDir, 'xdg-data'),
+            XDG_CONFIG_HOME: path.join(tempDir, 'xdg-config'),
+          },
+        }
+      );
+      expect(result.exitCode).toBe(0);
+
+      const { parseSchema } = await import('../../src/core/artifact-graph/schema.js');
+      const schemaPath = path.join(
+        tempDir,
+        'superpowers',
+        'schemas',
+        'tasks-workflow',
+        'schema.yaml'
+      );
+      const schema = parseSchema(fs.readFileSync(schemaPath, 'utf-8'));
+      expect(schema.apply).toMatchObject({
+        requires: ['tasks'],
+        tracks: 'tasks.md',
+      });
+    });
+
+    it('should reject invalid artifact ids and list execution-plan as valid', async () => {
+      const result = await runCLI(
+        [
+          'schema',
+          'init',
+          'invalid-workflow',
+          '--description',
+          'Invalid workflow',
+          '--artifacts',
+          'proposal,execution_plan',
+          '--json',
+        ],
+        {
+          cwd: tempDir,
+          env: {
+            XDG_DATA_HOME: path.join(tempDir, 'xdg-data'),
+            XDG_CONFIG_HOME: path.join(tempDir, 'xdg-config'),
+          },
+        }
+      );
+      expect(result.exitCode).toBe(1);
+
+      const json = JSON.parse(result.stdout);
+      expect(json.created).toBe(false);
+      expect(json.error).toContain("Unknown artifact 'execution_plan'");
+      expect(json.valid).toContain('execution-plan');
     });
   });
 

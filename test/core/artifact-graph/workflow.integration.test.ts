@@ -42,7 +42,20 @@ describe('artifact-graph workflow integration', () => {
 
       // Verify schema structure
       expect(graph.getName()).toBe('spec-driven');
-      expect(graph.getAllArtifacts()).toHaveLength(4);
+      expect(graph.getAllArtifacts()).toHaveLength(5);
+      expect(graph.getAllArtifacts().map((artifact) => artifact.id)).toEqual([
+        'proposal',
+        'specs',
+        'design',
+        'tasks',
+        'execution-plan',
+      ]);
+      expect(graph.getArtifact('execution-plan')).toMatchObject({
+        id: 'execution-plan',
+        generates: 'execution-plan.md',
+        template: 'execution-plan.md',
+        requires: ['tasks'],
+      });
 
       // 2. Initial state - nothing complete, only proposal is ready
       let completed = detectCompleted(graph, tempDir);
@@ -53,6 +66,7 @@ describe('artifact-graph workflow integration', () => {
         specs: ['proposal'],
         design: ['proposal'],
         tasks: ['design', 'specs'],
+        'execution-plan': ['tasks'],
       });
 
       // 3. Create proposal.md - now specs and design become ready
@@ -62,6 +76,7 @@ describe('artifact-graph workflow integration', () => {
       expect(graph.getNextArtifacts(completed).sort()).toEqual(['design', 'specs']);
       expect(normalizeBlocked(graph.getBlocked(completed))).toEqual({
         tasks: ['design', 'specs'],
+        'execution-plan': ['tasks'],
       });
 
       // 4. Create design.md - specs still needed for tasks
@@ -71,6 +86,7 @@ describe('artifact-graph workflow integration', () => {
       expect(graph.getNextArtifacts(completed)).toEqual(['specs']);
       expect(graph.getBlocked(completed)).toEqual({
         tasks: ['specs'],
+        'execution-plan': ['tasks'],
       });
 
       // 5. Create specs directory with a spec file - tasks becomes ready
@@ -80,15 +96,52 @@ describe('artifact-graph workflow integration', () => {
       completed = detectCompleted(graph, tempDir);
       expect(completed).toEqual(new Set(['proposal', 'design', 'specs']));
       expect(graph.getNextArtifacts(completed)).toEqual(['tasks']);
-      expect(graph.getBlocked(completed)).toEqual({});
+      expect(graph.getBlocked(completed)).toEqual({
+        'execution-plan': ['tasks'],
+      });
 
-      // 6. Create tasks.md - workflow complete
+      // 6. Create tasks.md - execution-plan becomes ready
       fs.writeFileSync(path.join(tempDir, 'tasks.md'), '# Tasks\n\n- [ ] Implement feature');
       completed = detectCompleted(graph, tempDir);
       expect(completed).toEqual(new Set(['proposal', 'design', 'specs', 'tasks']));
+      expect(graph.getNextArtifacts(completed)).toEqual(['execution-plan']);
+      expect(graph.isComplete(completed)).toBe(false);
+      expect(graph.getBlocked(completed)).toEqual({});
+
+      // 7. Create execution-plan.md - workflow complete
+      fs.writeFileSync(
+        path.join(tempDir, 'execution-plan.md'),
+        '# Feature Implementation Plan\n\n**Goal:** Implement feature.'
+      );
+      completed = detectCompleted(graph, tempDir);
+      expect(completed).toEqual(new Set(['proposal', 'design', 'specs', 'tasks', 'execution-plan']));
       expect(graph.getNextArtifacts(completed)).toEqual([]);
       expect(graph.isComplete(completed)).toBe(true);
       expect(graph.getBlocked(completed)).toEqual({});
+    });
+
+    it('should require explicit execution-plan.md path for completion', () => {
+      const schema = resolveSchema('spec-driven');
+      const graph = ArtifactGraph.fromSchema(schema);
+
+      fs.writeFileSync(path.join(tempDir, 'proposal.md'), '# Proposal');
+      fs.writeFileSync(path.join(tempDir, 'design.md'), '# Design');
+      const specsDir = path.join(tempDir, 'specs');
+      fs.mkdirSync(specsDir, { recursive: true });
+      fs.writeFileSync(path.join(specsDir, 'feature.md'), '# Spec');
+      fs.writeFileSync(path.join(tempDir, 'tasks.md'), '# Tasks\n\n- [ ] Task');
+      fs.writeFileSync(path.join(tempDir, 'execution-plan-notes.md'), '# Not the artifact');
+      fs.mkdirSync(path.join(tempDir, 'execution-plan'), { recursive: true });
+      fs.writeFileSync(path.join(tempDir, 'execution-plan', 'plan.md'), '# Also not the artifact');
+
+      let completed = detectCompleted(graph, tempDir);
+      expect(completed.has('execution-plan')).toBe(false);
+      expect(graph.getNextArtifacts(completed)).toEqual(['execution-plan']);
+
+      fs.writeFileSync(path.join(tempDir, 'execution-plan.md'), '# Execution Plan');
+
+      completed = detectCompleted(graph, tempDir);
+      expect(completed.has('execution-plan')).toBe(true);
     });
 
     it('should handle out-of-order file creation', () => {

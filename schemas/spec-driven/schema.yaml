@@ -1,6 +1,6 @@
 name: spec-driven
 version: 1
-description: Default Superpowers workflow - proposal → specs → design → tasks
+description: Default Superpowers workflow - proposal → specs → design → tasks → execution plan
 artifacts:
   - id: proposal
     generates: proposal.md
@@ -145,8 +145,87 @@ artifacts:
       - specs
       - design
 
+  - id: execution-plan
+    generates: execution-plan.md
+    description: Detailed implementation plan for executing the change
+    template: execution-plan.md
+    instruction: |
+      Create the execution plan that turns the compact task checklist into implementation-ready steps.
+
+      This artifact is saved as `execution-plan.md` in the current Superpowers change directory.
+      Use proposal, specs, design, and tasks as context, but keep `tasks.md` as the compact
+      checkbox progress file.
+
+      The plan must:
+      - Start with the implementation plan header from the template.
+      - Map files to create, modify, and test before listing task steps.
+      - Use project-relative paths that are portable across macOS, Linux, and Windows.
+      - Break work into bite-sized checkbox steps with exact commands and expected outcomes.
+      - Require test authoring first, then a comprehensive review of those tests before production code.
+      - Block production-code steps until the test review is approved or gaps are fixed.
+      - Avoid placeholders such as `TBD`, `TODO`, `implement later`, or vague directives.
+
+      After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
+      **1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+      **2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
+      **3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+      If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
+      
+      Example:
+      ````
+      ## Task Plan
+      ### Task 1: [Component or Behavior]
+
+      **Files:**
+      - Create: `path/to/file.ts`
+      - Modify: `path/to/existing.ts`
+      - Test: `test/path/to/test-file.test.ts`
+
+      - [ ] **Step 1: Write the failing test**
+
+      ```ts
+      it('describes the specific behavior', () => {
+        expect(actualBehavior()).toBe(expectedValue);
+      });
+      ```
+
+      - [ ] **Step 2: Run test to verify it fails**
+
+      Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
+      Expected: FAIL for the missing behavior, not because of syntax errors or incorrect test setup.
+
+      - [ ] **Step 3: Review test coverage before production code**
+
+      Check: requirement coverage, edge cases, negative paths, assertion strength, regression sensitivity, and cross-platform path behavior when paths are involved.
+      Expected: Review either approves the tests or identifies gaps that are fixed before Step 4.
+
+      - [ ] **Step 4: Write minimal implementation**
+
+      ```ts
+      export function actualBehavior() {
+        return expectedValue;
+      }
+      ```
+
+      - [ ] **Step 5: Run verification**
+
+      Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
+      Expected: PASS with the new test covering the behavior.
+
+      - [ ] **Step 6: Commit when appropriate**
+
+      ```bash
+      git add test/path/to/test-file.test.ts path/to/existing.ts
+      git commit -m "feat: add specific behavior"
+      ```
+      ````
+     
+      Reference `tasks.md` for task ordering and tracking, but add the concrete TDD detail here.
+    requires:
+      - tasks
+
 apply:
-  requires: [tasks]
+  requires: [execution-plan]
   tracks: tasks.md
   instruction: |
     Read context files, work through pending tasks, mark complete as you go.

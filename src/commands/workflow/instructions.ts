@@ -394,6 +394,7 @@ export async function generateApplyInstructions(
     progress: { total, complete, remaining },
     tasks,
     state,
+    applyRequires: requiredArtifactIds,
     missingArtifacts: missingArtifacts.length > 0 ? missingArtifacts : undefined,
     instruction,
   };

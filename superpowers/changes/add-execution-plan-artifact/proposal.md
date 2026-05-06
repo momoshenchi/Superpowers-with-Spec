@@ -8,6 +8,10 @@ Adding a dedicated execution plan artifact gives agents a place to produce imple
 
 - Add an `execution-plan` artifact to the default `spec-driven` workflow.
 - Generate `execution-plan.md` after `tasks.md`, using proposal, specs, design, and tasks as context.
+- Keep `tasks.md` and `execution-plan.md` semantically separate:
+  - `tasks.md` is the compact progress checklist
+  - `execution-plan.md` is the detailed execution guide
+  - status and apply should report their completion independently
 - Base the new artifact's template and instructions on the existing `writing-plan/` guidance:
   - file structure map before task details
   - bite-sized TDD steps
@@ -19,7 +23,7 @@ Adding a dedicated execution plan artifact gives agents a place to produce imple
   - self-review before handoff
 - Keep `tasks.md` as the checkbox tracking file for apply/list/archive behavior.
 - Require `execution-plan` before apply so implementation starts with both a trackable checklist and a detailed execution plan.
-- Update generated Superpowers workflow skill/command text so proposal, fast-forward, continue, onboarding, and apply flows understand the extra artifact.
+- Update generated Superpowers workflow skill/command text so proposal, fast-forward, continue, onboarding, and apply flows understand the extra artifact and keep apply moving continuously through tasks unless a real blocker appears.
 - Extend schema initialization defaults so custom schemas can include the same execution-plan artifact when appropriate.
 
 ## Capabilities
@@ -30,9 +34,9 @@ Adding a dedicated execution plan artifact gives agents a place to produce imple
 
 ### Modified Capabilities
 
-- `cli-artifact-workflow`: The default `spec-driven` artifact graph and apply requirements change to include `execution-plan` while preserving `tasks.md` as the progress tracking file.
+- `cli-artifact-workflow`: The default `spec-driven` artifact graph and apply requirements change to include `execution-plan` while preserving `tasks.md` as the progress tracking file and making task/execution-plan completion status distinct.
 - `schema-init-command`: Common schema scaffolding can include the execution-plan artifact and generate an appropriate default template.
-- `cli-init`: Generated Superpowers skills and slash-command instructions describe and handle the execution-plan artifact in user-facing workflows.
+- `cli-init`: Generated Superpowers skills and slash-command instructions describe and handle the execution-plan artifact in user-facing workflows, with less interruption during apply task switching.
 
 ## Impact
 
