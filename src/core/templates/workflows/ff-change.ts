@@ -36,7 +36,7 @@ export function getFfChangeSkillTemplate(): SkillTemplate {
    superpowers status --change "<name>" --json
    \`\`\`
    Parse the JSON to get:
-   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["execution-plan"]\`)
+   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["test-plan"]\`)
    - \`artifacts\`: list of all artifacts with their status and dependencies
 
 4. **Create artifacts in sequence until apply-ready**
@@ -88,7 +88,8 @@ After completing all artifacts, summarize:
 
 - Follow the \`instruction\` field from \`superpowers instructions\` for each artifact type
 - The schema defines what each artifact should contain - follow it
-- The default spec-driven schema creates proposal.md, specs, design.md, tasks.md, and execution-plan.md before implementation
+- The default spec-driven schema creates proposal.md, specs, design.md, tasks.md, execution-plan.md, and test-plan.md before implementation
+- In that default flow, test-plan.md captures the pre-implementation coverage draft and the post-implementation Test Hardening evidence.
 - Read dependency artifacts for context before creating new ones
 - Use \`template\` as the structure for your output file - fill in its sections
 - **IMPORTANT**: \`context\` and \`rules\` are constraints for YOU, not content for the file
@@ -139,7 +140,7 @@ export function getSpFfCommandTemplate(): CommandTemplate {
    superpowers status --change "<name>" --json
    \`\`\`
    Parse the JSON to get:
-   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["execution-plan"]\`)
+   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["test-plan"]\`)
    - \`artifacts\`: list of all artifacts with their status and dependencies
 
 4. **Create artifacts in sequence until apply-ready**
@@ -191,7 +192,8 @@ After completing all artifacts, summarize:
 
 - Follow the \`instruction\` field from \`superpowers instructions\` for each artifact type
 - The schema defines what each artifact should contain - follow it
-- The default spec-driven schema creates proposal.md, specs, design.md, tasks.md, and execution-plan.md before implementation
+- The default spec-driven schema creates proposal.md, specs, design.md, tasks.md, execution-plan.md, and test-plan.md before implementation
+- In that default flow, test-plan.md captures the pre-implementation coverage draft and the post-implementation Test Hardening evidence.
 - Read dependency artifacts for context before creating new ones
 - Use \`template\` as the structure for your output file - fill in its sections
 - **IMPORTANT**: \`context\` and \`rules\` are constraints for YOU, not content for the file

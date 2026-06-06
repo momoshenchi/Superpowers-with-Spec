@@ -12,7 +12,7 @@ For workflow patterns and when to use each command, see [Workflows](workflows.md
 |---------|---------|
 | `/sp:propose` | Create a change and generate planning artifacts in one step |
 | `/sp:explore` | Think through ideas before committing to a change |
-| `/sp:apply` | Implement tasks from the change |
+| `/sp:apply` | Implement tasks and complete Test Hardening |
 | `/sp:archive` | Archive a completed change |
 
 ### Expanded Workflow Commands (custom workflow selection)
@@ -49,7 +49,7 @@ Create a new change and generate planning artifacts in one step. This is the def
 
 **What it does:**
 - Creates `superpowers/changes/<change-name>/`
-- Generates artifacts needed before implementation (for `spec-driven`: proposal, specs, design, tasks)
+- Generates artifacts needed before implementation (for `spec-driven`: proposal, specs, design, tasks, execution-plan, test-plan)
 - Stops when the change is ready for `/sp:apply`
 
 **Example:**
@@ -61,6 +61,8 @@ AI:  Created superpowers/changes/add-dark-mode/
      ✓ specs/ui/spec.md
      ✓ design.md
      ✓ tasks.md
+     ✓ execution-plan.md
+     ✓ test-plan.md
      Ready for implementation. Run /sp:apply.
 ```
 
@@ -252,6 +254,8 @@ AI:  Fast-forwarding add-dark-mode...
      ✓ Creating specs/ui/spec.md
      ✓ Creating design.md
      ✓ Creating tasks.md
+     ✓ Creating execution-plan.md
+     ✓ Creating test-plan.md
 
      All planning artifacts complete!
      Ready for implementation. Run /sp:apply to begin.
@@ -267,7 +271,7 @@ AI:  Fast-forwarding add-dark-mode...
 
 ### `/sp:apply`
 
-Implement tasks from the change. Works through the task list, writing code and checking off items.
+Implement tasks from the change and complete the post-implementation Test Hardening pass. Works through the task list, writing code, checking off items, then updates `test-plan.md` with hardening evidence before apply completion.
 
 **Syntax:**
 ```
@@ -284,6 +288,7 @@ Implement tasks from the change. Works through the task list, writing code and c
 - Works through tasks one by one
 - Writes code, creates files, runs tests as needed
 - Marks tasks complete with checkboxes `[x]`
+- When tasks are complete, reads `test-plan.md`, analyzes which earlier tests were insufficient, adds feasible missing coverage, records what this stage strengthened, and only completes when every concrete test/status row is complete
 
 **Example:**
 ```
@@ -306,12 +311,18 @@ AI:  Implementing add-dark-mode...
 
      ✓ 1.2 Complete
      ...
+
+     All tasks complete. Starting Test Hardening...
+     ✓ Added missing boundary coverage
+     ✓ Updated test-plan.md with command evidence
+     ✓ test-plan.md table statuses complete
 ```
 
 **Tips:**
 - Can resume where you left off if interrupted
 - Use for parallel changes by specifying the change name
-- Completion state is tracked in `tasks.md` checkboxes
+- Implementation progress is tracked in `tasks.md` checkboxes
+- Final apply completion also requires Test Hardening in `test-plan.md`; task completion alone is not the archive signal
 
 ---
 

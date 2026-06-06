@@ -19,7 +19,7 @@ The default spec-driven schema SHALL create `test-plan.md` after `execution-plan
 - **AND** `test-plan.md` exists
 - **THEN** `contextFiles` SHALL include `test-plan`
 - **AND** `instruction` SHALL describe the post-task Test Hardening stage
-- **AND** `instruction` SHALL identify `- [x] Test Hardening complete` as the only completion marker
+- **AND** `instruction` SHALL identify complete concrete `Status` table rows as the Test Hardening completion condition
 
 ### Requirement: Test-plan template path SHALL resolve like other schema templates
 The CLI SHALL expose the `test-plan` template through existing schema template discovery.

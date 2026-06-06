@@ -1,6 +1,6 @@
 name: spec-driven
 version: 1
-description: Default Superpowers workflow - proposal → specs → design → tasks → execution plan
+description: Default Superpowers workflow - proposal → specs → design → tasks → execution plan → test plan
 artifacts:
   - id: proposal
     generates: proposal.md
@@ -163,6 +163,7 @@ artifacts:
       - Break work into bite-sized checkbox steps with exact commands and expected outcomes.
       - Require test authoring first, then a comprehensive review of those tests before production code.
       - Block production-code steps until the test review is approved or gaps are fixed.
+      - Keep red tests focused on driving implementation; broad post-diff coverage planning and evidence belong in `test-plan.md`.
       - Avoid placeholders such as `TBD`, `TODO`, `implement later`, or vague directives.
 
       After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
@@ -224,9 +225,32 @@ artifacts:
     requires:
       - tasks
 
+  - id: test-plan
+    generates: test-plan.md
+    description: Test coverage plan and post-implementation hardening record
+    template: test-plan.md
+    instruction: |
+      Create the test plan that maps intended coverage before implementation and records Test Hardening after implementation.
+
+      This artifact is saved as `test-plan.md` in the current Superpowers change directory.
+      Use proposal, specs, design, tasks, and execution-plan as context. Do not duplicate the full implementation plan.
+
+      The plan must:
+      - Distinguish red tests in `execution-plan.md` from post-implementation Test Hardening in `test-plan.md`.
+      - Include a requirement/scenario coverage matrix with unit, integration, E2E, manual, or not-applicable coverage decisions.
+      - Start by analyzing which earlier tests were insufficient or not broad enough, then describe which tests this stage added or strengthened.
+      - Include boundary, abnormal, failure, non-critical-path, integration, and cross-platform path risks where relevant.
+      - Include deferred or manual coverage only with specific reasons.
+      - Make Test Hardening completion depend on the concrete status rows in the test plan tables, not on a standalone completion checkbox.
+      - Use complete table statuses such as `covered`, `passed`, or `not applicable`; leave unfinished rows as `planned`, `failing`, or blank.
+    requires:
+      - execution-plan
+
 apply:
-  requires: [execution-plan]
+  requires: [test-plan]
   tracks: tasks.md
   instruction: |
     Read context files, work through pending tasks, mark complete as you go.
-    Pause if you hit blockers or need clarification.
+    When implementation tasks are complete, continue into Test Hardening using `test-plan.md`.
+    Apply completion requires both all tasks complete and every concrete test/status row in test-plan.md complete.
+    Pause if you hit blockers, failing hardening tests, unresolved defects, ambiguous diff ownership, or unclear requirements.

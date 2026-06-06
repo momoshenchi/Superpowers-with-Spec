@@ -51,7 +51,7 @@ Add tests proving:
 - Apply context includes `test-plan` when `test-plan.md` exists.
 - Progress tracking still reads `tasks.md`.
 - `superpowers templates --schema spec-driven --json` includes `test-plan`.
-- The initial template contains exactly `- [ ] Test Hardening complete`.
+- The initial template contains incomplete `Status` table rows rather than a standalone hardening checkbox.
 
 Run: `pnpm exec vitest run test/commands/artifact-workflow.test.ts`
 
@@ -63,7 +63,7 @@ Check:
 - Tests use `path.join()` or path normalization for path expectations.
 - Tests would fail for a shallow implementation that adds only the template file but leaves `apply.requires` as `execution-plan`.
 - Tests verify context inclusion and progress tracking independently.
-- Tests verify the exact hardening marker rather than accepting fuzzy wording.
+- Tests verify table-driven completion rather than accepting fuzzy summary wording.
 
 Expected: Review approves tests or gaps are fixed before schema edits.
 
@@ -88,14 +88,13 @@ Update `schemas/spec-driven/schema.yaml`:
 
 Create `schemas/spec-driven/templates/test-plan.md` with sections:
 - Testing Phase Boundary: red tests vs Test Hardening.
-- Hardening Status checklist, with final completion unchecked by default.
-- The exact line `- [ ] Test Hardening complete`.
+- Table-driven hardening completion guidance, with draft status rows incomplete by default.
+- Status examples that distinguish incomplete rows (`planned`, `failing`, blank) from complete rows (`covered`, `passed`, `not applicable`).
 - Requirement and scenario coverage matrix.
 - Boundary and abnormal case sweep.
 - Non-critical path sweep.
-- Actual diff audit.
-- Added/updated tests.
-- Verification commands.
+- Earlier testing gaps and newly strengthened tests.
+- Selected verification.
 - Deferred/manual coverage with reasons.
 
 - [ ] **Step 3: Update execution-plan template**
@@ -110,7 +109,7 @@ Clarify:
 Update `test/core/artifact-graph/instruction-loader.test.ts` to assert the `test-plan` instructions/template include:
 - Two-phase draft/hardening language.
 - Explicit red-test vs hardening distinction.
-- Exact hardening completion marker `- [ ] Test Hardening complete`.
+- Table-driven hardening completion language.
 - Command evidence section.
 
 Run: `pnpm exec vitest run test/core/artifact-graph/instruction-loader.test.ts test/commands/artifact-workflow.test.ts test/core/artifact-graph/workflow.integration.test.ts`
@@ -129,10 +128,10 @@ Add assertions that generated apply instructions:
 - Mention `test-plan.md`.
 - State that task completion transitions into Test Hardening.
 - State that apply completion requires implementation tasks and Test Hardening.
-- Tell agents to resume hardening when tasks are complete but `- [x] Test Hardening complete` is not present.
+- Tell agents to resume hardening when tasks are complete but concrete `test-plan.md` status rows are not all complete.
 - Distinguish red tests from Test Hardening.
 - Block completion when hardening tests fail or defects remain unresolved.
-- Scope diff auditing to relevant working-tree changes and pause on ambiguous unrelated changes.
+- Scope hardening to relevant implementation/testing changes and pause on ambiguous unrelated changes.
 
 Run: `pnpm exec vitest run test/core/templates/skill-templates-parity.test.ts`
 
@@ -143,10 +142,10 @@ Expected: FAIL until workflow templates are updated.
 Update both skill and command content in `apply-change.ts`:
 - Context file descriptions include `test-plan`.
 - Apply handling says `state: all_done` requires reading `test-plan.md` before claiming completion.
-- Apply handling treats only `- [x] Test Hardening complete` as hardening complete.
+- Apply handling treats only complete concrete `Status` table rows as hardening complete.
 - The implementation loop runs tasks as before.
 - After all tasks complete, the agent enters Test Hardening.
-- Test Hardening inspects specs/design/tasks/execution-plan/test-plan plus relevant `git diff --stat` and `git diff` evidence.
+- Test Hardening inspects specs/design/tasks/execution-plan/test-plan plus the completed implementation and test coverage.
 - Agent adds feasible missing tests and records evidence.
 - Agent fixes defects or pauses as blocked when hardening tests fail due to product behavior.
 - Final output separates implementation completion from hardening completion.

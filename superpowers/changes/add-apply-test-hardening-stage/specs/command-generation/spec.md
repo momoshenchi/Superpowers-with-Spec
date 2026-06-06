@@ -13,12 +13,12 @@ Generated `/sp:apply` skill and command content SHALL describe the post-task Tes
 - **WHEN** an agent reads the generated apply instructions
 - **THEN** the instructions SHALL distinguish pre-implementation red tests in `execution-plan.md` from post-implementation Test Hardening in `test-plan.md`
 - **AND** the instructions SHALL state that passing red tests is necessary but not sufficient for final apply completion
-- **AND** the instructions SHALL identify `- [x] Test Hardening complete` as the only completion marker
+- **AND** the instructions SHALL identify complete concrete `Status` table rows as the Test Hardening completion condition
 
 #### Scenario: Apply template handles hardening failures
 - **WHEN** an agent reads the generated apply instructions
 - **THEN** the instructions SHALL state that failing hardening tests or unresolved product defects block apply completion
-- **AND** the instructions SHALL tell agents to fix the defect or pause as blocked rather than checking the completion marker
+- **AND** the instructions SHALL tell agents to fix the defect or pause as blocked rather than marking affected table rows complete
 
 ### Requirement: Generated workflow content SHALL describe test-plan in artifact flows
 Generated workflow instructions SHALL mention `test-plan.md` in schema-aware artifact flow descriptions without hardcoding behavior for custom schemas that omit it.

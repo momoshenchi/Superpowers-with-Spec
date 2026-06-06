@@ -78,6 +78,8 @@ AI:  Creating all planning artifacts...
      ✓ specs/
      ✓ design.md
      ✓ tasks.md
+     ✓ execution-plan.md
+     ✓ test-plan.md
      Ready for implementation!
 
 You: /sp:apply
@@ -86,7 +88,9 @@ AI:  Working through tasks...
      ✓ Added logout button to header
      ✓ Implemented session clearing
      ✓ Added confirmation dialog
-     All tasks complete!
+     All tasks complete. Running Test Hardening...
+     ✓ Added missing hardening coverage
+     ✓ test-plan.md table statuses complete
 
 You: /sp:archive
 
@@ -173,9 +177,9 @@ AI:  ✓ Created planning artifacts
 
 You: /sp:apply
 
-AI:  Working on fix-login-redirect...
+     AI:  Working on fix-login-redirect...
      [Implements the fix]
-     All tasks complete!
+     All tasks complete. test-plan.md table statuses complete!
 
 You: /sp:archive
 
@@ -197,9 +201,9 @@ When you have multiple completed changes, use `/sp:bulk-archive`:
 You: /sp:bulk-archive
 
 AI:  Found 3 completed changes:
-     - add-dark-mode (all tasks done)
-     - fix-login-redirect (all tasks done)
-     - update-footer (all tasks done)
+     - add-dark-mode (tasks and Test Hardening done)
+     - fix-login-redirect (tasks and Test Hardening done)
+     - update-footer (tasks and Test Hardening done)
 
      Checking for spec conflicts...
      ⚠ add-dark-mode and update-footer both touch specs/ui/
@@ -225,10 +229,12 @@ The recommended completion flow:
 
 ```text
 /sp:apply ──► /sp:verify ──► /sp:archive
-                    │                 │
-              validates          prompts to sync
-              implementation     if needed
+    │                │                 │
+ implements      validates          prompts to sync
+ and hardens     implementation     if needed
 ```
+
+`/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass analyzes which earlier tests were insufficient, adds feasible missing coverage, records what this stage strengthened, and treats hardening as complete only when every concrete test/status row is complete and failures or product defects are resolved.
 
 #### Verify: Check Your Work
 

@@ -40,22 +40,22 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    \`\`\`
 
    This returns:
-   - Context file paths (varies by schema - for spec-driven this includes proposal, specs, design, tasks, and execution-plan when present)
+   - Context file paths (varies by schema - for spec-driven this includes proposal, specs, design, tasks, execution-plan, and test-plan when present)
    - Progress (total, complete, remaining)
    - Task list with status
    - Dynamic instruction based on current state
-   - For spec-driven changes, \`tasks.md\` is the progress checklist and \`execution-plan.md\` is the detailed implementation context.
+   - For spec-driven changes, \`tasks.md\` is the progress checklist, \`execution-plan.md\` is the detailed implementation/TDD context, and \`test-plan.md\` is the coverage draft plus Test Hardening record.
 
    **Handle states:**
    - If \`state: "blocked"\` (missing artifacts): show message, suggest using superpowers-continue-change
-   - If \`state: "all_done"\`: congratulate, suggest archive
+   - If \`state: "all_done"\`: read \`test-plan.md\` when present, confirm every concrete test/status row is complete, then summarize implementation and hardening before suggesting archive
    - Otherwise: proceed to implementation
 
 4. **Read context files**
 
    Read the files listed in \`contextFiles\` from the apply instructions output.
    The files depend on the schema being used:
-   - **spec-driven**: proposal, specs, design, tasks, execution-plan
+   - **spec-driven**: proposal, specs, design, tasks, execution-plan, test-plan
    - Other schemas: follow the contextFiles from CLI output
 
 5. **Show current progress**
@@ -83,12 +83,26 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Error or blocker encountered → report and wait for guidance
    - User interrupts
 
-7. **On completion or pause, show status**
+7. **Run Test Hardening after implementation tasks are complete**
+
+   For spec-driven changes with \`test-plan.md\`:
+   - Task completion transitions into Test Hardening; it is not apply completion by itself.
+   - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete test/status row in its tables is complete.
+   - Use complete statuses such as \`covered\`, \`passed\`, or \`not applicable\`; \`planned\`, \`failing\`, blank, or placeholder rows keep hardening incomplete.
+   - Distinguish pre-implementation red tests in \`execution-plan.md\` from post-implementation Test Hardening in \`test-plan.md\`; passing red tests is necessary but not sufficient for final apply completion.
+   - Analyze which earlier tests were insufficient or not broad enough, then decide which supplemental tests are needed.
+   - Add feasible missing tests for boundary cases, abnormal/error cases, non-critical paths, empty/missing/invalid states, permission/ownership failures, repeated actions, integration points, E2E flows, and cross-platform path behavior where relevant.
+   - Record which tests this stage added or strengthened and any justified deferrals in \`test-plan.md\`.
+   - Failing hardening tests or unresolved product defects block apply completion; fix them and rerun verification, or pause as blocked with the failing command, failure summary, affected files, and recommended next action.
+   - Mark the relevant table rows complete only after evidence exists and no hardening failures or unresolved defects remain.
+
+8. **On completion or pause, show status**
 
    Display:
    - Tasks completed this session
    - Overall progress: "N/M tasks complete"
-   - If all done: suggest archive
+   - Test Hardening status separately from implementation progress
+   - If all tasks and Test Hardening are done: suggest archive
    - If paused: explain why and wait for guidance
 
 **Output During Implementation**
@@ -113,13 +127,20 @@ Working on task 4/7: <task description>
 **Change:** <change-name>
 **Schema:** <schema-name>
 **Progress:** 7/7 tasks complete ✓
+**Test Hardening:** complete ✓
 
 ### Completed This Session
 - [x] Task 1
 - [x] Task 2
 ...
 
-All tasks complete! Ready to archive this change.
+### Test Hardening Summary
+- Earlier test gaps: <summary>
+- Tests added/strengthened: <summary>
+- Verification: <selected checks and outcomes>
+- Deferrals: <none or documented reasons>
+
+Implementation and Test Hardening are complete. Ready for the next workflow action.
 \`\`\`
 
 **Output On Pause (Issue Encountered)**
@@ -150,7 +171,10 @@ What would you like to do?
 - Before claiming a task is completed, please refer to \`verification-before-completion\` skill
 - Update task checkbox immediately after completing each task
 - Treat execution-plan.md as implementation context and tasks.md as the progress-tracking checklist.
-- Treat completion independently: \`tasks.md\` completion means the checklist is done; \`execution-plan.md\` completion means the implementation plan is ready.
+- Treat completion independently: \`tasks.md\` completion means implementation tasks are done; \`test-plan.md\` table statuses mean hardening is done.
+- Treat Test Hardening as incomplete while any concrete test/status row is \`planned\`, \`failing\`, blank, or still a placeholder.
+- Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.
+- Do not complete apply while hardening tests fail or product defects remain unresolved.
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles from CLI output, don't assume specific file names
 - Never start implementation on main/master branch without explicit user consent
@@ -214,14 +238,14 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
 
    **Handle states:**
    - If \`state: "blocked"\` (missing artifacts): show message, suggest using \`/sp:continue\`
-   - If \`state: "all_done"\`: congratulate, suggest archive
+   - If \`state: "all_done"\`: read \`test-plan.md\` when present, confirm every concrete test/status row is complete, then summarize implementation and hardening before suggesting archive
    - Otherwise: proceed to implementation
 
 4. **Read context files**
 
    Read the files listed in \`contextFiles\` from the apply instructions output.
    The files depend on the schema being used:
-   - **spec-driven**: proposal, specs, design, tasks, execution-plan
+   - **spec-driven**: proposal, specs, design, tasks, execution-plan, test-plan
    - Other schemas: follow the contextFiles from CLI output
 
 5. **Show current progress**
@@ -247,12 +271,26 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
    - Error or blocker encountered → report and wait for guidance
    - User interrupts
 
-7. **On completion or pause, show status**
+7. **Run Test Hardening after implementation tasks are complete**
+
+   For spec-driven changes with \`test-plan.md\`:
+   - Task completion transitions into Test Hardening; it is not apply completion by itself.
+   - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete test/status row in its tables is complete.
+   - Use complete statuses such as \`covered\`, \`passed\`, or \`not applicable\`; \`planned\`, \`failing\`, blank, or placeholder rows keep hardening incomplete.
+   - Distinguish pre-implementation red tests in \`execution-plan.md\` from post-implementation Test Hardening in \`test-plan.md\`; passing red tests is necessary but not sufficient for final apply completion.
+   - Analyze which earlier tests were insufficient or not broad enough, then decide which supplemental tests are needed.
+   - Add feasible missing tests for boundary cases, abnormal/error cases, non-critical paths, empty/missing/invalid states, permission/ownership failures, repeated actions, integration points, E2E flows, and cross-platform path behavior where relevant.
+   - Record which tests this stage added or strengthened and any justified deferrals in \`test-plan.md\`.
+   - Failing hardening tests or unresolved product defects block apply completion; fix them and rerun verification, or pause as blocked with the failing command, failure summary, affected files, and recommended next action.
+   - Mark the relevant table rows complete only after evidence exists and no hardening failures or unresolved defects remain.
+
+8. **On completion or pause, show status**
 
    Display:
    - Tasks completed this session
    - Overall progress: "N/M tasks complete"
-   - If all done: suggest archive
+   - Test Hardening status separately from implementation progress
+   - If all tasks and Test Hardening are done: suggest archive
    - If paused: explain why and wait for guidance
 
 **Output During Implementation**
@@ -277,13 +315,20 @@ Working on task 4/7: <task description>
 **Change:** <change-name>
 **Schema:** <schema-name>
 **Progress:** 7/7 tasks complete ✓
+**Test Hardening:** complete ✓
 
 ### Completed This Session
 - [x] Task 1
 - [x] Task 2
 ...
 
-All tasks complete! You can archive this change with \`/sp:archive\`.
+### Test Hardening Summary
+- Earlier test gaps: <summary>
+- Tests added/strengthened: <summary>
+- Verification: <selected checks and outcomes>
+- Deferrals: <none or documented reasons>
+
+Implementation and Test Hardening are complete. You can archive this change with \`/sp:archive\`.
 \`\`\`
 
 **Output On Pause (Issue Encountered)**
@@ -314,6 +359,10 @@ What would you like to do?
 - Keep code changes minimal and scoped to each task
 - Update task checkbox immediately after completing each task
 - Treat execution-plan.md as implementation context and tasks.md as the progress-tracking checklist.
+- Treat \`tasks.md\` completion as the transition into Test Hardening when \`test-plan.md\` exists.
+- Treat Test Hardening as incomplete while any concrete test/status row is \`planned\`, \`failing\`, blank, or still a placeholder.
+- Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.
+- Do not complete apply while hardening tests fail or product defects remain unresolved.
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles from CLI output, don't assume specific file names
 

@@ -201,6 +201,36 @@ describe('instruction-loader', () => {
       ]);
       expect(instructions.template).toContain('Expected: FAIL');
       expect(instructions.template).toContain('Expected: PASS');
+      expect(instructions.template).toContain('post-implementation Test Hardening records in `test-plan.md`');
+    });
+
+    it('should include test-plan template content and execution-plan dependency context', () => {
+      const changeDir = path.join(tempDir, 'superpowers', 'changes', 'my-change');
+      fs.mkdirSync(changeDir, { recursive: true });
+      fs.writeFileSync(path.join(changeDir, 'execution-plan.md'), '# Execution Plan');
+
+      const context = loadChangeContext(tempDir, 'my-change');
+      const instructions = generateInstructions(context, 'test-plan');
+
+      expect(instructions.outputPath).toBe('test-plan.md');
+      expect(instructions.dependencies).toEqual([
+        {
+          id: 'execution-plan',
+          done: true,
+          path: 'execution-plan.md',
+          description: 'Detailed implementation plan for executing the change',
+        },
+      ]);
+      expect(instructions.template).toContain('Testing Gap Analysis');
+      expect(instructions.template).toContain('earlier tests were still insufficient');
+      expect(instructions.template).toContain('Red tests in `execution-plan.md` drive the next implementation step');
+      expect(instructions.template).toContain('Test Hardening in this `test-plan.md` supplements that earlier testing');
+      expect(instructions.template).toContain('every concrete test/status row');
+      expect(instructions.template).toContain('planned / covered / passed / failing / not applicable');
+      expect(instructions.template).not.toContain('Test Hardening complete');
+      expect(instructions.template).toContain('Requirement And Scenario Coverage Matrix');
+      expect(instructions.template).not.toContain('Verification Commands');
+      expect(instructions.template).not.toContain('Actual Diff Audit');
     });
 
     it('should have empty dependencies for root artifact', () => {
@@ -595,6 +625,7 @@ rules:
       fs.writeFileSync(path.join(changeDir, 'design.md'), '# Design');
       fs.writeFileSync(path.join(changeDir, 'tasks.md'), '# Tasks');
       fs.writeFileSync(path.join(changeDir, 'execution-plan.md'), '# Execution Plan');
+      fs.writeFileSync(path.join(changeDir, 'test-plan.md'), '# Test Plan');
 
       const context = loadChangeContext(tempDir, 'my-change');
       const status = formatChangeStatus(context);

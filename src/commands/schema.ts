@@ -288,6 +288,12 @@ const DEFAULT_ARTIFACTS: Array<{
     generates: 'execution-plan.md',
     template: 'execution-plan.md',
   },
+  {
+    id: 'test-plan',
+    description: 'Test planning and post-implementation hardening record',
+    generates: 'test-plan.md',
+    template: 'test-plan.md',
+  },
 ];
 
 /**
@@ -673,7 +679,7 @@ export function registerSchemaCommand(program: Command): void {
     .description('Create a new project-local schema')
     .option('--json', 'Output as JSON')
     .option('--description <text>', 'Schema description')
-    .option('--artifacts <list>', 'Comma-separated artifact IDs (proposal,specs,design,tasks,execution-plan)')
+    .option('--artifacts <list>', 'Comma-separated artifact IDs (proposal,specs,design,tasks,execution-plan,test-plan)')
     .option('--default', 'Set as project default schema')
     .option('--no-default', 'Do not prompt to set as default')
     .option('--force', 'Overwrite existing schema')
@@ -833,6 +839,8 @@ export function registerSchemaCommand(program: Command): void {
             artifact.requires = requires;
           } else if (id === 'execution-plan' && selectedArtifactIds.includes('tasks')) {
             artifact.requires = ['tasks'];
+          } else if (id === 'test-plan' && selectedArtifactIds.includes('execution-plan')) {
+            artifact.requires = ['execution-plan'];
           }
 
           return artifact;
@@ -849,7 +857,11 @@ export function registerSchemaCommand(program: Command): void {
         // Add apply phase if tasks is included
         if (selectedArtifactIds.includes('tasks')) {
           schema.apply = {
-            requires: selectedArtifactIds.includes('execution-plan') ? ['execution-plan'] : ['tasks'],
+            requires: selectedArtifactIds.includes('test-plan')
+              ? ['test-plan']
+              : selectedArtifactIds.includes('execution-plan')
+                ? ['execution-plan']
+                : ['tasks'],
             tracks: 'tasks.md',
           };
         }
@@ -1035,6 +1047,28 @@ Expected: FAIL for the missing behavior.
 Run: \`pnpm exec vitest run test/path/to/test-file.test.ts\`
 Expected: PASS.
 -->
+`;
+
+    case 'test-plan':
+      return `## Testing Gap Analysis
+
+Analyze which earlier tests were still insufficient or not broad enough. Then describe which tests this Test Hardening stage added or strengthened.
+
+Red tests in \`execution-plan.md\` drive implementation before production code. Test Hardening in this file supplements that earlier testing after implementation tasks are done.
+
+Test Hardening is complete when every concrete test/status row in the tables below is complete. Use statuses such as \`covered\`, \`passed\`, or \`not applicable\` for completed rows. Leave rows as \`planned\`, \`failing\`, or blank until the coverage is actually complete.
+
+## Requirement And Scenario Coverage Matrix
+
+| Requirement / Scenario | Planned Coverage | Status | Notes |
+| --- | --- | --- | --- |
+| <!-- Requirement: Scenario --> | <!-- unit / integration / E2E / manual / not applicable --> | <!-- planned / covered / passed / failing / not applicable --> | <!-- test file, command, or rationale --> |
+
+## Deferred Or Manual Coverage
+
+| Gap | Reason Deferred | Safer Alternative / Follow-Up |
+| --- | --- | --- |
+| <!-- coverage gap --> | <!-- specific technical or scope reason --> | <!-- manual verification, narrower automated check, or follow-up --> |
 `;
 
     default:

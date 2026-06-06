@@ -13,6 +13,8 @@
 
 ## Task Plan
 
+Red tests in this file drive implementation one step at a time. Keep broad requirement/scenario coverage matrices, testing gap analysis, supplemental test coverage, and post-implementation Test Hardening records in `test-plan.md`. Passing the red/green task tests here does not replace the final Test Hardening pass after implementation tasks are complete.
+
 ### Task N: [Component or Behavior]
 
 <!-- 
@@ -57,6 +59,4 @@ export function actualBehavior() {
 Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
 Expected: PASS with the new test covering the behavior.
 -->
-
-
 

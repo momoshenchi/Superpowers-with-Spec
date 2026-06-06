@@ -53,7 +53,7 @@ I'll walk you through a complete change cycle—from idea to implementation—us
 1. Pick a small, real task in your codebase
 2. Explore the problem briefly
 3. Create a change (the container for our work)
-4. Build the artifacts: proposal → specs → design → tasks → execution plan
+4. Build the artifacts: proposal → specs → design → tasks → execution plan → test plan
 5. Implement the tasks
 6. Archive the completed change
 
@@ -402,21 +402,38 @@ Save to \`superpowers/changes/<name>/tasks.md\`.
 ## Execution Plan
 
 Before implementation, we create \`execution-plan.md\`: the detailed implementation plan. \`tasks.md\` stays the progress checklist; \`execution-plan.md\` carries the file map, TDD steps, exact commands, and test-review gate.
+
+Then we create \`test-plan.md\`: the pre-implementation coverage draft and post-implementation Test Hardening record.
 \`\`\`
 
 **DO:** Generate the execution plan from proposal, specs, design, and tasks, then save to \`superpowers/changes/<name>/execution-plan.md\`.
+
+**PAUSE** - Wait for user to confirm they're ready to create the test plan.
+
+---
+
+## Phase 10: Test Plan
+
+**EXPLAIN:**
+\`\`\`
+## Test Plan
+
+Before implementation starts, we create \`test-plan.md\`: a compact pre-implementation coverage draft and risk sweep. Later, after tasks are implemented, \`/sp:apply\` updates it with post-implementation Test Hardening evidence from the actual diff.
+\`\`\`
+
+**DO:** Generate the test plan from proposal, specs, design, tasks, and execution-plan, then save to \`superpowers/changes/<name>/test-plan.md\`.
 
 **PAUSE** - Wait for user to confirm they're ready to implement.
 
 ---
 
-## Phase 10: Apply (Implementation)
+## Phase 11: Apply (Implementation + Test Hardening)
 
 **EXPLAIN:**
 \`\`\`
 ## Implementation
 
-Now we implement each task, checking them off as we go. I'll announce each one and occasionally note how the specs/design informed the approach.
+Now we implement each task, checking them off as we go. When implementation tasks are complete, we continue into Test Hardening using \`test-plan.md\` before calling apply complete.
 \`\`\`
 
 **DO:** For each task:
@@ -429,7 +446,7 @@ Now we implement each task, checking them off as we go. I'll announce each one a
 
 Keep narration light—don't over-explain every line of code.
 
-After all tasks:
+After all tasks and Test Hardening:
 
 \`\`\`
 ## Implementation Complete
@@ -439,12 +456,14 @@ All tasks done:
 - [x] Task 2
 - [x] ...
 
-The change is implemented! One more step—let's archive it.
+Test Hardening is complete in \`test-plan.md\`.
+
+The change is implemented and hardened. One more step—let's archive it.
 \`\`\`
 
 ---
 
-## Phase 11: Archive
+## Phase 12: Archive
 
 **EXPLAIN:**
 \`\`\`
@@ -469,7 +488,7 @@ The change is now part of your project's history. The code is in your codebase, 
 
 ---
 
-## Phase 12: Recap & Next Steps
+## Phase 13: Recap & Next Steps
 
 \`\`\`
 ## Congratulations!
@@ -483,8 +502,9 @@ You just completed a full Superpowers cycle:
 5. **Design** - Decided HOW
 6. **Tasks** - Created the progress checklist
 7. **Execution Plan** - Wrote the detailed implementation plan
-8. **Apply** - Implemented the work
-9. **Archive** - Preserved the record
+8. **Test Plan** - Drafted coverage and hardening expectations
+9. **Apply** - Implemented the work and completed Test Hardening
+10. **Archive** - Preserved the record
 
 This same rhythm works for any size change—a small fix or a major feature.
 

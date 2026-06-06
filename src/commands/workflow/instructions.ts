@@ -21,6 +21,18 @@ import {
   type ApplyInstructions,
 } from './shared.js';
 
+const COMPLETE_TEST_PLAN_STATUSES = new Set([
+  'covered',
+  'complete',
+  'completed',
+  'done',
+  'pass',
+  'passed',
+  'not applicable',
+  'n/a',
+  'na',
+]);
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
@@ -322,6 +334,13 @@ export async function generateApplyInstructions(
   const requiredArtifactIds = applyConfig?.requires ?? schema.artifacts.map((a) => a.id);
   const tracksFile = applyConfig?.tracks ?? null;
   const schemaInstruction = applyConfig?.instruction ?? null;
+  const testPlanArtifact = schema.artifacts.find((artifact) => artifact.id === 'test-plan');
+  const testPlanPath = testPlanArtifact ? path.join(changeDir, testPlanArtifact.generates) : null;
+  let testHardeningComplete = false;
+  if (testPlanPath && fs.existsSync(testPlanPath)) {
+    const testPlanContent = await fs.promises.readFile(testPlanPath, 'utf-8');
+    testHardeningComplete = isTestPlanComplete(testPlanContent);
+  }
 
   // Check which required artifacts are missing
   const missingArtifacts: string[] = [];
@@ -375,8 +394,21 @@ export async function generateApplyInstructions(
     state = 'blocked';
     instruction = `The ${tracksFilename} file exists but contains no tasks.\nAdd tasks to ${tracksFilename} or regenerate it with superpowers-continue-change.`;
   } else if (tracksFile && remaining === 0 && total > 0) {
-    state = 'all_done';
-    instruction = 'All tasks are complete! This change is ready to be archived.\nConsider running tests and reviewing the changes before archiving.';
+    if (testPlanArtifact && !testHardeningComplete) {
+      state = 'ready';
+      instruction = [
+        'All implementation tasks are complete. Continue into Test Hardening before claiming apply completion.',
+        `Read \`${testPlanArtifact.generates}\` and treat Test Hardening as complete only when every concrete test/status row in the test plan tables is complete.`,
+        'Use completed statuses such as `covered`, `passed`, or `not applicable`; `planned`, `failing`, blank, or placeholder rows keep hardening incomplete.',
+        'Analyze which earlier tests were insufficient or not broad enough, add feasible missing tests, document what this stage strengthened, and pause if unrelated changes make the hardening scope ambiguous.',
+        'Failing hardening tests or unresolved product defects block apply completion; fix them or pause as blocked before marking the related table rows complete.',
+      ].join('\n');
+    } else {
+      state = 'all_done';
+      instruction = testPlanArtifact
+        ? 'All implementation tasks and Test Hardening are complete. This change is ready for the next workflow action.\nSummarize implementation progress, tests added or strengthened, selected verification, and any documented deferrals before suggesting archive.'
+        : 'All tasks are complete! This change is ready to be archived.\nConsider running tests and reviewing the changes before archiving.';
+    }
   } else if (!tracksFile) {
     // No tracking file configured in schema - ready to apply
     state = 'ready';
@@ -398,6 +430,71 @@ export async function generateApplyInstructions(
     missingArtifacts: missingArtifacts.length > 0 ? missingArtifacts : undefined,
     instruction,
   };
+}
+
+function isTestPlanComplete(content: string): boolean {
+  const lines = content.split(/\r?\n/);
+  let sawConcreteStatusRow = false;
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const headerCells = parseMarkdownTableRow(lines[index]);
+    if (!headerCells) continue;
+
+    const separatorCells = parseMarkdownTableRow(lines[index + 1] ?? '');
+    if (!separatorCells || !separatorCells.every(isSeparatorCell)) continue;
+
+    const statusIndex = headerCells.findIndex((cell) => normalizeTableCell(cell) === 'status');
+    if (statusIndex === -1) continue;
+
+    index += 2;
+    while (index < lines.length) {
+      const rowCells = parseMarkdownTableRow(lines[index]);
+      if (!rowCells) break;
+
+      if (isPlaceholderRow(rowCells)) {
+        index += 1;
+        continue;
+      }
+
+      const status = normalizeTableCell(rowCells[statusIndex] ?? '');
+      if (!status || !COMPLETE_TEST_PLAN_STATUSES.has(status)) {
+        return false;
+      }
+
+      sawConcreteStatusRow = true;
+      index += 1;
+    }
+  }
+
+  return sawConcreteStatusRow;
+}
+
+function parseMarkdownTableRow(line: string): string[] | null {
+  const trimmed = line.trim();
+  if (!trimmed.startsWith('|') || !trimmed.endsWith('|')) {
+    return null;
+  }
+
+  return trimmed.slice(1, -1).split('|').map((cell) => cell.trim());
+}
+
+function isSeparatorCell(cell: string): boolean {
+  return /^:?-{3,}:?$/.test(cell.trim());
+}
+
+function normalizeTableCell(cell: string): string {
+  return cell
+    .replace(/<!--.*?-->/g, '')
+    .replace(/`/g, '')
+    .trim()
+    .toLowerCase();
+}
+
+function isPlaceholderRow(cells: string[]): boolean {
+  return cells.every((cell) => {
+    const normalized = normalizeTableCell(cell);
+    return normalized === '' || normalized.includes('placeholder');
+  });
 }
 
 export async function applyInstructionsCommand(options: ApplyInstructionsOptions): Promise<void> {

@@ -18,6 +18,7 @@ I'll create a change with artifacts:
 - design.md (how)
 - tasks.md (progress checklist)
 - execution-plan.md (detailed implementation plan)
+- test-plan.md (pre-implementation coverage draft and post-implementation Test Hardening record)
 
 When ready to implement, run /sp:apply
 
@@ -47,7 +48,7 @@ When ready to implement, run /sp:apply
    superpowers status --change "<name>" --json
    \`\`\`
    Parse the JSON to get:
-   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["execution-plan"]\`)
+   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["test-plan"]\`)
    - \`artifacts\`: list of all artifacts with their status and dependencies
 
 4. **Create artifacts in sequence until apply-ready**
@@ -138,6 +139,7 @@ I'll create a change with artifacts:
 - design.md (how)
 - tasks.md (progress checklist)
 - execution-plan.md (detailed implementation plan)
+- test-plan.md (pre-implementation coverage draft and post-implementation Test Hardening record)
 
 When ready to implement, run /sp:apply
 
@@ -167,7 +169,7 @@ When ready to implement, run /sp:apply
    superpowers status --change "<name>" --json
    \`\`\`
    Parse the JSON to get:
-   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["execution-plan"]\`)
+   - \`applyRequires\`: array of artifact IDs needed before implementation (e.g., \`["test-plan"]\`)
    - \`artifacts\`: list of all artifacts with their status and dependencies
 
 4. **Create artifacts in sequence until apply-ready**

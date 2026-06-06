@@ -11,13 +11,13 @@
 
 #### Scenario: Apply resumes after tasks are already complete
 - **WHEN** `/sp:apply` is invoked for a change whose `tasks.md` checklist is already complete
-- **AND** `test-plan.md` does not mark Test Hardening complete
+- **AND** `test-plan.md` has concrete test/status rows that are not all complete
 - **THEN** the agent SHALL resume at the Test Hardening stage
 - **AND** the agent SHALL NOT treat the change as apply-complete solely because tasks are complete
 
 #### Scenario: Apply resumes after hardening is complete
 - **WHEN** `/sp:apply` is invoked for a change whose tasks are complete
-- **AND** `test-plan.md` marks Test Hardening complete
+- **AND** every concrete test/status row in `test-plan.md` tables is complete
 - **THEN** the agent MAY report implementation and hardening as complete
 - **AND** the agent MAY suggest the normal next workflow action
 
@@ -26,8 +26,8 @@ The Test Hardening stage SHALL examine the finished code and test diff to find c
 
 #### Scenario: Agent enters Test Hardening
 - **WHEN** Test Hardening begins
-- **THEN** the agent SHALL inspect the relevant code diff and test diff using repository-native evidence such as `git diff --stat` and `git diff`
-- **AND** compare them against specs, design risks, tasks, execution plan, and the pre-implementation `test-plan.md` draft
+- **THEN** the agent SHALL analyze which earlier tests were insufficient or not broad enough
+- **AND** compare the completed implementation against specs, design risks, tasks, execution plan, and the pre-implementation `test-plan.md` draft
 - **AND** identify missing coverage before final verification
 
 #### Scenario: Worktree contains unrelated changes
@@ -52,7 +52,7 @@ The apply workflow SHALL not complete hardening while hardening tests fail or ne
 - **WHEN** a hardening test fails because the implementation does not satisfy the intended behavior
 - **THEN** the agent SHALL fix the implementation or pause as blocked
 - **AND** the agent SHALL record the failing command, failure summary, and affected files in `test-plan.md`
-- **AND** the agent SHALL NOT mark `- [x] Test Hardening complete`
+- **AND** the agent SHALL NOT mark the affected test/status table rows complete
 
 #### Scenario: Hardening test fails due to test setup
 - **WHEN** a hardening test fails because of invalid test setup rather than product behavior
@@ -87,6 +87,6 @@ The apply workflow SHALL preserve pre-implementation TDD pressure while adding a
 - **AND** output SHALL list the next hardening actions
 
 #### Scenario: Test Hardening completes
-- **WHEN** the exact marker `- [x] Test Hardening complete` is present in `test-plan.md`
+- **WHEN** every concrete test/status row in `test-plan.md` tables is complete
 - **THEN** output SHALL summarize tests added or reviewed, verification commands run, and any documented deferrals
 - **AND** output SHALL state that apply is complete only after this summary

@@ -34,6 +34,8 @@ superpowers/
 │       ├── proposal.md
 │       ├── design.md
 │       ├── tasks.md
+│       ├── execution-plan.md
+│       ├── test-plan.md
 │       └── specs/      # Delta specs (what's changing)
 │           └── <domain>/
 │               └── spec.md
@@ -56,11 +58,13 @@ Each change folder contains artifacts that guide the work:
 | `specs/` | Delta specs showing ADDED/MODIFIED/REMOVED requirements |
 | `design.md` | The "how" - technical approach and architecture decisions |
 | `tasks.md` | Implementation checklist with checkboxes |
+| `execution-plan.md` | Detailed implementation/TDD plan |
+| `test-plan.md` | Pre-implementation coverage draft and post-implementation Test Hardening record |
 
 **Artifacts build on each other:**
 
 ```
-proposal ──► specs ──► design ──► tasks ──► implement
+proposal ──► specs ──► design ──► tasks ──► execution-plan ──► test-plan ──► apply
    ▲           ▲          ▲                    │
    └───────────┴──────────┴────────────────────┘
             update as you learn
@@ -130,6 +134,8 @@ AI:  Created superpowers/changes/add-dark-mode/
      ✓ specs/       — requirements and scenarios
      ✓ design.md    — technical approach
      ✓ tasks.md     — implementation checklist
+     ✓ execution-plan.md — detailed implementation/TDD plan
+     ✓ test-plan.md — coverage draft and hardening record
      Ready for implementation!
 ```
 
@@ -198,6 +204,22 @@ The system SHALL allow users to choose between light and dark themes.
 - [ ] 3.2 Update components to use CSS variables
 ```
 
+**test-plan.md** - Coverage and hardening plan:
+
+```markdown
+# Test Plan
+
+## Testing Gap Analysis
+Earlier tests covered the main toggle path but did not fully cover persistence
+fallbacks or invalid saved values. This hardening pass adds focused tests for
+those gaps.
+
+## Requirement And Scenario Coverage Matrix
+| Requirement / Scenario | Planned Coverage | Status | Notes |
+| --- | --- | --- | --- |
+| Theme Selection / Manual toggle | unit + integration | planned | ThemeContext and toggle flow |
+```
+
 ### 3. Implement
 
 ```
@@ -209,10 +231,13 @@ AI:  Working through tasks...
      ✓ 1.3 Implemented localStorage persistence
      ✓ 2.1 Created ThemeToggle component
      ...
-     All tasks complete!
+     All tasks complete. Running Test Hardening from test-plan.md...
+     ✓ Added missing persistence edge-case tests
+     ✓ Verification commands passed
+     ✓ test-plan.md table statuses complete
 ```
 
-During implementation, if you discover the design needs adjustment, just update the artifact and continue.
+During implementation, if you discover the design needs adjustment, just update the artifact and continue. Apply is complete after both the `tasks.md` checklist and the concrete test/status rows in `test-plan.md` are complete.
 
 ### 4. Archive
 

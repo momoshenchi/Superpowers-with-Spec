@@ -45,20 +45,20 @@ The spec-driven workflow SHALL include `test-plan.md` as a dedicated artifact fo
 - **AND** the artifact SHALL include any added or modified test files
 - **AND** the artifact SHALL include unresolved gaps only when they have a clear deferment reason
 
-### Requirement: Test plan SHALL mark hardening completion explicitly
-`test-plan.md` SHALL include explicit checklist state so `/sp:apply` can decide whether post-implementation hardening is complete.
+### Requirement: Test plan SHALL expose hardening completion through table statuses
+`test-plan.md` SHALL expose hardening completion through concrete `Status` table rows so `/sp:apply` can decide whether post-implementation hardening is complete without a standalone checkbox.
 
 #### Scenario: Test plan starts as a draft
 - **WHEN** the artifact is first created before implementation
-- **THEN** the artifact SHALL include the exact unchecked marker `- [ ] Test Hardening complete`
+- **THEN** the artifact SHALL include incomplete status values such as `planned`, `failing`, or blank table rows
 - **AND** the artifact SHALL be usable as an apply prerequisite without claiming that post-implementation work is done
 
 #### Scenario: Test hardening is finished
 - **WHEN** post-implementation hardening has reviewed the diff, added feasible missing tests, run verification, and documented deferrals
-- **THEN** the artifact SHALL update the exact marker to `- [x] Test Hardening complete`
+- **THEN** the artifact SHALL update every concrete test/status row to a complete status such as `covered`, `passed`, or `not applicable`
 - **AND** `/sp:apply` may then report the change as apply-complete
 
-#### Scenario: Completion marker uses other wording
-- **WHEN** `test-plan.md` does not contain the exact marker `- [x] Test Hardening complete`
+#### Scenario: Table statuses are incomplete
+- **WHEN** `test-plan.md` contains concrete status rows with `planned`, `failing`, blank, placeholder, or unknown values
 - **THEN** `/sp:apply` SHALL treat Test Hardening as incomplete
-- **AND** the agent SHALL NOT infer completion from alternate wording, headings, summaries, or command evidence alone
+- **AND** the agent SHALL NOT infer completion from headings, summaries, or prose alone

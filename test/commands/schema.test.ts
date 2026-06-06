@@ -374,6 +374,69 @@ artifacts:
       expect(fs.existsSync(path.join(schemaDir, 'templates', 'execution-plan.md'))).toBe(true);
     });
 
+    it('should scaffold test-plan with execution-plan dependency and apply requirement', async () => {
+      const result = await runCLI(
+        [
+          'schema',
+          'init',
+          'hardening-workflow',
+          '--description',
+          'Hardening workflow',
+          '--artifacts',
+          'proposal,specs,design,tasks,execution-plan,test-plan',
+          '--json',
+        ],
+        {
+          cwd: tempDir,
+          env: {
+            XDG_DATA_HOME: path.join(tempDir, 'xdg-data'),
+            XDG_CONFIG_HOME: path.join(tempDir, 'xdg-config'),
+          },
+        }
+      );
+      expect(result.exitCode).toBe(0);
+
+      const json = JSON.parse(result.stdout);
+      const schemaDir = path.join(tempDir, 'superpowers', 'schemas', 'hardening-workflow');
+      expect(json.artifacts).toEqual([
+        'proposal',
+        'specs',
+        'design',
+        'tasks',
+        'execution-plan',
+        'test-plan',
+      ]);
+
+      const { parseSchema } = await import('../../src/core/artifact-graph/schema.js');
+      const schemaPath = path.join(schemaDir, 'schema.yaml');
+      const schema = parseSchema(fs.readFileSync(schemaPath, 'utf-8'));
+      expect(schema.artifacts.map((artifact) => artifact.id)).toEqual([
+        'proposal',
+        'specs',
+        'design',
+        'tasks',
+        'execution-plan',
+        'test-plan',
+      ]);
+      expect(schema.artifacts.find((artifact) => artifact.id === 'test-plan')).toMatchObject({
+        generates: 'test-plan.md',
+        template: 'test-plan.md',
+        requires: ['execution-plan'],
+      });
+      expect(schema.apply).toMatchObject({
+        requires: ['test-plan'],
+        tracks: 'tasks.md',
+      });
+
+      const testPlanTemplatePath = path.join(schemaDir, 'templates', 'test-plan.md');
+      expect(fs.existsSync(testPlanTemplatePath)).toBe(true);
+      const testPlanTemplate = fs.readFileSync(testPlanTemplatePath, 'utf-8');
+      expect(testPlanTemplate).toContain('Testing Gap Analysis');
+      expect(testPlanTemplate).toContain('every concrete test/status row');
+      expect(testPlanTemplate).toContain('planned / covered / passed / failing / not applicable');
+      expect(testPlanTemplate).not.toContain('Test Hardening complete');
+    });
+
     it('should keep tasks as apply requirement when execution-plan is not selected', async () => {
       const result = await runCLI(
         [
@@ -437,6 +500,7 @@ artifacts:
       expect(json.created).toBe(false);
       expect(json.error).toContain("Unknown artifact 'execution_plan'");
       expect(json.valid).toContain('execution-plan');
+      expect(json.valid).toContain('test-plan');
     });
   });
 

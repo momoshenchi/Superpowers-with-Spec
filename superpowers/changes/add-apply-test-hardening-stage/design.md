@@ -59,16 +59,15 @@ Initial draft responsibilities:
 - Requirement/scenario coverage matrix.
 - Planned unit, integration, E2E, manual, or not-applicable coverage.
 - Known risks and abnormal paths to remember while coding.
-- Exact unchecked Test Hardening completion marker: `- [ ] Test Hardening complete`.
+- Incomplete `Status` table rows such as `planned`, `failing`, blank, or placeholder values.
 
 Post-implementation responsibilities:
 
-- Actual diff audit.
-- Added or modified test files.
+- Earlier testing gaps and newly strengthened coverage.
 - Boundary/abnormal/non-critical-path coverage results.
-- Verification commands and outcomes.
+- Selected verification and outcomes.
 - Explicit deferrals with reasons.
-- Checked Test Hardening completion marker, exactly `- [x] Test Hardening complete`, only after evidence exists.
+- Complete `Status` table rows such as `covered`, `passed`, or `not applicable`, only after evidence exists.
 
 **Rationale:** This avoids a second long implementation plan while still giving agents a concrete testing contract before coding starts.
 
@@ -83,7 +82,7 @@ Post-implementation responsibilities:
 
 ### 4. Add hardening state inside `test-plan.md`, not artifact status
 
-**Decision:** `superpowers status` should treat `test-plan.md` as done once the file exists, consistent with other artifacts. The apply workflow instructions should inspect the exact marker `- [x] Test Hardening complete` inside `test-plan.md` to decide whether apply is complete. Any other wording or unchecked marker, including `- [ ] Test Hardening complete`, means hardening is incomplete.
+**Decision:** `superpowers status` should treat `test-plan.md` as done once the file exists, consistent with other artifacts. The apply workflow instructions should inspect `Status` columns in `test-plan.md` tables to decide whether apply is complete. Test Hardening is complete only when at least one concrete status row exists and every concrete test/status row is complete (`covered`, `passed`, `not applicable`, or equivalent complete wording). `planned`, `failing`, blank, placeholder, or unknown statuses mean hardening is incomplete.
 
 **Rationale:** Artifact status answers "does this planning artifact exist?" Apply completion answers "is implementation plus hardening done?" Those are related but different state machines.
 
@@ -97,17 +96,17 @@ implementation tasks complete + hardening incomplete -> Test Hardening
 implementation tasks complete + hardening complete -> apply complete
 ```
 
-**Alternative considered:** Extend CLI status parsing to understand a `test-plan.md` checklist. Rejected for this change because the user asked not to broaden the scope into verify/archive behavior, and schema artifact completion currently stays file-existence based.
+**Alternative considered:** Use a standalone hardening checkbox. Rejected because the test plan already has compact tables, and a separate one-line marker duplicates state that can be derived from the actual test rows.
 
 ### 5. Define hardening failure behavior
 
-**Decision:** A failing hardening test or defect found during Test Hardening blocks apply completion. The agent must either fix the implementation and rerun verification, or pause as blocked with the failing command, failure summary, affected files, and recommended next action. It must not check `- [x] Test Hardening complete` while hardening tests fail or product defects remain unresolved.
+**Decision:** A failing hardening test or defect found during Test Hardening blocks apply completion. The agent must either fix the implementation and rerun verification, or pause as blocked with the failing command, failure summary, affected files, and recommended next action. It must not mark the related table rows complete while hardening tests fail or product defects remain unresolved.
 
 **Rationale:** Test Hardening only reduces bugs if it has teeth. A test-plan record with known failing evidence would make apply completion less trustworthy than the current workflow.
 
-### 6. Audit only the relevant diff
+### 6. Scope hardening to relevant change surfaces
 
-**Decision:** Test Hardening should begin by inspecting the current working-tree diff using repository-native commands such as `git diff --stat` and `git diff`. The agent should map changed files to `tasks.md`, `execution-plan.md`, and `test-plan.md`, ignore clearly unrelated user changes, and pause if unrelated or ambiguous changes affect the hardening judgment.
+**Decision:** Test Hardening should focus on the implementation and test surfaces relevant to the active change. The agent should map observed implementation choices back to `tasks.md`, `execution-plan.md`, and `test-plan.md`, ignore clearly unrelated user changes, and pause if unrelated or ambiguous changes affect the hardening judgment.
 
 **Rationale:** Many Codex/Superpowers worktrees may be dirty. Without a diff-scope rule, the hardening pass could either miss files from the change or accidentally take responsibility for unrelated user edits.
 
@@ -119,13 +118,13 @@ implementation tasks complete + hardening complete -> apply complete
 
 ## Risks / Trade-offs
 
-- [Risk] Agents may mark `test-plan.md` as hardening complete too casually. -> Template must require command evidence, added/reviewed tests, and specific deferrals before checking completion.
+- [Risk] Agents may mark `test-plan.md` as hardening complete too casually. -> Template must require concrete table rows with evidence, added/reviewed tests, and specific deferrals before statuses become complete.
 - [Risk] Apply can still appear "all done" from task progress alone in some instruction output. -> Generated apply workflow text must override that interpretation by reading the Test Hardening checklist before final completion messaging.
-- [Risk] Multiple hardening completion phrasings cause inconsistent implementation. -> Define the exact marker as `- [ ] Test Hardening complete` / `- [x] Test Hardening complete` and test for that string.
+- [Risk] Multiple hardening completion phrasings cause inconsistent implementation. -> Define completion as complete values in `Status` table columns and test incomplete values such as `planned`, `failing`, blank, and placeholder rows.
 - [Risk] The new artifact adds more process weight. -> Keep `test-plan.md` matrix-oriented and focused on testing evidence, not a duplicated implementation script.
 - [Risk] Existing in-progress changes under the default schema become blocked until `test-plan.md` exists. -> This follows the prior execution-plan migration pattern; missing artifact messages should explicitly say to create the test plan with `/sp:continue`.
 - [Risk] Tests that require browsers, external services, or platform-specific environments may be infeasible. -> `test-plan.md` allows manual or deferred coverage only with explicit rationale and safer alternative verification where possible.
-- [Risk] Dirty worktrees make diff auditing ambiguous. -> Hardening instructions must scope to relevant diff and pause when unrelated changes cannot be separated safely.
+- [Risk] Dirty worktrees make hardening scope ambiguous. -> Hardening instructions must scope to relevant implementation/testing changes and pause when unrelated changes cannot be separated safely.
 
 ## Migration Plan
 
