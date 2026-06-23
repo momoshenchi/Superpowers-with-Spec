@@ -40,7 +40,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
    superpowers instructions apply --change "<name>" --json
    \`\`\`
 
-   This returns the change directory and context files. Read all available artifacts from \`contextFiles\`.
+   This returns the change directory, context files, and attachment files. Read all available artifacts from \`contextFiles\`, and read or inspect files from \`attachmentFiles\` when present. Treat artifacts as the source of normative meaning for each attachment.
 
 4. **Initialize verification report structure**
 
@@ -209,7 +209,7 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
    superpowers instructions apply --change "<name>" --json
    \`\`\`
 
-   This returns the change directory and context files. Read all available artifacts from \`contextFiles\`.
+   This returns the change directory, context files, and attachment files. Read all available artifacts from \`contextFiles\`, and read or inspect files from \`attachmentFiles\` when present. Treat artifacts as the source of normative meaning for each attachment.
 
 4. **Initialize verification report structure**
 

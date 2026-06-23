@@ -102,6 +102,7 @@ After completing all artifacts, summarize:
 - The schema defines what each artifact should contain - follow it
 - Read dependency artifacts for context before creating new ones
 - Use \`template\` as the structure for your output file - fill in its sections
+- Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning \`attachments/\`; preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
 - **IMPORTANT**: \`context\` and \`rules\` are constraints for YOU, not content for the file
   - Do NOT copy \`<context>\`, \`<rules>\`, \`<project_context>\` blocks into the artifact
   - These guide what you write, but should never appear in the output
@@ -223,6 +224,7 @@ After completing all artifacts, summarize:
 - The schema defines what each artifact should contain - follow it
 - Read dependency artifacts for context before creating new ones
 - Use \`template\` as the structure for your output file - fill in its sections
+- Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning \`attachments/\`; preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
 - **IMPORTANT**: \`context\` and \`rules\` are constraints for YOU, not content for the file
   - Do NOT copy \`<context>\`, \`<rules>\`, \`<project_context>\` blocks into the artifact
   - These guide what you write, but should never appear in the output

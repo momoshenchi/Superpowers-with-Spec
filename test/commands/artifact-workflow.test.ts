@@ -121,6 +121,27 @@ describe('artifact-workflow CLI commands', () => {
     return changeDir;
   }
 
+  async function createCompleteTestChange(changeName: string): Promise<string> {
+    return createTestChange(changeName, [
+      'proposal',
+      'design',
+      'specs',
+      'tasks',
+      'execution-plan',
+      'test-plan',
+    ]);
+  }
+
+  async function writeAttachment(
+    changeDir: string,
+    relativePath: string,
+    content = 'attachment-content'
+  ): Promise<void> {
+    const fullPath = path.join(changeDir, ...relativePath.split('/'));
+    await fs.mkdir(path.dirname(fullPath), { recursive: true });
+    await fs.writeFile(fullPath, content);
+  }
+
   describe('status command', () => {
     it('shows status for scaffolded change without proposal.md', async () => {
       // Create empty change directory (no proposal.md)
@@ -430,6 +451,26 @@ describe('artifact-workflow CLI commands', () => {
       expect(output).toContain("Artifact 'unknown-artifact' not found");
       expect(output).toContain('Valid artifacts');
     });
+
+    it('includes attachment reference guidance for attachment-aware artifacts', async () => {
+      await createTestChange('guidance-change', ['proposal', 'design', 'specs', 'tasks']);
+
+      for (const artifactId of ['proposal', 'design', 'specs', 'execution-plan']) {
+        const result = await runCLI(
+          ['instructions', artifactId, '--change', 'guidance-change', '--json'],
+          { cwd: tempDir }
+        );
+        expect(result.exitCode).toBe(0);
+
+        const json = JSON.parse(result.stdout);
+        const combinedGuidance = `${json.instruction}\n${json.template}`.toLowerCase();
+        expect(combinedGuidance).toContain('attachments/');
+        expect(combinedGuidance).toContain('explain');
+        expect(combinedGuidance).toContain('why');
+        expect(combinedGuidance).toContain('normative');
+        expect(combinedGuidance).toContain('illustrative');
+      }
+    });
   });
 
   describe('templates command', () => {
@@ -525,6 +566,240 @@ describe('artifact-workflow CLI commands', () => {
   });
 
   describe('instructions apply command', () => {
+    describe('attachment references', () => {
+      it('discovers Markdown image and link attachment targets in apply JSON', async () => {
+        const changeDir = await createCompleteTestChange('attachment-change');
+        await fs.writeFile(
+          path.join(changeDir, 'proposal.md'),
+          [
+            '## Why',
+            'The target dashboard screenshot is normative for layout.',
+            '',
+            '![Desktop target](attachments/desktop-target.png)',
+          ].join('\n')
+        );
+        await fs.writeFile(
+          path.join(changeDir, 'design.md'),
+          [
+            '# Design',
+            'These visual notes are background context for implementation.',
+            '',
+            '[Visual notes](attachments/visual-notes.md)',
+          ].join('\n')
+        );
+        await writeAttachment(changeDir, 'attachments/desktop-target.png', 'png-bytes');
+        await writeAttachment(changeDir, 'attachments/visual-notes.md', '# Visual notes');
+
+        const result = await runCLI(
+          ['instructions', 'apply', '--change', 'attachment-change', '--json'],
+          { cwd: tempDir }
+        );
+        expect(result.exitCode).toBe(0);
+
+        const json = JSON.parse(result.stdout);
+        expect(json.attachmentFiles).toBeDefined();
+        expect(normalizePaths(json.attachmentFiles['attachments/desktop-target.png'])).toContain(
+          normalizePaths(
+            path.join(
+              'superpowers',
+              'changes',
+              'attachment-change',
+              'attachments',
+              'desktop-target.png'
+            )
+          )
+        );
+        expect(normalizePaths(json.attachmentFiles['attachments/visual-notes.md'])).toContain(
+          normalizePaths(
+            path.join(
+              'superpowers',
+              'changes',
+              'attachment-change',
+              'attachments',
+              'visual-notes.md'
+            )
+          )
+        );
+      });
+
+      it('filters, deduplicates, safely resolves, and stably orders referenced attachments', async () => {
+        const changeDir = await createCompleteTestChange('attachment-filtering');
+        const specPath = path.join(changeDir, 'specs', 'test-spec.md');
+        const supportedPaths = [
+          'attachments/supported/reference.csv',
+          'attachments/supported/reference.gif',
+          'attachments/supported/reference.jpeg',
+          'attachments/supported/reference.jpg',
+          'attachments/supported/reference.markdown',
+          'attachments/supported/reference.md',
+          'attachments/supported/reference.png',
+          'attachments/supported/reference.svg',
+          'attachments/supported/reference.txt',
+          'attachments/supported/reference.webp',
+          'attachments/execution-plan-target.txt',
+          'attachments/screens/mobile/home.png',
+          'attachments/shared.png',
+        ];
+
+        for (const relativePath of supportedPaths) {
+          await writeAttachment(changeDir, relativePath);
+        }
+        await writeAttachment(changeDir, 'attachments/prose-only.png');
+        await writeAttachment(changeDir, 'attachments/reference.pdf');
+        await writeAttachment(changeDir, 'attachments/reference.bin');
+
+        await fs.writeFile(
+          path.join(changeDir, 'proposal.md'),
+          [
+            '## Why',
+            'Plain prose says see attachments/prose-only.png but that is not a Markdown target.',
+            '',
+            '![Shared](attachments/shared.png)',
+            '![Shared again](attachments/shared.png)',
+            '[Unsafe](attachments/../proposal.md)',
+          ].join('\n')
+        );
+        await fs.writeFile(
+          path.join(changeDir, 'design.md'),
+          [
+            '# Design',
+            ...supportedPaths
+              .filter((relativePath) => relativePath !== 'attachments/shared.png')
+              .map((relativePath) => `[${relativePath}](${relativePath})`),
+          ].join('\n')
+        );
+        await fs.writeFile(
+          specPath,
+          [
+            '## ADDED Requirements',
+            '',
+            '### Requirement: Attachment references',
+            'The system SHALL surface linked attachments.',
+            '',
+            '#### Scenario: Spec reference',
+            '- **WHEN** specs link to [Nested](attachments/screens/mobile/home.png)',
+            '- **THEN** the attachment is discoverable.',
+          ].join('\n')
+        );
+        await fs.writeFile(
+          path.join(changeDir, 'execution-plan.md'),
+          [
+            '# Execution Plan',
+            '[Execution plan target](attachments/execution-plan-target.txt)',
+            '[Missing](attachments/missing.png)',
+            '[PDF](attachments/reference.pdf)',
+            '[Unknown](attachments/reference.bin)',
+          ].join('\n')
+        );
+
+        const result = await runCLI(
+          ['instructions', 'apply', '--change', 'attachment-filtering', '--json'],
+          { cwd: tempDir }
+        );
+        expect(result.exitCode).toBe(0);
+
+        const json = JSON.parse(result.stdout);
+        expect(Object.keys(json.attachmentFiles)).toEqual([...supportedPaths].sort());
+        expect(json.attachmentFiles['attachments/prose-only.png']).toBeUndefined();
+        expect(json.attachmentFiles['attachments/missing.png']).toBeUndefined();
+        expect(json.attachmentFiles['attachments/reference.pdf']).toBeUndefined();
+        expect(json.attachmentFiles['attachments/reference.bin']).toBeUndefined();
+        expect(json.attachmentFiles['attachments/../proposal.md']).toBeUndefined();
+        expect(normalizePaths(json.attachmentFiles['attachments/screens/mobile/home.png'])).toContain(
+          normalizePaths(
+            path.join(
+              'superpowers',
+              'changes',
+              'attachment-filtering',
+              'attachments',
+              'screens',
+              'mobile',
+              'home.png'
+            )
+          )
+        );
+        expect(json.state).toBe('ready');
+        expect(json.applyRequires).toEqual(['test-plan']);
+      });
+
+      it('keeps attachments separate from contextFiles and apply readiness', async () => {
+        const changeDir = await createCompleteTestChange('attachment-context');
+        await fs.writeFile(
+          path.join(changeDir, 'proposal.md'),
+          '## Why\n![Desktop target](attachments/desktop-target.png)'
+        );
+        await writeAttachment(changeDir, 'attachments/desktop-target.png', 'png-bytes');
+
+        const applyResult = await runCLI(
+          ['instructions', 'apply', '--change', 'attachment-context', '--json'],
+          { cwd: tempDir }
+        );
+        expect(applyResult.exitCode).toBe(0);
+
+        const applyJson = JSON.parse(applyResult.stdout);
+        expect(applyJson.contextFiles.proposal).toBeDefined();
+        expect(applyJson.contextFiles['attachments/desktop-target.png']).toBeUndefined();
+        expect(applyJson.attachmentFiles['attachments/desktop-target.png']).toBeDefined();
+        expect(applyJson.applyRequires).toEqual(['test-plan']);
+        expect(applyJson.state).toBe('ready');
+
+        const statusResult = await runCLI(
+          ['status', '--change', 'attachment-context', '--json'],
+          { cwd: tempDir }
+        );
+        expect(statusResult.exitCode).toBe(0);
+        const statusJson = JSON.parse(statusResult.stdout);
+        expect(statusJson.artifacts.map((artifact: any) => artifact.id)).not.toContain(
+          'attachments'
+        );
+      });
+
+      it('renders an Attachment Files section only when referenced attachments exist', async () => {
+        const changeDir = await createCompleteTestChange('attachment-text');
+        await fs.writeFile(
+          path.join(changeDir, 'proposal.md'),
+          '## Why\n![Desktop target](attachments/desktop-target.png)'
+        );
+        await writeAttachment(changeDir, 'attachments/desktop-target.png', 'png-bytes');
+
+        const textResult = await runCLI(
+          ['instructions', 'apply', '--change', 'attachment-text'],
+          { cwd: tempDir }
+        );
+        expect(textResult.exitCode).toBe(0);
+        expect(textResult.stdout).toContain('### Attachment Files');
+        expect(normalizePaths(textResult.stdout)).toContain('attachments/desktop-target.png');
+
+        await createCompleteTestChange('no-attachment-text');
+        const noReferenceDir = path.join(changesDir, 'no-attachment-text');
+        await fs.writeFile(
+          path.join(noReferenceDir, 'proposal.md'),
+          [
+            '## Why',
+            '',
+            'Empty and malformed attachment-adjacent input should stay quiet.',
+            '[Malformed](attachments/not-closed.png',
+            '[External](images/not-an-attachment.png)',
+          ].join('\n')
+        );
+        const noReferenceResult = await runCLI(
+          ['instructions', 'apply', '--change', 'no-attachment-text'],
+          { cwd: tempDir }
+        );
+        expect(noReferenceResult.exitCode).toBe(0);
+        expect(noReferenceResult.stdout).not.toContain('### Attachment Files');
+
+        const noReferenceJsonResult = await runCLI(
+          ['instructions', 'apply', '--change', 'no-attachment-text', '--json'],
+          { cwd: tempDir }
+        );
+        expect(noReferenceJsonResult.exitCode).toBe(0);
+        const noReferenceJson = JSON.parse(noReferenceJsonResult.stdout);
+        expect(noReferenceJson.attachmentFiles).toBeUndefined();
+        expect(noReferenceJson.state).toBe('ready');
+      });
+    });
+
     it('shows apply instructions for spec-driven schema with tasks, execution plan, and test plan', async () => {
       await createTestChange('apply-change', [
         'proposal',

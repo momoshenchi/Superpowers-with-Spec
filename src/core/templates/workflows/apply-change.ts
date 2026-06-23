@@ -41,6 +41,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 
    This returns:
    - Context file paths (varies by schema - for spec-driven this includes proposal, specs, design, tasks, execution-plan, and test-plan when present)
+   - Attachment file paths in \`attachmentFiles\` when completed artifacts explicitly reference supported files under \`attachments/\`
    - Progress (total, complete, remaining)
    - Task list with status
    - Dynamic instruction based on current state
@@ -54,6 +55,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 4. **Read context files**
 
    Read the files listed in \`contextFiles\` from the apply instructions output.
+   Read or inspect files listed in \`attachmentFiles\` when present. Treat the artifacts in \`contextFiles\` as the source of normative meaning for each attachment.
    The files depend on the schema being used:
    - **spec-driven**: proposal, specs, design, tasks, execution-plan, test-plan
    - Other schemas: follow the contextFiles from CLI output
@@ -176,7 +178,7 @@ What would you like to do?
 - Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.
 - Do not complete apply while hardening tests fail or product defects remain unresolved.
 - Pause on errors, blockers, or unclear requirements - don't guess
-- Use contextFiles from CLI output, don't assume specific file names
+- Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
 - Never start implementation on main/master branch without explicit user consent
 - Review the change proposal critically before starting — identify questions or concerns and raise them before proceeding
 - Keep the task loop continuous by default; only pause when blocked, unclear, or explicitly asked to stop
@@ -232,6 +234,7 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
 
    This returns:
    - Context file paths (varies by schema)
+   - Attachment file paths in \`attachmentFiles\` when completed artifacts explicitly reference supported files under \`attachments/\`
    - Progress (total, complete, remaining)
    - Task list with status
    - Dynamic instruction based on current state
@@ -244,6 +247,7 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
 4. **Read context files**
 
    Read the files listed in \`contextFiles\` from the apply instructions output.
+   Read or inspect files listed in \`attachmentFiles\` when present. Treat the artifacts in \`contextFiles\` as the source of normative meaning for each attachment.
    The files depend on the schema being used:
    - **spec-driven**: proposal, specs, design, tasks, execution-plan, test-plan
    - Other schemas: follow the contextFiles from CLI output
@@ -364,7 +368,7 @@ What would you like to do?
 - Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.
 - Do not complete apply while hardening tests fail or product defects remain unresolved.
 - Pause on errors, blockers, or unclear requirements - don't guess
-- Use contextFiles from CLI output, don't assume specific file names
+- Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
 
 **Fluid Workflow Integration**
 

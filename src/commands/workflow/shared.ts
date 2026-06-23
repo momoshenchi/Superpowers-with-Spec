@@ -26,6 +26,7 @@ export interface ApplyInstructions {
   changeDir: string;
   schemaName: string;
   contextFiles: Record<string, string>;
+  attachmentFiles?: Record<string, string>;
   progress: {
     total: number;
     complete: number;

@@ -20,6 +20,7 @@ import {
   type TaskItem,
   type ApplyInstructions,
 } from './shared.js';
+import { discoverAttachmentReferences } from './attachments.js';
 
 const COMPLETE_TEST_PLAN_STATUSES = new Set([
   'covered',
@@ -358,6 +359,7 @@ export async function generateApplyInstructions(
       contextFiles[artifact.id] = path.join(changeDir, artifact.generates);
     }
   }
+  const attachmentFiles = await discoverAttachmentReferences(changeDir, Object.values(contextFiles));
 
   // Parse tasks if tracking file exists
   let tasks: TaskItem[] = [];
@@ -423,6 +425,7 @@ export async function generateApplyInstructions(
     changeDir,
     schemaName: context.schemaName,
     contextFiles,
+    attachmentFiles: Object.keys(attachmentFiles).length > 0 ? attachmentFiles : undefined,
     progress: { total, complete, remaining },
     tasks,
     state,
@@ -527,7 +530,17 @@ export async function applyInstructionsCommand(options: ApplyInstructionsOptions
 }
 
 export function printApplyInstructionsText(instructions: ApplyInstructions): void {
-  const { changeName, schemaName, contextFiles, progress, tasks, state, missingArtifacts, instruction } = instructions;
+  const {
+    changeName,
+    schemaName,
+    contextFiles,
+    attachmentFiles,
+    progress,
+    tasks,
+    state,
+    missingArtifacts,
+    instruction,
+  } = instructions;
 
   console.log(`## Apply: ${changeName}`);
   console.log(`Schema: ${schemaName}`);
@@ -548,6 +561,15 @@ export function printApplyInstructionsText(instructions: ApplyInstructions): voi
     console.log('### Context Files');
     for (const [artifactId, filePath] of contextFileEntries) {
       console.log(`- ${artifactId}: ${filePath}`);
+    }
+    console.log();
+  }
+
+  const attachmentFileEntries = Object.entries(attachmentFiles ?? {});
+  if (attachmentFileEntries.length > 0) {
+    console.log('### Attachment Files');
+    for (const [relativePath, filePath] of attachmentFileEntries) {
+      console.log(`- ${relativePath}: ${filePath}`);
     }
     console.log();
   }

@@ -18,6 +18,11 @@
      Use existing spec names from superpowers/specs/. Leave empty if no requirement changes. -->
 - `<existing-name>`: <what requirement is changing>
 
+## Attachments
+
+<!-- Optional. Reference change-local files such as ![Mockup](attachments/mockup.png).
+Explain what each file is, why it matters, and whether it is normative, illustrative, or background context. -->
+
 ## Impact
 
 <!-- Affected code, APIs, dependencies, systems -->

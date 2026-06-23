@@ -15,6 +15,7 @@ artifacts:
       - **Capabilities**: Identify which specs will be created or modified:
         - **New Capabilities**: List capabilities being introduced. Each becomes a new `specs/<name>/spec.md`. Use kebab-case names (e.g., `user-auth`, `data-export`).
         - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Check `superpowers/specs/` for existing spec names. Leave empty if no requirement changes.
+      - **Attachments** (optional): Reference supporting change-local files with Markdown targets beginning `attachments/`. For each reference, explain what the file is, why it matters, and whether it is normative, illustrative, or background context.
       - **Impact**: Affected code, APIs, dependencies, or systems.
 
       IMPORTANT: The Capabilities section is critical. It creates the contract between
@@ -79,6 +80,9 @@ artifacts:
       ```
 
       Specs should be testable - each scenario is a potential test case.
+      Specs may reference supporting change-local files with Markdown targets beginning `attachments/`.
+      When they do, explain what each file is, why it matters, which requirement or
+      scenario it supports, and whether it is normative, illustrative, or background context.
     requires:
       - proposal
 
@@ -105,6 +109,9 @@ artifacts:
 
       Focus on architecture and approach, not line-by-line implementation.
       Reference the proposal for motivation and specs for requirements.
+      Design docs may reference supporting change-local files with Markdown targets
+      beginning `attachments/`. When they do, explain what each file is, why it
+      matters, and whether it is normative, illustrative, or background context.
 
       Good design docs explain the "why" behind technical decisions.
     requires:
@@ -165,6 +172,7 @@ artifacts:
       - Block production-code steps until the test review is approved or gaps are fixed.
       - Keep red tests focused on driving implementation; broad post-diff coverage planning and evidence belong in `test-plan.md`.
       - Avoid placeholders such as `TBD`, `TODO`, `implement later`, or vague directives.
+      - Reference supporting change-local files with Markdown targets beginning `attachments/` when useful, and explain what each file is, why it matters, whether it is normative, illustrative, or background context, and which task or requirement it supports.
 
       After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
       **1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.

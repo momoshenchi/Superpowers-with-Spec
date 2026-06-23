@@ -107,6 +107,8 @@ Common artifact patterns:
 - **execution-plan.md**: A schema artifact discovered from status output. Read completed dependency artifacts, especially tasks.md, then create the detailed implementation plan.
 - **test-plan.md**: A schema artifact discovered from status output after execution-plan.md. Capture the pre-implementation coverage draft and the post-implementation Test Hardening evidence.
 
+Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning \`attachments/\`. Preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
+
 For other schemas, follow the \`instruction\` field from the CLI output.
 
 **Guardrails**
@@ -227,6 +229,8 @@ Common artifact patterns:
 - **tasks.md**: Break down implementation into checkboxed tasks.
 - **execution-plan.md**: A schema artifact discovered from status output. Read completed dependency artifacts, especially tasks.md, then create the detailed implementation plan.
 - **test-plan.md**: A schema artifact discovered from status output after execution-plan.md. Capture the pre-implementation coverage draft and the post-implementation Test Hardening evidence.
+
+Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning \`attachments/\`. Preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
 
 For other schemas, follow the \`instruction\` field from the CLI output.
 

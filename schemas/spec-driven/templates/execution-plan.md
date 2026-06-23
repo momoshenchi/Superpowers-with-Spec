@@ -11,6 +11,11 @@
 
 -->
 
+## Attachments
+
+<!-- Optional. Reference change-local files such as ![Target state](attachments/target-state.png).
+Explain what each file is, why it matters, which task or requirement it supports, and whether it is normative, illustrative, or background context. -->
+
 ## Task Plan
 
 Red tests in this file drive implementation one step at a time. Keep broad requirement/scenario coverage matrices, testing gap analysis, supplemental test coverage, and post-implementation Test Hardening records in `test-plan.md`. Passing the red/green task tests here does not replace the final Test Hardening pass after implementation tasks are complete.
@@ -59,4 +64,3 @@ export function actualBehavior() {
 Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
 Expected: PASS with the new test covering the behavior.
 -->
-
