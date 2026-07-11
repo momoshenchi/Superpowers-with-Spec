@@ -48,6 +48,7 @@ describe('top-level validate command', () => {
     const c1DeltaDir = path.join(changesDir, 'c1', 'specs', 'alpha');
     await fs.mkdir(c1DeltaDir, { recursive: true });
     await fs.writeFile(path.join(c1DeltaDir, 'spec.md'), deltaContent, 'utf-8');
+    await writeRequiredArtifacts(path.join(changesDir, 'c1'));
 
     // Duplicate name for ambiguity test
     await fs.mkdir(path.join(changesDir, 'dup'), { recursive: true });
@@ -55,6 +56,7 @@ describe('top-level validate command', () => {
     const dupDeltaDir = path.join(changesDir, 'dup', 'specs', 'dup');
     await fs.mkdir(dupDeltaDir, { recursive: true });
     await fs.writeFile(path.join(dupDeltaDir, 'spec.md'), deltaContent, 'utf-8');
+    await writeRequiredArtifacts(path.join(changesDir, 'dup'));
     await fs.mkdir(path.join(specsDir, 'dup'), { recursive: true });
     await fs.writeFile(path.join(specsDir, 'dup', 'spec.md'), specContent, 'utf-8');
   });
@@ -78,6 +80,103 @@ describe('top-level validate command', () => {
     expect(Array.isArray(json.items)).toBe(true);
     expect(json.summary?.totals?.items).toBeDefined();
     expect(json.version).toBe('1.0');
+  });
+
+  it('fails direct change validation when a schema artifact is missing', async () => {
+    const changeDir = path.join(changesDir, 'missing-test-plan');
+    await createCompleteChange(changeDir);
+    await fs.rm(path.join(changeDir, 'test-plan.md'));
+
+    const result = await runCLI(['validate', 'missing-test-plan'], { cwd: testDir });
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toContain('artifact:test-plan');
+    expect(result.stderr).toContain('test-plan.md');
+    expect(result.stderr).toContain('Create or regenerate any missing schema artifacts');
+  });
+
+  it('treats an existing change directory without proposal.md as a change', async () => {
+    const changeDir = path.join(changesDir, 'scaffolded');
+    await createCompleteChange(changeDir);
+    await fs.rm(path.join(changeDir, 'proposal.md'));
+
+    const result = await runCLI(['validate', 'scaffolded', '--json'], { cwd: testDir });
+
+    expect(result.exitCode).toBe(1);
+    const json = JSON.parse(result.stdout);
+    expect(json.items[0].type).toBe('change');
+    expect(json.items[0].issues).toContainEqual(expect.objectContaining({
+      level: 'ERROR',
+      path: 'artifact:proposal',
+      message: expect.stringContaining('proposal.md'),
+    }));
+    expect(result.stderr).not.toContain('Unknown item');
+  });
+
+  it('includes missing artifact issues in bulk --changes JSON output', async () => {
+    const changeDir = path.join(changesDir, 'bulk-missing-execution');
+    await createCompleteChange(changeDir);
+    await fs.rm(path.join(changeDir, 'execution-plan.md'));
+
+    const result = await runCLI(['validate', '--changes', '--json'], { cwd: testDir });
+
+    expect(result.exitCode).toBe(1);
+    const json = JSON.parse(result.stdout);
+    const item = json.items.find((entry: any) => entry.id === 'bulk-missing-execution');
+    expect(item.valid).toBe(false);
+    expect(item.issues).toContainEqual(expect.objectContaining({
+      path: 'artifact:execution-plan',
+      message: expect.stringContaining('execution-plan'),
+    }));
+  });
+
+  it('includes existing change directories without proposal.md in bulk validation', async () => {
+    const changeDir = path.join(changesDir, 'bulk-scaffolded');
+    await createCompleteChange(changeDir);
+    await fs.rm(path.join(changeDir, 'proposal.md'));
+
+    const changesResult = await runCLI(['validate', '--changes', '--json'], { cwd: testDir });
+    expect(changesResult.exitCode).toBe(1);
+    const changesJson = JSON.parse(changesResult.stdout);
+    const changesItem = changesJson.items.find((entry: any) => entry.id === 'bulk-scaffolded');
+    expect(changesItem).toEqual(expect.objectContaining({
+      type: 'change',
+      valid: false,
+    }));
+    expect(changesItem.issues).toContainEqual(expect.objectContaining({
+      level: 'ERROR',
+      path: 'artifact:proposal',
+      message: expect.stringContaining('proposal.md'),
+    }));
+
+    const allResult = await runCLI(['validate', '--all', '--json'], { cwd: testDir });
+    expect(allResult.exitCode).toBe(1);
+    const allJson = JSON.parse(allResult.stdout);
+    const allItem = allJson.items.find((entry: any) => entry.id === 'bulk-scaffolded');
+    expect(allItem).toEqual(expect.objectContaining({
+      type: 'change',
+      valid: false,
+    }));
+    expect(allItem.issues).toContainEqual(expect.objectContaining({
+      path: 'artifact:proposal',
+    }));
+  });
+
+  it('includes schema artifact issues in --all JSON output while still validating specs', async () => {
+    const changeDir = path.join(changesDir, 'all-missing-test-plan');
+    await createCompleteChange(changeDir);
+    await fs.rm(path.join(changeDir, 'test-plan.md'));
+
+    const result = await runCLI(['validate', '--all', '--json'], { cwd: testDir });
+
+    expect(result.exitCode).toBe(1);
+    const json = JSON.parse(result.stdout);
+    expect(json.items.some((entry: any) => entry.type === 'spec' && entry.id === 'alpha' && entry.valid)).toBe(true);
+    const item = json.items.find((entry: any) => entry.id === 'all-missing-test-plan');
+    expect(item.issues).toContainEqual(expect.objectContaining({
+      level: 'ERROR',
+      path: 'artifact:test-plan',
+    }));
   });
 
   it('validates only specs with --specs and respects --concurrency', async () => {
@@ -126,6 +225,7 @@ describe('top-level validate command', () => {
     const deltaDir = path.join(changesDir, changeId, 'specs', 'alpha');
     await fs.mkdir(deltaDir, { recursive: true });
     await fs.writeFile(path.join(deltaDir, 'spec.md'), deltaContent, 'utf-8');
+    await writeRequiredArtifacts(path.join(changesDir, changeId));
 
     const result = await runCLI(['validate', changeId], { cwd: testDir });
     expect(result.exitCode).toBe(0);
@@ -144,4 +244,36 @@ describe('top-level validate command', () => {
     // Should complete without hanging and without prompts
     expect(result.stderr).not.toContain('What would you like to validate?');
   });
+
+  async function createCompleteChange(changeDir: string): Promise<void> {
+    await fs.mkdir(path.join(changeDir, 'specs', 'alpha'), { recursive: true });
+    await fs.writeFile(
+      path.join(changeDir, 'proposal.md'),
+      `# Test Change\n\n## Why\nBecause this change fixture is complete.\n\n## What Changes\n- **alpha:** Add behavior`,
+      'utf-8'
+    );
+    await fs.writeFile(
+      path.join(changeDir, 'specs', 'alpha', 'spec.md'),
+      [
+        '## ADDED Requirements',
+        '',
+        '### Requirement: CLI validation SHALL inspect artifacts',
+        'The CLI validation path SHALL report missing schema artifacts.',
+        '',
+        '#### Scenario: Missing artifact is reported',
+        '- **GIVEN** a schema-incomplete change',
+        '- **WHEN** validation runs',
+        '- **THEN** the missing artifact is reported',
+      ].join('\n'),
+      'utf-8'
+    );
+    await writeRequiredArtifacts(changeDir);
+  }
+
+  async function writeRequiredArtifacts(changeDir: string): Promise<void> {
+    await fs.writeFile(path.join(changeDir, 'design.md'), '## Context\nDesign context.\n', 'utf-8');
+    await fs.writeFile(path.join(changeDir, 'tasks.md'), '## 1. Tasks\n\n- [x] 1.1 Done\n', 'utf-8');
+    await fs.writeFile(path.join(changeDir, 'execution-plan.md'), '## Task Plan\n\n- [x] Step 1\n', 'utf-8');
+    await fs.writeFile(path.join(changeDir, 'test-plan.md'), '## Testing Gap Analysis\n\nCovered.\n', 'utf-8');
+  }
 });

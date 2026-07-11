@@ -51,6 +51,54 @@ describe('ArchiveCommand', () => {
     }
   });
 
+  async function writeRequiredArtifacts(
+    changeDir: string,
+    options: { overwriteTasks?: boolean } = {}
+  ): Promise<void> {
+    await fs.writeFile(path.join(changeDir, 'design.md'), '## Context\nDesign context.\n', 'utf-8');
+    if (options.overwriteTasks !== false) {
+      await fs.writeFile(path.join(changeDir, 'tasks.md'), '- [x] Task 1\n', 'utf-8');
+    }
+    await fs.writeFile(path.join(changeDir, 'execution-plan.md'), '## Task Plan\n\n- [x] Step 1\n', 'utf-8');
+    await fs.writeFile(path.join(changeDir, 'test-plan.md'), '## Testing Gap Analysis\n\nCovered.\n', 'utf-8');
+
+    const specDir = path.join(changeDir, 'specs', 'alpha');
+    await fs.mkdir(specDir, { recursive: true });
+    try {
+      await fs.access(path.join(specDir, 'spec.md'));
+    } catch {
+      await fs.writeFile(path.join(specDir, 'spec.md'), validDeltaSpec(), 'utf-8');
+    }
+  }
+
+  async function createSchemaCompleteChange(changeName: string): Promise<string> {
+    const changeDir = path.join(tempDir, 'superpowers', 'changes', changeName);
+    await fs.mkdir(changeDir, { recursive: true });
+    await fs.writeFile(
+      path.join(changeDir, 'proposal.md'),
+      '# Test Change\n\n## Why\nBecause archive validation needs a complete fixture.\n\n## What Changes\n- **alpha:** Add behavior\n',
+      'utf-8'
+    );
+    await writeRequiredArtifacts(changeDir);
+    return changeDir;
+  }
+
+  function validDeltaSpec(): string {
+    return [
+      '# Alpha - Changes',
+      '',
+      '## ADDED Requirements',
+      '',
+      '### Requirement: Archive validation SHALL work',
+      'The archive validation path SHALL accept complete change fixtures.',
+      '',
+      '#### Scenario: Archive validation passes',
+      '- **GIVEN** a complete change fixture',
+      '- **WHEN** archive validation runs',
+      '- **THEN** validation succeeds',
+    ].join('\n');
+  }
+
   describe('execute', () => {
     it('should archive a change successfully', async () => {
       // Create a test change
@@ -63,7 +111,7 @@ describe('ArchiveCommand', () => {
       await fs.writeFile(path.join(changeDir, 'tasks.md'), tasksContent);
       
       // Execute archive with --yes flag
-      await archiveCommand.execute(changeName, { yes: true });
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
       
       // Check that change was moved to archive
       const archiveDir = path.join(tempDir, 'superpowers', 'changes', 'archive');
@@ -86,7 +134,7 @@ describe('ArchiveCommand', () => {
       await fs.writeFile(path.join(changeDir, 'tasks.md'), tasksContent);
       
       // Execute archive with --yes flag
-      await archiveCommand.execute(changeName, { yes: true });
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
       
       // Verify warning was logged
       expect(console.log).toHaveBeenCalledWith(
@@ -272,7 +320,7 @@ New feature description.
       
       // Try to archive
       await expect(
-        archiveCommand.execute(changeName, { yes: true })
+        archiveCommand.execute(changeName, { yes: true, noValidate: true })
       ).rejects.toThrow(`Archive '${date}-${changeName}' already exists.`);
     });
 
@@ -282,7 +330,7 @@ New feature description.
       await fs.mkdir(changeDir, { recursive: true });
       
       // Execute archive without tasks.md
-      await archiveCommand.execute(changeName, { yes: true });
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
       
       // Should complete without warnings
       expect(console.log).not.toHaveBeenCalledWith(
@@ -301,7 +349,7 @@ New feature description.
       await fs.mkdir(changeDir, { recursive: true });
       
       // Execute archive without specs
-      await archiveCommand.execute(changeName, { yes: true });
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
       
       // Should complete without spec updates
       expect(console.log).not.toHaveBeenCalledWith(
@@ -383,6 +431,51 @@ The system will log all events.
       }
     });
 
+    it('should block schema-incomplete changes before spec updates or directory movement', async () => {
+      const changeName = 'missing-test-plan';
+      const changeDir = await createSchemaCompleteChange(changeName);
+      await fs.rm(path.join(changeDir, 'test-plan.md'));
+
+      await archiveCommand.execute(changeName, { yes: true });
+
+      expect(console.log).toHaveBeenCalledWith(expect.stringContaining('Validation errors in change'));
+      expect(console.log).toHaveBeenCalledWith(expect.stringContaining('artifact:test-plan'));
+      expect(console.log).toHaveBeenCalledWith(expect.stringContaining('test-plan.md'));
+      expect(console.log).toHaveBeenCalledWith(expect.stringContaining('Validation failed. Please fix the errors before archiving.'));
+      await expect(fs.access(changeDir)).resolves.not.toThrow();
+
+      const mainSpecPath = path.join(tempDir, 'superpowers', 'specs', 'alpha', 'spec.md');
+      await expect(fs.access(mainSpecPath)).rejects.toThrow();
+
+      const archives = await fs.readdir(path.join(tempDir, 'superpowers', 'changes', 'archive'));
+      expect(archives.some(name => name.includes(changeName))).toBe(false);
+    });
+
+    it('should allow --no-validate to bypass schema artifact validation with a warning', async () => {
+      const changeName = 'no-validate-schema-incomplete';
+      const changeDir = await createSchemaCompleteChange(changeName);
+      await fs.rm(path.join(changeDir, 'test-plan.md'));
+
+      await archiveCommand.execute(changeName, { yes: true, skipSpecs: true, noValidate: true });
+
+      expect(console.log).toHaveBeenCalledWith(expect.stringContaining('WARNING: Skipping validation may archive invalid specs.'));
+      await expect(fs.access(changeDir)).rejects.toThrow();
+      const archives = await fs.readdir(path.join(tempDir, 'superpowers', 'changes', 'archive'));
+      expect(archives.some(name => name.includes(changeName))).toBe(true);
+    });
+
+    it('should still validate schema artifacts when --skip-specs is used without --no-validate', async () => {
+      const changeName = 'skip-specs-still-validates';
+      const changeDir = await createSchemaCompleteChange(changeName);
+      await fs.rm(path.join(changeDir, 'test-plan.md'));
+
+      await archiveCommand.execute(changeName, { yes: true, skipSpecs: true });
+
+      expect(console.log).toHaveBeenCalledWith(expect.stringContaining('artifact:test-plan'));
+      expect(console.log).not.toHaveBeenCalledWith('Skipping spec updates (--skip-specs flag provided).');
+      await expect(fs.access(changeDir)).resolves.not.toThrow();
+    });
+
     it('should proceed with archive when user declines spec updates', async () => {
       const { confirm } = await import('@inquirer/prompts');
       const mockConfirm = confirm as unknown as ReturnType<typeof vi.fn>;
@@ -391,22 +484,22 @@ The system will log all events.
       const changeDir = path.join(tempDir, 'superpowers', 'changes', changeName);
       const changeSpecDir = path.join(changeDir, 'specs', 'test-capability');
       await fs.mkdir(changeSpecDir, { recursive: true });
+      await fs.writeFile(path.join(changeDir, 'proposal.md'), '# Test Change\n\n## Why\nBecause this fixture tests spec update prompting.\n\n## What Changes\n- **test-capability:** Add behavior\n', 'utf-8');
       
-      // Create valid spec in change
+      // Create valid delta spec in change
       const specContent = `# Test Capability Spec
 
-## Purpose
-This is a test capability specification.
+## ADDED Requirements
 
-## Requirements
-
-### The system SHALL provide test capability
+### Requirement: The system SHALL provide test capability
+The system SHALL provide test capability.
 
 #### Scenario: Basic test
-Given a test condition
-When an action occurs
-Then expected result happens`;
+- **GIVEN** a test condition
+- **WHEN** an action occurs
+- **THEN** expected result happens`;
       await fs.writeFile(path.join(changeSpecDir, 'spec.md'), specContent);
+      await writeRequiredArtifacts(changeDir);
       
       // Mock confirm to return false (decline spec updates)
       mockConfirm.mockResolvedValueOnce(false);
@@ -735,7 +828,7 @@ E1 updated`);
       mockSelect.mockResolvedValueOnce(change1);
       
       // Execute without change name
-      await archiveCommand.execute(undefined, { yes: true });
+      await archiveCommand.execute(undefined, { yes: true, noValidate: true });
       
       // Verify select was called with correct options (values matter, names may include progress)
       expect(mockSelect).toHaveBeenCalledWith(expect.objectContaining({
@@ -763,6 +856,8 @@ E1 updated`);
       // Create tasks.md with incomplete tasks
       const tasksContent = '- [ ] Task 1';
       await fs.writeFile(path.join(changeDir, 'tasks.md'), tasksContent);
+      await fs.writeFile(path.join(changeDir, 'proposal.md'), '# Test Change\n\n## Why\nBecause this fixture tests task prompting.\n\n## What Changes\n- **alpha:** Add behavior\n', 'utf-8');
+      await writeRequiredArtifacts(changeDir, { overwriteTasks: false });
       
       // Mock confirm to return true (proceed)
       mockConfirm.mockResolvedValueOnce(true);

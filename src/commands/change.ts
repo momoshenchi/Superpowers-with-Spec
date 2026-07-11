@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { JsonConverter } from '../core/converters/json-converter.js';
-import { Validator } from '../core/validation/validator.js';
+import { validateChange } from '../core/validation/change-validator.js';
 import { ChangeParser } from '../core/parsers/change-parser.js';
 import { Change } from '../core/schemas/index.js';
 import { isInteractive } from '../utils/interactive.js';
@@ -215,8 +215,7 @@ export class ChangeCommand {
       throw new Error(`Change "${changeName}" not found at ${changeDir}`);
     }
     
-    const validator = new Validator(options?.strict || false);
-    const report = await validator.validateChangeDeltaSpecs(changeDir);
+    const report = await validateChange(changeName, { strict: options?.strict || false });
     
     if (options?.json) {
       console.log(JSON.stringify(report, null, 2));
@@ -232,11 +231,10 @@ export class ChangeCommand {
         });
         // Next steps footer to guide fixing issues
         this.printNextSteps();
-        if (!options?.json) {
-          process.exitCode = 1;
-        }
       }
     }
+
+    process.exitCode = report.valid ? 0 : 1;
   }
 
   private async getActiveChanges(changesPath: string): Promise<string[]> {

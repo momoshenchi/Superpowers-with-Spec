@@ -22,6 +22,19 @@ export async function getActiveChangeIds(root: string = process.cwd()): Promise<
   }
 }
 
+export async function getChangeDirectoryIds(root: string = process.cwd()): Promise<string[]> {
+  const changesPath = path.join(root, 'superpowers', 'changes');
+  try {
+    const entries = await fs.readdir(changesPath, { withFileTypes: true });
+    return entries
+      .filter(entry => entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'archive')
+      .map(entry => entry.name)
+      .sort();
+  } catch {
+    return [];
+  }
+}
+
 export async function getSpecIds(root: string = process.cwd()): Promise<string[]> {
   const specsPath = path.join(root, 'superpowers', 'specs');
   const result: string[] = [];
@@ -63,4 +76,3 @@ export async function getArchivedChangeIds(root: string = process.cwd()): Promis
     return [];
   }
 }
-

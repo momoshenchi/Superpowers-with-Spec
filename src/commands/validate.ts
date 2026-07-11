@@ -1,8 +1,10 @@
 import ora from 'ora';
 import path from 'path';
+import { promises as fs } from 'fs';
 import { Validator } from '../core/validation/validator.js';
+import { validateChange } from '../core/validation/change-validator.js';
 import { isInteractive, resolveNoInteractive } from '../utils/interactive.js';
-import { getActiveChangeIds, getSpecIds } from '../utils/item-discovery.js';
+import { getActiveChangeIds, getChangeDirectoryIds, getSpecIds } from '../utils/item-discovery.js';
 import { nearestMatches } from '../utils/match.js';
 
 type ItemType = 'change' | 'spec';
@@ -104,7 +106,7 @@ export class ValidateCommand {
 
   private async validateDirectItem(itemName: string, opts: { typeOverride?: ItemType; strict: boolean; json: boolean }): Promise<void> {
     const [changes, specs] = await Promise.all([getActiveChangeIds(), getSpecIds()]);
-    const isChange = changes.includes(itemName);
+    const isChange = changes.includes(itemName) || await this.changeDirectoryExists(itemName);
     const isSpec = specs.includes(itemName);
 
     const type = opts.typeOverride ?? (isChange ? 'change' : isSpec ? 'spec' : undefined);
@@ -130,9 +132,8 @@ export class ValidateCommand {
   private async validateByType(type: ItemType, id: string, opts: { strict: boolean; json: boolean }): Promise<void> {
     const validator = new Validator(opts.strict);
     if (type === 'change') {
-      const changeDir = path.join(process.cwd(), 'superpowers', 'changes', id);
       const start = Date.now();
-      const report = await validator.validateChangeDeltaSpecs(changeDir);
+      const report = await validateChange(id, { strict: opts.strict });
       const durationMs = Date.now() - start;
       this.printReport('change', id, report, durationMs, opts.json);
       // Non-zero exit if invalid (keeps enriched output test semantics)
@@ -169,6 +170,7 @@ export class ValidateCommand {
   private printNextSteps(type: ItemType): void {
     const bullets: string[] = [];
     if (type === 'change') {
+      bullets.push('- Create or regenerate any missing schema artifacts shown as artifact:<id> errors');
       bullets.push('- Ensure change has deltas in specs/: use headers ## ADDED/MODIFIED/REMOVED/RENAMED Requirements');
       bullets.push('- Each requirement MUST include at least one #### Scenario: block');
       bullets.push('- Debug parsed deltas: superpowers change show <id> --json --deltas-only');
@@ -184,7 +186,7 @@ export class ValidateCommand {
   private async runBulkValidation(scope: { changes: boolean; specs: boolean }, opts: { strict: boolean; json: boolean; concurrency?: string; noInteractive?: boolean }): Promise<void> {
     const spinner = !opts.json && !opts.noInteractive ? ora('Validating...').start() : undefined;
     const [changeIds, specIds] = await Promise.all([
-      scope.changes ? getActiveChangeIds() : Promise.resolve<string[]>([]),
+      scope.changes ? getChangeDirectoryIds() : Promise.resolve<string[]>([]),
       scope.specs ? getSpecIds() : Promise.resolve<string[]>([]),
     ]);
 
@@ -197,8 +199,7 @@ export class ValidateCommand {
     for (const id of changeIds) {
       queue.push(async () => {
         const start = Date.now();
-        const changeDir = path.join(process.cwd(), 'superpowers', 'changes', id);
-        const report = await validator.validateChangeDeltaSpecs(changeDir);
+        const report = await validateChange(id, { strict: opts.strict });
         const durationMs = Date.now() - start;
         return { id, type: 'change' as const, valid: report.valid, issues: report.issues, durationMs };
       });
@@ -292,6 +293,15 @@ export class ValidateCommand {
     }
 
     process.exitCode = failed > 0 ? 1 : 0;
+  }
+
+  private async changeDirectoryExists(itemName: string): Promise<boolean> {
+    try {
+      const stat = await fs.stat(path.join(process.cwd(), 'superpowers', 'changes', itemName));
+      return stat.isDirectory();
+    } catch {
+      return false;
+    }
   }
 }
 

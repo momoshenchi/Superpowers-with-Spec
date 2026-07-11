@@ -9,26 +9,35 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 
 **Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
 
+**Continuous execution:** Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are: BLOCKED status you cannot resolve, ambiguity that genuinely prevents progress, or all tasks complete. "Should I continue?" prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.
+
 ## When to Use
 
 **Use when:**
-- You have an independent tasks
-- Tasks can be worked on sequentially without tight coupling
-- You want to stay in the current session (vs. parallel agents)
+```
+digraph when_to_use {
+    "Have change proposal?" [shape=diamond];
+    "Tasks mostly independent?" [shape=diamond];
+    "Stay in this session?" [shape=diamond];
+    "subagent-driven-development" [shape=box];
+    "Manual execution or explore first" [shape=box];
 
-**vs. Parallel Agents:**
-- Same session (no context switch)
-- Fresh subagent per task (no context pollution)
-- Two-stage review after each task: spec compliance first, then code quality
-- Faster iteration (no human-in-loop between tasks)
+    "Have change proposal?" -> "Tasks mostly independent?" [label="yes"];
+    "Have change proposal?" -> "Manual execution or explore first" [label="no"];
+    "Tasks mostly independent?" -> "Stay in this session?" [label="yes"];
+    "Tasks mostly independent?" -> "sequential execute" [label="no - tightly coupled"];
+    "Stay in this session?" -> "subagent-driven-development" [label="yes"];
+    "Stay in this session?" -> "sequential execute" [label="no"];
+}
+```
 
 ## The Process
 
 ### Setup
 
 1. Read plan file (`superpowers/changes/<change-name>/`) once
-2. Extract all tasks with full text and context
-3. Create task list with all tasks
+2. 思考并检查任务之间的独立性
+
 
 ### Per Task
 
@@ -77,7 +86,7 @@ Each subagent dispatch needs:
 - Implementer (same subagent) fixes them
 - Reviewer reviews again
 - Repeat until approved
-ß
+
 ## Integration
 
 **Required:**
