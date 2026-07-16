@@ -217,7 +217,15 @@ The markdown parser SHALL correctly identify sections regardless of line ending 
 - **THEN** validation SHALL recognize the sections and NOT raise parsing errors
 
 ### Requirement: Change validation SHALL require complete schema artifacts
-The validate command SHALL treat a change as valid only when every artifact declared by the change's resolved workflow schema is complete, in addition to existing delta spec validation. Schema validation SHALL require `proposal.md` when the schema declares the `proposal` artifact, but SHALL NOT introduce new blocking validation of proposal markdown contents.
+The validate command SHALL treat a change as valid only when every artifact declared by the change's resolved workflow schema is complete. When the resolved schema declares a specs artifact (id `specs` or `generates` under `specs/`), validation SHALL also apply existing delta spec validation. When the schema does not declare a specs artifact, validation SHALL NOT require deltas or a `specs/` directory. Schema validation SHALL require `proposal.md` when the schema declares the `proposal` artifact, but SHALL NOT introduce new blocking validation of proposal markdown contents.
+
+#### Scenario: Custom schema without specs does not require deltas
+- **GIVEN** a change uses a schema whose artifacts do not include specs (for example only `design` and `test-plan`)
+- **AND** every declared artifact file is present
+- **AND** the change has no `specs/` directory
+- **WHEN** a user runs `superpowers validate <change-id>`
+- **THEN** validation passes
+- **AND** validation does not report "No deltas found"
 
 #### Scenario: Direct change validation fails when schema artifact is missing
 - **GIVEN** a change uses a schema with artifacts `proposal`, `specs`, `design`, `tasks`, `execution-plan`, and `test-plan`

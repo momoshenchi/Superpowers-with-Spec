@@ -16,12 +16,15 @@ export async function validateChange(
   const projectRoot = options.projectRoot ?? process.cwd();
   const changeDir = path.join(projectRoot, 'superpowers', 'changes', changeName);
   const validator = new Validator(options.strict ?? false);
+  const context = loadChangeContext(projectRoot, changeName);
 
-  const artifactIssues = getMissingArtifactIssues(projectRoot, changeName);
-  const extraFileIssues = getExtraFileIssues(projectRoot, changeName);
-  const deltaReport = await validator.validateChangeDeltaSpecs(changeDir);
+  const artifactIssues = getMissingArtifactIssues(context);
+  const extraFileIssues = getExtraFileIssues(context);
+  const deltaIssues = schemaRequiresDeltaSpecs(context)
+    ? (await validator.validateChangeDeltaSpecs(changeDir)).issues
+    : [];
 
-  return createReport([...artifactIssues, ...extraFileIssues, ...deltaReport.issues], options.strict ?? false);
+  return createReport([...artifactIssues, ...extraFileIssues, ...deltaIssues], options.strict ?? false);
 }
 
 export async function validateChangeDir(
@@ -33,8 +36,7 @@ export async function validateChangeDir(
   return validateChange(changeName, { ...options, projectRoot });
 }
 
-function getMissingArtifactIssues(projectRoot: string, changeName: string): ValidationIssue[] {
-  const context = loadChangeContext(projectRoot, changeName);
+function getMissingArtifactIssues(context: ReturnType<typeof loadChangeContext>): ValidationIssue[] {
   const status = formatChangeStatus(context);
 
   return status.artifacts
@@ -46,8 +48,7 @@ function getMissingArtifactIssues(projectRoot: string, changeName: string): Vali
     }));
 }
 
-function getExtraFileIssues(projectRoot: string, changeName: string): ValidationIssue[] {
-  const context = loadChangeContext(projectRoot, changeName);
+function getExtraFileIssues(context: ReturnType<typeof loadChangeContext>): ValidationIssue[] {
   const allowedArtifactFiles = getAllowedArtifactFiles(context.changeDir, context.graph.getAllArtifacts().map(artifact => artifact.generates));
   const changeFiles = fg.sync('**/*', {
     cwd: context.changeDir,
@@ -62,6 +63,18 @@ function getExtraFileIssues(projectRoot: string, changeName: string): Validation
       path: file,
       message: `Unexpected change file "${file}". Extra files must be declared by the schema or placed under specs/ or attachments/.`,
     }));
+}
+
+/**
+ * Delta-spec validation only applies when the resolved schema declares a specs artifact.
+ * Custom schemas (e.g. test-harden) that only produce design/test-plan must not fail for missing deltas.
+ */
+function schemaRequiresDeltaSpecs(context: ReturnType<typeof loadChangeContext>): boolean {
+  return context.graph.getAllArtifacts().some(artifact => {
+    if (artifact.id === 'specs') return true;
+    const generates = toPosixPath(artifact.generates);
+    return generates === 'specs' || generates.startsWith('specs/');
+  });
 }
 
 function getAllowedArtifactFiles(changeDir: string, generatesPatterns: string[]): Set<string> {

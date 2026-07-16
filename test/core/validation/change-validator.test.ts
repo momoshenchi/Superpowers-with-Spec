@@ -56,6 +56,40 @@ describe('schema-aware change validation', () => {
       message: expect.stringContaining('audit.md'),
     }));
     expect(report.issues).not.toContainEqual(expect.objectContaining({ path: 'artifact:test-plan' }));
+    expect(report.issues.map(issue => issue.message).join('\n')).not.toContain('at least one delta');
+  });
+
+  it('passes for complete custom schemas that do not declare specs', async () => {
+    await createSchema('test-harden', [
+      { id: 'design', generates: 'design.md' },
+      { id: 'test-plan', generates: 'test-plan.md', requires: ['design'] },
+    ]);
+    const changeDir = await createChangeDir('no-specs-schema');
+    await fs.writeFile(path.join(changeDir, '.superpowers.yaml'), 'schema: test-harden\n');
+    await fs.writeFile(path.join(changeDir, 'design.md'), '## Context\nDesign context.\n');
+    await fs.writeFile(path.join(changeDir, 'test-plan.md'), '## Testing Gap Analysis\nCovered.\n');
+
+    const report = await validateChange('no-specs-schema', { projectRoot });
+
+    expect(report.valid).toBe(true);
+    expect(report.issues).toEqual([]);
+  });
+
+  it('still requires deltas when the schema declares a specs artifact', async () => {
+    await createSchema('specs-required', [
+      { id: 'proposal', generates: 'proposal.md' },
+      { id: 'specs', generates: 'specs/**/*.md', requires: ['proposal'] },
+    ]);
+    const changeDir = await createChangeDir('missing-deltas');
+    await fs.writeFile(path.join(changeDir, '.superpowers.yaml'), 'schema: specs-required\n');
+    await fs.writeFile(path.join(changeDir, 'proposal.md'), '# Proposal\n');
+    await fs.mkdir(path.join(changeDir, 'specs', 'alpha'), { recursive: true });
+    await fs.writeFile(path.join(changeDir, 'specs', 'alpha', 'spec.md'), '# Notes only\n', 'utf-8');
+
+    const report = await validateChange('missing-deltas', { projectRoot });
+
+    expect(report.valid).toBe(false);
+    expect(report.issues.map(issue => issue.message).join('\n')).toContain('at least one delta');
   });
 
   it('falls back to project default schema when metadata is absent', async () => {

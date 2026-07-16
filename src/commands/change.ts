@@ -230,7 +230,7 @@ export class ChangeCommand {
           console.error(`${prefix} [${label}] ${issue.path}: ${issue.message}`);
         });
         // Next steps footer to guide fixing issues
-        this.printNextSteps();
+        this.printNextSteps(report.issues);
       }
     }
 
@@ -279,11 +279,25 @@ export class ChangeCommand {
     return { total, completed };
   }
 
-  private printNextSteps(): void {
+  private printNextSteps(issues: { path: string; message: string }[] = []): void {
     const bullets: string[] = [];
-    bullets.push('- Ensure change has deltas in specs/: use headers ## ADDED/MODIFIED/REMOVED/RENAMED Requirements');
-    bullets.push('- Each requirement MUST include at least one #### Scenario: block');
-    bullets.push('- Debug parsed deltas: superpowers change show <id> --json --deltas-only');
+    const hasArtifactIssues = issues.some(issue => issue.path.startsWith('artifact:'));
+    const hasDeltaIssues = issues.some(issue =>
+      issue.message.includes('delta') ||
+      issue.message.includes('Scenario') ||
+      issue.path.includes('spec.md')
+    );
+    if (hasArtifactIssues) {
+      bullets.push('- Create or regenerate any missing schema artifacts shown as artifact:<id> errors');
+    }
+    if (hasDeltaIssues || (!hasArtifactIssues && issues.length > 0)) {
+      bullets.push('- Ensure change has deltas in specs/: use headers ## ADDED/MODIFIED/REMOVED/RENAMED Requirements');
+      bullets.push('- Each requirement MUST include at least one #### Scenario: block');
+      bullets.push('- Debug parsed deltas: superpowers change show <id> --json --deltas-only');
+    }
+    if (bullets.length === 0) {
+      bullets.push('- Re-run with --json to see structured report');
+    }
     console.error('Next steps:');
     bullets.forEach(b => console.error(`  ${b}`));
   }

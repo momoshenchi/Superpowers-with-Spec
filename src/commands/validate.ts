@@ -163,17 +163,30 @@ export class ValidateCommand {
         const prefix = issue.level === 'ERROR' ? '✗' : issue.level === 'WARNING' ? '⚠' : 'ℹ';
         console.error(`${prefix} [${label}] ${issue.path}: ${issue.message}`);
       }
-      this.printNextSteps(type);
+      this.printNextSteps(type, report.issues);
     }
   }
 
-  private printNextSteps(type: ItemType): void {
+  private printNextSteps(type: ItemType, issues: { path: string; message: string }[] = []): void {
     const bullets: string[] = [];
     if (type === 'change') {
-      bullets.push('- Create or regenerate any missing schema artifacts shown as artifact:<id> errors');
-      bullets.push('- Ensure change has deltas in specs/: use headers ## ADDED/MODIFIED/REMOVED/RENAMED Requirements');
-      bullets.push('- Each requirement MUST include at least one #### Scenario: block');
-      bullets.push('- Debug parsed deltas: superpowers change show <id> --json --deltas-only');
+      const hasArtifactIssues = issues.some(issue => issue.path.startsWith('artifact:'));
+      const hasDeltaIssues = issues.some(issue =>
+        issue.message.includes('delta') ||
+        issue.message.includes('Scenario') ||
+        issue.path.includes('spec.md')
+      );
+      if (hasArtifactIssues) {
+        bullets.push('- Create or regenerate any missing schema artifacts shown as artifact:<id> errors');
+      }
+      if (hasDeltaIssues || (!hasArtifactIssues && issues.length > 0)) {
+        bullets.push('- Ensure change has deltas in specs/: use headers ## ADDED/MODIFIED/REMOVED/RENAMED Requirements');
+        bullets.push('- Each requirement MUST include at least one #### Scenario: block');
+        bullets.push('- Debug parsed deltas: superpowers change show <id> --json --deltas-only');
+      }
+      if (bullets.length === 0) {
+        bullets.push('- Re-run with --json to see structured report');
+      }
     } else {
       bullets.push('- Ensure spec includes ## Purpose and ## Requirements sections');
       bullets.push('- Each requirement MUST include at least one #### Scenario: block');
