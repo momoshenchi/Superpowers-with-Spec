@@ -5,9 +5,9 @@ description: Use when executing implementation plans with independent tasks in t
 
 # Subagent-Driven Development
 
-Execute plan by dispatching fresh subagent per task, with two-stage review after each: spec compliance review first, then code quality review.
+Execute a change plan through logical work packages. Detailed checkboxes track progress; a complete work-package block is the unit of dispatch, handoff, and integration.
 
-**Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
+**Core principle:** Coherent work packages + worker self-review + one final cross-package integration review = focused execution without repetitive local reviews.
 
 **Continuous execution:** Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are: BLOCKED status you cannot resolve, ambiguity that genuinely prevents progress, or all tasks complete. "Should I continue?" prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.
 
@@ -17,15 +17,15 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 ```
 digraph when_to_use {
     "Have change proposal?" [shape=diamond];
-    "Tasks mostly independent?" [shape=diamond];
+    "Work packages have safe boundaries?" [shape=diamond];
     "Stay in this session?" [shape=diamond];
     "subagent-driven-development" [shape=box];
     "Manual execution or explore first" [shape=box];
 
-    "Have change proposal?" -> "Tasks mostly independent?" [label="yes"];
+    "Have change proposal?" -> "Work packages have safe boundaries?" [label="yes"];
     "Have change proposal?" -> "Manual execution or explore first" [label="no"];
-    "Tasks mostly independent?" -> "Stay in this session?" [label="yes"];
-    "Tasks mostly independent?" -> "sequential execute" [label="no - tightly coupled"];
+    "Work packages have safe boundaries?" -> "Stay in this session?" [label="yes"];
+    "Work packages have safe boundaries?" -> "sequential execute" [label="no - tightly coupled"];
     "Stay in this session?" -> "subagent-driven-development" [label="yes"];
     "Stay in this session?" -> "sequential execute" [label="no"];
 }
@@ -35,57 +35,51 @@ digraph when_to_use {
 
 ### Setup
 
-1. Read plan file (`superpowers/changes/<change-name>/`) once
-2. 思考并检查任务之间的独立性
+1. Read the proposal, specs, design, `tasks.md`, and `execution-plan.md` once.
+2. Use `execution-plan.md` to identify ownership, dependencies, and safe parallelism.
+3. In `tasks.md`, a heading in the form `# <work-package-number>. agent<logical-id> — <scope>` is a logical work-package boundary, not a promise to dispatch a particular live subagent.
+4. If an existing task list has no work-package heading, preserve it and treat all incomplete tasks as one sequential work package.
 
 
-### Per Task
+### Per Work Package
 
-1. **Dispatch implementer subagent** with full task text + context
-2. If subagent asks questions → answer clearly, then re-dispatch
-3. Implementer implements, tests, commits, self-reviews
-4. **Dispatch spec compliance reviewer** — confirms code matches spec
-   - Issues found? Implementer fixes → reviewer reviews again
-   - ✅ Spec compliant? Continue
-5. **Dispatch code quality reviewer** — reviews code quality
-   - Issues found? Implementer fixes → reviewer reviews again
-   - ✅ Approved? Mark task complete
-6. Move to next task
+1. Dispatch the complete work-package block with its task text, dependencies, ownership boundaries, and verification expectations. The coordinator may assign one block to one subagent, combine compatible work packages in one assignment, or execute all work packages sequentially itself.
+2. If a worker asks questions, resolve them before implementation.
+3. The worker implements every detailed checkbox in the block, runs the planned checks, self-reviews, and reports changed files, verification, and concerns.
+4. Integrate the completed package and mark its detailed checkboxes only after its own verification succeeds.
+5. Dispatch in parallel only when the execution plan declares disjoint ownership and no unmet dependency. Serialize any overlap.
 
 ### Completion
 
-After all tasks:
-1. Dispatch final code reviewer for entire implementation
-2. Use `superpowers: verification-before-completion` to verify everything is ready for completion
-3. Use `superpowers: finishing-a-development-branch` to complete the development branch
+After all work packages are integrated:
+1. Dispatch one final cross-package integration review for the complete diff, requirements, package interactions, code quality, and test coverage.
+2. Fix blocking findings and run targeted verification. Do not start a second complete review unless the reviewer explicitly requests confirmation of a specified finding.
+3. Run the full verification defined by the change, then use `superpowers: verification-before-completion` and `superpowers: finishing-a-development-branch`.
 
 ## Prompt Templates
 
-Each subagent dispatch needs:
-- **Implementer:** Full task text, context, location in plan
-- **Spec reviewer:** What was implemented, original spec/requirements
-- **Code quality reviewer:** git SHAs (base and head), what was built
+Each dispatch needs:
+- **Implementer:** The full work-package block, context, dependencies, ownership boundaries, and verification commands.
+- **Final reviewer:** The complete integrated diff, all work-package reports, original requirements, and change-level base/head SHAs.
 
 ## Red Flags
 
 **Never:**
 - Start implementation on main/master branch without explicit user consent
-- Skip reviews (spec compliance OR code quality)
-- Proceed with unfixed issues
-- Dispatch multiple implementation subagents in parallel (conflicts)
-- Make subagent read plan file (provide full text instead)
-- Accept "close enough" on spec compliance
-- Skip review loops (reviewer found issues = implementer fixes = review again)
-- **Start code quality review before spec compliance is ✅**
+- Skip worker verification, self-review, or the final integration review
+- Proceed with unfixed blocking findings
+- Dispatch parallel work packages with overlapping ownership or unmet dependencies
+- Make a worker infer its work-package block instead of providing its full text
+- Treat an `agent<logical-id>` label as a required subagent identity
 
 **If subagent asks questions:**
 - Answer clearly and completely
 - Don't rush them into implementation
 
-**If reviewer finds issues:**
-- Implementer (same subagent) fixes them
-- Reviewer reviews again
-- Repeat until approved
+**If the final reviewer finds issues:**
+- The coordinator assigns or implements the fix.
+- Run the targeted verification named by the finding.
+- Request reviewer confirmation only when the reviewer explicitly asked for it; do not repeat a full review by default.
 
 ## Integration
 
@@ -100,8 +94,8 @@ Each subagent dispatch needs:
 
 ## Advantages vs Manual Execution
 
-- Subagents follow TDD naturally
-- Fresh context per task (no confusion)
-- Questions surfaced before work begins
-- Self-review catches issues before handoff
-- Two-stage review prevents over/under-building
+- Work-package context stays coherent while detailed progress remains visible
+- The coordinator can safely choose parallel, combined, or inline execution
+- Workers surface questions before changing code
+- Self-review catches local issues before integration
+- One final review focuses on the interactions that local reviews cannot see

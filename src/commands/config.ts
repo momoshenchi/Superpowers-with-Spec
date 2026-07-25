@@ -50,6 +50,10 @@ const WORKFLOW_PROMPT_META: Record<string, WorkflowPromptMeta> = {
     name: 'Explore ideas',
     description: 'Investigate a problem before implementation',
   },
+  review: {
+    name: 'Review proposal',
+    description: 'Review a complete proposal before implementation',
+  },
   new: {
     name: 'New change',
     description: 'Create a new change scaffold quickly',

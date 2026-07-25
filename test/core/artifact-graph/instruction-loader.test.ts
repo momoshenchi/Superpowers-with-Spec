@@ -185,7 +185,7 @@ describe('instruction-loader', () => {
     it('should include execution-plan template content and task dependency context', () => {
       const changeDir = path.join(tempDir, 'superpowers', 'changes', 'my-change');
       fs.mkdirSync(changeDir, { recursive: true });
-      fs.writeFileSync(path.join(changeDir, 'tasks.md'), '## Tasks\n- [ ] 1.1 Add tests');
+      fs.writeFileSync(path.join(changeDir, 'tasks.md'), '# 1. agent1 — Tests\n\n- [ ] 1.1 Add tests');
 
       const context = loadChangeContext(tempDir, 'my-change');
       const instructions = generateInstructions(context, 'execution-plan');
@@ -199,9 +199,13 @@ describe('instruction-loader', () => {
           description: 'Implementation checklist with trackable tasks',
         },
       ]);
-      expect(instructions.template).toContain('Expected: FAIL');
-      expect(instructions.template).toContain('Expected: PASS');
-      expect(instructions.template).toContain('post-implementation Test Hardening records in `test-plan.md`');
+      expect(instructions.template).toContain('Work-Package Coordination');
+      expect(instructions.template).toContain('Work-Package Execution');
+      expect(instructions.template).toContain('Step 1: Write or extend focused tests');
+      expect(instructions.template).toContain('Step 5: Self-review and handoff');
+      expect(instructions.template).toContain('Final Integration Review and Validation');
+      expect(instructions.template).toContain('logical work-package identifiers');
+      expect(instructions.template).not.toContain('Review test coverage before production code');
     });
 
     it('should include test-plan template content and execution-plan dependency context', () => {
@@ -223,8 +227,8 @@ describe('instruction-loader', () => {
       ]);
       expect(instructions.template).toContain('Testing Gap Analysis');
       expect(instructions.template).toContain('earlier tests were still insufficient');
-      expect(instructions.template).toContain('Red tests in `execution-plan.md` drive the next implementation step');
-      expect(instructions.template).toContain('Test Hardening in this `test-plan.md` supplements that earlier testing');
+      expect(instructions.template).toContain('Workers record and run the tests needed by their detailed task blocks');
+      expect(instructions.template).toContain('Test Hardening in this `test-plan.md` supplements that local verification');
       expect(instructions.template).toContain('every concrete test/status row');
       expect(instructions.template).toContain('planned / covered / passed / failing / not applicable');
       expect(instructions.template).not.toContain('Test Hardening complete');

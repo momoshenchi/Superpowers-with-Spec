@@ -2,7 +2,7 @@
 
 Analyze which earlier tests were still insufficient or not broad enough. Then describe which tests this Test Hardening stage added or strengthened, especially for boundary cases, abnormal/error cases, non-critical paths, empty/missing/invalid states, permissions/ownership, repeated actions, integration points, E2E workflows, and cross-platform path behavior where relevant.
 
-Red tests in `execution-plan.md` drive the next implementation step before production code. Test Hardening in this `test-plan.md` supplements that earlier testing after implementation tasks are done. Passing task-level red tests is necessary but not sufficient for final apply completion.
+Workers record and run the tests needed by their detailed task blocks in `tasks.md`. Test Hardening in this `test-plan.md` supplements that local verification after all work packages are integrated. Passing worker-level tests is necessary but not sufficient for final apply completion.
 
 Test Hardening is complete when every concrete test/status row in the tables below is complete. Use statuses such as `covered`, `passed`, or `not applicable` for completed rows. Leave rows as `planned`, `failing`, or blank until the coverage is actually complete.
 

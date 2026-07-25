@@ -16,6 +16,7 @@ import {
   getVerifyChangeSkillTemplate,
   getOnboardSkillTemplate,
   getSpProposeSkillTemplate,
+  getChangeReviewSkillTemplate,
   getSpExploreCommandTemplate,
   getSpNewCommandTemplate,
   getSpContinueCommandTemplate,
@@ -27,6 +28,7 @@ import {
   getSpVerifyCommandTemplate,
   getSpOnboardCommandTemplate,
   getSpProposeCommandTemplate,
+  getSpReviewCommandTemplate,
   type SkillTemplate,
 } from '../templates/skill-templates.js';
 import type { CommandContent } from '../command-generation/index.js';
@@ -66,6 +68,7 @@ export function getSkillTemplates(workflowFilter?: readonly string[]): SkillTemp
     { template: getVerifyChangeSkillTemplate(), dirName: 'superpowers-verify-change', workflowId: 'verify' },
     { template: getOnboardSkillTemplate(), dirName: 'superpowers-onboard', workflowId: 'onboard' },
     { template: getSpProposeSkillTemplate(), dirName: 'superpowers-propose', workflowId: 'propose' },
+    { template: getChangeReviewSkillTemplate(), dirName: 'superpowers-change-review', workflowId: 'review' },
   ];
 
   if (!workflowFilter) return all;
@@ -92,6 +95,7 @@ export function getCommandTemplates(workflowFilter?: readonly string[]): Command
     { template: getSpVerifyCommandTemplate(), id: 'verify' },
     { template: getSpOnboardCommandTemplate(), id: 'onboard' },
     { template: getSpProposeCommandTemplate(), id: 'propose' },
+    { template: getSpReviewCommandTemplate(), id: 'review' },
   ];
 
   if (!workflowFilter) return all;

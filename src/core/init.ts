@@ -63,6 +63,7 @@ const PROGRESS_SPINNER = {
 
 const WORKFLOW_TO_SKILL_DIR: Record<string, string> = {
   'explore': 'superpowers-explore',
+  'review': 'superpowers-change-review',
   'new': 'superpowers-new-change',
   'continue': 'superpowers-continue-change',
   'apply': 'superpowers-apply-change',

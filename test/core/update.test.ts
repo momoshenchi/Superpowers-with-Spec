@@ -155,9 +155,10 @@ Old instructions content
 
       await updateCommand.execute(testDir);
 
-      // Verify core profile skill files were created/updated (propose, explore, apply, archive)
+      // Verify core profile skill files were created/updated (propose, explore, review, apply, archive)
       const coreSkillNames = [
         'superpowers-explore',
+        'superpowers-change-review',
         'superpowers-apply-change',
         'superpowers-archive-change',
         'superpowers-propose',
@@ -1322,6 +1323,7 @@ More user content after markers.
       const skillNames = [
         'superpowers-propose',
         'superpowers-explore',
+        'superpowers-change-review',
         'superpowers-apply-change',
         'superpowers-archive-change',
       ];

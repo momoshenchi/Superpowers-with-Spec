@@ -3,7 +3,7 @@
 You are reviewing code changes for production readiness.
 
 **Your task:**
-1. Review {WHAT_WAS_IMPLEMENTED}
+1. Review the complete integrated change described by {WHAT_WAS_IMPLEMENTED}
 2. Compare against {PLAN_OR_REQUIREMENTS}
 3. Check code quality, architecture, testing
 4. Categorize issues by severity
@@ -13,9 +13,11 @@ You are reviewing code changes for production readiness.
 
 {DESCRIPTION}
 
-## Requirements/Plan
+## Requirements/Plan and Work-Package Context
 
 {PLAN_REFERENCE}
+
+Review all integrated work-package reports and their interaction boundaries, not an individual checklist item in isolation.
 
 ## Git Range to Review
 

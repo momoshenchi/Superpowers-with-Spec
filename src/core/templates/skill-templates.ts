@@ -17,4 +17,5 @@ export { getBulkArchiveChangeSkillTemplate, getSpBulkArchiveCommandTemplate } fr
 export { getVerifyChangeSkillTemplate, getSpVerifyCommandTemplate } from './workflows/verify-change.js';
 export { getOnboardSkillTemplate, getSpOnboardCommandTemplate } from './workflows/onboard.js';
 export { getSpProposeSkillTemplate, getSpProposeCommandTemplate } from './workflows/propose.js';
+export { getChangeReviewSkillTemplate, getSpReviewCommandTemplate } from './workflows/change-review.js';
 export { getFeedbackSkillTemplate } from './workflows/feedback.js';

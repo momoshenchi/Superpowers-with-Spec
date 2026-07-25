@@ -82,10 +82,11 @@ describe('InitCommand', () => {
 
       await initCommand.execute(testDir);
 
-      // Core profile: propose, explore, apply, archive
+      // Core profile: propose, explore, review, apply, archive
       const coreSkillNames = [
         'superpowers-propose',
         'superpowers-explore',
+        'superpowers-change-review',
         'superpowers-apply-change',
         'superpowers-archive-change',
       ];
@@ -121,10 +122,11 @@ describe('InitCommand', () => {
 
       await initCommand.execute(testDir);
 
-      // Core profile: propose, explore, apply, archive
+      // Core profile: propose, explore, review, apply, archive
       const coreCommandNames = [
         'sp/propose.md',
         'sp/explore.md',
+        'sp/review.md',
         'sp/apply.md',
         'sp/archive.md',
       ];
@@ -332,6 +334,17 @@ describe('InitCommand', () => {
       const content = await fs.readFile(skillFile, 'utf-8');
 
       expect(content).toContain('name: superpowers-propose');
+    });
+
+    it('should include proposal review skill instructions', async () => {
+      const initCommand = new InitCommand({ tools: 'claude', force: true });
+      await initCommand.execute(testDir);
+
+      const skillFile = path.join(testDir, '.claude', 'skills', 'superpowers-change-review', 'SKILL.md');
+      const content = await fs.readFile(skillFile, 'utf-8');
+
+      expect(content).toContain('name: superpowers-change-review');
+      expect(content).toContain('present the complete review report');
     });
 
     it('should include apply-change skill instructions', async () => {

@@ -7,12 +7,12 @@ description: Use when completing tasks, implementing major features, or before m
 
 Dispatch a code-reviewer subagent to catch issues before they cascade.
 
-**Core principle:** Review early, review often.
+**Core principle:** Review at a meaningful delivery boundary with enough integrated context to assess real risk.
 
 ## When to Request Review
 
 **Mandatory:**
-- After each task in subagent-driven development
+- Once after all work packages are integrated in subagent-driven development
 - After completing major feature
 - Before merge to main
 
@@ -47,9 +47,9 @@ Provide:
 ## Integration with Workflows
 
 **Subagent-Driven Development:**
-- Review after EACH task
-- Catch issues before they compound
-- Fix before moving to next task
+- Workers verify and self-review their own complete work packages.
+- Review once after all work packages are integrated.
+- Fix blocking findings and run targeted verification; do not restart a complete review unless the reviewer explicitly requests confirmation of a specified finding.
 
 **Applying Changes (`/sp:apply`):**
 - Review after each batch (3 tasks)

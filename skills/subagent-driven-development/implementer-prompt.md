@@ -4,17 +4,17 @@ Use this template when dispatching an implementer subagent.
 
 ```
 Task tool (general-purpose):
-  description: "Implement Task N: [task name]"
+  description: "Implement work package [number]: [scope]"
   prompt: |
-    You are implementing Task N: [task name]
+    You are implementing a complete work-package block: [number] [scope]
 
-    ## Task Description
+    ## Complete Work-Package Block
 
-    [FULL TEXT of task from plan - paste it here, don't make subagent read file]
+    [FULL TEXT from the `# <number>. agent<logical-id> — <scope>` heading through every detailed checkbox; paste it here, don't make the worker read the plan file]
 
     ## Context
 
-    [Scene-setting: where this fits, dependencies, architectural context]
+    [Scene-setting: where this fits, dependencies, architectural context, file ownership boundaries, and verification commands]
 
     ## Before You Begin
 
@@ -29,12 +29,12 @@ Task tool (general-purpose):
     ## Your Job
 
     Once you're clear on requirements:
-    1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
-    3. Verify implementation works
-    4. Commit your work
+    1. Implement every detailed task in this complete work-package block
+    2. Write and run the tests required by the block
+    3. Verify the work-package outcome
+    4. Commit your work when the repository workflow requires it
     5. Self-review (see below)
-    6. Report back
+    6. Report back for integration; do not request a formal review after individual checkboxes
 
     Work from: [directory]
 
@@ -46,7 +46,7 @@ Task tool (general-purpose):
     Review your work with fresh eyes. Ask yourself:
 
     **Completeness:**
-    - Did I fully implement everything in the spec?
+    - Did I fully implement every detailed checkbox and relevant requirement in this work package?
     - Did I miss any requirements?
     - Are there edge cases I didn't handle?
 

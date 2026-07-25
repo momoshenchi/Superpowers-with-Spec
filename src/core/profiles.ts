@@ -11,7 +11,7 @@ import type { Profile } from './global-config.js';
  * Core workflows included in the 'core' profile.
  * These provide the streamlined experience for new users.
  */
-export const CORE_WORKFLOWS = ['propose', 'explore', 'apply', 'archive'] as const;
+export const CORE_WORKFLOWS = ['propose', 'explore', 'review', 'apply', 'archive'] as const;
 
 /**
  * All available workflows in the system.
@@ -19,6 +19,7 @@ export const CORE_WORKFLOWS = ['propose', 'explore', 'apply', 'archive'] as cons
 export const ALL_WORKFLOWS = [
   'propose',
   'explore',
+  'review',
   'new',
   'continue',
   'apply',

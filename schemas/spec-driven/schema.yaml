@@ -128,19 +128,24 @@ artifacts:
       checkbox format to track progress. Tasks not using `- [ ]` won't be tracked.
 
       Guidelines:
-      - Group related tasks under ## numbered headings
-      - Each task MUST be a checkbox: `- [ ] X.Y Task description`
-      - Tasks should be small enough to complete in one session
-      - Order tasks by dependency (what must be done first?)
+      - Start every work package with `# <work-package-number>. agent<logical-id> — <scope>`
+      - Use `##` headings only to group delivery areas inside that work package
+      - Each detailed task MUST be a checkbox: `- [ ] <work-package-number>.<task-number> Task description`
+      - Make each work package a coherent, independently reportable delivery area and order work packages by dependency
+      - Treat `agent<logical-id>` as a logical allocation label: a coordinator may dispatch one block, combine compatible blocks, or execute all blocks sequentially
 
       Example:
       ```
-      ## 1. Setup
+      # 1. agent1 — Schema and template foundation
+
+      ## Templates
 
       - [ ] 1.1 Create new module structure
       - [ ] 1.2 Add dependencies to package.json
 
-      ## 2. Core Implementation
+      # 2. agent2 — Core implementation
+
+      ## Delivery
 
       - [ ] 2.1 Implement data export function
       - [ ] 2.2 Add CSV formatting utilities
@@ -157,79 +162,68 @@ artifacts:
     description: Detailed implementation plan for executing the change
     template: execution-plan.md
     instruction: |
-      Create the execution plan that turns the compact task checklist into implementation-ready steps.
+      Create the execution plan that coordinates the task-list work packages for implementation.
 
       This artifact is saved as `execution-plan.md` in the current Superpowers change directory.
       Use proposal, specs, design, and tasks as context, but keep `tasks.md` as the compact
       checkbox progress file.
 
       The plan must:
-      - Start with the implementation plan header from the template.
-      - Map files to create, modify, and test before listing task steps.
-      - Use project-relative paths that are portable across macOS, Linux, and Windows.
-      - Break work into bite-sized checkbox steps with exact commands and expected outcomes.
-      - Require test authoring first, then a comprehensive review of those tests before production code.
-      - Block production-code steps until the test review is approved or gaps are fixed.
-      - Keep red tests focused on driving implementation; broad post-diff coverage planning and evidence belong in `test-plan.md`.
+      - Map files to create, modify, and test with project-relative paths that are portable across macOS, Linux, and Windows.
+      - Keep `tasks.md` as the implementation progress source of truth, then expand every detailed checkbox task in its work package into a concrete Step 1–5 execution sequence here.
+      - List each logical work-package block, its ownership boundary, dependencies, safe parallel eligibility, integration order, and handoff evidence.
+      - State that `agent<logical-id>` is a logical label, not a required one-to-one subagent assignment.
+      - For every detailed task, provide concrete files, focused tests, commands, expected results, implementation detail, verification, and self-review/handoff guidance across its Step 1–5 sequence.
+      - Treat those five steps as task-level execution detail, not as separate subagent assignments or required 2–5 minute units.
+      - Require workers to run the verification named by their detailed tasks and self-review before handoff.
+      - Require one formal cross-package review and full validation only after all work packages are integrated; fixes receive targeted verification without a second complete review unless explicitly requested.
+      - Keep broad post-diff coverage planning and evidence in `test-plan.md`.
       - Avoid placeholders such as `TBD`, `TODO`, `implement later`, or vague directives.
       - Reference supporting change-local files with Markdown targets beginning `attachments/` when useful, and explain what each file is, why it matters, whether it is normative, illustrative, or background context, and which task or requirement it supports.
 
       After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
-      **1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+      **1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a work package that implements it? List any gaps.
       **2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
       **3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
       If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
       
       Example:
       ````
-      ## Task Plan
-      ### Task 1: [Component or Behavior]
+      ## Work-Package Coordination
+
+      | Task block | Ownership boundary | Dependencies | Parallel eligibility | Handoff evidence |
+      | --- | --- | --- | --- |
+      | `# 1. agent1 — [scope]` | `path/to/owned-area` | None | Yes / No, with reason | Verification result and self-review report |
+
+      ## Work-Package Execution
+
+      ### `# 1. agent1 — [scope]`
+
+      #### Task 1.1: [Detailed task description]
 
       **Files:**
-      - Create: `path/to/file.ts`
       - Modify: `path/to/existing.ts`
       - Test: `test/path/to/test-file.test.ts`
 
-      - [ ] **Step 1: Write the failing test**
+      1. **Step 1: Write or extend focused tests**
+      2. **Step 2: Run focused tests**
+         Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
+         Expected: Fail for the missing behavior, or document the verified baseline when no new failing test applies.
+      3. **Step 3: Implement Task 1.1**
+      4. **Step 4: Run package verification**
+         Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
+         Expected: PASS with Task 1.1 behavior covered.
+      5. **Step 5: Self-review and handoff**
 
-      ```ts
-      it('describes the specific behavior', () => {
-        expect(actualBehavior()).toBe(expectedValue);
-      });
-      ```
+      Repeat this Step 1–5 structure for every detailed task in the work package. Keep task completion checkboxes only in `tasks.md`.
 
-      - [ ] **Step 2: Run test to verify it fails**
+      ## Final Integration Review and Validation
 
-      Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
-      Expected: FAIL for the missing behavior, not because of syntax errors or incorrect test setup.
-
-      - [ ] **Step 3: Review test coverage before production code**
-
-      Check: requirement coverage, edge cases, negative paths, assertion strength, regression sensitivity, and cross-platform path behavior when paths are involved.
-      Expected: Review either approves the tests or identifies gaps that are fixed before Step 4.
-
-      - [ ] **Step 4: Write minimal implementation**
-
-      ```ts
-      export function actualBehavior() {
-        return expectedValue;
-      }
-      ```
-
-      - [ ] **Step 5: Run verification**
-
-      Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
-      Expected: PASS with the new test covering the behavior.
-
-      - [ ] **Step 6: Commit when appropriate**
-
-      ```bash
-      git add test/path/to/test-file.test.ts path/to/existing.ts
-      git commit -m "feat: add specific behavior"
-      ```
+      After all work packages are integrated, review the full diff against the requirements and run full-change verification.
+      Fix blockers and run targeted verification. Do not run another full review unless the reviewer explicitly requests confirmation of a specified finding.
       ````
      
-      Reference `tasks.md` for task ordering and tracking, but add the concrete TDD detail here.
+      Reference `tasks.md` for detailed task ordering and tracking; use this artifact for coordination and final validation.
     requires:
       - tasks
 
@@ -244,7 +238,7 @@ artifacts:
       Use proposal, specs, design, tasks, and execution-plan as context. Do not duplicate the full implementation plan.
 
       The plan must:
-      - Distinguish red tests in `execution-plan.md` from post-implementation Test Hardening in `test-plan.md`.
+      - Distinguish worker-level verification in detailed `tasks.md` from post-integration Test Hardening in `test-plan.md`.
       - Include a requirement/scenario coverage matrix with unit, integration, E2E, manual, or not-applicable coverage decisions.
       - Start by analyzing which earlier tests were insufficient or not broad enough, then describe which tests this stage added or strengthened.
       - Include boundary, abnormal, failure, non-critical-path, integration, and cross-platform path risks where relevant.

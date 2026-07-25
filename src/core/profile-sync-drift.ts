@@ -13,6 +13,7 @@ type WorkflowId = (typeof ALL_WORKFLOWS)[number];
  */
 export const WORKFLOW_TO_SKILL_DIR: Record<WorkflowId, string> = {
   'explore': 'superpowers-explore',
+  'review': 'superpowers-change-review',
   'new': 'superpowers-new-change',
   'continue': 'superpowers-continue-change',
   'apply': 'superpowers-apply-change',

@@ -4,7 +4,7 @@ description: Use when starting any conversation - establishes how to find and us
 ---
 
 <EXTREMELY-IMPORTANT>
-If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+**Invoke relevant or requested skills BEFORE any response or action.** If an invoked skill turns out to be wrong for the situation, you don't need to use it.
 
 IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 
@@ -19,9 +19,8 @@ This is not negotiable. This is not optional. You cannot rationalize your way ou
 
 # Using Skills
 
-## The Rule
+## The Superpower workflow 
 
-**Invoke relevant or requested skills BEFORE any response or action.** Even a 1% chance a skill might apply means that you should invoke the skill to check. If an invoked skill turns out to be wrong for the situation, you don't need to use it.
 
 ```dot
 digraph skill_flow {
@@ -52,6 +51,41 @@ digraph skill_flow {
     "Create TodoWrite todo per item" -> "Follow skill exactly";
 }
 ```
+
+superpowers helps you and your AI coding assistant agree on what to build before any code is written.
+
+**Default quick path (core profile):**
+
+```text
+/sp:explore ──► /sp:propose ──► /sp:review ──►  /sp:apply ──► /sp:verify ──► /sp:sync ──► /sp:archive
+   (optional)
+```
+
+Start with `/sp:explore` when you're figuring out what to do, or jump straight to `/sp:propose` when you already know. Explore is in the default profile, so it's always there when you want it.
+
+
+## What superpowers Creates
+
+After running `superpowers init`, your project has this structure:
+
+```
+superpowers/
+├── specs/              # Source of truth (your system's behavior)
+│   └── <domain>/
+│       └── spec.md
+├── changes/            # Proposed updates (one folder per change)
+│   └── <change-name>/
+│       ├── proposal.md
+│       ├── design.md
+│       ├── tasks.md
+│       ├── implementation-plan.md
+│       ├── test-plan.md
+│       └── specs/      # Delta specs (what's changing)
+│           └── <domain>/
+│               └── spec.md
+└── config.yaml         # Project configuration (optional)
+```
+
 
 ## Red Flags
 

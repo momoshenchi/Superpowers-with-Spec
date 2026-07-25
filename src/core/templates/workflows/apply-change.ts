@@ -45,7 +45,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Progress (total, complete, remaining)
    - Task list with status
    - Dynamic instruction based on current state
-   - For spec-driven changes, \`tasks.md\` is the progress checklist, \`execution-plan.md\` is the detailed implementation/TDD context, and \`test-plan.md\` is the coverage draft plus Test Hardening record.
+   - For spec-driven changes, \`tasks.md\` is the detailed progress checklist, \`execution-plan.md\` contains work-package coordination plus Step 1–5 execution guidance for each detailed task and final validation, and \`test-plan.md\` is the coverage draft plus Test Hardening record.
 
    **Handle states:**
    - If \`state: "blocked"\` (missing artifacts): show message, suggest using superpowers-continue-change
@@ -91,7 +91,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Task completion transitions into Test Hardening; it is not apply completion by itself.
    - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete test/status row in its tables is complete.
    - Use complete statuses such as \`covered\`, \`passed\`, or \`not applicable\`; \`planned\`, \`failing\`, blank, or placeholder rows keep hardening incomplete.
-   - Distinguish pre-implementation red tests in \`execution-plan.md\` from post-implementation Test Hardening in \`test-plan.md\`; passing red tests is necessary but not sufficient for final apply completion.
+   - Distinguish worker-level verification in detailed \`tasks.md\` from post-integration Test Hardening in \`test-plan.md\`; passing worker-level tests is necessary but not sufficient for final apply completion.
    - Analyze which earlier tests were insufficient or not broad enough, then decide which supplemental tests are needed.
    - Add feasible missing tests for boundary cases, abnormal/error cases, non-critical paths, empty/missing/invalid states, permission/ownership failures, repeated actions, integration points, E2E flows, and cross-platform path behavior where relevant.
    - Record which tests this stage added or strengthened and any justified deferrals in \`test-plan.md\`.
@@ -180,7 +180,8 @@ What would you like to do?
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
 - Never start implementation on main/master branch without explicit user consent
-- Review the change proposal critically before starting — identify questions or concerns and raise them before proceeding
+- Do not automatically repeat proposal review before starting. The normal \`/sp:propose\` path performs it after creating all required artifacts; users may invoke \`/sp:review <change>\` voluntarily.
+- Keep the final integration review separate: after work packages integrate, review cross-package behavior, the integrated diff, code quality, and full validation before completion.
 - Keep the task loop continuous by default; only pause when blocked, unclear, or explicitly asked to stop
 
 **Fluid Workflow Integration**
@@ -281,7 +282,7 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
    - Task completion transitions into Test Hardening; it is not apply completion by itself.
    - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete test/status row in its tables is complete.
    - Use complete statuses such as \`covered\`, \`passed\`, or \`not applicable\`; \`planned\`, \`failing\`, blank, or placeholder rows keep hardening incomplete.
-   - Distinguish pre-implementation red tests in \`execution-plan.md\` from post-implementation Test Hardening in \`test-plan.md\`; passing red tests is necessary but not sufficient for final apply completion.
+   - Distinguish worker-level verification in detailed \`tasks.md\` from post-integration Test Hardening in \`test-plan.md\`; passing worker-level tests is necessary but not sufficient for final apply completion.
    - Analyze which earlier tests were insufficient or not broad enough, then decide which supplemental tests are needed.
    - Add feasible missing tests for boundary cases, abnormal/error cases, non-critical paths, empty/missing/invalid states, permission/ownership failures, repeated actions, integration points, E2E flows, and cross-platform path behavior where relevant.
    - Record which tests this stage added or strengthened and any justified deferrals in \`test-plan.md\`.
@@ -369,6 +370,8 @@ What would you like to do?
 - Do not complete apply while hardening tests fail or product defects remain unresolved.
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
+- Do not automatically repeat proposal review before starting. The normal \`/sp:propose\` path performs it after creating all required artifacts; users may invoke \`/sp:review <change>\` voluntarily.
+- Keep the final integration review separate: after work packages integrate, review cross-package behavior, the integrated diff, code quality, and full validation before completion.
 
 **Fluid Workflow Integration**
 

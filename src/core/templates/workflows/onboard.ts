@@ -401,7 +401,7 @@ Save to \`superpowers/changes/<name>/tasks.md\`.
 \`\`\`
 ## Execution Plan
 
-Before implementation, we create \`execution-plan.md\`: the detailed implementation plan. \`tasks.md\` stays the progress checklist; \`execution-plan.md\` carries the file map, TDD steps, exact commands, and test-review gate.
+Before implementation, we create \`execution-plan.md\`: the work-package coordination and final validation plan. \`tasks.md\` stays the progress checklist; \`execution-plan.md\` carries file ownership, dependencies, safe parallelism, integration order, Step 1–5 execution guidance for every detailed task, and final review guidance.
 
 Then we create \`test-plan.md\`: the pre-implementation coverage draft and post-implementation Test Hardening record.
 \`\`\`
@@ -427,7 +427,31 @@ Before implementation starts, we create \`test-plan.md\`: a compact pre-implemen
 
 ---
 
-## Phase 11: Apply (Implementation + Test Hardening)
+## Phase 11: Proposal Review
+
+**EXPLAIN:**
+
+\`\`\`
+Before implementation, /sp:propose reviews the complete proposal bundle: requirements, design, task work packages, execution plan, and test plan.
+
+This is a plan-quality review. It reports findings first, repairs every resolvable BLOCKER and WARNING, then reviews the repaired plan again. Suggestions stay visible but do not block readiness.
+
+This is different from the final integration review after implementation, which checks the integrated diff and work-package interactions.
+\`\`\`
+
+**DO:**
+
+Show the proposal review report. If it identifies a user decision that cannot be safely inferred, pause for that decision; otherwise repair the planning artifacts and re-review before continuing.
+
+**SHOW:**
+
+\`\`\`
+Proposal review passed. The implementation plan is ready.
+\`\`\`
+
+---
+
+## Phase 12: Apply (Implementation + Test Hardening)
 
 **EXPLAIN:**
 \`\`\`
@@ -463,7 +487,7 @@ The change is implemented and hardened. One more step—let's archive it.
 
 ---
 
-## Phase 12: Archive
+## Phase 13: Archive
 
 **EXPLAIN:**
 \`\`\`
@@ -488,7 +512,7 @@ The change is now part of your project's history. The code is in your codebase, 
 
 ---
 
-## Phase 13: Recap & Next Steps
+## Phase 14: Recap & Next Steps
 
 \`\`\`
 ## Congratulations!
@@ -503,8 +527,10 @@ You just completed a full Superpowers cycle:
 6. **Tasks** - Created the progress checklist
 7. **Execution Plan** - Wrote the detailed implementation plan
 8. **Test Plan** - Drafted coverage and hardening expectations
-9. **Apply** - Implemented the work and completed Test Hardening
-10. **Archive** - Preserved the record
+9. **Proposal Review** - Reviewed the complete plan, reported findings, repaired BLOCKER/WARNING items, and re-reviewed before implementation
+10. **Apply** - Implemented the work and completed Test Hardening
+11. **Final Integration Review** - Reviewed the integrated work packages, diff, and full validation
+12. **Archive** - Preserved the record
 
 This same rhythm works for any size change—a small fix or a major feature.
 
@@ -518,6 +544,7 @@ This same rhythm works for any size change—a small fix or a major feature.
 |---------|--------------|
 | \`/sp:propose\` | Create a change and generate all artifacts |
 | \`/sp:explore\` | Think through problems before/during work |
+| \`/sp:review\` | Manually review a complete proposal before implementation |
 | \`/sp:apply\` | Implement tasks from a change |
 | \`/sp:archive\` | Archive a completed change |
 
@@ -570,6 +597,7 @@ If the user says they just want to see the commands or skip the tutorial:
 |---------|--------------|
 | \`/sp:propose <name>\` | Create a change and generate all artifacts |
 | \`/sp:explore\` | Think through problems (no code changes) |
+| \`/sp:review <name>\` | Manually review a complete proposal |
 | \`/sp:apply <name>\` | Implement tasks |
 | \`/sp:archive <name>\` | Archive when done |
 

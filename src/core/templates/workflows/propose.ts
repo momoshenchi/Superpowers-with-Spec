@@ -83,7 +83,16 @@ When ready to implement, run /sp:apply
       - Use **AskUserQuestion tool** to clarify
       - Then continue with creation
 
-5. **Show final status**
+5. **Review the complete proposal before readiness**
+
+   After every \`applyRequires\` artifact is done, automatically follow the \`superpowers-change-review\` workflow:
+   - Inspect the completed proposal artifacts and present the complete review report before editing any artifact in response to findings.
+   - Repair every resolvable BLOCKER and WARNING, then re-run review.
+   - Keep SUGGESTION findings visible but non-blocking.
+   - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
+   - Do not create \`review.md\`, approval metadata, or a review artifact.
+
+6. **Show final status**
    \`\`\`bash
    superpowers status --change "<name>"
    \`\`\`
@@ -93,7 +102,7 @@ When ready to implement, run /sp:apply
 After completing all artifacts, summarize:
 - Change name and location
 - List of artifacts created with brief descriptions
-- What's ready: "All artifacts created! Ready for implementation."
+- What's ready: "Proposal review passed after any required repairs. Ready for implementation."
 - Prompt: "Run \`/sp:apply\` or ask me to implement to start working on the tasks."
 
 **Artifact Creation Guidelines**
@@ -114,11 +123,12 @@ After completing all artifacts, summarize:
 - If a change with that name already exists, ask if user wants to continue it or create a new one
 - Verify each artifact file exists after writing before proceeding to next
 
-**Task Granularity in tasks.md**
-- Each task should be bite-sized (2-5 minutes per step): write failing test → run it → implement minimal code → run tests → commit
-- Tasks must include exact file paths, complete code snippets (not 'add validation'), and exact commands with expected output
+**Work Packages in tasks.md**
+- Use \`# <number>. agent<logical-id> — <scope>\` for each coherent work package; detailed checkbox tasks stay inside that block.
+- \`agent<logical-id>\` is a logical allocation label, not a required subagent identity. A coordinator may dispatch blocks separately, combine compatible blocks, or execute all blocks sequentially.
+- Keep detailed tasks verifiable and ordered by dependency. In \`execution-plan.md\`, expand every detailed task into concrete Step 1–5 execution guidance while recording file ownership, dependencies, safe parallelism, and final validation.
+- Keep each work package coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
 - Follow DRY, YAGNI, TDD principles. Ensure frequent commits.
-
 `,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
@@ -139,7 +149,7 @@ I'll create a change with artifacts:
 - specs/<capability>/spec.md (requirements)
 - design.md (how)
 - tasks.md (progress checklist)
-- execution-plan.md (detailed implementation plan)
+- execution-plan.md (work-package coordination and final validation plan)
 - test-plan.md (pre-implementation coverage draft and post-implementation Test Hardening record)
 
 When ready to implement, run /sp:apply
@@ -205,7 +215,16 @@ When ready to implement, run /sp:apply
       - Use **AskUserQuestion tool** to clarify
       - Then continue with creation
 
-5. **Show final status**
+5. **Review the complete proposal before readiness**
+
+   After every \`applyRequires\` artifact is done, automatically follow the \`superpowers-change-review\` workflow:
+   - Inspect the completed proposal artifacts and present the complete review report before editing any artifact in response to findings.
+   - Repair every resolvable BLOCKER and WARNING, then re-run review.
+   - Keep SUGGESTION findings visible but non-blocking.
+   - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
+   - Do not create \`review.md\`, approval metadata, or a review artifact.
+
+6. **Show final status**
    \`\`\`bash
    superpowers status --change "<name>"
    \`\`\`
@@ -215,7 +234,7 @@ When ready to implement, run /sp:apply
 After completing all artifacts, summarize:
 - Change name and location
 - List of artifacts created with brief descriptions
-- What's ready: "All artifacts created! Ready for implementation."
+- What's ready: "Proposal review passed after any required repairs. Ready for implementation."
 - Prompt: "Run \`/sp:apply\` to start implementing."
 
 **Artifact Creation Guidelines**

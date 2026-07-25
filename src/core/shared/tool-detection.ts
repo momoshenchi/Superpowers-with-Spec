@@ -13,6 +13,7 @@ import { AI_TOOLS } from '../config.js';
  */
 export const SKILL_NAMES = [
   'superpowers-explore',
+  'superpowers-change-review',
   'superpowers-new-change',
   'superpowers-continue-change',
   'superpowers-apply-change',
@@ -32,6 +33,7 @@ export type SkillName = (typeof SKILL_NAMES)[number];
  */
 export const COMMAND_IDS = [
   'explore',
+  'review',
   'new',
   'continue',
   'apply',

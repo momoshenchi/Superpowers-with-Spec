@@ -1009,11 +1009,19 @@ Description and rationale.
 `;
 
     case 'tasks':
-      return `## Implementation Tasks
+      return `# 1. agent1 — Work-package scope
 
-- [ ] Task 1
-- [ ] Task 2
-- [ ] Task 3
+## Delivery area
+
+- [ ] 1.1 Detailed, verifiable task description
+- [ ] 1.2 Detailed, verifiable task description
+
+# 2. agent2 — Work-package scope
+
+## Delivery area
+
+- [ ] 2.1 Detailed, verifiable task description
+- [ ] 2.2 Detailed, verifiable task description
 `;
 
     case 'execution-plan':
@@ -1026,27 +1034,33 @@ Description and rationale.
 - Test:
   - <!-- \`test/path/to/test-file.test.ts\` -->
 
-## Task Plan
+## Work-Package Coordination
 
-### Task N: [Component or Behavior]
+\`tasks.md\` owns the detailed checkbox tasks. Agent labels are logical work-package identifiers, not required subagent identities.
 
-**Files:**
-- Modify: \`path/to/existing-file.ts\`
-- Test: \`test/path/to/test-file.test.ts\`
+| Task block | Ownership boundary | Dependencies | Parallel eligibility | Handoff evidence |
+| --- | --- | --- | --- | --- |
+| \`# 1. agent1 — [scope]\` | \`path/to/owned-area\` | None | Yes / No, with reason | Verification result and self-review report |
 
-- [ ] **Step 1: Write the failing test**
-- [ ] **Step 2: Run test to verify it fails**
-<!-- 
-Run: \`pnpm exec vitest run test/path/to/test-file.test.ts\`
-Expected: FAIL for the missing behavior.
--->
-- [ ] **Step 3: Review tests before production code**
-- [ ] **Step 4: Write minimal implementation**
-- [ ] **Step 5: Run verification**
-<!-- 
-Run: \`pnpm exec vitest run test/path/to/test-file.test.ts\`
-Expected: PASS.
--->
+## Work-Package Execution
+
+Expand every detailed task in the work package below. These are task-level execution steps, not separate subagent assignments or required 2–5 minute units; keep completion checkboxes in \`tasks.md\`.
+
+### \`# 1. agent1 — [scope]\`
+
+#### Task 1.1: Detailed task description
+
+1. **Step 1: Write or extend focused tests**
+2. **Step 2: Run focused tests**
+3. **Step 3: Implement Task 1.1**
+4. **Step 4: Run package verification**
+5. **Step 5: Self-review and handoff**
+
+## Final Integration Review and Validation
+
+- Integrate all work packages before formal review.
+- Review the complete change once for requirements, package interactions, code quality, test coverage, and full verification.
+- Fix blockers with targeted verification; do not start a second complete review unless explicitly requested.
 `;
 
     case 'test-plan':
@@ -1054,7 +1068,7 @@ Expected: PASS.
 
 Analyze which earlier tests were still insufficient or not broad enough. Then describe which tests this Test Hardening stage added or strengthened.
 
-Red tests in \`execution-plan.md\` drive implementation before production code. Test Hardening in this file supplements that earlier testing after implementation tasks are done.
+Workers record and run task-level verification in \`tasks.md\`. Test Hardening in this file supplements that local verification after all work packages are integrated.
 
 Test Hardening is complete when every concrete test/status row in the tables below is complete. Use statuses such as \`covered\`, \`passed\`, or \`not applicable\` for completed rows. Leave rows as \`planned\`, \`failing\`, or blank until the coverage is actually complete.
 
