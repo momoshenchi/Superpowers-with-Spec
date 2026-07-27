@@ -45,7 +45,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Progress (total, complete, remaining)
    - Task list with status
    - Dynamic instruction based on current state
-   - For spec-driven changes, \`tasks.md\` is the detailed progress checklist, \`execution-plan.md\` contains work-package coordination plus Step 1–5 execution guidance for each detailed task and final validation, and \`test-plan.md\` is the coverage draft plus Test Hardening record.
+   - For spec-driven changes, \`tasks.md\` is the detailed progress checklist, \`execution-plan.md\` contains dispatch-unit coordination plus Step 1–5 execution guidance for each detailed task and final validation, and \`test-plan.md\` is the coverage draft plus Test Hardening record.
 
    **Handle states:**
    - If \`state: "blocked"\` (missing artifacts): show message, suggest using superpowers-continue-change
@@ -181,7 +181,7 @@ What would you like to do?
 - Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
 - Never start implementation on main/master branch without explicit user consent
 - Do not automatically repeat proposal review before starting. The normal \`/sp:propose\` path performs it after creating all required artifacts; users may invoke \`/sp:review <change>\` voluntarily.
-- Keep the final integration review separate: after work packages integrate, review cross-package behavior, the integrated diff, code quality, and full validation before completion.
+- Keep the final integration review separate: after dispatch units integrate, review cross-unit behavior, the integrated diff, code quality, and full validation before completion.
 - Keep the task loop continuous by default; only pause when blocked, unclear, or explicitly asked to stop
 
 **Fluid Workflow Integration**
@@ -371,7 +371,7 @@ What would you like to do?
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
 - Do not automatically repeat proposal review before starting. The normal \`/sp:propose\` path performs it after creating all required artifacts; users may invoke \`/sp:review <change>\` voluntarily.
-- Keep the final integration review separate: after work packages integrate, review cross-package behavior, the integrated diff, code quality, and full validation before completion.
+- Keep the final integration review separate: after dispatch units integrate, review cross-unit behavior, the integrated diff, code quality, and full validation before completion.
 
 **Fluid Workflow Integration**
 

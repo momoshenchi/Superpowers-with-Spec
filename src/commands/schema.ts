@@ -1009,14 +1009,14 @@ Description and rationale.
 `;
 
     case 'tasks':
-      return `# 1. agent1 — Work-package scope
+      return `# 1. Dispatch-unit scope
 
 ## Delivery area
 
 - [ ] 1.1 Detailed, verifiable task description
 - [ ] 1.2 Detailed, verifiable task description
 
-# 2. agent2 — Work-package scope
+# 2. Dispatch-unit scope
 
 ## Delivery area
 
@@ -1034,33 +1034,32 @@ Description and rationale.
 - Test:
   - <!-- \`test/path/to/test-file.test.ts\` -->
 
-## Work-Package Coordination
+## Dispatch Coordination
 
-\`tasks.md\` owns the detailed checkbox tasks. Agent labels are logical work-package identifiers, not required subagent identities.
+\`tasks.md\` owns the detailed checkbox tasks. Each top-level \`# <number>. <scope>\` heading is a dispatch unit (allocation boundary, not a live subagent identity). Legacy agent-labeled headings remain acceptable. Record assignee policy in the table below.
 
-| Task block | Ownership boundary | Dependencies | Parallel eligibility | Handoff evidence |
-| --- | --- | --- | --- | --- |
-| \`# 1. agent1 — [scope]\` | \`path/to/owned-area\` | None | Yes / No, with reason | Verification result and self-review report |
+| Unit | Scope | Ownership | Dependencies | Assignee policy | Parallel | Handoff |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | [scope] | \`path/to/owned-area\` | None | Prefer dedicated worker / may combine / execute inline | Yes / No, with reason | Verification result and self-review report |
 
-## Work-Package Execution
+## Dispatch Execution
 
-Expand every detailed task in the work package below. These are task-level execution steps, not separate subagent assignments or required 2–5 minute units; keep completion checkboxes in \`tasks.md\`.
+Expand every detailed task in the dispatch unit below under clean \`### <number>. <scope>\` headings. These are task-level execution steps, not separate subagent assignments or required 2–5 minute units; keep completion checkboxes in \`tasks.md\`.
 
-### \`# 1. agent1 — [scope]\`
+### 1. [scope]
 
 #### Task 1.1: Detailed task description
 
 1. **Step 1: Write or extend focused tests**
 2. **Step 2: Run focused tests**
 3. **Step 3: Implement Task 1.1**
-4. **Step 4: Run package verification**
+4. **Step 4: Run focused verification**
 5. **Step 5: Self-review and handoff**
 
 ## Final Integration Review and Validation
 
-- Integrate all work packages before formal review.
-- Review the complete change once for requirements, package interactions, code quality, test coverage, and full verification.
-- Fix blockers with targeted verification; do not start a second complete review unless explicitly requested.
+- Integrate all dispatch units before formal review.
+- Perform one cross-unit review after integration; fix blockers with targeted verification.
 `;
 
     case 'test-plan':
@@ -1068,7 +1067,7 @@ Expand every detailed task in the work package below. These are task-level execu
 
 Analyze which earlier tests were still insufficient or not broad enough. Then describe which tests this Test Hardening stage added or strengthened.
 
-Workers record and run task-level verification in \`tasks.md\`. Test Hardening in this file supplements that local verification after all work packages are integrated.
+Workers record and run task-level verification in \`tasks.md\`. Test Hardening in this file supplements that local verification after all dispatch units are integrated.
 
 Test Hardening is complete when every concrete test/status row in the tables below is complete. Use statuses such as \`covered\`, \`passed\`, or \`not applicable\` for completed rows. Leave rows as \`planned\`, \`failing\`, or blank until the coverage is actually complete.
 

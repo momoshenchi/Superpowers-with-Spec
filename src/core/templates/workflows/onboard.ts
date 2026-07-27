@@ -401,7 +401,7 @@ Save to \`superpowers/changes/<name>/tasks.md\`.
 \`\`\`
 ## Execution Plan
 
-Before implementation, we create \`execution-plan.md\`: the work-package coordination and final validation plan. \`tasks.md\` stays the progress checklist; \`execution-plan.md\` carries file ownership, dependencies, safe parallelism, integration order, Step 1–5 execution guidance for every detailed task, and final review guidance.
+Before implementation, we create \`execution-plan.md\`: the dispatch-unit coordination and final validation plan. \`tasks.md\` stays the progress checklist; \`execution-plan.md\` carries file ownership, dependencies, safe parallelism, integration order, Step 1–5 execution guidance for every detailed task, and final review guidance.
 
 Then we create \`test-plan.md\`: the pre-implementation coverage draft and post-implementation Test Hardening record.
 \`\`\`
@@ -432,16 +432,16 @@ Before implementation starts, we create \`test-plan.md\`: a compact pre-implemen
 **EXPLAIN:**
 
 \`\`\`
-Before implementation, /sp:propose reviews the complete proposal bundle: requirements, design, task work packages, execution plan, and test plan.
+Before implementation, /sp:propose reviews the complete proposal bundle: requirements, design, task dispatch units, execution plan, and test plan. Only unresolved BLOCKERs require repair + re-review before readiness; WARNING/SUGGESTION findings do not force a second full proposal review.
 
-This is a plan-quality review. It reports findings first, repairs every resolvable BLOCKER and WARNING, then reviews the repaired plan again. Suggestions stay visible but do not block readiness.
+This is a plan-quality review. It reports findings first, repairs every resolvable BLOCKER, and re-reviews only after blocker repairs. WARNING findings are recommended repairs and do not block readiness or force a second full proposal review. Suggestions stay visible but do not block readiness.
 
-This is different from the final integration review after implementation, which checks the integrated diff and work-package interactions.
+This is different from the final integration review after implementation, which checks the integrated diff and dispatch-unit interactions.
 \`\`\`
 
 **DO:**
 
-Show the proposal review report. If it identifies a user decision that cannot be safely inferred, pause for that decision; otherwise repair the planning artifacts and re-review before continuing.
+Show the proposal review report. If it identifies a user decision that cannot be safely inferred, pause for that decision. Repair resolvable BLOCKERs and re-review only after those blocker repairs; WARNING/SUGGESTION handling does not require a second full proposal review before continuing.
 
 **SHOW:**
 
@@ -527,9 +527,9 @@ You just completed a full Superpowers cycle:
 6. **Tasks** - Created the progress checklist
 7. **Execution Plan** - Wrote the detailed implementation plan
 8. **Test Plan** - Drafted coverage and hardening expectations
-9. **Proposal Review** - Reviewed the complete plan, reported findings, repaired BLOCKER/WARNING items, and re-reviewed before implementation
+9. **Proposal Review** - Reviewed the complete plan, reported findings, repaired BLOCKERs with re-review only when needed, and treated WARNING/SUGGESTION as non-blocking before implementation
 10. **Apply** - Implemented the work and completed Test Hardening
-11. **Final Integration Review** - Reviewed the integrated work packages, diff, and full validation
+11. **Final Integration Review** - Reviewed the integrated dispatch units, diff, and full validation
 12. **Archive** - Preserved the record
 
 This same rhythm works for any size change—a small fix or a major feature.

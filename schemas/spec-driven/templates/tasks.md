@@ -1,11 +1,11 @@
-# 1. agent1 — <!-- Work-package scope -->
+# 1. <!-- Dispatch-unit scope -->
 
 ## <!-- Delivery area -->
 
 - [ ] 1.1 <!-- Detailed, verifiable task description -->
 - [ ] 1.2 <!-- Detailed, verifiable task description -->
 
-# 2. agent2 — <!-- Work-package scope -->
+# 2. <!-- Dispatch-unit scope -->
 
 ## <!-- Delivery area -->
 

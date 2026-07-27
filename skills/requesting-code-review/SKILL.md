@@ -12,7 +12,7 @@ Dispatch a code-reviewer subagent to catch issues before they cascade.
 ## When to Request Review
 
 **Mandatory:**
-- Once after all work packages are integrated in subagent-driven development
+- Once after all dispatch units are integrated in subagent-driven development
 - After completing major feature
 - Before merge to main
 
@@ -47,8 +47,8 @@ Provide:
 ## Integration with Workflows
 
 **Subagent-Driven Development:**
-- Workers verify and self-review their own complete work packages.
-- Review once after all work packages are integrated.
+- Workers verify and self-review their own complete dispatch units.
+- Review once after all dispatch units are integrated.
 - Fix blocking findings and run targeted verification; do not restart a complete review unless the reviewer explicitly requests confirmation of a specified finding.
 
 **Applying Changes (`/sp:apply`):**

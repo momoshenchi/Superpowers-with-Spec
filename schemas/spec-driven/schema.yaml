@@ -128,22 +128,22 @@ artifacts:
       checkbox format to track progress. Tasks not using `- [ ]` won't be tracked.
 
       Guidelines:
-      - Start every work package with `# <work-package-number>. agent<logical-id> — <scope>`
-      - Use `##` headings only to group delivery areas inside that work package
-      - Each detailed task MUST be a checkbox: `- [ ] <work-package-number>.<task-number> Task description`
-      - Make each work package a coherent, independently reportable delivery area and order work packages by dependency
-      - Treat `agent<logical-id>` as a logical allocation label: a coordinator may dispatch one block, combine compatible blocks, or execute all blocks sequentially
+      - Start every dispatch unit with `# <number>. <scope>`
+      - Use `##` headings only to group delivery areas inside that dispatch unit
+      - Each detailed task MUST be a checkbox: `- [ ] <number>.<task-number> Task description`
+      - Make each dispatch unit a coherent, independently reportable delivery area and order units by dependency
+      - A dispatch unit is a logical allocation boundary, not a live subagent identity. Record assignee policy in `execution-plan.md`. A coordinator may dispatch one unit, combine compatible units, or execute all units sequentially. Legacy `# <number>. agent<logical-id> — <scope>` headings remain acceptable.
 
       Example:
       ```
-      # 1. agent1 — Schema and template foundation
+      # 1. Schema and template foundation
 
       ## Templates
 
       - [ ] 1.1 Create new module structure
       - [ ] 1.2 Add dependencies to package.json
 
-      # 2. agent2 — Core implementation
+      # 2. Core implementation
 
       ## Delivery
 
@@ -162,7 +162,7 @@ artifacts:
     description: Detailed implementation plan for executing the change
     template: execution-plan.md
     instruction: |
-      Create the execution plan that coordinates the task-list work packages for implementation.
+      Create the execution plan that coordinates the task-list dispatch units for implementation.
 
       This artifact is saved as `execution-plan.md` in the current Superpowers change directory.
       Use proposal, specs, design, and tasks as context, but keep `tasks.md` as the compact
@@ -170,60 +170,23 @@ artifacts:
 
       The plan must:
       - Map files to create, modify, and test with project-relative paths that are portable across macOS, Linux, and Windows.
-      - Keep `tasks.md` as the implementation progress source of truth, then expand every detailed checkbox task in its work package into a concrete Step 1–5 execution sequence here.
-      - List each logical work-package block, its ownership boundary, dependencies, safe parallel eligibility, integration order, and handoff evidence.
-      - State that `agent<logical-id>` is a logical label, not a required one-to-one subagent assignment.
+      - Keep `tasks.md` as the implementation progress source of truth, then expand every detailed checkbox task in its dispatch unit into a concrete Step 1–5 execution sequence here under clean `### <number>. <scope>` headings (do not nest code-wrapped `# ...` heading text).
+      - List each logical dispatch unit, its ownership boundary, dependencies, assignee policy, safe parallel eligibility, integration order, and handoff evidence in a Dispatch Coordination table.
+      - State that a dispatch unit is an allocation boundary, not a required one-to-one subagent assignment; put assignee policy in the coordination table rather than in `tasks.md` headings. Accept legacy `agent<logical-id>` headings as dispatch units.
       - For every detailed task, provide concrete files, focused tests, commands, expected results, implementation detail, verification, and self-review/handoff guidance across its Step 1–5 sequence.
       - Treat those five steps as task-level execution detail, not as separate subagent assignments or required 2–5 minute units.
       - Require workers to run the verification named by their detailed tasks and self-review before handoff.
-      - Require one formal cross-package review and full validation only after all work packages are integrated; fixes receive targeted verification without a second complete review unless explicitly requested.
+      - Require one formal cross-unit review and full validation only after all dispatch units are integrated; fixes receive targeted verification without a second complete review unless explicitly requested.
       - Keep broad post-diff coverage planning and evidence in `test-plan.md`.
       - Avoid placeholders such as `TBD`, `TODO`, `implement later`, or vague directives.
       - Reference supporting change-local files with Markdown targets beginning `attachments/` when useful, and explain what each file is, why it matters, whether it is normative, illustrative, or background context, and which task or requirement it supports.
 
       After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
-      **1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a work package that implements it? List any gaps.
-      **2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
-      **3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
-      If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
-      
-      Example:
-      ````
-      ## Work-Package Coordination
-
-      | Task block | Ownership boundary | Dependencies | Parallel eligibility | Handoff evidence |
-      | --- | --- | --- | --- |
-      | `# 1. agent1 — [scope]` | `path/to/owned-area` | None | Yes / No, with reason | Verification result and self-review report |
-
-      ## Work-Package Execution
-
-      ### `# 1. agent1 — [scope]`
-
-      #### Task 1.1: [Detailed task description]
-
-      **Files:**
-      - Modify: `path/to/existing.ts`
-      - Test: `test/path/to/test-file.test.ts`
-
-      1. **Step 1: Write or extend focused tests**
-      2. **Step 2: Run focused tests**
-         Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
-         Expected: Fail for the missing behavior, or document the verified baseline when no new failing test applies.
-      3. **Step 3: Implement Task 1.1**
-      4. **Step 4: Run package verification**
-         Run: `pnpm exec vitest run test/path/to/test-file.test.ts`
-         Expected: PASS with Task 1.1 behavior covered.
-      5. **Step 5: Self-review and handoff**
-
-      Repeat this Step 1–5 structure for every detailed task in the work package. Keep task completion checkboxes only in `tasks.md`.
-
-      ## Final Integration Review and Validation
-
-      After all work packages are integrated, review the full diff against the requirements and run full-change verification.
-      Fix blockers and run targeted verification. Do not run another full review unless the reviewer explicitly requests confirmation of a specified finding.
-      ````
-     
-      Reference `tasks.md` for detailed task ordering and tracking; use this artifact for coordination and final validation.
+      **1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a dispatch unit that implements it? List any gaps.
+      **2. Placeholder scan:** Search your plan for TBD, TODO, "implement later", or vague directives. Every task must be concrete and completable.
+      **3. Contradiction / orphan check:** Check for internal contradictions and for tasks that do not map back to a requirement.
+      **4. Type consistency:** Named types, fields, and behaviors should match the specs.
+      **5. Completeness:** Gaps, placeholders, contradictions, orphans, and type mismatches should be resolved before implementation starts.
     requires:
       - tasks
 

@@ -13,11 +13,11 @@ You are reviewing code changes for production readiness.
 
 {DESCRIPTION}
 
-## Requirements/Plan and Work-Package Context
+## Requirements/Plan and Dispatch-Unit Context
 
 {PLAN_REFERENCE}
 
-Review all integrated work-package reports and their interaction boundaries, not an individual checklist item in isolation.
+Review all integrated dispatch-unit reports and their interaction boundaries, not an individual checklist item in isolation.
 
 ## Git Range to Review
 

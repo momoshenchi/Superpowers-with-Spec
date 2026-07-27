@@ -25,13 +25,15 @@ description: 用户在开始实现 Superpowers 变更前、希望审核变更提
 
 ## 自动 Propose 审查与修复顺序
 
-当 `/sp:propose` 在所有 `applyRequires` artifact 完成后自动使用本 skill 时，严格执行：审查 → **present the complete review report** → 修复 → **re-run review** → 宣布 ready 或暂停。
+当 `/sp:propose` 在所有 `applyRequires` artifact 完成后自动使用本 skill 时，严格执行：审查 → **present the complete review report** → 按严重级别修复 → 仅在修复 BLOCKER 后 **re-run review** → 宣布 ready 或暂停。
 
 - 报告输出前不得修改因本次发现而需调整的 proposal artifacts。
-- 报告后必须 **repair every resolvable BLOCKER and WARNING**；`SUGGESTION` findings are non-blocking，可保留在报告中。
+- 报告后必须 **repair every resolvable BLOCKER**。WARNING 为建议修复：可在报告后修复，但本身不阻塞 ready。`SUGGESTION` findings are non-blocking，可保留在报告中。
+- **re-run review only after repairing one or more BLOCKERs**。不得仅因 WARNING/SUGGESTION 存在或已修复而重新跑完整 proposal review。
+- 宣布 ready 的条件是 no unresolved BLOCKER；residual WARNING/SUGGESTION notes may remain visible。
 - 若修复依赖用户、产品、安全、schema 或外部依赖决策，报告该 BLOCKER 并暂停；不得猜测或宣称 ready。
 - Do not create `review.md`、approval metadata 或 review artifact。proposal review 是瞬态行为；`/sp:apply` does not automatically repeat proposal review。
-- 本 skill 是实施前的 proposal review；实现完成后仍保留独立的 **final integration review**，审跨工作包行为、完整 diff 与全量验证，二者不得混同。
+- 本 skill 是实施前的 proposal review；实现完成后仍保留独立的 **final integration review**，审跨 dispatch unit 行为、完整 diff 与全量验证，二者不得混同。
 
 ## 审查维度
 
@@ -82,7 +84,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 - **范围边界**：Goals 与 Non-Goals 互斥、可判定；不出现“视情况”“酌情”“后续再定”而无明确 defer 说明。
 - **决策结论**：每个 Decision 有明确选用方案；备选方案说明了为何不选。
 - **文件落点**：Create/Modify/Test 使用仓库内真实路径，不用“相关模块”“适当位置”等模糊指代。
-- **任务粒度**：`tasks.md` 的顶层 `# <number>. agent<logical-id> — <scope>` 是逻辑工作包，不代表必须分派给一个 live subagent。每个细分 checkbox 都应在 `execution-plan.md` 中有可执行的 Step 1–5 说明，包含具体测试文件、实现文件、运行命令与**预期通过/失败信号**。（`test-harden` 看 test-plan 矩阵与 harness；`spec-driven` 看 tasks/execution-plan）
+- **任务粒度**：`tasks.md` 的顶层 `# <number>. <scope>` 是逻辑 **dispatch unit**（可分派边界，不是 live subagent 身份）。也接受遗留的 `# <number>. agent<logical-id> — <scope>` 作为等价 dispatch unit。每个细分 checkbox 都应在 `execution-plan.md` 中有可执行的 Step 1–5 说明，包含具体测试文件、实现文件、运行命令与**预期通过/失败信号**；分配策略写在 Dispatch Coordination 表的 Assignee policy 列，而不是 heading 里。（`test-harden` 看 test-plan 矩阵与 harness；`spec-driven` 看 tasks/execution-plan）
 - **需求可测性**：`spec-driven` 的 Requirement 使用 SHALL/MUST；Scenario 使用 WHEN/THEN/AND，THEN 断言可观察、可写测试。`test-harden` 的矩阵行须写清主要断言与推荐测试层。
 - **数据与契约**：若涉及 API 字段、错误码、状态机、枚举、i18n key，文档中给出稳定命名与示例，而非仅描述意图。
 - **边界与异常**：至少覆盖空值/未知输入、失败中途、重复操作、权限/所有权、超时/取消、历史数据兼容（如适用）。
@@ -135,7 +137,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 
 **共用条件：**
 
-1. 无 BLOCKER（含 `superpowers validate` 的 ERROR）。
+1. 无 BLOCKER（含 `superpowers validate` 的 ERROR）。WARNING / SUGGESTION 不单独阻塞 ready；可保留为 residual notes。
 2. `applyRequires` 中每个 artifact 均 `status: done`，且内容通过本 skill 的明晰性/一致性检查。
 3. 关键决策无未决分叉；若存在外部依赖（未合并前置 change、共享 harness 未就绪），已写明阻塞关系与降级策略。
 

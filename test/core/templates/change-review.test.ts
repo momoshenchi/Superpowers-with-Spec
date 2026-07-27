@@ -28,29 +28,43 @@ describe('change review workflow templates', () => {
       expect(content).toContain('SUGGESTION');
       expect(content).toContain('Step 1–5');
       expect(content).toContain('final integration review');
+      expect(content).toContain('dispatch unit');
     }
   });
 
-  it('defines report-before-repair and ephemeral proposal review boundaries', () => {
+  it('defines report-before-repair and blocker-gated re-review boundaries', () => {
     const content = getChangeReviewSkillTemplate().instructions;
 
     expect(content.indexOf('present the complete review report')).toBeGreaterThan(-1);
-    expect(content.indexOf('repair every resolvable BLOCKER and WARNING')).toBeGreaterThan(
+    expect(content.indexOf('repair every resolvable BLOCKER')).toBeGreaterThan(
       content.indexOf('present the complete review report')
     );
-    expect(content).toContain('re-run review');
+    expect(content).toContain('re-run review only after repairing one or more BLOCKERs');
+    expect(content).toContain(
+      'Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired'
+    );
     expect(content).toContain('SUGGESTION findings are non-blocking');
+    expect(content).toContain('no unresolved BLOCKER remains');
+    expect(content).not.toContain('repair every resolvable BLOCKER and WARNING');
+    expect(content).not.toContain('no unresolved BLOCKER or WARNING remains');
     expect(content).toContain('Do not create `review.md`');
     expect(content).toContain('does not automatically repeat proposal review');
+    expect(content).toContain('# <number>. <scope>');
+    expect(content).toContain('legacy');
+    expect(content).toContain('Dispatch Coordination');
+    expect(content).toContain('assignee policy');
   });
 
   it('runs the automatic loop from propose, but never repeats it from apply', () => {
     for (const template of [getSpProposeSkillTemplate(), getSpProposeCommandTemplate()]) {
       const content = 'instructions' in template ? template.instructions : template.content;
       expect(content).toContain('present the complete review report');
-      expect(content).toContain('Repair every resolvable BLOCKER and WARNING');
-      expect(content).toContain('re-run review');
+      expect(content).toContain('Repair every resolvable BLOCKER.');
+      expect(content).toContain('re-run review only after repairing one or more BLOCKERs');
       expect(content).toContain('Do not create `review.md`');
+      expect(content).toContain('Dispatch Units in tasks.md');
+      expect(content).toContain('# <number>. <scope>');
+      expect(content).not.toContain('Repair every resolvable BLOCKER and WARNING');
     }
 
     for (const template of [getApplyChangeSkillTemplate(), getSpApplyCommandTemplate()]) {

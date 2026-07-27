@@ -4,13 +4,13 @@ Use this template when dispatching an implementer subagent.
 
 ```
 Task tool (general-purpose):
-  description: "Implement work package [number]: [scope]"
+  description: "Implement dispatch unit [number]: [scope]"
   prompt: |
-    You are implementing a complete work-package block: [number] [scope]
+    You are implementing a complete dispatch unit: [number] [scope]
 
-    ## Complete Work-Package Block
+    ## Complete Dispatch Unit
 
-    [FULL TEXT from the `# <number>. agent<logical-id> — <scope>` heading through every detailed checkbox; paste it here, don't make the worker read the plan file]
+    [FULL TEXT from the `# <number>. <scope>` heading (or legacy `# <number>. agent<logical-id> — <scope>`) through every detailed checkbox; paste it here, don't make the worker read the plan file]
 
     ## Context
 
@@ -29,9 +29,9 @@ Task tool (general-purpose):
     ## Your Job
 
     Once you're clear on requirements:
-    1. Implement every detailed task in this complete work-package block
+    1. Implement every detailed task in this complete dispatch unit
     2. Write and run the tests required by the block
-    3. Verify the work-package outcome
+    3. Verify the dispatch-unit outcome
     4. Commit your work when the repository workflow requires it
     5. Self-review (see below)
     6. Report back for integration; do not request a formal review after individual checkboxes
@@ -46,7 +46,7 @@ Task tool (general-purpose):
     Review your work with fresh eyes. Ask yourself:
 
     **Completeness:**
-    - Did I fully implement every detailed checkbox and relevant requirement in this work package?
+    - Did I fully implement every detailed checkbox and relevant requirement in this dispatch unit?
     - Did I miss any requirements?
     - Are there edge cases I didn't handle?
 

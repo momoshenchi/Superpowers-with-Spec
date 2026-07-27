@@ -375,10 +375,10 @@ artifacts:
       const executionPlanTemplatePath = path.join(schemaDir, 'templates', 'execution-plan.md');
       expect(fs.existsSync(tasksTemplatePath)).toBe(true);
       expect(fs.existsSync(executionPlanTemplatePath)).toBe(true);
-      expect(fs.readFileSync(tasksTemplatePath, 'utf-8')).toContain('# 1. agent1 — Work-package scope');
+      expect(fs.readFileSync(tasksTemplatePath, 'utf-8')).toContain('# 1. Dispatch-unit scope');
       const executionPlanTemplate = fs.readFileSync(executionPlanTemplatePath, 'utf-8');
-      expect(executionPlanTemplate).toContain('Work-Package Coordination');
-      expect(executionPlanTemplate).toContain('Work-Package Execution');
+      expect(executionPlanTemplate).toContain('Dispatch Coordination');
+      expect(executionPlanTemplate).toContain('Dispatch Execution');
       expect(executionPlanTemplate).toContain('Step 1: Write or extend focused tests');
       expect(executionPlanTemplate).toContain('Step 5: Self-review and handoff');
       expect(executionPlanTemplate).toContain('Final Integration Review and Validation');

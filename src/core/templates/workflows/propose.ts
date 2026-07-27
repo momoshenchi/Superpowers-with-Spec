@@ -87,8 +87,9 @@ When ready to implement, run /sp:apply
 
    After every \`applyRequires\` artifact is done, automatically follow the \`superpowers-change-review\` workflow:
    - Inspect the completed proposal artifacts and present the complete review report before editing any artifact in response to findings.
-   - Repair every resolvable BLOCKER and WARNING, then re-run review.
-   - Keep SUGGESTION findings visible but non-blocking.
+   - Repair every resolvable BLOCKER. WARNING findings are recommended repairs and do not block readiness by themselves.
+   - re-run review only after repairing one or more BLOCKERs. Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired.
+   - Keep SUGGESTION findings visible but non-blocking. Residual WARNING notes may remain visible when announcing readiness.
    - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
    - Do not create \`review.md\`, approval metadata, or a review artifact.
 
@@ -102,7 +103,7 @@ When ready to implement, run /sp:apply
 After completing all artifacts, summarize:
 - Change name and location
 - List of artifacts created with brief descriptions
-- What's ready: "Proposal review passed after any required repairs. Ready for implementation."
+- What's ready: "Proposal review passed with no unresolved BLOCKERs after any required blocker repairs. Ready for implementation. Residual WARNING/SUGGESTION notes may remain visible."
 - Prompt: "Run \`/sp:apply\` or ask me to implement to start working on the tasks."
 
 **Artifact Creation Guidelines**
@@ -123,11 +124,11 @@ After completing all artifacts, summarize:
 - If a change with that name already exists, ask if user wants to continue it or create a new one
 - Verify each artifact file exists after writing before proceeding to next
 
-**Work Packages in tasks.md**
-- Use \`# <number>. agent<logical-id> — <scope>\` for each coherent work package; detailed checkbox tasks stay inside that block.
-- \`agent<logical-id>\` is a logical allocation label, not a required subagent identity. A coordinator may dispatch blocks separately, combine compatible blocks, or execute all blocks sequentially.
-- Keep detailed tasks verifiable and ordered by dependency. In \`execution-plan.md\`, expand every detailed task into concrete Step 1–5 execution guidance while recording file ownership, dependencies, safe parallelism, and final validation.
-- Keep each work package coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
+**Dispatch Units in tasks.md**
+- Use \`# <number>. <scope>\` for each coherent dispatch unit; detailed checkbox tasks stay inside that block.
+- A dispatch unit is a logical allocation boundary, not a live subagent identity. Record assignee policy in \`execution-plan.md\` Dispatch Coordination. A coordinator may dispatch units separately, combine compatible units, or execute all units sequentially. Legacy \`# <number>. agent<logical-id> — <scope>\` headings remain acceptable.
+- Keep detailed tasks verifiable and ordered by dependency. In \`execution-plan.md\`, expand every detailed task into concrete Step 1–5 execution guidance under clean \`### <number>. <scope>\` headings while recording file ownership, dependencies, assignee policy, safe parallelism, and final validation.
+- Keep each dispatch unit coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
 - Follow DRY, YAGNI, TDD principles. Ensure frequent commits.
 `,
     license: 'MIT',
@@ -149,7 +150,7 @@ I'll create a change with artifacts:
 - specs/<capability>/spec.md (requirements)
 - design.md (how)
 - tasks.md (progress checklist)
-- execution-plan.md (work-package coordination and final validation plan)
+- execution-plan.md (dispatch-unit coordination and final validation plan)
 - test-plan.md (pre-implementation coverage draft and post-implementation Test Hardening record)
 
 When ready to implement, run /sp:apply
@@ -219,8 +220,9 @@ When ready to implement, run /sp:apply
 
    After every \`applyRequires\` artifact is done, automatically follow the \`superpowers-change-review\` workflow:
    - Inspect the completed proposal artifacts and present the complete review report before editing any artifact in response to findings.
-   - Repair every resolvable BLOCKER and WARNING, then re-run review.
-   - Keep SUGGESTION findings visible but non-blocking.
+   - Repair every resolvable BLOCKER. WARNING findings are recommended repairs and do not block readiness by themselves.
+   - re-run review only after repairing one or more BLOCKERs. Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired.
+   - Keep SUGGESTION findings visible but non-blocking. Residual WARNING notes may remain visible when announcing readiness.
    - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
    - Do not create \`review.md\`, approval metadata, or a review artifact.
 
@@ -234,7 +236,7 @@ When ready to implement, run /sp:apply
 After completing all artifacts, summarize:
 - Change name and location
 - List of artifacts created with brief descriptions
-- What's ready: "Proposal review passed after any required repairs. Ready for implementation."
+- What's ready: "Proposal review passed with no unresolved BLOCKERs after any required blocker repairs. Ready for implementation. Residual WARNING/SUGGESTION notes may remain visible."
 - Prompt: "Run \`/sp:apply\` to start implementing."
 
 **Artifact Creation Guidelines**
@@ -253,6 +255,13 @@ After completing all artifacts, summarize:
 - Always read dependency artifacts before creating a new one
 - If context is critically unclear, ask the user - but prefer making reasonable decisions to keep momentum
 - If a change with that name already exists, ask if user wants to continue it or create a new one
-- Verify each artifact file exists after writing before proceeding to next`
+- Verify each artifact file exists after writing before proceeding to next
+
+**Dispatch Units in tasks.md**
+- Use \`# <number>. <scope>\` for each coherent dispatch unit; detailed checkbox tasks stay inside that block.
+- A dispatch unit is a logical allocation boundary, not a live subagent identity. Record assignee policy in \`execution-plan.md\` Dispatch Coordination. A coordinator may dispatch units separately, combine compatible units, or execute all units sequentially. Legacy \`# <number>. agent<logical-id> — <scope>\` headings remain acceptable.
+- Keep detailed tasks verifiable and ordered by dependency. In \`execution-plan.md\`, expand every detailed task into concrete Step 1–5 execution guidance under clean \`### <number>. <scope>\` headings while recording file ownership, dependencies, assignee policy, safe parallelism, and final validation.
+- Keep each dispatch unit coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
+- Follow DRY, YAGNI, TDD principles. Ensure frequent commits.`
   };
 }
