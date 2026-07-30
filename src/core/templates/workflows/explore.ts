@@ -48,10 +48,10 @@ Depending on what the user brings, you might:
 - Surface hidden complexity
 
 **Compare options**
-- Brainstorm multiple approaches
+- Brainstorm multiple approaches (for major features, aim for **≥3** before locking)
 - Build comparison tables
 - Sketch tradeoffs
-- Recommend a path (if asked)
+- Recommend a path (if asked); leave minor local choices light
 
 **Visualize**
 \`\`\`
@@ -135,7 +135,11 @@ If the user mentions a change or you detect one is relevant:
 
 ### Ending Discovery
 
-When transitioning to a proposal, always **propose 2-3 approaches with trade-offs** before settling on one. Let the user choose the direction before creating artifacts.
+When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later **converges**: record the comparison table, choice, and trade-offs—do not re-brainstorm from scratch.
+
+For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
+
+If the work is UI-facing, optionally discover a repository visual \`DESIGN.md\` / \`design.md\` (google-labs identity file: tokens + prose)—distinct from change-local \`design.md\`—and carry any citation into design Current system / Relationship.
 
 ---
 
@@ -258,10 +262,12 @@ You: That changes everything.
 
 There's no required ending. Discovery might:
 
-- **Flow into a proposal**: "Ready to start? I can create a change proposal."
+- **Flow into a proposal**: "Ready to start? I can create a change proposal." For **major** features, present **≥3 approaches** with trade-offs first; design will record the comparison and choice.
 - **Result in artifact updates**: "Updated design.md with these decisions"
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"
+
+Minor local fixes do not need three fake options.
 
 When it feels like things are crystallizing, you might summarize:
 
@@ -350,10 +356,10 @@ Depending on what the user brings, you might:
 - Surface hidden complexity
 
 **Compare options**
-- Brainstorm multiple approaches
+- Brainstorm multiple approaches (for major features, aim for **≥3** before locking)
 - Build comparison tables
 - Sketch tradeoffs
-- Recommend a path (if asked)
+- Recommend a path (if asked); leave minor local choices light
 
 **Visualize**
 \`\`\`
@@ -458,6 +464,12 @@ There's no required ending. Discovery might:
 - **Result in artifact updates**: "Updated design.md with these decisions"
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"
+
+When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later **converges**: record the comparison table, choice, and trade-offs—do not re-brainstorm from scratch.
+
+For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
+
+If the work is UI-facing, optionally discover a repository visual \`DESIGN.md\` / \`design.md\` (google-labs identity file: tokens + prose)—distinct from change-local \`design.md\`—and carry any citation into design Current system / Relationship.
 
 When things crystallize, you might offer a summary - but it's optional. Sometimes the thinking IS the value.
 

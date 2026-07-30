@@ -68,7 +68,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 | Artifact | 适用 schema | 必须包含 | 常见缺口 |
 |----------|-------------|----------|----------|
 | `proposal.md` | `spec-driven` | Why、What Changes、Capabilities（New/Modified）、Impact | 只写动机不写范围；Impact 缺关键模块 |
-| `design.md` | 全部 | Context、Goals/Non-Goals、Decisions（含备选方案与取舍理由） | 只有方案罗列、没有 Non-Goals |
+| `design.md` | 全部 | Context、**Current system**（可短）、Relationship 指针、Goals/Non-Goals、Decisions（重大决策含 ≥3 方案比较；细节决策仅需理由）、**Contracts**（无表面变更可写 N/A）、Risks | 缺 Current system/Contracts；重大决策无比较表；“复用现有”无指针；只有方案罗列、没有 Non-Goals |
 | `specs/<capability>/spec.md` | `spec-driven` | ADDED/MODIFIED/REMOVED Requirements；每个 Requirement 至少一个 Scenario | Requirement 无 Scenario；delta 与主 spec 关系不清 |
 | `tasks.md` | `spec-driven` | 可勾选任务清单，带具体文件路径 | 任务过大、缺验证步骤 |
 | `execution-plan.md` | `spec-driven` | File Structure、分步 Task Plan（红测→实现→验证） | 与 tasks.md 脱节；缺命令与预期结果 |
@@ -82,7 +82,9 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 ### 必须无歧义的要素
 
 - **范围边界**：Goals 与 Non-Goals 互斥、可判定；不出现“视情况”“酌情”“后续再定”而无明确 defer 说明。
-- **决策结论**：每个 Decision 有明确选用方案；备选方案说明了为何不选。
+- **决策结论**：每个 Decision 有明确选用方案。**重大**决策（新事实源、跨子系统、安全/计费/幂等/恢复、不可逆迁移、重要依赖、用户声明的模块级工作）须有 **≥3 方案比较表** + 取舍；**细节**决策（本地命名、单 helper、文件位置）一行理由即可，**不得**因缺少三方案表而判缺陷。
+- **Current system / Contracts**：`design.md` 含 `## Current system`（不要 `(as-is)` 后缀；可短）与 `## Contracts`。无 API/状态/错误表面变更时，Contracts 可写 `N/A — no API/state/error surface change`。
+- **复用指针**：凡 reuse/extend/keep-current 类依赖，须有可导航 Pointer（路径、符号、命令或文档章节）。
 - **文件落点**：Create/Modify/Test 使用仓库内真实路径，不用“相关模块”“适当位置”等模糊指代。
 - **任务粒度**：`tasks.md` 的顶层 `# <number>. <scope>` 是逻辑 **dispatch unit**（可分派边界，不是 live subagent 身份）。也接受遗留的 `# <number>. agent<logical-id> — <scope>` 作为等价 dispatch unit。每个细分 checkbox 都应在 `execution-plan.md` 中有可执行的 Step 1–5 说明，包含具体测试文件、实现文件、运行命令与**预期通过/失败信号**；分配策略写在 Dispatch Coordination 表的 Assignee policy 列，而不是 heading 里。（`test-harden` 看 test-plan 矩阵与 harness；`spec-driven` 看 tasks/execution-plan）
 - **需求可测性**：`spec-driven` 的 Requirement 使用 SHALL/MUST；Scenario 使用 WHEN/THEN/AND，THEN 断言可观察、可写测试。`test-harden` 的矩阵行须写清主要断言与推荐测试层。
@@ -92,11 +94,38 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 ### 常见歧义信号（出现即标 WARNING 或 BLOCKER）
 
 - 同一概念在 proposal/design/spec 中使用不同名称且无映射说明。
-- “复用现有逻辑”“保持现有行为”但未指明现有入口函数/文件。
+- “复用现有逻辑”“保持现有行为”但未指明现有入口函数/文件（至少 WARNING；跨信任边界可升 BLOCKER）。
 - 表格/映射表写“等”“etc.”但未定义闭合规则。
 - tasks 写“添加校验”“优化错误处理”但无具体规则或测试断言。
 
+## 2.1 设计约定专项（`design.md` 存在时）
+
+在通用完整性/明晰性之外，按以下规则审查。默认 **WARNING**；仅当跨切变更缺少可实施的技术图景或契约、足以阻塞开工时升为 **BLOCKER**。
+
+### Current system 与 Contracts
+- 期望 `## Current system`（标题精确；不要 `(as-is)`）：本变更相关技术图景切片。短文可接受；空壳/仅占位至少 WARNING。
+- 期望 `## Contracts` 始终存在。specs/tasks 无 API/CLI/状态/错误变更时，接受明确的 N/A 声明。Contracts 写 N/A 但 specs 新增 API/状态/错误 → 升级。
+- 有 `design.md` 却缺 Current system 或 Contracts 标题 → WARNING（跨切且全文无技术图景 → 可 BLOCKER）。
+
+### Relationship / 复用指针
+- 优先 Relationship 表（或等价列表），关系取 `reuse | extend | replace | boundary | retire`，并含 **Pointer** 列。
+- 裸复用表述无指针 → WARNING；跨模块/信任边界 → 可 BLOCKER。
+
+### 重大 vs 细节决策比较
+- **重大**决策：须记录 **≥3 方案**比较、选择与取舍；缺失 → 按影响面 WARNING 或 BLOCKER。
+- **细节**决策：仅需理由；**不得**因无三方案表判缺陷。
+- 重大/细节含糊时：WARNING 请作者归类或补比较即可。
+
+### 视觉 DESIGN.md（UI 身份文件；不是 change design.md）
+- 英文规范名：**visual DESIGN.md**；指 google-labs design.md 思路（YAML tokens + 散文身份），**不是** change-local `design.md`、不是工程 living doc、不是 ADR。
+- 发现路径：仓库根 `DESIGN.md`/`design.md`、`docs/DESIGN.md`、或项目上下文声明路径。
+- UI 变更且存在视觉 DESIGN.md 但 design 未引用 → 至少 WARNING。
+- 外观 token/规则变更 → 期望 tasks（或已完成计划）更新该视觉 DESIGN.md；**不要**要求把整套视觉系统粘进 change design。
+- 非 UI 变更缺少视觉 DESIGN.md → **不成问题**。
+- UI 变更未找到视觉 DESIGN.md → 注明以现有组件/CSS 为准即可，不自动成缺陷。
+
 ## 3. 一致性（Coherence）
+
 
 检查 artifacts 之间、与项目约束之间是否自洽。
 

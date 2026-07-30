@@ -83,4 +83,23 @@ describe('change review workflow templates', () => {
     expect(schema).not.toMatch(/^\s*-\s+id:\s*review\s*$/m);
     expect(schema).not.toContain('review.md');
   });
+
+  it('includes design convention checks for Current system, Contracts, pointers, scale-aware decisions, and visual DESIGN.md', () => {
+    for (const content of [
+      getChangeReviewSkillTemplate().instructions,
+      getSpReviewCommandTemplate().content,
+    ]) {
+      expect(content).toContain('Design convention checks');
+      expect(content).toContain('## Current system');
+      expect(content).toContain('## Contracts');
+      expect(content).toContain('N/A — no API/state/error surface change');
+      expect(content).toContain('Pointer');
+      expect(content).toContain('visual DESIGN.md');
+      expect(content).toContain('google-labs');
+      expect(content).toMatch(/≥3 options/);
+      expect(content).toContain('Minor');
+      expect(content).toContain('not a finding');
+      expect(content).not.toContain('## Current system (as-is)');
+    }
+  });
 });

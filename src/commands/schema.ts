@@ -986,6 +986,18 @@ Description of the requirement.
 
 <!-- Background and context -->
 
+## Current system
+
+<!-- Technical landscape slice for this change. Short is fine. -->
+
+### Relationship to existing tech
+
+<!-- Relations: reuse | extend | replace | boundary | retire. Always include a Pointer. -->
+
+| Existing capability | Relation | Pointer | Note |
+|---|---|---|---|
+| <!-- capability --> | <!-- relation --> | <!-- path/symbol/command/section --> | <!-- optional --> |
+
 ## Goals / Non-Goals
 
 **Goals:**
@@ -996,16 +1008,57 @@ Description of the requirement.
 
 ## Decisions
 
-### 1. Decision Name
+<!-- Major decisions: compare >=3 options (table below), then choice + trade-offs.
+     Minor decisions: short rationale only—delete the comparison table; do not invent fake alternatives. -->
 
-Description and rationale.
+### 1. Major decision name
 
-**Alternatives considered:**
-- Alternative 1: Rejected because...
+**Problem:** <!-- what must be chosen -->
+
+| Option | Pros | Cons |
+|---|---|---|
+| A. <!-- ... --> | | |
+| B. <!-- ... --> | | |
+| C. <!-- ... --> | | |
+
+**Choice:** <!-- selected option and why -->
+
+### 2. Minor decision name
+
+<!-- Rationale only for local naming, single-helper, or file-placement choices. -->
+
+## Contracts
+
+<!-- API/CLI, states, errors—or write exactly:
+     N/A — no API/state/error surface change -->
+
+### API / CLI
+
+<!-- Surface, fields, meaning. Omit or N/A if none. -->
+
+### States
+
+<!-- Lifecycle/state changes. Omit or N/A if none. -->
+
+### Errors
+
+<!-- Error codes, empty/deny. Omit or N/A if none. -->
+
+## Attachments
+
+<!-- Optional. Reference change-local files under attachments/. -->
 
 ## Risks / Trade-offs
 
 <!-- List risks and trade-offs -->
+
+## Migration Plan
+
+<!-- Deploy/rollback if applicable -->
+
+## Open Questions
+
+<!-- Outstanding unknowns -->
 `;
 
     case 'tasks':

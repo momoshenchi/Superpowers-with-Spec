@@ -24,6 +24,32 @@ When this procedure runs automatically from \`/sp:propose\` after every \`applyR
 
 Do not create \`review.md\`, approval metadata, or a review artifact. Proposal review is ephemeral. \`/sp:apply\` does not automatically repeat proposal review; users may invoke \`/sp:review <change>\` voluntarily.
 
+## Design convention checks (when \`design.md\` is present)
+
+Apply these in addition to general completeness/clarity checks. Prefer **WARNING**; escalate to **BLOCKER** only when missing landscape or contracts would block implementation of a cross-cutting change.
+
+### Current system and Contracts
+- Expect \`## Current system\` (exact title; no \`(as-is)\` suffix) as a technical landscape *slice for this change*. Short content is OK; empty/placeholder-only is at least WARNING.
+- Expect \`## Contracts\` always. Accept an explicit \`N/A — no API/state/error surface change\` (or equivalent) when specs/tasks show no API/CLI/state/error change. If Contracts says N/A but specs add API/state/error behavior, escalate.
+- Missing Current system or Contracts headings on a present design.md → WARNING (BLOCKER if cross-cutting and the design otherwise has no technical landscape).
+
+### Relationship / reuse pointers
+- Prefer a Relationship table (or equivalent) with relations \`reuse | extend | replace | boundary | retire\` and a **Pointer** column (path, symbol, command, or documented section).
+- Bare reuse / "keep existing behavior" language without a navigable pointer → WARNING; BLOCKER when the claim crosses module or trust boundaries.
+
+### Scale-aware decision comparisons
+- **Major** decisions (new source of truth; cross-subsystem; security/billing/idempotency/recovery; irreversible migration; important dependency; user-declared module-scale): require a recorded comparison of **≥3 options** with choice and trade-offs. Missing comparison → WARNING or BLOCKER by blast radius.
+- **Minor** decisions (local rename, single-helper, file placement): rationale only is enough. Do **not** flag missing three-option tables as a defect.
+- If major vs minor is ambiguous, WARNING asking the author to classify or add comparison is enough.
+
+### Visual DESIGN.md (UI identity; not change design.md)
+- Visual \`DESIGN.md\` means the google-labs design.md idea (YAML tokens + prose identity)—**not** change-local design.md, not engineering living docs, not ADRs.
+- Discovery: repo-root \`DESIGN.md\`/\`design.md\`, \`docs/DESIGN.md\`, or project-context paths.
+- UI change + visual DESIGN.md exists but design never cites it → at least WARNING.
+- Look-and-feel token/rule changes → expect a task (or completed plan) that updates that visual DESIGN.md; do not require pasting the full visual system into change design.
+- Non-UI change missing visual DESIGN.md → **not a finding**.
+- UI change with no visual DESIGN.md found → note de facto components/CSS is OK; not an automatic defect.
+
 ## Keep review contracts separate
 
 - **Proposal review** happens before implementation and judges whether artifacts can be implemented without ambiguity.
