@@ -1,12 +1,12 @@
 ## ADDED Requirements
 
 ### Requirement: Design template exposes Current system and Contracts
-The default spec-driven `design.md` template SHALL include, after `## Context`, a required `## Current system` section (without an `(as-is)` title suffix) containing a `### Relationship to existing tech` subsection, and SHALL include a required `## Contracts` section. Authors MAY keep `## Current system` and `## Contracts` extremely short, including a single `N/A` line when appropriate.
+The default spec-driven `design.md` template SHALL include, after `## Context`, a required exact `## Current system` section containing a `### Relationship to existing tech` subsection, and SHALL include a required `## Contracts` section. Authors MAY keep `## Current system` and `## Contracts` extremely short, including a single `N/A` line when appropriate.
 
 #### Scenario: Template skeleton lists the new sections
 - **WHEN** an agent loads the default design template for a new change
 - **THEN** the template SHALL contain `## Current system`, `### Relationship to existing tech`, and `## Contracts` as first-class headings
-- **AND** it SHALL NOT title the current-system section `## Current system (as-is)`
+- **AND** it SHALL use the exact `## Current system` title
 
 #### Scenario: Small change may use short Current system
 - **WHEN** a change only adjusts a local helper with no architectural surface

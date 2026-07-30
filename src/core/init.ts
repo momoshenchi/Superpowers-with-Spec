@@ -72,6 +72,8 @@ const WORKFLOW_TO_SKILL_DIR: Record<string, string> = {
   'archive': 'superpowers-archive-change',
   'bulk-archive': 'superpowers-bulk-archive-change',
   'verify': 'superpowers-verify-change',
+  'simplify': 'superpowers-simplify',
+  'design-verify': 'superpowers-design-verify',
   'onboard': 'superpowers-onboard',
   'propose': 'superpowers-propose',
 };

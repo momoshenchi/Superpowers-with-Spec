@@ -7,7 +7,7 @@ This change tightens **schema design template/instruction**, **explore handoff**
 ## What Changes
 
 - Expand the default `design.md` template and schema instruction with:
-  - required `## Current system` (short allowed; no `(as-is)` suffix)
+  - required exact `## Current system` title (short allowed)
   - `### Relationship to existing tech` with reuse/extend/replace/boundary relations and **pointers**
   - required `## Contracts` (API/CLI, states, errors; `N/A` when no surface change)
   - scale-aware Decisions: major decisions record ≥3-option comparison tables; minor decisions need rationale only

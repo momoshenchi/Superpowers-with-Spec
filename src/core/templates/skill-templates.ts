@@ -15,6 +15,8 @@ export { getSyncSpecsSkillTemplate, getSpSyncCommandTemplate } from './workflows
 export { getArchiveChangeSkillTemplate, getSpArchiveCommandTemplate } from './workflows/archive-change.js';
 export { getBulkArchiveChangeSkillTemplate, getSpBulkArchiveCommandTemplate } from './workflows/bulk-archive-change.js';
 export { getVerifyChangeSkillTemplate, getSpVerifyCommandTemplate } from './workflows/verify-change.js';
+export { getSimplifySkillTemplate, getSpSimplifyCommandTemplate } from './workflows/simplify.js';
+export { getDesignVerifySkillTemplate, getSpDesignVerifyCommandTemplate } from './workflows/design-verify.js';
 export { getOnboardSkillTemplate, getSpOnboardCommandTemplate } from './workflows/onboard.js';
 export { getSpProposeSkillTemplate, getSpProposeCommandTemplate } from './workflows/propose.js';
 export { getChangeReviewSkillTemplate, getSpReviewCommandTemplate } from './workflows/change-review.js';

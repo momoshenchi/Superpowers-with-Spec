@@ -83,7 +83,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 
 - **范围边界**：Goals 与 Non-Goals 互斥、可判定；不出现“视情况”“酌情”“后续再定”而无明确 defer 说明。
 - **决策结论**：每个 Decision 有明确选用方案。**重大**决策（新事实源、跨子系统、安全/计费/幂等/恢复、不可逆迁移、重要依赖、用户声明的模块级工作）须有 **≥3 方案比较表** + 取舍；**细节**决策（本地命名、单 helper、文件位置）一行理由即可，**不得**因缺少三方案表而判缺陷。
-- **Current system / Contracts**：`design.md` 含 `## Current system`（不要 `(as-is)` 后缀；可短）与 `## Contracts`。无 API/状态/错误表面变更时，Contracts 可写 `N/A — no API/state/error surface change`。
+- **Current system / Contracts**：`design.md` 含精确的 `## Current system` 标题（可短）与 `## Contracts`。无 API/状态/错误表面变更时，Contracts 可写 `N/A — no API/state/error surface change`。
 - **复用指针**：凡 reuse/extend/keep-current 类依赖，须有可导航 Pointer（路径、符号、命令或文档章节）。
 - **文件落点**：Create/Modify/Test 使用仓库内真实路径，不用“相关模块”“适当位置”等模糊指代。
 - **任务粒度**：`tasks.md` 的顶层 `# <number>. <scope>` 是逻辑 **dispatch unit**（可分派边界，不是 live subagent 身份）。也接受遗留的 `# <number>. agent<logical-id> — <scope>` 作为等价 dispatch unit。每个细分 checkbox 都应在 `execution-plan.md` 中有可执行的 Step 1–5 说明，包含具体测试文件、实现文件、运行命令与**预期通过/失败信号**；分配策略写在 Dispatch Coordination 表的 Assignee policy 列，而不是 heading 里。（`test-harden` 看 test-plan 矩阵与 harness；`spec-driven` 看 tasks/execution-plan）
@@ -103,7 +103,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 在通用完整性/明晰性之外，按以下规则审查。默认 **WARNING**；仅当跨切变更缺少可实施的技术图景或契约、足以阻塞开工时升为 **BLOCKER**。
 
 ### Current system 与 Contracts
-- 期望 `## Current system`（标题精确；不要 `(as-is)`）：本变更相关技术图景切片。短文可接受；空壳/仅占位至少 WARNING。
+- 期望精确的 `## Current system` 标题：本变更相关技术图景切片。短文可接受；空壳/仅占位至少 WARNING。
 - 期望 `## Contracts` 始终存在。specs/tasks 无 API/CLI/状态/错误变更时，接受明确的 N/A 声明。Contracts 写 N/A 但 specs 新增 API/状态/错误 → 升级。
 - 有 `design.md` 却缺 Current system 或 Contracts 标题 → WARNING（跨切且全文无技术图景 → 可 BLOCKER）。
 
@@ -226,4 +226,3 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 按优先级列出 3–7 条具体修改建议（指向文件与章节）。
 
 ```
-

@@ -5,6 +5,23 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
+import { getCanonicalNonVisualSuiteInstructions } from './final-quality-gates.js';
+
+const e2eAcceptanceInstructions = `   **End-to-end acceptance**:
+   - Classify changed requirements/scenarios as runnable user, browser, or end-to-end journeys.
+   - After the canonical preflight passes, exercise every affected runnable journey through its normal entry point using repository E2E automation or an equivalent agent-controlled browser. For browser-facing journeys, drive the real UI with the same clicks, keyboard input, and navigation a user uses; an API call or curl request is not a substitute for an interactive UI flow.
+   - Select a concrete available driver (repository E2E runner, Playwright/browser automation, or agent-controlled browser), wait for the application to be ready, and capture inspectable evidence: command output, route/URL transitions, relevant DOM or response assertions, screenshots or pane dumps where useful, and relevant console and failed-network signals. Memory alone is not evidence.
+   - Verify the observable success outcome plus applicable risk paths. Consider error, empty, permission, repeat-operation, refresh/navigation, invalid or missing input, rapid repeated interaction, and resize/responsive behavior when they apply to the changed journey.
+   - Drive destructive flows only against a documented safe target, fixture, dry run, or disposable environment. If none exists, report the affected path as \`blocked\` rather than risking real data or systems.
+   - A plan containing only build, typecheck, or isolated test commands is a CI rerun, not E2E verification. Find a step that reaches the changed surface or report it \`blocked\`.
+   - Report E2E as \`passed\`, \`failed\`, \`blocked\`, or \`not applicable\`: include route/entry point, environment/command, selected driver, exercised states, and captured evidence. An unexpected observable outcome or relevant console/network failure is \`failed\` and must include remediation; missing runtime, credentials, dependencies, or browser capability is \`blocked\`; non-runnable scope is \`not applicable\` with a concrete reason. Source inspection, screenshots, and unaided human checks never substitute for an applicable E2E pass.
+   - An applicable E2E journey reported \`blocked\` or \`failed\` makes both Correctness and the overall Verify outcome \`blocked\` or \`failed\`; resolve it before archive. Only a concrete, scope-backed \`not applicable\` outcome is non-blocking.`;
+
+const finalQualityRetryInstructions = `   **Final-quality Verify retries**:
+   - When Verify is delegated by \`/sp:apply\`, label the report \`Verify round 1\` through \`Verify round 4\`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
+   - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable E2E acceptance. Preserve separate command and E2E evidence for every numbered round.
+   - Treat \`CRITICAL\` as \`P0\` for final-quality retry decisions. Before round four, repair a resolvable failed check, applicable E2E failure, or P0/CRITICAL finding, then retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
+   - A missing runtime, credential, browser capability, dependency, or other prerequisite is \`BLOCKER\`: report \`blocked\`, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable E2E failure, or P0/CRITICAL finding, report \`failed\`; do not begin a fifth round or recommend archive.`;
 
 export function getVerifyChangeSkillTemplate(): SkillTemplate {
   return {
@@ -73,6 +90,8 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
 6. **Verify Correctness**
 
+${getCanonicalNonVisualSuiteInstructions('verify')}
+
    **Requirement Implementation Mapping**:
    - For each requirement from delta specs:
      - Search codebase for implementation evidence
@@ -89,6 +108,10 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
      - If scenario appears uncovered:
        - Add WARNING: "Scenario not covered: <scenario name>"
        - Recommendation: "Add test or implementation for scenario: <description>"
+
+${e2eAcceptanceInstructions}
+
+${finalQualityRetryInstructions}
 
 7. **Verify Coherence**
 
@@ -119,6 +142,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
    |--------------|------------------|
    | Completeness | X/Y tasks, N reqs|
    | Correctness  | M/N reqs covered |
+   | E2E evidence | Outcome, driver, states, artifacts |
    | Coherence    | Followed/Issues  |
    \`\`\`
 
@@ -140,6 +164,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
       - Each with specific recommendation
 
    **Final Assessment**:
+   - If any applicable E2E journey is \`blocked\` or \`failed\`: "Verify blocked/failed: resolve the E2E outcome before archiving." Do not report Correctness as passed.
    - If CRITICAL issues: "X critical issue(s) found. Fix before archiving."
    - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
    - If all clear: "All checks passed. Ready for archive."
@@ -164,6 +189,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 Use clear markdown with:
 - Table for summary scorecard
 - Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
+- When running as an apply final-quality gate: \`Verify round: <1-4>\`, \`Fresh worker: <identity>\`, retry disposition, canonical preflight/E2E evidence for that round, and the terminal \`failed\` or \`blocked\` reason where applicable
 - Code references in format: \`file.ts:123\`
 - Specific, actionable recommendations
 - No vague suggestions like "consider reviewing"`,
@@ -242,6 +268,8 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
 
 6. **Verify Correctness**
 
+${getCanonicalNonVisualSuiteInstructions('verify')}
+
    **Requirement Implementation Mapping**:
    - For each requirement from delta specs:
      - Search codebase for implementation evidence
@@ -258,6 +286,10 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
      - If scenario appears uncovered:
        - Add WARNING: "Scenario not covered: <scenario name>"
        - Recommendation: "Add test or implementation for scenario: <description>"
+
+${e2eAcceptanceInstructions}
+
+${finalQualityRetryInstructions}
 
 7. **Verify Coherence**
 
@@ -288,6 +320,7 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
    |--------------|------------------|
    | Completeness | X/Y tasks, N reqs|
    | Correctness  | M/N reqs covered |
+   | E2E evidence | Outcome, driver, states, artifacts |
    | Coherence    | Followed/Issues  |
    \`\`\`
 
@@ -309,6 +342,7 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
       - Each with specific recommendation
 
    **Final Assessment**:
+   - If any applicable E2E journey is \`blocked\` or \`failed\`: "Verify blocked/failed: resolve the E2E outcome before archiving." Do not report Correctness as passed.
    - If CRITICAL issues: "X critical issue(s) found. Fix before archiving."
    - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
    - If all clear: "All checks passed. Ready for archive."
@@ -333,6 +367,7 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
 Use clear markdown with:
 - Table for summary scorecard
 - Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
+- When running as an apply final-quality gate: \`Verify round: <1-4>\`, \`Fresh worker: <identity>\`, retry disposition, canonical preflight/E2E evidence for that round, and the terminal \`failed\` or \`blocked\` reason where applicable
 - Code references in format: \`file.ts:123\`
 - Specific, actionable recommendations
 - No vague suggestions like "consider reviewing"`

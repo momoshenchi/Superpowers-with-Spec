@@ -29,7 +29,7 @@ Do not create \`review.md\`, approval metadata, or a review artifact. Proposal r
 Apply these in addition to general completeness/clarity checks. Prefer **WARNING**; escalate to **BLOCKER** only when missing landscape or contracts would block implementation of a cross-cutting change.
 
 ### Current system and Contracts
-- Expect \`## Current system\` (exact title; no \`(as-is)\` suffix) as a technical landscape *slice for this change*. Short content is OK; empty/placeholder-only is at least WARNING.
+- Expect the exact \`## Current system\` title as a technical landscape *slice for this change*. Short content is OK; empty/placeholder-only is at least WARNING.
 - Expect \`## Contracts\` always. Accept an explicit \`N/A — no API/state/error surface change\` (or equivalent) when specs/tasks show no API/CLI/state/error change. If Contracts says N/A but specs add API/state/error behavior, escalate.
 - Missing Current system or Contracts headings on a present design.md → WARNING (BLOCKER if cross-cutting and the design otherwise has no technical landscape).
 

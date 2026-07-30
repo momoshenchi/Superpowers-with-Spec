@@ -35,6 +35,18 @@ describe('command-generation/adapters', () => {
     body: 'This is the command body.\n\nWith multiple lines.',
   };
 
+  it('uses namespaced paths for simplify and design-verify across representative adapters', () => {
+    const adapters = [claudeAdapter, codexAdapter, opencodeAdapter, cursorAdapter, geminiAdapter];
+
+    for (const adapter of adapters) {
+      for (const commandId of ['simplify', 'design-verify']) {
+        const generatedPath = adapter.getFilePath(commandId);
+        expect(generatedPath).toContain(commandId);
+        expect(generatedPath).toMatch(/sp[-/]/);
+      }
+    }
+  });
+
   describe('claudeAdapter', () => {
     it('should have correct toolId', () => {
       expect(claudeAdapter.toolId).toBe('claude');

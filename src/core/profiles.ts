@@ -28,6 +28,8 @@ export const ALL_WORKFLOWS = [
   'archive',
   'bulk-archive',
   'verify',
+  'simplify',
+  'design-verify',
   'onboard',
 ] as const;
 

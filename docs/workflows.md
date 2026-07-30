@@ -46,7 +46,7 @@ Typical flow:
 
 ### Expanded/Full Workflow (custom selection)
 
-If you want explicit scaffold-and-build commands (`/sp:new`, `/sp:continue`, `/sp:ff`, `/sp:verify`, `/sp:sync`, `/sp:bulk-archive`, `/sp:onboard`), enable them with:
+If you want explicit scaffold-and-build commands (`/sp:new`, `/sp:continue`, `/sp:ff`, `/sp:verify`, `/sp:simplify`, `/sp:design-verify`, `/sp:sync`, `/sp:bulk-archive`, `/sp:onboard`), enable them with:
 
 ```bash
 superpowers config profile
@@ -234,11 +234,13 @@ The recommended completion flow:
  and hardens     implementation     if needed
 ```
 
-`/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass analyzes which earlier tests were insufficient, adds feasible missing coverage, records what this stage strengthened, and treats hardening as complete only when every concrete test/status row is complete and failures or product defects are resolved.
+`/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass discovers and runs the complete canonical non-visual suite from scripts, CI, test documentation, and the test plan; it records authority, commands, results, and excluded visual-only checks. After hardening, apply delegates host-native final code review (or a labelled equivalent fallback), `/sp:simplify`, `/sp:verify`, and `/sp:design-verify`—in that order—to fresh, distinct subagents, awaiting and integrating each report before starting the next. These gates are mandatory inside apply even if their standalone workflows are not selected; a host unable to launch a gate worker blocks completion.
+
+Final gates use bounded, local retries. `P0` is the same severity as Verify `CRITICAL`; review repairs every resolvable finding and only repeats with a fresh reviewer when the round contains P0. `P1` and `P2` are repaired and recorded in the current round but do not themselves trigger another review. `BLOCKER` is neither P0 nor P1: it is a missing prerequisite or external decision that pauses immediately without consuming a round. Code review, Verify, and Design verify each allow at most four numbered fresh-worker rounds; a remaining P0 or failed check in round four is terminal. Simplify has no retry loop: a safe cleanup proceeds to Verify round one. Verify retries from Verify and Design verify retries from Design verify, rather than restarting all gates from review.
 
 #### Verify: Check Your Work
 
-`/sp:verify` validates implementation against your artifacts across three dimensions:
+`/sp:verify` validates implementation against your artifacts across three dimensions. It reruns the canonical non-visual suite before applicable runnable journey E2E. Browser journeys must use real UI input rather than API-only substitutes and retain inspectable driver, route, DOM/response, console/network, and useful screenshot evidence; source inspection, screenshots, and manual confidence alone do not substitute for E2E evidence.
 
 ```text
 You: /sp:verify
@@ -279,7 +281,7 @@ AI:  Verifying add-auth...
 | Correctness | Implementation matches spec intent, edge cases handled |
 | Coherence | Design decisions reflected in code, patterns consistent |
 
-Verify won't block archive, but it surfaces issues you might want to address first.
+Verify surfaces ordinary warnings without blocking archive. An applicable E2E failure or blocked prerequisite, however, blocks Verify and must be resolved before archive. Inside apply, Verify's first post-Simplify run is round one of four; every retry uses a fresh worker and reruns the complete canonical non-visual suite plus applicable E2E. A missing prerequisite is a `BLOCKER` pause rather than a spent round.
 
 #### Archive: Finalize the Change
 
@@ -446,6 +448,8 @@ For full command details and options, see [Commands](commands.md).
 | `/sp:ff` | Create all planning artifacts | Expanded mode, clear scope |
 | `/sp:apply` | Implement tasks | Ready to write code |
 | `/sp:verify` | Validate implementation | Expanded mode, before archiving |
+| `/sp:simplify` | Behavior-preserving cleanup | Expanded mode or apply final gate |
+| `/sp:design-verify` | Runtime visual conformance | Expanded mode or apply final gate |
 | `/sp:sync` | Merge delta specs | Expanded mode, optional |
 | `/sp:archive` | Complete the change | All work finished |
 | `/sp:bulk-archive` | Archive multiple changes | Expanded mode, parallel work |

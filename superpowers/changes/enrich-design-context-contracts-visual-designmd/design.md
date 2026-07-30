@@ -59,7 +59,7 @@ skills/change-review/SKILL.md            # repo-local review skill rendering
 | B. Instruction-only; create sections when needed | Medium | Lowest empty-file | Low (forgotten) |
 | C. Separate optional artifacts | Low | High | Medium |
 
-**Choice:** A. Title is exactly `## Current system` (no `(as-is)`). Contracts always present; use explicit N/A when no API/state/error surface change.
+**Choice:** A. Title is exactly `## Current system`. Contracts always present; use explicit N/A when no API/state/error surface change.
 
 **Cost:** Slightly longer empty skeleton; mitigated by “short is fine” instruction.
 

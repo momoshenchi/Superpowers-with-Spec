@@ -8,9 +8,9 @@ import {
 
 describe('skill-generation', () => {
   describe('getSkillTemplates', () => {
-    it('should return all 12 skill templates', () => {
+    it('should return all 14 skill templates', () => {
       const templates = getSkillTemplates();
-      expect(templates).toHaveLength(12);
+      expect(templates).toHaveLength(14);
     });
 
     it('should have unique directory names', () => {
@@ -33,6 +33,9 @@ describe('skill-generation', () => {
       expect(dirNames).toContain('superpowers-archive-change');
       expect(dirNames).toContain('superpowers-bulk-archive-change');
       expect(dirNames).toContain('superpowers-verify-change');
+      expect(dirNames).toContain('superpowers-simplify');
+      expect(dirNames).toContain('superpowers-design-verify');
+      expect(dirNames).not.toContain('superpowers-code-review');
       expect(dirNames).toContain('superpowers-onboard');
       expect(dirNames).toContain('superpowers-propose');
       expect(dirNames).toContain('superpowers-change-review');
@@ -89,9 +92,9 @@ describe('skill-generation', () => {
   });
 
   describe('getCommandTemplates', () => {
-    it('should return all 12 command templates', () => {
+    it('should return all 14 command templates', () => {
       const templates = getCommandTemplates();
-      expect(templates).toHaveLength(12);
+      expect(templates).toHaveLength(14);
     });
 
     it('should have unique IDs', () => {
@@ -114,6 +117,9 @@ describe('skill-generation', () => {
       expect(ids).toContain('archive');
       expect(ids).toContain('bulk-archive');
       expect(ids).toContain('verify');
+      expect(ids).toContain('simplify');
+      expect(ids).toContain('design-verify');
+      expect(ids).not.toContain('code-review');
       expect(ids).toContain('onboard');
       expect(ids).toContain('propose');
       expect(ids).toContain('review');
@@ -144,9 +150,9 @@ describe('skill-generation', () => {
   });
 
   describe('getCommandContents', () => {
-    it('should return all 12 command contents', () => {
+    it('should return all 14 command contents', () => {
       const contents = getCommandContents();
-      expect(contents).toHaveLength(12);
+      expect(contents).toHaveLength(14);
     });
 
     it('should have valid content structure', () => {

@@ -5,6 +5,7 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
+import { getCanonicalNonVisualSuiteInstructions, getFinalQualityGateInstructions } from './final-quality-gates.js';
 
 export function getApplyChangeSkillTemplate(): SkillTemplate {
   return {
@@ -49,7 +50,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 
    **Handle states:**
    - If \`state: "blocked"\` (missing artifacts): show message, suggest using superpowers-continue-change
-   - If \`state: "all_done"\`: read \`test-plan.md\` when present, confirm every concrete test/status row is complete, then summarize implementation and hardening before suggesting archive
+   - If \`state: "all_done"\`: read \`test-plan.md\` when present, confirm every concrete Test Hardening row outside \`## Final Quality Gates\` is complete **and** that the \`## Final Quality Gates\` record contains fresh integrated outcomes for every gate (each applicable gate passed; every \`not applicable\` result is justified). If the record is missing, failed, or applicable-blocked, run or resume final quality gates instead of suggesting archive.
    - Otherwise: proceed to implementation
 
 4. **Read context files**
@@ -89,7 +90,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 
    For spec-driven changes with \`test-plan.md\`:
    - Task completion transitions into Test Hardening; it is not apply completion by itself.
-   - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete test/status row in its tables is complete.
+   - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete testing/hardening status row outside \`## Final Quality Gates\` is complete. Final-gate rows are evaluated separately only after Test Hardening.
    - Use complete statuses such as \`covered\`, \`passed\`, or \`not applicable\`; \`planned\`, \`failing\`, blank, or placeholder rows keep hardening incomplete.
    - Distinguish worker-level verification in detailed \`tasks.md\` from post-integration Test Hardening in \`test-plan.md\`; passing worker-level tests is necessary but not sufficient for final apply completion.
    - Analyze which earlier tests were insufficient or not broad enough, then decide which supplemental tests are needed.
@@ -98,13 +99,19 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Failing hardening tests or unresolved product defects block apply completion; fix them and rerun verification, or pause as blocked with the failing command, failure summary, affected files, and recommended next action.
    - Mark the relevant table rows complete only after evidence exists and no hardening failures or unresolved defects remain.
 
-8. **On completion or pause, show status**
+${getCanonicalNonVisualSuiteInstructions('Test Hardening')}
+
+8. **Run final quality gates**
+
+${getFinalQualityGateInstructions()}
+
+9. **On completion or pause, show status**
 
    Display:
    - Tasks completed this session
    - Overall progress: "N/M tasks complete"
    - Test Hardening status separately from implementation progress
-   - If all tasks and Test Hardening are done: suggest archive
+   - If all tasks, Test Hardening, and every applicable final quality gate are done: show the four-gate outcome/evidence summary below, then suggest archive
    - If paused: explain why and wait for guidance
 
 **Output During Implementation**
@@ -142,7 +149,15 @@ Working on task 4/7: <task description>
 - Verification: <selected checks and outcomes>
 - Deferrals: <none or documented reasons>
 
-Implementation and Test Hardening are complete. Ready for the next workflow action.
+### Final Quality Gates
+| Gate | Outcome | Fresh worker evidence |
+| --- | --- | --- |
+| Host-native code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
+| \`/sp:simplify\` | passed / failed / blocked / not applicable | <worker report and cleanup/skip summary> |
+| \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, E2E disposition> |
+| \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |
+
+Implementation, Test Hardening, and every applicable final quality gate are complete. You can archive this change with \`/sp:archive\`.
 \`\`\`
 
 **Output On Pause (Issue Encountered)**
@@ -173,10 +188,11 @@ What would you like to do?
 - Before claiming a task is completed, please refer to \`verification-before-completion\` skill
 - Update task checkbox immediately after completing each task
 - Treat execution-plan.md as implementation context and tasks.md as the progress-tracking checklist.
-- Treat completion independently: \`tasks.md\` completion means implementation tasks are done; \`test-plan.md\` table statuses mean hardening is done.
-- Treat Test Hardening as incomplete while any concrete test/status row is \`planned\`, \`failing\`, blank, or still a placeholder.
+- Treat completion independently: \`tasks.md\` completion means implementation tasks are done; \`test-plan.md\` testing/hardening table statuses outside \`## Final Quality Gates\` mean hardening is done.
+- Treat Test Hardening as incomplete while any concrete testing/hardening status row outside \`## Final Quality Gates\` is \`planned\`, \`failing\`, blank, or still a placeholder.
 - Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.
 - Do not complete apply while hardening tests fail or product defects remain unresolved.
+- Do not recommend archive while a final quality gate is failed or an applicable gate is blocked.
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
 - Never start implementation on main/master branch without explicit user consent
@@ -242,7 +258,7 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
 
    **Handle states:**
    - If \`state: "blocked"\` (missing artifacts): show message, suggest using \`/sp:continue\`
-   - If \`state: "all_done"\`: read \`test-plan.md\` when present, confirm every concrete test/status row is complete, then summarize implementation and hardening before suggesting archive
+   - If \`state: "all_done"\`: read \`test-plan.md\` when present, confirm every concrete Test Hardening row outside \`## Final Quality Gates\` is complete **and** that the \`## Final Quality Gates\` record contains fresh integrated outcomes for every gate (each applicable gate passed; every \`not applicable\` result is justified). If the record is missing, failed, or applicable-blocked, run or resume final quality gates instead of suggesting archive.
    - Otherwise: proceed to implementation
 
 4. **Read context files**
@@ -280,7 +296,7 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
 
    For spec-driven changes with \`test-plan.md\`:
    - Task completion transitions into Test Hardening; it is not apply completion by itself.
-   - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete test/status row in its tables is complete.
+   - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete testing/hardening status row outside \`## Final Quality Gates\` is complete. Final-gate rows are evaluated separately only after Test Hardening.
    - Use complete statuses such as \`covered\`, \`passed\`, or \`not applicable\`; \`planned\`, \`failing\`, blank, or placeholder rows keep hardening incomplete.
    - Distinguish worker-level verification in detailed \`tasks.md\` from post-integration Test Hardening in \`test-plan.md\`; passing worker-level tests is necessary but not sufficient for final apply completion.
    - Analyze which earlier tests were insufficient or not broad enough, then decide which supplemental tests are needed.
@@ -289,13 +305,19 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
    - Failing hardening tests or unresolved product defects block apply completion; fix them and rerun verification, or pause as blocked with the failing command, failure summary, affected files, and recommended next action.
    - Mark the relevant table rows complete only after evidence exists and no hardening failures or unresolved defects remain.
 
-8. **On completion or pause, show status**
+${getCanonicalNonVisualSuiteInstructions('Test Hardening')}
+
+8. **Run final quality gates**
+
+${getFinalQualityGateInstructions()}
+
+9. **On completion or pause, show status**
 
    Display:
    - Tasks completed this session
    - Overall progress: "N/M tasks complete"
    - Test Hardening status separately from implementation progress
-   - If all tasks and Test Hardening are done: suggest archive
+   - If all tasks, Test Hardening, and every applicable final quality gate are done: show the four-gate outcome/evidence summary below, then suggest archive
    - If paused: explain why and wait for guidance
 
 **Output During Implementation**
@@ -333,7 +355,15 @@ Working on task 4/7: <task description>
 - Verification: <selected checks and outcomes>
 - Deferrals: <none or documented reasons>
 
-Implementation and Test Hardening are complete. You can archive this change with \`/sp:archive\`.
+### Final Quality Gates
+| Gate | Outcome | Fresh worker evidence |
+| --- | --- | --- |
+| Host-native code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
+| \`/sp:simplify\` | passed / failed / blocked / not applicable | <worker report and cleanup/skip summary> |
+| \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, E2E disposition> |
+| \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |
+
+Implementation, Test Hardening, and every applicable final quality gate are complete. You can archive this change with \`/sp:archive\`.
 \`\`\`
 
 **Output On Pause (Issue Encountered)**
@@ -365,9 +395,10 @@ What would you like to do?
 - Update task checkbox immediately after completing each task
 - Treat execution-plan.md as implementation context and tasks.md as the progress-tracking checklist.
 - Treat \`tasks.md\` completion as the transition into Test Hardening when \`test-plan.md\` exists.
-- Treat Test Hardening as incomplete while any concrete test/status row is \`planned\`, \`failing\`, blank, or still a placeholder.
+- Treat Test Hardening as incomplete while any concrete testing/hardening status row outside \`## Final Quality Gates\` is \`planned\`, \`failing\`, blank, or still a placeholder.
 - Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.
 - Do not complete apply while hardening tests fail or product defects remain unresolved.
+- Do not recommend archive while a final quality gate is failed or an applicable gate is blocked.
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
 - Do not automatically repeat proposal review before starting. The normal \`/sp:propose\` path performs it after creating all required artifacts; users may invoke \`/sp:review <change>\` voluntarily.

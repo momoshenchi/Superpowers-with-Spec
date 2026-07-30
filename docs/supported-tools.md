@@ -15,7 +15,7 @@ By default, Superpowers uses the `core` profile, which includes:
 - `apply`
 - `archive`
 
-You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard`) via `superpowers config profile`, then run `superpowers update`.
+You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `simplify`, `design-verify`, `sync`, `bulk-archive`, `onboard`) via `superpowers config profile`, then run `superpowers update`.
 
 ## Tool Directory Reference
 
@@ -76,7 +76,7 @@ Superpowers installs workflow artifacts based on selected workflows:
 
 - **Core profile (default):** `propose`, `explore`, `apply`, `archive`
 - **Custom selection:** any subset of all workflow IDs:
-  `propose`, `explore`, `new`, `continue`, `apply`, `ff`, `sync`, `archive`, `bulk-archive`, `verify`, `onboard`
+  `propose`, `explore`, `new`, `continue`, `apply`, `ff`, `sync`, `archive`, `bulk-archive`, `verify`, `simplify`, `design-verify`, `onboard`
 
 In other words, skill/command counts are profile-dependent and delivery-dependent, not fixed.
 
@@ -94,6 +94,8 @@ When selected by profile/workflow config, Superpowers generates these skills:
 - `superpowers-archive-change`
 - `superpowers-bulk-archive-change`
 - `superpowers-verify-change`
+- `superpowers-simplify`
+- `superpowers-design-verify`
 - `superpowers-onboard`
 
 See [Commands](commands.md) for command behavior and [CLI](cli.md) for `init`/`update` options.

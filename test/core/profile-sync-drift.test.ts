@@ -89,4 +89,15 @@ describe('profile sync drift detection', () => {
     const hasDrift = hasProjectConfigDrift(tempDir, CORE_WORKFLOWS, 'both');
     expect(hasDrift).toBe(true);
   });
+
+  it('detects deselected simplify and design-verify artifacts', () => {
+    setupCoreSkills(tempDir);
+    setupCoreCommands(tempDir);
+    writeSkill(tempDir, 'simplify');
+    writeSkill(tempDir, 'design-verify');
+    writeCommand(tempDir, 'simplify');
+    writeCommand(tempDir, 'design-verify');
+
+    expect(hasProjectConfigDrift(tempDir, CORE_WORKFLOWS, 'both')).toBe(true);
+  });
 });

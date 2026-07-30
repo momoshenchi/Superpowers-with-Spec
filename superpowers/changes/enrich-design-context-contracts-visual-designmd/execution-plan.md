@@ -50,7 +50,7 @@
 
 1. **Step 1: Write or extend focused tests** — Add/adjust a test (or extend schema template read assertions) that the design template file contains `## Current system`, `### Relationship to existing tech`, and `## Contracts`.
 2. **Step 2: Run the focused tests** — Expect FAIL on missing headings before edit.
-3. **Step 3: Implement Task 1.1** — Insert sections after Context; keep Goals/Non-Goals, Decisions (with major-comparison placeholder comment), Contracts, Risks; optional Migration/Open Questions/Attachments as today. No `(as-is)` in Current system title. Relationship comment should mention pointer column. Contracts comment should allow N/A.
+3. **Step 3: Implement Task 1.1** — Insert sections after Context; keep Goals/Non-Goals, Decisions (with major-comparison placeholder comment), Contracts, Risks; optional Migration/Open Questions/Attachments as today. Current system title is exact. Relationship comment should mention pointer column. Contracts comment should allow N/A.
 4. **Step 4: Run focused verification** — Headings present; template still valid markdown.
 5. **Step 5: Self-review and handoff** — Confirm no engineering-living-doc mandate text accidentally included.
 

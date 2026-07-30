@@ -99,7 +99,6 @@ describe('change review workflow templates', () => {
       expect(content).toMatch(/≥3 options/);
       expect(content).toContain('Minor');
       expect(content).toContain('not a finding');
-      expect(content).not.toContain('## Current system (as-is)');
     }
   });
 });

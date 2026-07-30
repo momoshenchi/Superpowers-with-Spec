@@ -894,7 +894,7 @@ describe('artifact-workflow CLI commands', () => {
       expect(json.progress).toEqual({ total: 1, complete: 0, remaining: 1 });
       expect(json.applyRequires).toEqual(['test-plan']);
       expect(json.instruction).toContain('Test Hardening');
-      expect(json.instruction).toContain('every concrete test/status row');
+      expect(json.instruction).toContain('every concrete Test Hardening row outside `## Final Quality Gates`');
     });
 
     it('shows schema instruction from apply block', async () => {

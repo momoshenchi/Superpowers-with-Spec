@@ -22,6 +22,8 @@ export const SKILL_NAMES = [
   'superpowers-archive-change',
   'superpowers-bulk-archive-change',
   'superpowers-verify-change',
+  'superpowers-simplify',
+  'superpowers-design-verify',
   'superpowers-onboard',
   'superpowers-propose',
 ] as const;
@@ -42,6 +44,8 @@ export const COMMAND_IDS = [
   'archive',
   'bulk-archive',
   'verify',
+  'simplify',
+  'design-verify',
   'onboard',
   'propose',
 ] as const;

@@ -48,7 +48,6 @@ describe('change design conventions sources', () => {
       '## Risks / Trade-offs',
     ]);
 
-    expect(template).not.toContain('## Current system (as-is)');
     expect(template).toContain('Pointer');
     expect(template).toContain('reuse | extend | replace | boundary | retire');
     expect(template).toContain('N/A — no API/state/error surface change');
@@ -73,7 +72,7 @@ describe('change design conventions sources', () => {
     const instruction = schema.slice(designBlockStart, tasksBlockStart);
 
     expect(instruction).toContain('Current system');
-    expect(instruction).toContain('`(as-is)` suffix');
+    expect(instruction).toContain('Title is exactly `## Current system`');
     expect(instruction).toContain('Relationship to existing tech');
     expect(instruction).toContain('Pointer');
     expect(instruction).toContain('reuse | extend | replace | boundary | retire');
@@ -115,7 +114,6 @@ describe('change design conventions sources', () => {
     expect(fallback).toContain('Minor decision');
     expect(fallback).toContain('do not invent fake alternatives');
     expect(fallback).toContain('### API / CLI');
-    expect(fallback).not.toContain('(as-is)');
   });
 
   it('explore skill and command both require major ≥3 diverge and design converge', () => {
@@ -144,7 +142,6 @@ describe('change design conventions sources', () => {
       expect(content).toMatch(/≥3 options/);
       expect(content).toContain('Minor');
       expect(content).toContain('not a finding');
-      expect(content).not.toContain('## Current system (as-is)');
     }
   });
 
@@ -163,6 +160,5 @@ describe('change design conventions sources', () => {
     expect(skill).toContain('Pointer');
     expect(skill).toMatch(/≥3|>=3/);
     expect(skill).toContain('视觉 DESIGN.md');
-    expect(skill).not.toContain('## Current system (as-is)');
   });
 });

@@ -23,6 +23,8 @@ For workflow patterns and when to use each command, see [Workflows](workflows.md
 | `/sp:continue` | Create the next artifact based on dependencies |
 | `/sp:ff` | Fast-forward: create all planning artifacts at once |
 | `/sp:verify` | Validate implementation matches artifacts |
+| `/sp:simplify` | Two-phase cleanup review and safe fixes |
+| `/sp:design-verify` | Runtime UI conformance to repository `DESIGN.md` |
 | `/sp:sync` | Merge delta specs into main specs |
 | `/sp:bulk-archive` | Archive multiple changes at once |
 | `/sp:onboard` | Guided tutorial through the complete workflow |
@@ -323,6 +325,8 @@ AI:  Implementing add-dark-mode...
 - Use for parallel changes by specifying the change name
 - Implementation progress is tracked in `tasks.md` checkboxes
 - Final apply completion also requires Test Hardening in `test-plan.md`; task completion alone is not the archive signal
+- Test Hardening runs the repository's complete canonical non-visual suite. Apply then delegates final code review, `/sp:simplify`, `/sp:verify`, and `/sp:design-verify` in that order to fresh, distinct subagents, integrating each result before the next; standalone workflow selection never disables those gates.
+- Final-gate retries are bounded and local: `P0` equals Verify `CRITICAL`, while `P1`/`P2` are repaired in the current review round without forcing another round. A `BLOCKER` is a missing prerequisite or external decision, not a priority level; it pauses without consuming an attempt. Code review, Verify, and Design verify each stop with `failed` if round four still fails. Simplify has no retry loop and hands off to Verify round one.
 
 ---
 
@@ -342,9 +346,12 @@ Validate that implementation matches your change artifacts. Checks completeness,
 
 **What it does:**
 - Checks three dimensions of implementation quality
+- Discovers and runs the complete canonical non-visual suite before applicable E2E acceptance
+- Requires executable journey evidence through real UI input where applicable, including a risk path, selected driver, inspectable runtime artifacts, and browser/network signals for changed runnable journeys
 - Searches codebase for implementation evidence
 - Reports issues categorized as CRITICAL, WARNING, or SUGGESTION
-- Does not block archive, but surfaces issues
+- Surfaces ordinary warnings without blocking archive; however, an applicable E2E failure or blocked prerequisite blocks Verify and must be resolved before archive
+- When delegated by apply, labels fresh Verify rounds 1–4; each round reruns the complete canonical non-visual suite and applicable E2E. Repairable failures retry from Verify, while a `BLOCKER` pauses without consuming a round and a fourth failed round is terminal
 
 **Verification dimensions:**
 
@@ -391,6 +398,30 @@ AI:  Verifying add-dark-mode...
 - Warnings don't block archive but indicate potential issues
 - Good for reviewing AI's work before committing
 - Can reveal drift between artifacts and implementation
+
+---
+
+### `/sp:simplify`
+
+Perform behavior-preserving cleanup within an active change.
+
+```text
+/sp:simplify [change-name]
+```
+
+It gathers the diff, reviews reuse, simplification, efficiency, and abstraction-level concerns with four parallel agents when the host supports them, then deduplicates and applies safe findings. Without agent fan-out it performs all four angles in one disclosed single pass. It does not replace any host-native simplify command. When delegated by apply, Simplify has no separate retry loop: after safe cleanup it hands off to Verify round one; a blocked or unresolvable result pauses apply.
+
+---
+
+### `/sp:design-verify`
+
+Verify a changed runtime UI against the repository's visual `DESIGN.md`.
+
+```text
+/sp:design-verify [change-name]
+```
+
+The workflow detects UI scope, uses a browser or equivalent controlled driver to inspect affected routes/states, and reports `passed`, `failed`, `blocked`, or `not applicable`. For UI work without a visual design source, formal conformance is unassessable; source inspection alone cannot produce a pass. This is separate from functional `/sp:verify`. Inside apply, repairable visual failures retry only Design verify with a fresh worker, up to four numbered rounds; a `BLOCKER` pauses without using a round.
 
 ---
 

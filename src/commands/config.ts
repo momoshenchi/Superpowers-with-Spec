@@ -86,6 +86,14 @@ const WORKFLOW_PROMPT_META: Record<string, WorkflowPromptMeta> = {
     name: 'Verify change',
     description: 'Run verification checks against a change',
   },
+  simplify: {
+    name: 'Simplify change',
+    description: 'Perform behavior-preserving cleanup for a change',
+  },
+  'design-verify': {
+    name: 'Design verify',
+    description: 'Verify runtime UI conformance for a change',
+  },
   onboard: {
     name: 'Onboard',
     description: 'Guided onboarding flow for Superpowers',

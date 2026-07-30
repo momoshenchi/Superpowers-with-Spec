@@ -1395,12 +1395,12 @@ More user content after markers.
 
   describe('profile-aware updates', () => {
     it('should generate only profile workflows when custom profile is set', async () => {
-      // Set custom profile with only explore and new
+      // Set custom profile with representative standard and quality workflows.
       setMockConfig({
         featureFlags: {},
         profile: 'custom',
         delivery: 'both',
-        workflows: ['explore', 'new'],
+        workflows: ['explore', 'new', 'simplify', 'design-verify'],
       });
 
       // Set up a configured tool
@@ -1417,6 +1417,16 @@ More user content after markers.
       expect(await FileSystemUtils.fileExists(
         path.join(skillsDir, 'superpowers-new-change', 'SKILL.md')
       )).toBe(true);
+      expect(await FileSystemUtils.fileExists(
+        path.join(skillsDir, 'superpowers-simplify', 'SKILL.md')
+      )).toBe(true);
+      expect(await FileSystemUtils.fileExists(
+        path.join(skillsDir, 'superpowers-design-verify', 'SKILL.md')
+      )).toBe(true);
+
+      const commandsDir = path.join(testDir, '.claude', 'commands', 'sp');
+      expect(await FileSystemUtils.fileExists(path.join(commandsDir, 'simplify.md'))).toBe(true);
+      expect(await FileSystemUtils.fileExists(path.join(commandsDir, 'design-verify.md'))).toBe(true);
 
       // Should NOT create non-profile skills
       expect(await FileSystemUtils.fileExists(

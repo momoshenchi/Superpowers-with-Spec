@@ -28,7 +28,7 @@ describe('tool-detection', () => {
 
   describe('SKILL_NAMES', () => {
     it('should contain all skill names matching COMMAND_IDS', () => {
-      expect(SKILL_NAMES).toHaveLength(12);
+      expect(SKILL_NAMES).toHaveLength(14);
       expect(SKILL_NAMES).toContain('superpowers-explore');
       expect(SKILL_NAMES).toContain('superpowers-new-change');
       expect(SKILL_NAMES).toContain('superpowers-continue-change');
@@ -38,6 +38,9 @@ describe('tool-detection', () => {
       expect(SKILL_NAMES).toContain('superpowers-archive-change');
       expect(SKILL_NAMES).toContain('superpowers-bulk-archive-change');
       expect(SKILL_NAMES).toContain('superpowers-verify-change');
+      expect(SKILL_NAMES).toContain('superpowers-simplify');
+      expect(SKILL_NAMES).toContain('superpowers-design-verify');
+      expect(SKILL_NAMES).not.toContain('superpowers-code-review');
       expect(SKILL_NAMES).toContain('superpowers-onboard');
       expect(SKILL_NAMES).toContain('superpowers-propose');
       expect(SKILL_NAMES).toContain('superpowers-change-review');

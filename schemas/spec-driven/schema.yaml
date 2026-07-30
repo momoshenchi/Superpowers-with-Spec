@@ -103,7 +103,7 @@ artifacts:
       bury the technical starting point only inside Context):
       - **Context**: Background, motivation, constraints, stakeholders
       - **Current system**: Technical landscape *slice for this change* (modules,
-        entry points, data flow). Title is exactly `## Current system` . 
+        entry points, data flow). Title is exactly `## Current system`.
       - **Relationship to existing tech** (under Current system): How this work
         relates to what already exists. Use relations
         `reuse | extend | replace | boundary | retire` and always give a
@@ -130,9 +130,9 @@ artifacts:
       - **Open Questions**: Outstanding decisions or unknowns to resolve
 
       Visual identity (optional, UI only):
-      - A repository **visual DESIGN.md** means the google-labs design.md idea
-        (YAML tokens + prose identity for coding agents)—**not** change-local
-        `design.md`. 
+      - A repository **visual DESIGN.md** means the google-labs
+        `@google/design.md` idea (YAML tokens + prose identity for coding
+        agents)—**not** change-local `design.md`.
       - UI-facing changes: when a visual DESIGN.md exists, read and **cite** it
         from Current system or Relationship (pointer). Treat its tokens and
         Do's/Don'ts as visual constraints.
@@ -245,7 +245,7 @@ artifacts:
       - Start by analyzing which earlier tests were insufficient or not broad enough, then describe which tests this stage added or strengthened.
       - Include boundary, abnormal, failure, non-critical-path, integration, and cross-platform path risks where relevant.
       - Include deferred or manual coverage only with specific reasons.
-      - Make Test Hardening completion depend on the concrete status rows in the test plan tables, not on a standalone completion checkbox.
+      - Make Test Hardening completion depend on concrete testing/hardening status rows outside any `## Final Quality Gates` table, not on a standalone completion checkbox. Final-gate rows are evaluated separately after Test Hardening.
       - Use complete table statuses such as `covered`, `passed`, or `not applicable`; leave unfinished rows as `planned`, `failing`, or blank.
     requires:
       - execution-plan
@@ -256,5 +256,5 @@ apply:
   instruction: |
     Read context files, work through pending tasks, mark complete as you go.
     When implementation tasks are complete, continue into Test Hardening using `test-plan.md`.
-    Apply completion requires both all tasks complete and every concrete test/status row in test-plan.md complete.
+    Apply completion requires all tasks, every concrete Test Hardening row outside `## Final Quality Gates`, and every applicable final gate to be complete.
     Pause if you hit blockers, failing hardening tests, unresolved defects, ambiguous diff ownership, or unclear requirements.

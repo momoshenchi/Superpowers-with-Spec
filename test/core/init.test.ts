@@ -509,7 +509,7 @@ describe('InitCommand - profile and detection features', () => {
       featureFlags: {},
       profile: 'custom',
       delivery: 'both',
-      workflows: ['explore', 'new', 'apply'],
+      workflows: ['explore', 'new', 'apply', 'simplify', 'design-verify'],
     });
 
     // Override with --profile core
@@ -620,7 +620,7 @@ describe('InitCommand - profile and detection features', () => {
       featureFlags: {},
       profile: 'custom',
       delivery: 'both',
-      workflows: ['explore', 'new'],
+      workflows: ['explore', 'new', 'simplify', 'design-verify'],
     });
 
     const initCommand = new InitCommand({ tools: 'claude', force: true });
@@ -629,8 +629,15 @@ describe('InitCommand - profile and detection features', () => {
     // Custom profile skills should be created
     const exploreSkill = path.join(testDir, '.claude', 'skills', 'superpowers-explore', 'SKILL.md');
     const newChangeSkill = path.join(testDir, '.claude', 'skills', 'superpowers-new-change', 'SKILL.md');
+    const simplifySkill = path.join(testDir, '.claude', 'skills', 'superpowers-simplify', 'SKILL.md');
+    const designVerifySkill = path.join(testDir, '.claude', 'skills', 'superpowers-design-verify', 'SKILL.md');
     expect(await fileExists(exploreSkill)).toBe(true);
     expect(await fileExists(newChangeSkill)).toBe(true);
+    expect(await fileExists(simplifySkill)).toBe(true);
+    expect(await fileExists(designVerifySkill)).toBe(true);
+
+    expect(await fileExists(path.join(testDir, '.claude', 'commands', 'sp', 'simplify.md'))).toBe(true);
+    expect(await fileExists(path.join(testDir, '.claude', 'commands', 'sp', 'design-verify.md'))).toBe(true);
 
     // Non-selected skills should NOT be created
     const proposeSkill = path.join(testDir, '.claude', 'skills', 'superpowers-propose', 'SKILL.md');
@@ -666,7 +673,7 @@ describe('InitCommand - profile and detection features', () => {
       featureFlags: {},
       profile: 'custom',
       delivery: 'both',
-      workflows: ['explore', 'new'],
+      workflows: ['explore', 'new', 'simplify', 'design-verify'],
     });
 
     const initCommand = new InitCommand({ force: true });
