@@ -1,0 +1,127 @@
+---
+name: /sp-propose
+id: sp-propose
+category: Workflow
+description: Propose a new change - create it and generate all artifacts in one step
+---
+
+Propose a new change - create the change and generate all artifacts in one step.
+
+I'll create a change with artifacts:
+- proposal.md (what & why)
+- specs/<capability>/spec.md (requirements)
+- design.md (how)
+- tasks.md (progress checklist)
+- execution-plan.md (dispatch-unit coordination and final validation plan)
+- test-plan.md (pre-implementation coverage draft and post-implementation Test Hardening record)
+
+When ready to implement, run /sp:apply
+
+---
+
+**Input**: The argument after `/sp:propose` is the change name (kebab-case), OR a description of what the user wants to build.
+
+**Steps**
+
+1. **If no input provided, ask what they want to build**
+
+   Use the **AskUserQuestion tool** (open-ended, no preset options) to ask:
+   > "What change do you want to work on? Describe what you want to build or fix."
+
+   From their description, derive a kebab-case name (e.g., "add user authentication" → `add-user-auth`).
+
+   **IMPORTANT**: Do NOT proceed without understanding what the user wants to build.
+
+2. **Create the change directory**
+   ```bash
+   superpowers new change "<name>"
+   ```
+   This creates a scaffolded change at `superpowers/changes/<name>/` with `.superpowers.yaml`.
+
+3. **Get the artifact build order**
+   ```bash
+   superpowers status --change "<name>" --json
+   ```
+   Parse the JSON to get:
+   - `applyRequires`: array of artifact IDs needed before implementation (e.g., `["test-plan"]`)
+   - `artifacts`: list of all artifacts with their status and dependencies
+
+4. **Create artifacts in sequence until apply-ready**
+
+   Use the **TodoWrite tool** to track progress through the artifacts.
+
+   Loop through artifacts in dependency order (artifacts with no pending dependencies first):
+
+   a. **For each artifact that is `ready` (dependencies satisfied)**:
+      - Get instructions:
+        ```bash
+        superpowers instructions <artifact-id> --change "<name>" --json
+        ```
+      - The instructions JSON includes:
+        - `context`: Project background (constraints for you - do NOT include in output)
+        - `rules`: Artifact-specific rules (constraints for you - do NOT include in output)
+        - `template`: The structure to use for your output file
+        - `instruction`: Schema-specific guidance for this artifact type
+        - `outputPath`: Where to write the artifact
+        - `dependencies`: Completed artifacts to read for context
+      - Read any completed dependency files for context
+      - Create the artifact file using `template` as the structure
+      - Apply `context` and `rules` as constraints - but do NOT copy them into the file
+      - Show brief progress: "Created <artifact-id>"
+
+   b. **Continue until all `applyRequires` artifacts are complete**
+      - After creating each artifact, re-run `superpowers status --change "<name>" --json`
+      - Check if every artifact ID in `applyRequires` has `status: "done"` in the artifacts array
+      - Stop when all `applyRequires` artifacts are done
+
+   c. **If an artifact requires user input** (unclear context):
+      - Use **AskUserQuestion tool** to clarify
+      - Then continue with creation
+
+5. **Review the complete proposal before readiness**
+
+   After every `applyRequires` artifact is done, automatically follow the `superpowers-change-review` workflow:
+   - Inspect the completed proposal artifacts and present the complete review report before editing any artifact in response to findings.
+   - Repair every resolvable BLOCKER. WARNING findings are recommended repairs and do not block readiness by themselves.
+   - re-run review only after repairing one or more BLOCKERs. Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired.
+   - Keep SUGGESTION findings visible but non-blocking. Residual WARNING notes may remain visible when announcing readiness.
+   - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
+   - Do not create `review.md`, approval metadata, or a review artifact.
+
+6. **Show final status**
+   ```bash
+   superpowers status --change "<name>"
+   ```
+
+**Output**
+
+After completing all artifacts, summarize:
+- Change name and location
+- List of artifacts created with brief descriptions
+- What's ready: "Proposal review passed with no unresolved BLOCKERs after any required blocker repairs. Ready for implementation. Residual WARNING/SUGGESTION notes may remain visible."
+- Prompt: "Run `/sp:apply` to start implementing."
+
+**Artifact Creation Guidelines**
+
+- Follow the `instruction` field from `superpowers instructions` for each artifact type
+- The schema defines what each artifact should contain - follow it
+- Read dependency artifacts for context before creating new ones
+- Use `template` as the structure for your output file - fill in its sections
+- Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning `attachments/`; preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
+- **IMPORTANT**: `context` and `rules` are constraints for YOU, not content for the file
+  - Do NOT copy `<context>`, `<rules>`, `<project_context>` blocks into the artifact
+  - These guide what you write, but should never appear in the output
+
+**Guardrails**
+- Create ALL artifacts needed for implementation (as defined by schema's `apply.requires`)
+- Always read dependency artifacts before creating a new one
+- If context is critically unclear, ask the user - but prefer making reasonable decisions to keep momentum
+- If a change with that name already exists, ask if user wants to continue it or create a new one
+- Verify each artifact file exists after writing before proceeding to next
+
+**Dispatch Units in tasks.md**
+- Use `# <number>. <scope>` for each coherent dispatch unit; detailed checkbox tasks stay inside that block.
+- A dispatch unit is a logical allocation boundary, not a live subagent identity. Record assignee policy in `execution-plan.md` Dispatch Coordination. A coordinator may dispatch units separately, combine compatible units, or execute all units sequentially. Legacy `# <number>. agent<logical-id> — <scope>` headings remain acceptable.
+- Keep detailed tasks verifiable and ordered by dependency. In `execution-plan.md`, expand every detailed task into concrete Step 1–5 execution guidance under clean `### <number>. <scope>` headings while recording file ownership, dependencies, assignee policy, safe parallelism, and final validation.
+- Keep each dispatch unit coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
+- Follow DRY, YAGNI, TDD principles. Ensure frequent commits.
