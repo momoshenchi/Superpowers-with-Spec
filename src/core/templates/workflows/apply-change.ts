@@ -5,7 +5,7 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
-import { getCanonicalNonVisualSuiteInstructions, getFinalQualityGateInstructions } from './final-quality-gates.js';
+import { getCanonicalNonVisualSuiteInstructions, getFinalQualityGateInstructions, getManualCoverageInstructions } from './final-quality-gates.js';
 
 export function getApplyChangeSkillTemplate(): SkillTemplate {
   return {
@@ -100,6 +100,8 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Mark the relevant table rows complete only after evidence exists and no hardening failures or unresolved defects remain.
 
 ${getCanonicalNonVisualSuiteInstructions('Test Hardening')}
+
+${getManualCoverageInstructions('Test Hardening')}
 
 8. **Run final quality gates**
 
@@ -306,6 +308,8 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
    - Mark the relevant table rows complete only after evidence exists and no hardening failures or unresolved defects remain.
 
 ${getCanonicalNonVisualSuiteInstructions('Test Hardening')}
+
+${getManualCoverageInstructions('Test Hardening')}
 
 8. **Run final quality gates**
 

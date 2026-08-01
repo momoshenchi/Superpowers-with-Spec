@@ -39,23 +39,23 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getExploreSkillTemplate: '4cf1f0a23da5234a5e3d2ee4bfa9b3e83ac9289bcc470b8cdb271f6a087ad023',
   getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
   getContinueChangeSkillTemplate: 'a20b37ab5f70315351edbd4883fe6031a844cf8c067943379c70cadb23610f4a',
-  getApplyChangeSkillTemplate: '20678e0c3f9975a0ff3f6c2a8f4bdb36b80f5afcc49653bbf22ef0fcde6cc336',
+  getApplyChangeSkillTemplate: '06514c34b05e89a50cb32f07ba140483690b13207ff874768c78cb0962f001df',
   getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'cb44c89f7b66c3991134b0f4b2d04c591deccdf3c92ce255af6b0caabcdfa86f',
   getSpExploreCommandTemplate: '35ad7b98f94d71af061571dd03bb42d1bc7ceaa3d7b850ec51cb245c3cc9aafa',
   getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
   getSpContinueCommandTemplate: '6d77d9c35d82ffed073692445237d0e0af38bb47e5a8ac546f2dfca7b7b38e94',
-  getSpApplyCommandTemplate: 'd63a628ad1804b6b8122ae5fe6845299f9b8250b49cc5147f0f09410a4137429',
+  getSpApplyCommandTemplate: '74b0e08975d1500101718c14c63539b7761115541ed2cae4f03d99a588c908b3',
   getSpFfCommandTemplate: 'a1f27b1120565937907ed8bd7209bfd3682e23aa07cc1b4da0a501bd8cd8d158',
   getArchiveChangeSkillTemplate: 'aadb596f4c1787809290603f7bd02d0fdfec40489fde03c5f0b40048682d33d1',
   getBulkArchiveChangeSkillTemplate: '5f80cc40af4beb29180d7a0266dc6aa21d62ee1826182623d21acbb35e8d376c',
   getSpSyncCommandTemplate: 'cc1ff958f3b66201e1b044c5fc4ab74c542d22520a8ab6338cf24bc50937aeb4',
-  getVerifyChangeSkillTemplate: '47e798b886df4c3419bf7b71bde5933c94664afac9903d3681ad51fcb383b12c',
+  getVerifyChangeSkillTemplate: '60d668e45b32c78b63fd3d99c9a0e4172466d0b49bf2611f91c3030900ba5b35',
   getSpArchiveCommandTemplate: 'a6d8bbbfd0de892f525e720bd1b32d5f8ec548ad27bfab7df4f803137180d3d0',
   getSpOnboardCommandTemplate: '0367f6a87f32d992e6bd7e2413cef097d77bc4ac791bc92c89d4df0ae7892e60',
   getSpBulkArchiveCommandTemplate: 'f8ad96bf71f2c8e5c5c24d31d25054974e24219ee910aa1ddee25ce9f3c843c1',
-  getSpVerifyCommandTemplate: '6c920393a299e7f009d5e9520067c99b0f4c9ae79e1563a4e874e3fe500f3871',
+  getSpVerifyCommandTemplate: '178a00e25dd2bb7ae08c8a20e44159e7fef28313629fb14f45553638e478de12',
   getSimplifySkillTemplate: '3e338ee9e88ad981381987b7f5e306a8082e9bdf5546c99168b3482c983dc065',
   getSpSimplifyCommandTemplate: '25777147317cf11bc9e5818d13ecac123f2912059b4913e3b72a163e301191a9',
   getDesignVerifySkillTemplate: '30a13aa0afc2aa73e37089fbd6842cb20ffef6805896a3952f791fea062057f5',
@@ -63,25 +63,25 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getSpProposeSkillTemplate: '2258417dde2da1c72b26af514be652c2ba9d553bc76d566a918d7f39dd2fe769',
   getSpProposeCommandTemplate: '4036943fd64207a52f3cac25adb4d62c7ae9d3dd320f1a639ef26e7272af19b0',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
-  getChangeReviewSkillTemplate: 'fbe723dfab1a8510156147c6276d8fd45275bfef62b73cb4c9a0cae4d4e08d2c',
-  getSpReviewCommandTemplate: 'a720f30a406778b7271657b21e3cb2eaaba77203eaa1598314d17dcf959c47ee',
+  getChangeReviewSkillTemplate: '8ec91991af7de4f6ce371725a84d182f02b0043e1c0acce57a80b3bc8f4a9d55',
+  getSpReviewCommandTemplate: '97f01b2f7230389b09622606e966fb421cc2ede93e3e30a7e8c35e5807183153',
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-explore': 'a2b1df6784a1712104e6bf6fca58c571488cc156ce10beb135e03c8bcb7699c3',
   'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
   'superpowers-continue-change': '2c2576679add3482c5f871493d490351baa300f3eee571f8706f3911dac7c7ef',
-  'superpowers-apply-change': '59c225170ec7ec24bf0da24efabfb6f06d360e9ea84295fae80b4b8a9d6daaf1',
+  'superpowers-apply-change': '542e670af01e3efc0b267f95756ea3f8edd6b7e04271057eb8c181ac5fff5de9',
   'superpowers-ff-change': '0ceb62124b4b26a9fe00edcff8576d1e27bb00197794ca4228ab61534a18a299',
   'superpowers-sync-specs': '54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2',
   'superpowers-archive-change': 'a50623f1936b93f63d405038cc05bdd04fbe4c0c51b0dc9bf0d64c79a8822920',
   'superpowers-bulk-archive-change': '62e0d64f3b80cf3f7c29073dcd4842c00a2c55d139eb3f7b52bdd3aa59cfecd0',
-  'superpowers-verify-change': '8639930ef05b6a516d855cbcddf69ffe19ad8607c8727e6c15d67865c48c6cb3',
+  'superpowers-verify-change': '87fd4c84edc905a7b44ce5af943525b3f0e47ae6662bd934c2ee715d0852fec3',
   'superpowers-simplify': '421dc20215029e28e5731337ddf39b2c3d7dd645b432be6b6a0c2a4c59f877f6',
   'superpowers-design-verify': 'c1a12547d66e22af0800f7ee77332e83ebb29fa1d37931a23be1e60e41ca99ce',
   'superpowers-onboard': '1e40083eae207872b397d141c4f2660e9d8ec3a705f46ab6a0e2b3a0facab580',
   'superpowers-propose': 'd85f336ca1e7afba60bc27e88a0a193de1574b775c128fe6bce90a92f7cff477',
-  'superpowers-change-review': '93f0703abdc077c3ac321b0fcffd5aada0cdb2f4751adb290a30af90817fe8a7',
+  'superpowers-change-review': '98accc62e59f5f4ceabe127204052a58b0ef597f02816a2ccbdb10a7a6667618',
 };
 
 function stableStringify(value: unknown): string {
@@ -183,6 +183,11 @@ describe('skill templates split parity', () => {
       expect(content).toContain('Failing hardening tests or unresolved product defects block apply completion');
       expect(content).toContain('Test Hardening Summary');
       expect(content).toContain('Test Hardening status separately from implementation progress');
+      expect(content).toContain('## Manual Coverage');
+      expect(content).toContain('every concrete Manual Coverage status row');
+      expect(content).toContain('## Deferred Coverage');
+      expect(content).toContain('Deferred Coverage is not execution evidence');
+      expect(content).toContain('unexecuted, failed, or blocked applicable manual row');
       expect(content).toContain('complete canonical non-visual suite');
       expect(content).toContain('Host-native code review');
       expect(content).toContain('Simplify (one pass, then Verify)');
@@ -276,6 +281,14 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('relevant console/network failure is `failed`');
     expect(verify).toContain('makes both Correctness and the overall Verify outcome');
     expect(verify).toContain('resolve the E2E outcome before archiving');
+    expect(verify).toContain('## Manual Coverage');
+    expect(verify).toContain('After the canonical non-visual preflight');
+    expect(verify).toContain('execute every applicable Manual Coverage row');
+    expect(verify).toContain('through its normal entry point');
+    expect(verify).toContain('method/environment, actions, observed outcome, and inspectable evidence');
+    expect(verify).toContain('unexecuted, failed, or blocked');
+    expect(verify).toContain('Deferred Coverage is not execution evidence');
+    expect(verify).toContain('Manual Coverage status');
     expect(verify).toContain('**Final-quality Verify retries**');
     expect(verify).toContain('Verify round 1');
     expect(verify).toContain('every attempt, including a retry, uses a fresh subagent');

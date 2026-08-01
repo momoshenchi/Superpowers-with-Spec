@@ -1130,11 +1130,17 @@ Test Hardening is complete when every concrete test/status row in the tables bel
 | --- | --- | --- | --- |
 | <!-- Requirement: Scenario --> | <!-- unit / integration / E2E / manual / not applicable --> | <!-- planned / covered / passed / failing / not applicable --> | <!-- test file, command, or rationale --> |
 
-## Deferred Or Manual Coverage
+## Manual Coverage
+
+| Check / Scenario | Execution Method and Environment | Status | Evidence |
+| --- | --- | --- | --- |
+| <!-- concrete manual check --> | <!-- normal entry point, method, and safe environment --> | <!-- planned / passed / failed / blocked / not applicable --> | <!-- command, steps, observed outcome, and inspectable evidence --> |
+
+## Deferred Coverage
 
 | Gap | Reason Deferred | Safer Alternative / Follow-Up |
 | --- | --- | --- |
-| <!-- coverage gap --> | <!-- specific technical or scope reason --> | <!-- manual verification, narrower automated check, or follow-up --> |
+| <!-- coverage gap --> | <!-- specific technical or scope reason --> | <!-- safer alternative or follow-up --> |
 `;
 
     default:

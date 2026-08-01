@@ -244,7 +244,9 @@ artifacts:
       - Include a requirement/scenario coverage matrix with unit, integration, E2E, manual, or not-applicable coverage decisions.
       - Start by analyzing which earlier tests were insufficient or not broad enough, then describe which tests this stage added or strengthened.
       - Include boundary, abnormal, failure, non-critical-path, integration, and cross-platform path risks where relevant.
-      - Include deferred or manual coverage only with specific reasons.
+      - Put executable manual checks in a `## Manual Coverage` table with Check / Scenario, Execution Method and Environment, Status, and Evidence columns.
+      - Put intentionally postponed work in a separate `## Deferred Coverage` table with a specific reason and safer alternative or follow-up; deferred rows are not execution evidence.
+      - Treat every concrete Manual Coverage status row as incomplete while it is `planned`, `failing`, `blocked`, blank, or a placeholder; only `passed` or scope-backed `not applicable` completes it.
       - Make Test Hardening completion depend on concrete testing/hardening status rows outside any `## Final Quality Gates` table, not on a standalone completion checkbox. Final-gate rows are evaluated separately after Test Hardening.
       - Use complete table statuses such as `covered`, `passed`, or `not applicable`; leave unfinished rows as `planned`, `failing`, or blank.
     requires:
@@ -257,4 +259,5 @@ apply:
     Read context files, work through pending tasks, mark complete as you go.
     When implementation tasks are complete, continue into Test Hardening using `test-plan.md`.
     Apply completion requires all tasks, every concrete Test Hardening row outside `## Final Quality Gates`, and every applicable final gate to be complete.
+    During Test Hardening, read `## Manual Coverage` separately from `## Deferred Coverage`, execute each applicable manual row through its stated method, and record status plus inspectable evidence. An applicable manual row that is unexecuted, failed, or blocked keeps hardening incomplete; deferred rows must never be counted as executed checks.
     Pause if you hit blockers, failing hardening tests, unresolved defects, ambiguous diff ownership, or unclear requirements.

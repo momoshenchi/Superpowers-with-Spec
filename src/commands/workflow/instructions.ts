@@ -400,7 +400,7 @@ export async function generateApplyInstructions(
       state = 'ready';
       instruction = [
         'All implementation tasks are complete. Continue into Test Hardening before claiming apply completion.',
-        `Read \`${testPlanArtifact.generates}\` and treat Test Hardening as complete only when every concrete test/status row in the test plan tables is complete.`,
+        `Read \`${testPlanArtifact.generates}\` and treat Test Hardening as complete only when every concrete testing/hardening status row outside \`## Final Quality Gates\` is complete, including required \`## Manual Coverage\` rows; \`## Deferred Coverage\` is not execution evidence.`,
         'Use completed statuses such as `covered`, `passed`, or `not applicable`; `planned`, `failing`, blank, or placeholder rows keep hardening incomplete.',
         'Analyze which earlier tests were insufficient or not broad enough, add feasible missing tests, document what this stage strengthened, and pause if unrelated changes make the hardening scope ambiguous.',
         'Failing hardening tests or unresolved product defects block apply completion; fix them or pause as blocked before marking the related table rows complete.',
@@ -438,16 +438,41 @@ export async function generateApplyInstructions(
 function isTestPlanComplete(content: string): boolean {
   const lines = content.split(/\r?\n/);
   let sawConcreteStatusRow = false;
+  let currentSection = '';
 
   for (let index = 0; index < lines.length; index += 1) {
+    const sectionMatch = /^##\s+(.+?)\s*$/.exec(lines[index].trim());
+    if (sectionMatch) {
+      currentSection = normalizeTableCell(sectionMatch[1]);
+      continue;
+    }
+
     const headerCells = parseMarkdownTableRow(lines[index]);
     if (!headerCells) continue;
 
     const separatorCells = parseMarkdownTableRow(lines[index + 1] ?? '');
     if (!separatorCells || !separatorCells.every(isSeparatorCell)) continue;
 
+    if (currentSection === 'final quality gates') continue;
+
     const statusIndex = headerCells.findIndex((cell) => normalizeTableCell(cell) === 'status');
-    if (statusIndex === -1) continue;
+    const isManualCoverageTable = currentSection === 'manual coverage';
+    if (statusIndex === -1) {
+      if (isManualCoverageTable) return false;
+      continue;
+    }
+
+    const requiredManualColumnIndexes = isManualCoverageTable
+      ? [
+          headerCells.findIndex((cell) => normalizeTableCell(cell) === 'check / scenario'),
+          headerCells.findIndex(
+            (cell) => normalizeTableCell(cell) === 'execution method and environment'
+          ),
+          statusIndex,
+          headerCells.findIndex((cell) => normalizeTableCell(cell) === 'evidence'),
+        ]
+      : [];
+    if (requiredManualColumnIndexes.some((columnIndex) => columnIndex === -1)) return false;
 
     index += 2;
     while (index < lines.length) {
@@ -457,6 +482,15 @@ function isTestPlanComplete(content: string): boolean {
       if (isPlaceholderRow(rowCells)) {
         index += 1;
         continue;
+      }
+
+      if (
+        requiredManualColumnIndexes.some((columnIndex) => {
+          const value = normalizeTableCell(rowCells[columnIndex] ?? '');
+          return value === '' || value.includes('placeholder');
+        })
+      ) {
+        return false;
       }
 
       const status = normalizeTableCell(rowCells[statusIndex] ?? '');

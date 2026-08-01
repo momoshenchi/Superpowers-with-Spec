@@ -236,11 +236,18 @@ The recommended completion flow:
 
 `/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass discovers and runs the complete canonical non-visual suite from scripts, CI, test documentation, and the test plan; it records authority, commands, results, and excluded visual-only checks. After hardening, apply delegates host-native final code review (or a labelled equivalent fallback), `/sp:simplify`, `/sp:verify`, and `/sp:design-verify`—in that order—to fresh, distinct subagents, awaiting and integrating each report before starting the next. These gates are mandatory inside apply even if their standalone workflows are not selected; a host unable to launch a gate worker blocks completion.
 
+The `test-plan.md` coverage tables distinguish checks that must be executed from gaps that are intentionally deferred:
+
+- `## Manual Coverage` lists every applicable manual or runtime check with its normal entry point, method and safe environment, status, and inspectable evidence. Test Hardening must execute each applicable row after the canonical preflight and record the actions, observed outcome, and evidence. Blank, placeholder, `planned`, failed, or blocked rows keep hardening incomplete; `not applicable` needs concrete scope evidence.
+- `## Deferred Coverage` records a gap, why it is deferred, and a safer alternative or follow-up. A deferred row is planning information only and never counts as execution evidence or a passing check.
+
 Final gates use bounded, local retries. `P0` is the same severity as Verify `CRITICAL`; review repairs every resolvable finding and only repeats with a fresh reviewer when the round contains P0. `P1` and `P2` are repaired and recorded in the current round but do not themselves trigger another review. `BLOCKER` is neither P0 nor P1: it is a missing prerequisite or external decision that pauses immediately without consuming a round. Code review, Verify, and Design verify each allow at most four numbered fresh-worker rounds; a remaining P0 or failed check in round four is terminal. Simplify has no retry loop: a safe cleanup proceeds to Verify round one. Verify retries from Verify and Design verify retries from Design verify, rather than restarting all gates from review.
 
 #### Verify: Check Your Work
 
 `/sp:verify` validates implementation against your artifacts across three dimensions. It reruns the canonical non-visual suite before applicable runnable journey E2E. Browser journeys must use real UI input rather than API-only substitutes and retain inspectable driver, route, DOM/response, console/network, and useful screenshot evidence; source inspection, screenshots, and manual confidence alone do not substitute for E2E evidence.
+
+After that canonical preflight, Verify executes every applicable row in `## Manual Coverage` through the stated normal entry point, method, and safe environment. Each row receives a status (`passed`, `failed`, `blocked`, or scope-backed `not applicable`) plus method/environment, actions, observed outcome, and inspectable evidence. An unexecuted, failed, or blocked applicable row blocks Verify; entries under `## Deferred Coverage` are not substitutes. In apply's final-quality loop, a repairable manual failure retries from Verify within the four-round limit, while `BLOCKER` pauses without consuming a round.
 
 ```text
 You: /sp:verify

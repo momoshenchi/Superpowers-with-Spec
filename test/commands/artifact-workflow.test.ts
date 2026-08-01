@@ -70,6 +70,12 @@ describe('artifact-workflow CLI commands', () => {
       '| Surface | Cases Attacked | Coverage Decision | Status |',
       '| --- | --- | --- | --- |',
       '| Apply state | Complete task list with table-complete test plan | automated | passed |',
+      '',
+      '## Manual Coverage',
+      '',
+      '| Check / scenario | Execution method and environment | Status | Evidence |',
+      '| --- | --- | --- | --- |',
+      '| Generated workflow verification | Focused Vitest in repository workspace | passed | 7 tests passed |',
     ].join('\n');
   }
 
@@ -939,7 +945,11 @@ describe('artifact-workflow CLI commands', () => {
       expect(json.state).toBe('ready');
       expect(json.progress).toEqual({ total: 2, complete: 2, remaining: 0 });
       expect(json.instruction).toContain('Continue into Test Hardening');
-      expect(json.instruction).toContain('every concrete test/status row');
+      expect(json.instruction).toContain(
+        'every concrete testing/hardening status row outside `## Final Quality Gates`'
+      );
+      expect(json.instruction).toContain('## Manual Coverage');
+      expect(json.instruction).toContain('`## Deferred Coverage` is not execution evidence');
       expect(json.instruction).toContain('planned');
       expect(json.instruction).toContain('earlier tests were insufficient');
       expect(json.instruction).toContain('Failing hardening tests');
@@ -967,6 +977,57 @@ describe('artifact-workflow CLI commands', () => {
       expect(result.stdout).toContain('complete ✓');
       expect(result.stdout).toContain('implementation tasks and Test Hardening are complete');
     });
+
+    it('does not count planned Final Quality Gates rows as unfinished Test Hardening', async () => {
+      const changeDir = await createTestChange('hardened-before-final-gates', [
+        'proposal',
+        'design',
+        'specs',
+        'tasks',
+        'execution-plan',
+        'test-plan',
+      ]);
+      await fs.writeFile(path.join(changeDir, 'tasks.md'), '## Tasks\n- [x] Task 1');
+      await fs.writeFile(
+        path.join(changeDir, 'test-plan.md'),
+        `${completeTestPlanContent()}\n\n## Final Quality Gates\n\n| Gate | Status | Evidence |\n| --- | --- | --- |\n| Verify | planned | Awaiting worker |`
+      );
+
+      const result = await runCLI(
+        ['instructions', 'apply', '--change', path.basename(changeDir)],
+        { cwd: tempDir }
+      );
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout).toContain('implementation tasks and Test Hardening are complete');
+    });
+
+    it.each([
+      ['planned', 'pending execution'],
+      ['failed', 'focused test failed'],
+      ['blocked', 'safe runtime unavailable'],
+      ['passed', ''],
+    ])(
+      'keeps apply in Test Hardening while a Manual Coverage row is %s with evidence %j',
+      async (status, evidence) => {
+        const changeDir = await createTestChange(
+          `manual-coverage-${status}-${evidence ? 'evidence' : 'no-evidence'}`,
+          ['proposal', 'design', 'specs', 'tasks', 'execution-plan', 'test-plan']
+        );
+        await fs.writeFile(path.join(changeDir, 'tasks.md'), '## Tasks\n- [x] Task 1');
+        const pendingPlan = completeTestPlanContent().replace(
+          '| Generated workflow verification | Focused Vitest in repository workspace | passed | 7 tests passed |',
+          `| Generated workflow verification | Focused Vitest in repository workspace | ${status} | ${evidence} |`
+        );
+        await fs.writeFile(path.join(changeDir, 'test-plan.md'), pendingPlan);
+
+        const result = await runCLI(
+          ['instructions', 'apply', '--change', path.basename(changeDir)],
+          { cwd: tempDir }
+        );
+        expect(result.exitCode).toBe(0);
+        expect(result.stdout).toContain('Continue into Test Hardening');
+      }
+    );
 
     it('uses spec-driven schema apply configuration', async () => {
       // Create a spec-driven style change with all artifacts

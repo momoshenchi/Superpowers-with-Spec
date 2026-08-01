@@ -12,6 +12,17 @@ export function getCanonicalNonVisualSuiteInstructions(stage: 'Test Hardening' |
 `;
 }
 
+export function getManualCoverageInstructions(stage: 'Test Hardening' | 'verify'): string {
+  return `
+**Manual Coverage execution (${stage})**
+
+- Read the active \`test-plan.md\` \`## Manual Coverage\` table separately from \`## Deferred Coverage\`. A Manual Coverage row is an executable check. Deferred Coverage is not execution evidence and must not be reported as passed or run.
+- After the canonical non-visual preflight, execute every applicable Manual Coverage row through its stated normal entry point, method, and safe environment. Record the performed steps, method/environment, actions, observed outcome, and inspectable evidence in the row or report.
+- Treat every concrete Manual Coverage status row as required coverage. Classify each concrete Manual Coverage row as \`passed\`, \`failed\`, \`blocked\`, or scope-backed \`not applicable\`. An unexecuted, blank, \`planned\`, or placeholder row is incomplete. Any unexecuted, failed, or blocked applicable manual row prevents ${stage} from passing; name remediation or the missing prerequisite rather than guessing.
+- Do not move a required manual row into Deferred Coverage merely to avoid execution. Use \`not applicable\` only with concrete scope evidence and use Deferred Coverage only for intentionally postponed work with a specific reason and safer follow-up.
+- When this is final-quality Verify, a Manual Coverage \`BLOCKER\` is an immediate \`blocked\` outcome and does not consume the Verify retry round; a repairable manual failure retries from Verify under the existing four-round limit.`;
+}
+
 export function getFinalQualityGateInstructions(): string {
   return `
 ## Final Quality Gates

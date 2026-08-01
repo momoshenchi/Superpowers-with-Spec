@@ -5,7 +5,7 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
-import { getCanonicalNonVisualSuiteInstructions } from './final-quality-gates.js';
+import { getCanonicalNonVisualSuiteInstructions, getManualCoverageInstructions } from './final-quality-gates.js';
 
 const e2eAcceptanceInstructions = `   **End-to-end acceptance**:
    - Classify changed requirements/scenarios as runnable user, browser, or end-to-end journeys.
@@ -91,6 +91,8 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 6. **Verify Correctness**
 
 ${getCanonicalNonVisualSuiteInstructions('verify')}
+
+${getManualCoverageInstructions('verify')}
 
    **Requirement Implementation Mapping**:
    - For each requirement from delta specs:
@@ -269,6 +271,8 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
 6. **Verify Correctness**
 
 ${getCanonicalNonVisualSuiteInstructions('verify')}
+
+${getManualCoverageInstructions('verify')}
 
    **Requirement Implementation Mapping**:
    - For each requirement from delta specs:

@@ -233,6 +233,12 @@ describe('instruction-loader', () => {
       expect(instructions.template).toContain('planned / covered / passed / failing / not applicable');
       expect(instructions.template).not.toContain('Test Hardening complete');
       expect(instructions.template).toContain('Requirement And Scenario Coverage Matrix');
+      expect(instructions.template).toContain('## Manual Coverage');
+      expect(instructions.template).toContain('Execution Method and Environment');
+      expect(instructions.template).toContain('Status');
+      expect(instructions.template).toContain('Evidence');
+      expect(instructions.template).toContain('## Deferred Coverage');
+      expect(instructions.template).not.toContain('## Deferred Or Manual Coverage');
       expect(instructions.template).not.toContain('Verification Commands');
       expect(instructions.template).not.toContain('Actual Diff Audit');
     });
