@@ -6,6 +6,7 @@
  */
 
 import path from 'path';
+import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 import ora from 'ora';
 import * as fs from 'fs';
@@ -50,6 +51,7 @@ import {
 
 const require = createRequire(import.meta.url);
 const { version: SUPERPOWERS_VERSION } = require('../../package.json');
+const OBSOLETE_BUNDLED_SKILL_DIRS = ['requesting-code-review'] as const;
 
 /**
  * Options for the update command.
@@ -117,6 +119,21 @@ export class UpdateCommand {
     if (configuredTools.length === 0 && newlyConfiguredTools.length === 0) {
       console.log(chalk.yellow('No configured tools found.'));
       console.log(chalk.dim('Run "superpowers init" to set up tools.'));
+      return;
+    }
+
+    // Bundled static skills are independent of generated workflow versioning.
+    // Refresh every configured tool before smart-update detection so renamed
+    // skills and obsolete installed directories migrate even in mixed-version
+    // or commands-only installations.
+    const staticRefreshFailures = await this.refreshBundledStaticSkills(
+      resolvedProjectPath,
+      configuredTools
+    );
+    if (staticRefreshFailures.length > 0) {
+      console.log(chalk.red(`✗ Failed to refresh bundled skills: ${staticRefreshFailures.join(', ')}`));
+      this.detectNewTools(resolvedProjectPath, configuredTools);
+      this.displayExtraWorkflowsNote(resolvedProjectPath, configuredTools, desiredWorkflows);
       return;
     }
 
@@ -392,6 +409,46 @@ export class UpdateCommand {
     }
 
     return removed;
+  }
+
+  /**
+   * Refreshes repository-bundled static skills independently of generated workflows.
+   */
+  private async copyBundledStaticSkills(projectPath: string, toolSkillsDir: string): Promise<void> {
+    const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+    const bundledSkillsDir = path.join(pkgRoot, 'skills');
+    if (!fs.existsSync(bundledSkillsDir)) return;
+
+    const destSkillsDir = path.join(projectPath, toolSkillsDir, 'skills');
+    for (const obsoleteDirName of OBSOLETE_BUNDLED_SKILL_DIRS) {
+      await fs.promises.rm(path.join(destSkillsDir, obsoleteDirName), {
+        recursive: true,
+        force: true,
+      });
+    }
+
+    await fs.promises.mkdir(destSkillsDir, { recursive: true });
+    await fs.promises.cp(bundledSkillsDir, destSkillsDir, { recursive: true });
+  }
+
+  private async refreshBundledStaticSkills(
+    projectPath: string,
+    toolIds: readonly string[]
+  ): Promise<string[]> {
+    const failures: string[] = [];
+
+    for (const toolId of toolIds) {
+      const tool = AI_TOOLS.find((candidate) => candidate.value === toolId);
+      if (!tool?.skillsDir) continue;
+
+      try {
+        await this.copyBundledStaticSkills(projectPath, tool.skillsDir);
+      } catch (error) {
+        failures.push(`${tool.name}: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+
+    return failures;
   }
 
   /**
@@ -684,6 +741,8 @@ export class UpdateCommand {
             }
           }
         }
+
+        await this.copyBundledStaticSkills(projectPath, tool.skillsDir);
 
         spinner.succeed(`Setup complete for ${tool.name}`);
         newlyConfigured.push(toolId);

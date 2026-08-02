@@ -191,6 +191,25 @@ Old instructions content
         expect(exists).toBe(false);
       }
     });
+
+    it('should refresh bundled static skills and remove the obsolete review skill', async () => {
+      const skillsDir = path.join(testDir, '.claude', 'skills');
+      const generatedSkillDir = path.join(skillsDir, 'superpowers-explore');
+      const obsoleteReviewSkillDir = path.join(skillsDir, 'requesting-code-review');
+      await fs.mkdir(generatedSkillDir, { recursive: true });
+      await fs.writeFile(path.join(generatedSkillDir, 'SKILL.md'), 'old');
+      await fs.mkdir(obsoleteReviewSkillDir, { recursive: true });
+      await fs.writeFile(path.join(obsoleteReviewSkillDir, 'SKILL.md'), 'obsolete');
+
+      await updateCommand.execute(testDir);
+
+      expect(
+        await FileSystemUtils.fileExists(
+          path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
+        )
+      ).toBe(true);
+      expect(await FileSystemUtils.directoryExists(obsoleteReviewSkillDir)).toBe(false);
+    });
   });
 
   describe('command updates', () => {
@@ -297,6 +316,17 @@ Old instructions content
         'utf-8'
       );
       expect(cursorSkill).toContain('name: superpowers-explore');
+
+      for (const skillsDir of [claudeSkillsDir, cursorSkillsDir]) {
+        expect(
+          await FileSystemUtils.fileExists(
+            path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
+          )
+        ).toBe(true);
+        expect(
+          await FileSystemUtils.directoryExists(path.join(skillsDir, 'requesting-code-review'))
+        ).toBe(false);
+      }
 
       consoleSpy.mockRestore();
     });
@@ -606,6 +636,104 @@ Old instructions content
       );
 
       consoleSpy.mockRestore();
+    });
+
+    it('should refresh bundled static skills before the up-to-date early return', async () => {
+      const initCommand = new InitCommand({ tools: 'claude', force: true });
+      await initCommand.execute(testDir);
+
+      const skillsDir = path.join(testDir, '.claude', 'skills');
+      const obsoleteReviewSkill = path.join(skillsDir, 'requesting-code-review');
+      await fs.mkdir(obsoleteReviewSkill, { recursive: true });
+      await fs.writeFile(path.join(obsoleteReviewSkill, 'SKILL.md'), 'obsolete');
+
+      await updateCommand.execute(testDir);
+
+      expect(await FileSystemUtils.directoryExists(obsoleteReviewSkill)).toBe(false);
+      expect(
+        await FileSystemUtils.fileExists(
+          path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
+        )
+      ).toBe(true);
+    });
+
+    it('should refresh bundled static skills for commands-only up-to-date tools', async () => {
+      setMockConfig({
+        featureFlags: {},
+        profile: 'core',
+        delivery: 'commands',
+      });
+      const initCommand = new InitCommand({ tools: 'claude', force: true });
+      await initCommand.execute(testDir);
+
+      const skillsDir = path.join(testDir, '.claude', 'skills');
+      const obsoleteReviewSkill = path.join(skillsDir, 'requesting-code-review');
+      await fs.mkdir(obsoleteReviewSkill, { recursive: true });
+      await fs.writeFile(path.join(obsoleteReviewSkill, 'SKILL.md'), 'obsolete');
+
+      await updateCommand.execute(testDir);
+
+      expect(await FileSystemUtils.directoryExists(obsoleteReviewSkill)).toBe(false);
+      expect(
+        await FileSystemUtils.fileExists(
+          path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
+        )
+      ).toBe(true);
+    });
+
+    it('should refresh bundled static skills for every up-to-date configured tool', async () => {
+      const initCommand = new InitCommand({ tools: 'claude,cursor', force: true });
+      await initCommand.execute(testDir);
+
+      for (const toolRoot of ['.claude', '.cursor']) {
+        const obsoleteReviewSkill = path.join(
+          testDir,
+          toolRoot,
+          'skills',
+          'requesting-code-review'
+        );
+        await fs.mkdir(obsoleteReviewSkill, { recursive: true });
+        await fs.writeFile(path.join(obsoleteReviewSkill, 'SKILL.md'), 'obsolete');
+      }
+
+      await updateCommand.execute(testDir);
+
+      for (const toolRoot of ['.claude', '.cursor']) {
+        const skillsDir = path.join(testDir, toolRoot, 'skills');
+        expect(
+          await FileSystemUtils.directoryExists(path.join(skillsDir, 'requesting-code-review'))
+        ).toBe(false);
+        expect(
+          await FileSystemUtils.fileExists(
+            path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
+          )
+        ).toBe(true);
+      }
+    });
+
+    it('should refresh static skills for up-to-date tools in a mixed-version update', async () => {
+      const initCommand = new InitCommand({ tools: 'claude,cursor', force: true });
+      await initCommand.execute(testDir);
+
+      const claudeSkillsDir = path.join(testDir, '.claude', 'skills');
+      await fs.writeFile(
+        path.join(claudeSkillsDir, 'superpowers-explore', 'SKILL.md'),
+        `---\nmetadata:\n  generatedBy: "0.1.0"\n---\nold version\n`
+      );
+
+      const cursorSkillsDir = path.join(testDir, '.cursor', 'skills');
+      const cursorObsoleteReviewSkill = path.join(cursorSkillsDir, 'requesting-code-review');
+      await fs.mkdir(cursorObsoleteReviewSkill, { recursive: true });
+      await fs.writeFile(path.join(cursorObsoleteReviewSkill, 'SKILL.md'), 'obsolete');
+
+      await updateCommand.execute(testDir);
+
+      expect(await FileSystemUtils.directoryExists(cursorObsoleteReviewSkill)).toBe(false);
+      expect(
+        await FileSystemUtils.fileExists(
+          path.join(cursorSkillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
+        )
+      ).toBe(true);
     });
 
     it('should detect update needed when generatedBy is missing', async () => {

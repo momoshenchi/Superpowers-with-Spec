@@ -15,8 +15,10 @@ Superpowers helps you and your AI coding assistant agree on what to build before
 **Expanded path (custom workflow selection):**
 
 ```text
-/sp:new ──► /sp:ff or /sp:continue ──► /sp:apply ──► /sp:verify ──► /sp:archive
+/sp:new ──► /sp:ff or /sp:continue ──► /sp:apply ──► /sp:archive
 ```
+
+`/sp:apply` performs Test Hardening and its final code review, Simplify, Verify, and Design Verify gates. Use standalone `/sp:verify` only for an explicit independent diagnostic or work completed outside Apply.
 
 The default global profile is `core`, which includes `propose`, `explore`, `apply`, and `archive`. You can enable the expanded workflow commands with `superpowers config profile` and then `superpowers update`.
 

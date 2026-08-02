@@ -11,6 +11,10 @@ Code review requires technical evaluation, not emotional performance.
 
 **Core principle:** Verify before implementing. Ask before assuming. Technical correctness over social comfort.
 
+## Workflow Boundary
+
+Use this skill as the coordinator's feedback-evaluation protocol after a reviewer reports findings. It is not a code-review worker or an additional final-quality gate: it does not dispatch review, set Apply retry policy, or replace host-native code review. Evaluate each finding against the codebase and requirements, repair accepted findings in the coordinator context, and run targeted verification before reporting resolution.
+
 ## The Response Pattern
 
 ```
@@ -147,4 +151,3 @@ You understand 1,2,3,6. Unclear on 4,5.
 ## GitHub Thread Replies
 
 When replying to inline review comments on GitHub, reply in the comment thread (`gh api repos/{owner}/{repo}/pulls/{pr}/comments/{id}/replies`), not as a top-level PR comment.
-

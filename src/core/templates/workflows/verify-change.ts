@@ -20,8 +20,15 @@ const e2eAcceptanceInstructions = `   **End-to-end acceptance**:
 const finalQualityRetryInstructions = `   **Final-quality Verify retries**:
    - When Verify is delegated by \`/sp:apply\`, label the report \`Verify round 1\` through \`Verify round 4\`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
    - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable E2E acceptance. Preserve separate command and E2E evidence for every numbered round.
-   - Treat \`CRITICAL\` as \`P0\` for final-quality retry decisions. Before round four, repair a resolvable failed check, applicable E2E failure, or P0/CRITICAL finding, then retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
+   - Treat \`CRITICAL\` as \`P0\` for final-quality retry decisions. Before round four, the worker reports each resolvable failed check, applicable E2E failure, or P0/CRITICAL finding. When the coordinator repairs an accepted failure or CRITICAL finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
    - A missing runtime, credential, browser capability, dependency, or other prerequisite is \`BLOCKER\`: report \`blocked\`, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable E2E failure, or P0/CRITICAL finding, report \`failed\`; do not begin a fifth round or recommend archive.`;
+
+const repairOwnershipInstructions = `**Repair ownership**
+
+- The Verify worker is read-only by default. Report findings and evidence before any implementation changes; include severity, affected files or journeys, reproduction details, and a specific recommendation.
+- The coordinator evaluates and repairs accepted product, architecture, or workflow findings, then runs targeted verification. A host-native workflow may authorize worker self-repair only when that authorization is explicit.
+- If a finding cannot be reproduced or its required repair is ambiguous, investigate or clarify before editing. Do not modify the implementation merely to make the report appear clean.
+- In final-quality Verify, a repair ends the current worker's result. The coordinator starts the next required fresh Verify round; the reporting worker does not silently approve its own repair.`;
 
 export function getVerifyChangeSkillTemplate(): SkillTemplate {
   return {
@@ -67,6 +74,8 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
    - **Coherence**: Track design adherence and pattern consistency
 
    Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
+
+${repairOwnershipInstructions}
 
 5. **Verify Completeness**
 
@@ -192,6 +201,7 @@ Use clear markdown with:
 - Table for summary scorecard
 - Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
 - When running as an apply final-quality gate: \`Verify round: <1-4>\`, \`Fresh worker: <identity>\`, retry disposition, canonical preflight/E2E evidence for that round, and the terminal \`failed\` or \`blocked\` reason where applicable
+- Repair ownership: findings reported without edits by default; coordinator remediation and targeted-validation evidence when applicable
 - Code references in format: \`file.ts:123\`
 - Specific, actionable recommendations
 - No vague suggestions like "consider reviewing"`,
@@ -248,6 +258,8 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
 
    Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
 
+${repairOwnershipInstructions}
+
 5. **Verify Completeness**
 
    **Task Completion**:
@@ -372,6 +384,7 @@ Use clear markdown with:
 - Table for summary scorecard
 - Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
 - When running as an apply final-quality gate: \`Verify round: <1-4>\`, \`Fresh worker: <identity>\`, retry disposition, canonical preflight/E2E evidence for that round, and the terminal \`failed\` or \`blocked\` reason where applicable
+- Repair ownership: findings reported without edits by default; coordinator remediation and targeted-validation evidence when applicable
 - Code references in format: \`file.ts:123\`
 - Specific, actionable recommendations
 - No vague suggestions like "consider reviewing"`

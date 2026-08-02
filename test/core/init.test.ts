@@ -789,7 +789,22 @@ describe('InitCommand copyBundledAssets', () => {
     await initCommand.execute(testDir);
 
     const usingSuperpowersSkill = path.join(testDir, '.claude', 'skills', 'using-superpowers', 'SKILL.md');
+    const reviewDispatchSkill = path.join(
+      testDir,
+      '.claude',
+      'skills',
+      'when-to-dispatch-code-review',
+      'SKILL.md'
+    );
+    const obsoleteReviewSkill = path.join(
+      testDir,
+      '.claude',
+      'skills',
+      'requesting-code-review'
+    );
     expect(await fileExists(usingSuperpowersSkill)).toBe(true);
+    expect(await fileExists(reviewDispatchSkill)).toBe(true);
+    expect(await directoryExists(obsoleteReviewSkill)).toBe(false);
   });
 
   it('should copy bundled static skills into non-Claude tool skills directory', async () => {
@@ -798,6 +813,36 @@ describe('InitCommand copyBundledAssets', () => {
 
     const usingSuperpowersSkill = path.join(testDir, '.cursor', 'skills', 'using-superpowers', 'SKILL.md');
     expect(await fileExists(usingSuperpowersSkill)).toBe(true);
+  });
+
+  it('should remove the obsolete installed review skill when re-initializing', async () => {
+    const initCommand = new InitCommand({ tools: 'claude', force: true });
+    await initCommand.execute(testDir);
+
+    const skillsDir = path.join(testDir, '.claude', 'skills');
+    const obsoleteReviewSkill = path.join(skillsDir, 'requesting-code-review');
+    await fs.mkdir(obsoleteReviewSkill, { recursive: true });
+    await fs.writeFile(path.join(obsoleteReviewSkill, 'SKILL.md'), 'obsolete');
+
+    await initCommand.execute(testDir);
+
+    expect(await directoryExists(obsoleteReviewSkill)).toBe(false);
+    expect(
+      await fileExists(path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md'))
+    ).toBe(true);
+  });
+
+  it('should synchronize the renamed review skill for multiple tools', async () => {
+    const initCommand = new InitCommand({ tools: 'claude,opencode', force: true });
+    await initCommand.execute(testDir);
+
+    for (const toolRoot of ['.claude', '.opencode']) {
+      const skillsDir = path.join(testDir, toolRoot, 'skills');
+      expect(
+        await fileExists(path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md'))
+      ).toBe(true);
+      expect(await directoryExists(path.join(skillsDir, 'requesting-code-review'))).toBe(false);
+    }
   });
 
   it('should copy hooks into Claude .claude/hooks directory', async () => {

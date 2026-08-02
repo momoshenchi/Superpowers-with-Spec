@@ -52,7 +52,7 @@ The `skills/` directory contains static skill files that are copied into AI tool
 - `subagent-driven-development` — Parallel subagent task execution
 - `using-git-worktrees` — Isolated workspace setup
 - `finishing-a-development-branch` — Branch completion workflows
-- `requesting-code-review` — Structured code review requests
+- `when-to-dispatch-code-review` — Mode-aware code review dispatch timing
 - `receiving-code-review` — Code review response process
 - `writing-skills` — How to write new skills
 - `dispatching-parallel-agents` — Multi-agent coordination

@@ -1,4 +1,6 @@
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -39,27 +41,27 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getExploreSkillTemplate: '4cf1f0a23da5234a5e3d2ee4bfa9b3e83ac9289bcc470b8cdb271f6a087ad023',
   getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
   getContinueChangeSkillTemplate: 'a20b37ab5f70315351edbd4883fe6031a844cf8c067943379c70cadb23610f4a',
-  getApplyChangeSkillTemplate: '06514c34b05e89a50cb32f07ba140483690b13207ff874768c78cb0962f001df',
+  getApplyChangeSkillTemplate: 'ad34dfede606671f98e0c1c02b44ec3abbfdcb161b650b0dc55a4af0a007dab7',
   getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'cb44c89f7b66c3991134b0f4b2d04c591deccdf3c92ce255af6b0caabcdfa86f',
   getSpExploreCommandTemplate: '35ad7b98f94d71af061571dd03bb42d1bc7ceaa3d7b850ec51cb245c3cc9aafa',
   getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
   getSpContinueCommandTemplate: '6d77d9c35d82ffed073692445237d0e0af38bb47e5a8ac546f2dfca7b7b38e94',
-  getSpApplyCommandTemplate: '74b0e08975d1500101718c14c63539b7761115541ed2cae4f03d99a588c908b3',
+  getSpApplyCommandTemplate: '804fbaefc094290ac60f25197c755414abc29d38b122dba716377e96b1325a59',
   getSpFfCommandTemplate: 'a1f27b1120565937907ed8bd7209bfd3682e23aa07cc1b4da0a501bd8cd8d158',
   getArchiveChangeSkillTemplate: 'aadb596f4c1787809290603f7bd02d0fdfec40489fde03c5f0b40048682d33d1',
   getBulkArchiveChangeSkillTemplate: '5f80cc40af4beb29180d7a0266dc6aa21d62ee1826182623d21acbb35e8d376c',
   getSpSyncCommandTemplate: 'cc1ff958f3b66201e1b044c5fc4ab74c542d22520a8ab6338cf24bc50937aeb4',
-  getVerifyChangeSkillTemplate: '60d668e45b32c78b63fd3d99c9a0e4172466d0b49bf2611f91c3030900ba5b35',
+  getVerifyChangeSkillTemplate: 'e180f91b00e8ed384bc1f901a6fc9c41a8bcde85d073aff252174e4ca81d0afb',
   getSpArchiveCommandTemplate: 'a6d8bbbfd0de892f525e720bd1b32d5f8ec548ad27bfab7df4f803137180d3d0',
   getSpOnboardCommandTemplate: '0367f6a87f32d992e6bd7e2413cef097d77bc4ac791bc92c89d4df0ae7892e60',
   getSpBulkArchiveCommandTemplate: 'f8ad96bf71f2c8e5c5c24d31d25054974e24219ee910aa1ddee25ce9f3c843c1',
-  getSpVerifyCommandTemplate: '178a00e25dd2bb7ae08c8a20e44159e7fef28313629fb14f45553638e478de12',
-  getSimplifySkillTemplate: '3e338ee9e88ad981381987b7f5e306a8082e9bdf5546c99168b3482c983dc065',
-  getSpSimplifyCommandTemplate: '25777147317cf11bc9e5818d13ecac123f2912059b4913e3b72a163e301191a9',
-  getDesignVerifySkillTemplate: '30a13aa0afc2aa73e37089fbd6842cb20ffef6805896a3952f791fea062057f5',
-  getSpDesignVerifyCommandTemplate: 'e1d70ff5cb7ce80895aae5255485dbaef0eaefef62228747963ff9d627cd18c5',
+  getSpVerifyCommandTemplate: 'db71b3cfce288a6d990f80595ee33b622f46df5279d40ca3a116263951ba5139',
+  getSimplifySkillTemplate: '26e7a93aff3744eb6df3ea4268bd0d9c92bb2b91f5d48cf62b61a2267ec3e9a5',
+  getSpSimplifyCommandTemplate: '6b2cbe5bfaf2de3912de7f8a252f7481121d76ebfe29a1cd32e4edfd4faa26a9',
+  getDesignVerifySkillTemplate: '4920e25dce697b90b8031620b63085856bf09cfc275d1fec45d7873dcef7c14b',
+  getSpDesignVerifyCommandTemplate: '65f9b0ea063d942aed1d148781f1022007de0d38a0cb7502e6375a5fa3ffa7cd',
   getSpProposeSkillTemplate: '2258417dde2da1c72b26af514be652c2ba9d553bc76d566a918d7f39dd2fe769',
   getSpProposeCommandTemplate: '4036943fd64207a52f3cac25adb4d62c7ae9d3dd320f1a639ef26e7272af19b0',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
@@ -71,14 +73,14 @@ const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-explore': 'a2b1df6784a1712104e6bf6fca58c571488cc156ce10beb135e03c8bcb7699c3',
   'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
   'superpowers-continue-change': '2c2576679add3482c5f871493d490351baa300f3eee571f8706f3911dac7c7ef',
-  'superpowers-apply-change': '542e670af01e3efc0b267f95756ea3f8edd6b7e04271057eb8c181ac5fff5de9',
+  'superpowers-apply-change': 'ba0bee0e283d49608c577876fbe83111d3df354121787c761d98d36f98a73b9a',
   'superpowers-ff-change': '0ceb62124b4b26a9fe00edcff8576d1e27bb00197794ca4228ab61534a18a299',
   'superpowers-sync-specs': '54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2',
   'superpowers-archive-change': 'a50623f1936b93f63d405038cc05bdd04fbe4c0c51b0dc9bf0d64c79a8822920',
   'superpowers-bulk-archive-change': '62e0d64f3b80cf3f7c29073dcd4842c00a2c55d139eb3f7b52bdd3aa59cfecd0',
-  'superpowers-verify-change': '87fd4c84edc905a7b44ce5af943525b3f0e47ae6662bd934c2ee715d0852fec3',
-  'superpowers-simplify': '421dc20215029e28e5731337ddf39b2c3d7dd645b432be6b6a0c2a4c59f877f6',
-  'superpowers-design-verify': 'c1a12547d66e22af0800f7ee77332e83ebb29fa1d37931a23be1e60e41ca99ce',
+  'superpowers-verify-change': 'c3e97e9bb3ffc76cdcc749d9e9ae6e008c3465faa16cd01cef620c1f6dc87d87',
+  'superpowers-simplify': 'ded11077d5f03a74fd393307599a3339e221677a54b04bfbbcd7195ae41b0c8b',
+  'superpowers-design-verify': '50a6a25f20bd749bfee135b384702ae4aa7adcc0fb06345c18de0902f505bab7',
   'superpowers-onboard': '1e40083eae207872b397d141c4f2660e9d8ec3a705f46ab6a0e2b3a0facab580',
   'superpowers-propose': 'd85f336ca1e7afba60bc27e88a0a193de1574b775c128fe6bce90a92f7cff477',
   'superpowers-change-review': '98accc62e59f5f4ceabe127204052a58b0ef597f02816a2ccbdb10a7a6667618',
@@ -297,6 +299,50 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('do not consume a round');
     expect(verify).toContain('do not begin a fifth round');
     expect(verify).toContain('`Verify round: <1-4>`');
+  });
+
+  it('defines report-first gate workers and coordinator-owned repairs', () => {
+    const apply = [getApplyChangeSkillTemplate().instructions, getSpApplyCommandTemplate().content].join('\n');
+    expect(apply).toContain('Code review, Verify, and Design Verify workers are read-only by default');
+    expect(apply).toContain('The coordinator evaluates and repairs accepted findings');
+    expect(apply).toContain('Simplify is the only gate authorized to edit by default');
+    expect(apply).toContain('worker reports first; the coordinator repairs');
+    expect(apply).toContain('coordinator repairs every accepted resolvable P1/P2 finding');
+    expect(apply).toContain('coordinator repairs the issue and starts the next fresh Verify round');
+    expect(apply).toContain('coordinator repairs it and starts the next fresh, numbered design-verification round');
+
+    const simplify = [getSimplifySkillTemplate().instructions, getSpSimplifyCommandTemplate().content].join('\n');
+    expect(simplify).toContain('Simplify is authorized to edit the reviewed scope directly');
+    expect(simplify).toContain('only for behavior-preserving cleanup');
+    expect(simplify).toContain('Do not repair product correctness, requirements, architecture, or visual-design findings');
+    expect(simplify).toContain('revert or skip it and report the reason');
+
+    const verify = [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n');
+    expect(verify).toContain('The Verify worker is read-only by default');
+    expect(verify).toContain('Report findings and evidence before any implementation changes');
+    expect(verify).toContain('The coordinator evaluates and repairs accepted product, architecture, or workflow findings');
+    expect(verify).toContain('investigate or clarify before editing');
+    expect(verify).toContain('coordinator repairs an accepted failure or CRITICAL finding');
+
+    const designVerify = [getDesignVerifySkillTemplate().instructions, getSpDesignVerifyCommandTemplate().content].join('\n');
+    expect(designVerify).toContain('The Design Verify worker is read-only by default');
+    expect(designVerify).toContain('Report rule-cited findings before any implementation changes');
+    expect(designVerify).toContain('The coordinator evaluates and repairs accepted UI findings');
+    expect(designVerify).toContain('coordinator repairs an accepted visual nonconformance');
+
+    const receiving = readFileSync(
+      path.join(process.cwd(), 'skills', 'receiving-code-review', 'SKILL.md'),
+      'utf8'
+    );
+    expect(receiving).toContain('feedback-evaluation protocol');
+    expect(receiving).toContain('not a code-review worker or an additional final-quality gate');
+
+    const completion = readFileSync(
+      path.join(process.cwd(), 'skills', 'verification-before-completion', 'SKILL.md'),
+      'utf8'
+    );
+    expect(completion).toContain('evidence-before-claims guardrail');
+    expect(completion).toContain('not a substitute for substantive Verify, code review, or any Apply final-quality gate');
   });
 
   it('describes test-plan in default spec-driven artifact flows', () => {

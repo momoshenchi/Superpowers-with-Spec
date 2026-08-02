@@ -55,6 +55,7 @@ const { version: SUPERPOWERS_VERSION } = require('../../package.json');
 // -----------------------------------------------------------------------------
 
 const DEFAULT_SCHEMA = 'spec-driven';
+const OBSOLETE_BUNDLED_SKILL_DIRS = ['requesting-code-review'] as const;
 
 const PROGRESS_SPINNER = {
   interval: 80,
@@ -773,6 +774,12 @@ export class InitCommand {
     const bundledSkillsDir = path.join(pkgRoot, 'skills');
     if (fs.existsSync(bundledSkillsDir)) {
       const destSkillsDir = path.join(projectPath, tool.skillsDir, 'skills');
+      for (const obsoleteDirName of OBSOLETE_BUNDLED_SKILL_DIRS) {
+        await fs.promises.rm(path.join(destSkillsDir, obsoleteDirName), {
+          recursive: true,
+          force: true,
+        });
+      }
       await this.copyDir(bundledSkillsDir, destSkillsDir);
     }
 

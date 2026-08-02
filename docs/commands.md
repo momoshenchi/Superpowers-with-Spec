@@ -4,6 +4,15 @@ This is the reference for Superpowers's slash commands. These commands are invok
 
 For workflow patterns and when to use each command, see [Workflows](workflows.md). For CLI commands, see [CLI](cli.md).
 
+## Work-mode decision
+
+Choose one of two modes before editing:
+
+- **Direct Modification**: a bounded, reversible, low-risk local edit with a clear verification path.
+- **Proposal → Review → Apply**: required for explicit Proposal requests, new capabilities/public contracts, migrations or security/data boundaries, and work whose six-dimension workload estimate exceeds the practical Proposal budget.
+
+A user-requested plan does not create a third lifecycle. Estimate implementation surface, layer breadth, behavior complexity, verification cost, orchestration cost, and context churn from 0–3; use `0–5`, `6–10`, `11–14`, and `15+` as small-to-very-large bands. Combine small work when the total fits; split multiple large capabilities or stage one very large capability before defining internal Dispatch Units. Dispatch Units are ownership/parallelism boundaries inside a Proposal, not separate archive units.
+
 ## Quick Reference
 
 ### Default Quick Path (`core` profile)
@@ -533,7 +542,7 @@ AI:  ✓ Synced specs to superpowers/specs/ui/spec.md
 - Archive won't block on incomplete tasks, but will warn
 - Delta specs can be synced during archive or beforehand
 - Archived changes are preserved for history
-- Use `/sp:verify` first to catch issues
+- After a completed `/sp:apply`, archive directly because Apply already ran Verify. Use standalone `/sp:verify` first only for work completed outside Apply or for an explicit independent diagnostic.
 
 ---
 

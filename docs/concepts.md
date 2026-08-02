@@ -576,19 +576,14 @@ superpowers/
 │           ▼                                                                  │
 │   ┌────────────────┐                                                         │
 │   │  3. IMPLEMENT  │  /sp:apply                                            │
-│   │     TASKS      │  Work through tasks, checking them off                  │
+│   │  + QUALITY     │  Tasks + Test Hardening + final gates                  │
+│   │                │  code review → Simplify → Verify → Design Verify      │
 │   │                │◄──── Update artifacts as you learn                      │
 │   └───────┬────────┘                                                         │
 │           │                                                                  │
 │           ▼                                                                  │
-│   ┌────────────────┐                                                         │
-│   │  4. VERIFY     │  /sp:verify (optional)                                │
-│   │     WORK       │  Check implementation matches specs                     │
-│   └───────┬────────┘                                                         │
-│           │                                                                  │
-│           ▼                                                                  │
 │   ┌────────────────┐     ┌──────────────────────────────────────────────┐   │
-│   │  5. ARCHIVE    │────►│  Delta specs merge into main specs           │   │
+│   │  4. ARCHIVE    │────►│  Delta specs merge into main specs           │   │
 │   │     CHANGE     │     │  Change folder moves to archive/             │   │
 │   └────────────────┘     │  Specs are now the updated source of truth   │   │
 │                          └──────────────────────────────────────────────┘   │

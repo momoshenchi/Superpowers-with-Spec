@@ -22,7 +22,7 @@ describe('subagent dispatch-unit guidance', () => {
 
   it('uses one final integration review with targeted verification after fixes', () => {
     const development = readGuidance('skills', 'subagent-driven-development', 'SKILL.md');
-    const review = readGuidance('skills', 'requesting-code-review', 'SKILL.md');
+    const review = readGuidance('skills', 'when-to-dispatch-code-review', 'SKILL.md');
     const reviewer = readGuidance(
       'skills',
       'subagent-driven-development',
@@ -32,8 +32,10 @@ describe('subagent dispatch-unit guidance', () => {
     expect(development).toContain('one final cross-unit integration review');
     expect(development).toContain('targeted verification');
     expect(development).not.toContain('two-stage review');
-    expect(review).toContain('after all dispatch units are integrated');
+    expect(review).toContain('After all units are integrated');
+    expect(review).toContain('one final cross-unit integration review');
     expect(review).not.toContain('Review after EACH task');
     expect(reviewer).toContain('all dispatch units are integrated');
+    expect(reviewer).toContain('read-only by default');
   });
 });

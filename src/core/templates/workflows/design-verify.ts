@@ -5,6 +5,8 @@ const instructions = `Verify an active Superpowers change's runtime UI with \`/s
 
 **Input:** Optional change name. Load its status, apply instructions, context artifacts, and implementation diff before deciding scope.
 
+**Repair ownership:** The Design Verify worker is read-only by default. Report rule-cited findings before any implementation changes, including the affected route/state, runtime evidence, governing rule, implementation location, and specific remediation. The coordinator evaluates and repairs accepted UI findings, then runs targeted validation. A host-native workflow may authorize worker self-repair only when that authorization is explicit. If a finding or intended visual result is ambiguous, investigate or clarify before editing rather than changing the UI merely to make the report pass.
+
 ## Execution
 
 1. **Establish scope.** Inspect the change artifacts and implementation diff to decide whether it affects a user-facing UI: a rendered route, component, interaction, or responsive/state behavior. If it does not, stop and report \`not applicable\` with concrete diff/artifact evidence; this is not a visual pass.
@@ -19,7 +21,8 @@ const instructions = `Verify an active Superpowers change's runtime UI with \`/s
 When Design verify is delegated by \`/sp:apply\`, number every attempt
 \`Design verify round 1\` through \`Design verify round 4\`; each attempt uses
 a fresh subagent and retains distinct route, rule, and runtime evidence. Before
-round four, repair a resolvable visual nonconformance and retry **only** Design
+round four, when the coordinator repairs an accepted visual nonconformance,
+retry **only** Design
 verify with a fresh worker. Do not restart code review, Simplify, or Verify
 solely because of a design-verification retry. A missing runtime, credential,
 browser capability, visual design source, or external decision is \`BLOCKER\`:
@@ -39,6 +42,7 @@ non-UI \`not applicable\` result is not a retry and remains non-blocking.
 **UI scope:** <affected routes/states, or concrete non-UI evidence>
 **Visual source:** <DESIGN.md path and applicable rules | not found>
 **Runtime evidence:** <commands, browser routes/states, screenshots/logs, or blocking prerequisite>
+**Repair ownership:** <findings reported without edits by default; coordinator remediation and targeted-validation evidence when applicable>
 
 | Route / state | Rule | Evidence | Implementation location | Outcome / remediation |
 | --- | --- | --- | --- | --- |

@@ -5,6 +5,8 @@ You are improving the quality of the changed code, not hunting for bugs. Review
 it for reuse, simplification, efficiency, and altitude issues, then fix what you
 find. Do not look for correctness bugs — that is what host-native code review is for.
 
+**Repair ownership:** Simplify is authorized to edit the reviewed scope directly, but only for behavior-preserving cleanup. Do not repair product correctness, requirements, architecture, or visual-design findings; report those outside-scope concerns for the coordinator instead. If a proposed cleanup is uncertain, crosses the resolved scope, or changes observable behavior, revert or skip it and report the reason.
+
 ## Phase -1 — Resolve Superpowers change scope
 
 When a \`<change-name>\` is supplied, resolve it before gathering a diff:
@@ -68,7 +70,7 @@ special cases.
 ## Phase 2 — Apply the fixes
 
 Wait for all four agents to complete, dedup findings that point at the same
-line or mechanism, and fix each remaining one directly. Skip any finding whose
+line or mechanism, and apply each remaining behavior-preserving cleanup directly. Skip any finding whose
 fix would change intended behavior, require changes well outside the reviewed
 diff, or that you judge to be a false positive — note the skip rather than
 arguing with it. Finish with a brief summary of what was fixed and what was

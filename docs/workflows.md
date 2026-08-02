@@ -28,6 +28,19 @@ SP (fluid actions):
 
 > **Customization:** SP workflows are driven by schemas that define artifact sequences. See [Customization](customization.md) for details on creating custom schemas.
 
+## Choosing a Work Mode and Proposal Boundary
+
+Superpowers has exactly two work modes:
+
+- **Direct Modification** for clear, local, reversible, low-risk work with a focused verification path.
+- **Proposal → Review → Apply** for new capabilities or public contracts, security/data boundaries, migrations, cross-cutting or ambiguous work, and work whose estimated agent workload is too large for one context budget.
+
+A requested plan is an execution aid inside either mode; it is not a third Plan Mode or a new artifact. Direct work must still run relevant tests, E2E, and visual checks. Proposal work uses the schema artifacts, Test Hardening, and Apply's final gates.
+
+Size a Proposal by six workload dimensions—implementation surface, layer breadth, behavior complexity, verification cost, orchestration cost, and context churn—on a 0–3 scale. Use `0–5` (small), `6–10` (medium), `11–14` (large), and `15+` (very large) as calibration bands. A normal combined Proposal targets a score of 14 or less, at most 3–5 Dispatch Units, and at most 2–3 dependency waves; these are judgment aids, not file-count gates.
+
+Combine multiple small or medium fixes when their combined work and acceptance story fit. Split multiple large capabilities into separate Proposals, keep only a small companion fix with a large capability when it adds no separate coordination or verification burden, and stage a very large capability by stable, independently testable milestones. A Change Proposal protects context, acceptance, and archive boundaries; Dispatch Units inside it divide ownership and safe parallelism and are not independently archivable.
+
 ## Two Modes
 
 ### Default Quick Path (`core` profile)
@@ -60,7 +73,7 @@ superpowers update
 When you know what you want to build and just need to execute:
 
 ```text
-/sp:new ──► /sp:ff ──► /sp:apply ──► /sp:verify ──► /sp:archive
+/sp:new ──► /sp:ff ──► /sp:apply ──► /sp:archive
 ```
 
 **Example conversation:**
@@ -228,13 +241,15 @@ Bulk archive detects when multiple changes touch the same specs and resolves con
 The recommended completion flow:
 
 ```text
-/sp:apply ──► /sp:verify ──► /sp:archive
-    │                │                 │
- implements      validates          prompts to sync
- and hardens     implementation     if needed
+/sp:apply ──► /sp:archive
+    │                              │
+ implements, hardens, and runs    prompts to sync
+ final quality gates               if needed
 ```
 
 `/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass discovers and runs the complete canonical non-visual suite from scripts, CI, test documentation, and the test plan; it records authority, commands, results, and excluded visual-only checks. After hardening, apply delegates host-native final code review (or a labelled equivalent fallback), `/sp:simplify`, `/sp:verify`, and `/sp:design-verify`—in that order—to fresh, distinct subagents, awaiting and integrating each report before starting the next. These gates are mandatory inside apply even if their standalone workflows are not selected; a host unable to launch a gate worker blocks completion.
+
+Standalone `/sp:verify` remains available for an explicit independent diagnostic or when work was completed outside `/sp:apply`; it is not an additional routine step after an Apply run.
 
 The `test-plan.md` coverage tables distinguish checks that must be executed from gaps that are intentionally deferred:
 

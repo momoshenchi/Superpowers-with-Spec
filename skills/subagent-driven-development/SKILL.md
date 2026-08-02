@@ -86,8 +86,7 @@ Each dispatch needs:
 **Required:**
 - **superpowers:using-git-worktrees** — REQUIRED: Set up isolated workspace before starting
 - `/sp:propose` — Creates the plan this skill executes
-- **superpowers:requesting-code-review** — Code review template for reviewer subagents
-- `/sp:archive` — Complete development after all tasks
+- **superpowers:when-to-dispatch-code-review** — Timing and integrated-scope guidance for reviewer dispatch
 
 **Subagents should use:**
 - **superpowers:test-driven-development** — Subagents follow TDD for each task
