@@ -46,6 +46,13 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
 
    Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
 
+**Repair ownership**
+
+- The Verify worker is read-only by default. Report findings and evidence before any implementation changes; include severity, affected files or journeys, reproduction details, and a specific recommendation.
+- The coordinator evaluates and repairs accepted product, architecture, or workflow findings, then runs targeted verification. A host-native workflow may authorize worker self-repair only when that authorization is explicit.
+- If a finding cannot be reproduced or its required repair is ambiguous, investigate or clarify before editing. Do not modify the implementation merely to make the report appear clean.
+- In final-quality Verify, a repair ends the current worker's result. The coordinator starts the next required fresh Verify round; the reporting worker does not silently approve its own repair.
+
 5. **Verify Completeness**
 
    **Task Completion**:
@@ -75,6 +82,15 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
 - Record every selected command, its source of authority, and explicitly visual-only checks excluded. A convenient or partial test script is not full validation without repository evidence.
 - Run every selected command and record fresh results. If the suite is ambiguous, unavailable, cannot run, or fails, report `blocked` or `failed`; do not complete verify or continue to E2E.
 
+
+
+**Manual Coverage execution (verify)**
+
+- Read the active `test-plan.md` `## Manual Coverage` table separately from `## Deferred Coverage`. A Manual Coverage row is an executable check. Deferred Coverage is not execution evidence and must not be reported as passed or run.
+- After the canonical non-visual preflight, execute every applicable Manual Coverage row through its stated normal entry point, method, and safe environment. Record the performed steps, method/environment, actions, observed outcome, and inspectable evidence in the row or report.
+- Treat every concrete Manual Coverage status row as required coverage. Classify each concrete Manual Coverage row as `passed`, `failed`, `blocked`, or scope-backed `not applicable`. An unexecuted, blank, `planned`, or placeholder row is incomplete. Any unexecuted, failed, or blocked applicable manual row prevents verify from passing; name remediation or the missing prerequisite rather than guessing.
+- Do not move a required manual row into Deferred Coverage merely to avoid execution. Use `not applicable` only with concrete scope evidence and use Deferred Coverage only for intentionally postponed work with a specific reason and safer follow-up.
+- When this is final-quality Verify, a Manual Coverage `BLOCKER` is an immediate `blocked` outcome and does not consume the Verify retry round; a repairable manual failure retries from Verify under the existing four-round limit.
 
    **Requirement Implementation Mapping**:
    - For each requirement from delta specs:
@@ -106,7 +122,7 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
    **Final-quality Verify retries**:
    - When Verify is delegated by `/sp:apply`, label the report `Verify round 1` through `Verify round 4`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
    - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable E2E acceptance. Preserve separate command and E2E evidence for every numbered round.
-   - Treat `CRITICAL` as `P0` for final-quality retry decisions. Before round four, repair a resolvable failed check, applicable E2E failure, or P0/CRITICAL finding, then retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
+   - Treat `CRITICAL` as `P0` for final-quality retry decisions. Before round four, the worker reports each resolvable failed check, applicable E2E failure, or P0/CRITICAL finding. When the coordinator repairs an accepted failure or CRITICAL finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
    - A missing runtime, credential, browser capability, dependency, or other prerequisite is `BLOCKER`: report `blocked`, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable E2E failure, or P0/CRITICAL finding, report `failed`; do not begin a fifth round or recommend archive.
 
 7. **Verify Coherence**
@@ -186,6 +202,7 @@ Use clear markdown with:
 - Table for summary scorecard
 - Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
 - When running as an apply final-quality gate: `Verify round: <1-4>`, `Fresh worker: <identity>`, retry disposition, canonical preflight/E2E evidence for that round, and the terminal `failed` or `blocked` reason where applicable
+- Repair ownership: findings reported without edits by default; coordinator remediation and targeted-validation evidence when applicable
 - Code references in format: `file.ts:123`
 - Specific, actionable recommendations
 - No vague suggestions like "consider reviewing"

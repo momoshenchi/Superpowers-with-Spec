@@ -13,6 +13,10 @@ Claiming work is complete without verification is dishonesty, not efficiency.
 
 **Violating the letter of this rule is violating the spirit of this rule.**
 
+## Workflow Boundary
+
+Use this skill as an evidence-before-claims guardrail in every work mode. It is not a substitute for substantive Verify, code review, or any Apply final-quality gate: it requires fresh evidence for a claim but does not add another review stage, duplicate a domain-specific verification contract, or change gate retry policy.
+
 ## The Iron Law
 
 ```

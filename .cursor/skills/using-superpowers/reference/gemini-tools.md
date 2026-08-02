@@ -48,4 +48,4 @@ These tools are available in Gemini CLI but have no Claude Code equivalent:
 | `save_memory` | Persist facts to GEMINI.md across sessions |
 | `ask_user` | Request structured input from the user |
 | `tracker_create_task` | Rich task management (create, update, list, visualize) |
-| `enter_plan_mode` / `exit_plan_mode` | Switch to read-only research mode before making changes |
+| `enter_plan_mode` / `exit_plan_mode` | Optional host research controls. A requested plan remains an execution aid inside Direct Modification or Proposal → Review → Apply; these controls do not create a third Superpowers work mode. |

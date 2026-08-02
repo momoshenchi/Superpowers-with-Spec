@@ -11,6 +11,10 @@ Code review requires technical evaluation, not emotional performance.
 
 **Core principle:** Verify before implementing. Ask before assuming. Technical correctness over social comfort.
 
+## Workflow Boundary
+
+Use this skill as the coordinator's feedback-evaluation protocol after a reviewer reports findings. It is not a code-review worker or an additional final-quality gate: it does not dispatch review, set Apply retry policy, or replace host-native code review. Evaluate each finding against the codebase and requirements, repair accepted findings in the coordinator context, and run targeted verification before reporting resolution.
+
 ## The Response Pattern
 
 ```
@@ -23,19 +27,6 @@ WHEN receiving code review feedback:
 5. RESPOND: Technical acknowledgment or reasoned pushback
 6. IMPLEMENT: One item at a time, test each
 ```
-
-## Forbidden Responses
-
-**NEVER:**
-- "You're absolutely right!" (explicit CLAUDE.md violation)
-- "Great point!" / "Excellent feedback!" (performative)
-- "Let me implement that now" (before verification)
-
-**INSTEAD:**
-- Restate the technical requirement
-- Ask clarifying questions
-- Push back with technical reasoning if wrong
-- Just start working (actions > words)
 
 ## Handling Unclear Feedback
 
@@ -85,17 +76,6 @@ IF conflicts with your human partner's prior decisions:
 
 **your human partner's rule:** "External feedback - be skeptical, but check carefully"
 
-## YAGNI Check for "Professional" Features
-
-```
-IF reviewer suggests "implementing properly":
-  grep codebase for actual usage
-
-  IF unused: "This endpoint isn't called. Remove it (YAGNI)?"
-  IF used: Then implement properly
-```
-
-**your human partner's rule:** "You and reviewer both report to me. If we don't need this feature, don't add it."
 
 ## Implementation Order
 
@@ -128,38 +108,6 @@ Push back when:
 
 **Signal if uncomfortable pushing back out loud:** "Strange things are afoot at the Circle K"
 
-## Acknowledging Correct Feedback
-
-When feedback IS correct:
-```
-✅ "Fixed. [Brief description of what changed]"
-✅ "Good catch - [specific issue]. Fixed in [location]."
-✅ [Just fix it and show in the code]
-
-❌ "You're absolutely right!"
-❌ "Great point!"
-❌ "Thanks for catching that!"
-❌ "Thanks for [anything]"
-❌ ANY gratitude expression
-```
-
-**Why no thanks:** Actions speak. Just fix it. The code itself shows you heard the feedback.
-
-**If you catch yourself about to write "Thanks":** DELETE IT. State the fix instead.
-
-## Gracefully Correcting Your Pushback
-
-If you pushed back and were wrong:
-```
-✅ "You were right - I checked [X] and it does [Y]. Implementing now."
-✅ "Verified this and you're correct. My initial understanding was wrong because [reason]. Fixing."
-
-❌ Long apology
-❌ Defending why you pushed back
-❌ Over-explaining
-```
-
-State the correction factually and move on.
 
 ## Common Mistakes
 
@@ -203,11 +151,3 @@ You understand 1,2,3,6. Unclear on 4,5.
 ## GitHub Thread Replies
 
 When replying to inline review comments on GitHub, reply in the comment thread (`gh api repos/{owner}/{repo}/pulls/{pr}/comments/{id}/replies`), not as a top-level PR comment.
-
-## The Bottom Line
-
-**External feedback = suggestions to evaluate, not orders to follow.**
-
-Verify. Question. Then implement.
-
-No performative agreement. Technical rigor always.

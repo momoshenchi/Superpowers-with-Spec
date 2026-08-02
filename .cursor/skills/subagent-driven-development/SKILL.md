@@ -37,7 +37,7 @@ digraph when_to_use {
 
 1. Read the proposal, specs, design, `tasks.md`, and `execution-plan.md` once.
 2. Use `execution-plan.md` to identify ownership, dependencies, and safe parallelism.
-3. In `tasks.md`, a heading in the form `# <number>. <scope>` is a logical dispatch-unit boundary, not a promise to dispatch a particular live subagent. Legacy `# <number>. agent<logical-id> — <scope>` headings remain acceptable as dispatch units.
+3. In `tasks.md`, a heading in the form `# <number>. <scope>` is a logical dispatch-unit boundary, not a promise to dispatch a particular live subagent. 
 4. If an existing task list has no dispatch-unit heading, preserve it and treat all incomplete tasks as one sequential dispatch unit.
 
 
@@ -86,8 +86,6 @@ Each dispatch needs:
 **Required:**
 - **superpowers:using-git-worktrees** — REQUIRED: Set up isolated workspace before starting
 - `/sp:propose` — Creates the plan this skill executes
-- **superpowers:requesting-code-review** — Code review template for reviewer subagents
-- `/sp:archive` — Complete development after all tasks
 
 **Subagents should use:**
 - **superpowers:test-driven-development** — Subagents follow TDD for each task
