@@ -32,13 +32,18 @@ describe('change review workflow templates', () => {
     }
   });
 
-  it('defines report-before-repair and blocker-gated re-review boundaries', () => {
+  it('defines report-before-repair, subagent dispatch, and blocker-gated re-review boundaries', () => {
     const content = getChangeReviewSkillTemplate().instructions;
 
     expect(content.indexOf('present the complete review report')).toBeGreaterThan(-1);
     expect(content.indexOf('repair every resolvable BLOCKER')).toBeGreaterThan(
       content.indexOf('present the complete review report')
     );
+    expect(content).toContain('fresh subagent');
+    expect(content).toContain('coordinator chooses');
+    expect(content).toContain('three rounds');
+    expect(content).not.toContain('change-reviewer-prompt');
+    expect(content).toContain('Change reviewer');
     expect(content).toContain('re-run review only after repairing one or more BLOCKERs');
     expect(content).toContain(
       'Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired'
@@ -58,9 +63,11 @@ describe('change review workflow templates', () => {
   it('runs the automatic loop from propose, but never repeats it from apply', () => {
     for (const template of [getSpProposeSkillTemplate(), getSpProposeCommandTemplate()]) {
       const content = 'instructions' in template ? template.instructions : template.content;
+      expect(content).toContain('Dispatch a fresh change reviewer subagent');
       expect(content).toContain('present the complete review report');
       expect(content).toContain('Repair every resolvable BLOCKER.');
       expect(content).toContain('re-run review only after repairing one or more BLOCKERs');
+      expect(content).toContain('at most three rounds');
       expect(content).toContain('Do not create `review.md`');
       expect(content).toContain('Dispatch Units in tasks.md');
       expect(content).toContain('# <number>. <scope>');

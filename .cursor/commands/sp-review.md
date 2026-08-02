@@ -11,7 +11,34 @@ Review a complete Superpowers change before implementation.
 
 **Input**: Optionally specify a change name. If omitted, infer it only from clear conversation context; otherwise run `superpowers list --json` and ask the user to choose.
 
-## Review procedure
+## Roles
+
+- **Coordinator** (default: the agent running `/sp:propose` or `/sp:review`): dispatches each review round to a fresh subagent, **present the complete review report** from the worker before editing proposal artifacts, **repair every resolvable BLOCKER**, and re-dispatch only after BLOCKER repair. Does not perform dimensional artifact assessment in the coordinator context when the host can launch subagents.
+- **Change reviewer** (fresh subagent): read-only proposal review — runs CLI checks, reads artifacts, applies the four review dimensions, returns a structured report. Does not edit proposal artifacts or announce readiness.
+
+## Dispatch
+
+Do not reuse a review worker across rounds. Do not perform inspection and dimensional assessment in the coordinator context when the host can launch subagents.
+
+If the host cannot launch a subagent, mark proposal review `blocked`, name the missing host capability, and pause; do not silently substitute an inline coordinator review.
+
+## Coordinator loop
+
+When running automatically from `/sp:propose` after every `applyRequires` artifact is complete, or manually from `/sp:review`:
+
+A **round** is one fresh reviewer dispatch plus its integrated report. Proposal review allows at most **three rounds** total.
+
+1. Dispatch one fresh change reviewer subagent (round 1).
+2. **Present the complete review report** from the worker before editing any proposal artifact in response to findings.
+3. Then **repair every resolvable BLOCKER** in the coordinator context. WARNING findings are recommended repairs: you may fix them after the report, but they do not block readiness by themselves. SUGGESTION findings are non-blocking and may remain visible in the report.
+4. **Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs** (re-run review only after repairing one or more BLOCKERs). Each re-dispatch starts the next numbered round. Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired.
+5. If round three still reports unresolved BLOCKERs, pause and report the remaining BLOCKERs; do not start a fourth round or claim readiness.
+6. Announce readiness only when no unresolved BLOCKER remains within the three-round limit. Residual WARNING and SUGGESTION notes may stay visible.
+7. If a repair needs a product, security, schema, or external-dependency decision, report the blocker and pause; do not guess or claim readiness.
+
+Do not create `review.md`, approval metadata, or a review artifact. Proposal review is ephemeral. `/sp:apply` does not automatically repeat proposal review; users may invoke `/sp:review <change>` voluntarily.
+
+## Change reviewer procedure
 
 1. Run `superpowers status --change "<name>" --json`. Read `schemaName`, `applyRequires`, and `artifacts[]` (`id`, `outputPath`, `status`). Cross-check `.superpowers.yaml` `schema:` when helpful. Do not assume every schema has delta specs.
 2. Run `superpowers validate <name>` (or `--json`). Treat every validation ERROR as a BLOCKER. Do not invent delta specs for schemas without a `specs` artifact.
@@ -19,18 +46,6 @@ Review a complete Superpowers change before implementation.
 4. When the schema includes a `specs` artifact, compare `Modified Capabilities` against `superpowers/specs/<capability>/spec.md` master specs.
 5. Assess the four dimensions below. Report every finding as BLOCKER, WARNING, or SUGGESTION with artifact location and a concrete repair.
 6. For spec-driven tasks, treat top-level `# <number>. <scope>` headings as logical **dispatch unit** boundaries. Accept legacy `# <number>. agent<logical-id> — <scope>` headings as equivalent dispatch units. Verify `execution-plan.md` Dispatch Coordination covers each unit's ownership, dependencies, assignee policy, parallel eligibility, and handoff evidence, and that every detailed task has concrete Step 1–5 execution guidance under clean `### <number>. <scope>` headings. Do not require per-checkbox delegation, per-checkbox formal review, or 2–5 minute work units.
-
-## Automatic proposal-review loop
-
-When this procedure runs automatically from `/sp:propose` after every `applyRequires` artifact is complete:
-
-1. Inspect the complete proposal artifacts and **present the complete review report** before editing any of them.
-2. Then **repair every resolvable BLOCKER**. WARNING findings are recommended repairs: you may fix them after the report, but they do not block readiness by themselves. SUGGESTION findings are non-blocking and may remain visible in the report.
-3. **re-run review only after repairing one or more BLOCKERs** (or when the initial report contained a BLOCKER that was repaired). Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired.
-4. Announce readiness only when no unresolved BLOCKER remains. Residual WARNING and SUGGESTION notes may stay visible.
-5. If a repair needs a product, security, schema, or external-dependency decision, report the blocker and pause; do not guess or claim readiness.
-
-Do not create `review.md`, approval metadata, or a review artifact. Proposal review is ephemeral. `/sp:apply` does not automatically repeat proposal review; users may invoke `/sp:review <change>` voluntarily.
 
 ## Review dimensions
 
@@ -179,4 +194,3 @@ Can work start **now**, not "when the design is perfect"?
 1. ...
 
 ```
-

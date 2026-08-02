@@ -7,6 +7,17 @@ description: 用户在开始实现 Superpowers 变更前、希望审核变更提
 
 对 **Superpowers 变更提案**（`superpowers/changes/<name>/` 下的 artifacts）做实施前审查。目标是判断：提案是否完整、细节是否足够明晰、实现者能否 **无疑义** 开工。
 
+## 角色
+
+- **Coordinator**（运行 `/sp:propose` 或 `/sp:review` 的主 agent）：每轮 review 派遣 fresh subagent，**present the complete review report** 后再改 artifacts，**repair every resolvable BLOCKER**，仅在 BLOCKER 修复后 re-dispatch。宿主能 spawn subagent 时，不在 coordinator 上下文做维度审查。
+- **Change reviewer**（fresh subagent）：只读审查 — 跑 CLI、读 artifacts、按四维度出报告。不改 proposal artifacts，不宣布 ready。
+
+## 派遣
+
+**每一轮 proposal review 必须派遣 one fresh subagent**（Task tool 或等价机制）。由 coordinator 自行决定 dispatch 的 subagent 类型与 prompt 内容；至少包含 change 名称与路径、只读 reviewer 角色、下方「Change reviewer procedure / 审查维度 / 输出格式」。
+
+不得复用 review worker。宿主无法 spawn subagent 时，标记 proposal review `blocked` 并暂停；**不得**静默改为 coordinator 内联审查。
+
 ## 输入
 
 1. 若用户未指定变更名，运行 `superpowers list --json`，列出可审查的 change，请用户选择。不要猜测。
@@ -23,13 +34,15 @@ description: 用户在开始实现 Superpowers 变更前、希望审核变更提
 6. 可选：对每个待审 artifact 运行 `superpowers instructions <artifact-id> --change "<name>" --json`，获取 `template`、`description` 作为章节完整性参考。
 7. **仅当 schema 包含 `specs` artifact 时**，`Modified Capabilities` 才需对照 `superpowers/specs/<capability>/spec.md` 主 spec。
 
-## 自动 Propose 审查与修复顺序
+## 自动 Propose 审查与修复顺序（Coordinator loop）
 
-当 `/sp:propose` 在所有 `applyRequires` artifact 完成后自动使用本 skill 时，严格执行：审查 → **present the complete review report** → 按严重级别修复 → 仅在修复 BLOCKER 后 **re-run review** → 宣布 ready 或暂停。
+当 `/sp:propose` 在所有 `applyRequires` artifact 完成后自动使用本 skill 时，严格执行：派遣 reviewer → **present the complete review report** → 按严重级别修复 → 仅在修复 BLOCKER 后 **re-dispatch a fresh reviewer** → 宣布 ready 或暂停。
 
+- **最多三轮**（three rounds）：一轮 = 一次 fresh reviewer dispatch + 其报告。round 3 后仍有 unresolved BLOCKER 则暂停并报告，不得开启第四轮或宣称 ready。
+- 每轮先 dispatch one fresh change reviewer subagent。
 - 报告输出前不得修改因本次发现而需调整的 proposal artifacts。
 - 报告后必须 **repair every resolvable BLOCKER**。WARNING 为建议修复：可在报告后修复，但本身不阻塞 ready。`SUGGESTION` findings are non-blocking，可保留在报告中。
-- **re-run review only after repairing one or more BLOCKERs**。不得仅因 WARNING/SUGGESTION 存在或已修复而重新跑完整 proposal review。
+- **re-run review only after repairing one or more BLOCKERs**（re-dispatch fresh reviewer，不得复用 worker）。不得仅因 WARNING/SUGGESTION 存在或已修复而重新跑完整 proposal review。
 - 宣布 ready 的条件是 no unresolved BLOCKER；residual WARNING/SUGGESTION notes may remain visible。
 - 若修复依赖用户、产品、安全、schema 或外部依赖决策，报告该 BLOCKER 并暂停；不得猜测或宣称 ready。
 - Do not create `review.md`、approval metadata 或 review artifact。proposal review 是瞬态行为；`/sp:apply` does not automatically repeat proposal review。
