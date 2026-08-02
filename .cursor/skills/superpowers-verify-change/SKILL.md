@@ -6,7 +6,7 @@ compatibility: Requires superpowers CLI.
 metadata:
   author: superpowers
   version: "1.0"
-  generatedBy: "1.0.6"
+  generatedBy: "1.0.7"
 ---
 
 Verify that an implementation matches the change artifacts (specs, tasks, design).

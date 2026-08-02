@@ -6,7 +6,7 @@ compatibility: Requires superpowers CLI.
 metadata:
   author: superpowers
   version: "1.0"
-  generatedBy: "1.0.6"
+  generatedBy: "1.0.7"
 ---
 
 Propose a new change - create the change and generate all artifacts in one step.
@@ -85,9 +85,9 @@ When ready to implement, run /sp:apply
 5. **Review the complete proposal before readiness**
 
    After every `applyRequires` artifact is done, automatically follow the `superpowers-change-review` workflow:
-   - Inspect the completed proposal artifacts and present the complete review report before editing any artifact in response to findings.
+   - Dispatch a fresh change reviewer subagent; **present the complete review report** from the worker before editing any artifact in response to findings.
    - Repair every resolvable BLOCKER. WARNING findings are recommended repairs and do not block readiness by themselves.
-   - re-run review only after repairing one or more BLOCKERs. Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired.
+   - Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs (re-run review only after repairing one or more BLOCKERs). Proposal review allows at most three rounds; if round three still has unresolved BLOCKERs, pause and report them without claiming readiness.
    - Keep SUGGESTION findings visible but non-blocking. Residual WARNING notes may remain visible when announcing readiness.
    - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
    - Do not create `review.md`, approval metadata, or a review artifact.

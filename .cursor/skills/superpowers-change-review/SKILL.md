@@ -6,7 +6,7 @@ compatibility: Requires superpowers CLI.
 metadata:
   author: superpowers
   version: "1.0"
-  generatedBy: "1.0.6"
+  generatedBy: "1.0.7"
 ---
 
 Review a complete Superpowers change before implementation.
@@ -21,7 +21,6 @@ Review a complete Superpowers change before implementation.
 ## Dispatch
 
 Do not reuse a review worker across rounds. Do not perform inspection and dimensional assessment in the coordinator context when the host can launch subagents.
-
 If the host cannot launch a subagent, mark proposal review `blocked`, name the missing host capability, and pause; do not silently substitute an inline coordinator review.
 
 ## Coordinator loop

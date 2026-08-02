@@ -6,7 +6,7 @@ compatibility: Requires superpowers CLI.
 metadata:
   author: superpowers
   version: "1.0"
-  generatedBy: "1.0.6"
+  generatedBy: "1.0.7"
 ---
 
 Implement tasks from an Superpowers change.
