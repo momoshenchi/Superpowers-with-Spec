@@ -24,7 +24,7 @@ Small, local, low-risk edits do not require automatic review unless the user ask
 
 ### Subagent-Driven Development
 
-Workers verify and self-review their own complete Dispatch Units. After all units are integrated and local verification passes, dispatch one final cross-unit integration review of the complete change. Do not dispatch complete reviews per task, per unit, or by fixed-size batch. After accepted fixes, run targeted verification; request targeted reviewer confirmation only when the reviewer explicitly asks for it.
+Workers verify and self-review their own complete Dispatch Units. SDD does not own a separate complete review after unit integration. When SDD runs through `/sp:apply`, hand off to Apply's Test Hardening and ordered Final Quality Gates; Apply's Host-native code review is the single integrated code-review boundary. Do not dispatch complete reviews per task, per unit, or around the Apply gate.
 
 ### Proposal → Review → Apply
 
@@ -55,6 +55,6 @@ Use `receiving-code-review` behavior when feedback is unclear, technically unsup
 
 - Do not create or expect a Superpowers `/sp:code-review` command.
 - Do not schedule reviews by a fixed task count.
-- Do not repeat standalone SDD's complete final review unless a named finding requires confirmation.
+- Do not add a standalone SDD complete final review around the Apply gate.
 - Do not add another generic review before or after Apply's mandatory final code-review gate.
 - Do not confuse worker self-review or Proposal review with the independent integrated code review.
