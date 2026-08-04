@@ -1,6 +1,6 @@
 ---
 name: using-superpowers
-description: Use when starting any conversation to select the proportional Superpowers work mode, decide whether and how to bound Change Proposals, and invoke relevant skills before responding or acting
+description: Use when starting any conversation to select the proportional Superpowers work mode, decide whether and how to bound Change Proposals
 ---
 
 # Use Superpowers
@@ -47,6 +47,15 @@ While working directly, stop and promote to one or more Proposals before further
 - repeated broad context rereads, uncertain cross-boundary behavior, or workload that exceeds the Proposal budget.
 
 Preserve what was learned, explain the boundary that was crossed, and do not silently continue expanding the direct session.
+
+### Diagnostic context boundaries during investigation
+
+Repeated broad diagnostic rereads are a context-boundary signal even when the
+work is still read-only. Before another diagnostic reread, create or update a
+Debug Checkpoint with the current track statuses, Evidence IDs, exact anchors,
+and one next decisive experiment. If the next step is only recovery, hand the
+checkpoint to a fresh context; if the next step is implementation, use the
+existing Proposal → Review → Apply or Direct Modification decision. 
 
 ## Size Proposals by workload
 
@@ -151,8 +160,3 @@ The Proposal lifecycle stores durable intent and evidence under `superpowers/cha
 
 Repository specs under `superpowers/specs/<capability>/spec.md` remain the source of truth for behavior. Requirements state what must happen; scenarios provide concrete verifiable cases.
 
-## Invoke skills
-
-Use relevant process skills before implementation skills. Read the current skill rather than relying on memory.
-
-Stop if you catch yourself thinking that a task is too simple for a skill check, that you should inspect files first, or that you already remember the instructions. Skill selection precedes clarification, exploration, and action.

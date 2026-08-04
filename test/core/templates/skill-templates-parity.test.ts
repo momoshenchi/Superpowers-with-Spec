@@ -38,14 +38,14 @@ import {
 import { generateSkillContent } from '../../../src/core/shared/skill-generation.js';
 
 const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
-  getExploreSkillTemplate: '4cf1f0a23da5234a5e3d2ee4bfa9b3e83ac9289bcc470b8cdb271f6a087ad023',
+  getExploreSkillTemplate: 'd3cd9a58e8b4ef3b119d9cb476e36d3c719e322a346ac79e6bddc570eb9f1a5d',
   getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
   getContinueChangeSkillTemplate: 'a20b37ab5f70315351edbd4883fe6031a844cf8c067943379c70cadb23610f4a',
   getApplyChangeSkillTemplate: 'ad34dfede606671f98e0c1c02b44ec3abbfdcb161b650b0dc55a4af0a007dab7',
   getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'cb44c89f7b66c3991134b0f4b2d04c591deccdf3c92ce255af6b0caabcdfa86f',
-  getSpExploreCommandTemplate: '35ad7b98f94d71af061571dd03bb42d1bc7ceaa3d7b850ec51cb245c3cc9aafa',
+  getSpExploreCommandTemplate: '6cd455628eef47236a018d8dcaa8bc45b79bbbcbb7325d5299d8d59adf23b20c',
   getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
   getSpContinueCommandTemplate: '6d77d9c35d82ffed073692445237d0e0af38bb47e5a8ac546f2dfca7b7b38e94',
   getSpApplyCommandTemplate: '804fbaefc094290ac60f25197c755414abc29d38b122dba716377e96b1325a59',
@@ -70,7 +70,7 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
-  'superpowers-explore': 'a2b1df6784a1712104e6bf6fca58c571488cc156ce10beb135e03c8bcb7699c3',
+  'superpowers-explore': '034e2010be3e400b450b761c9ef5ca9efe42d4a7fdbf51758c930d30d0d7ad69',
   'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
   'superpowers-continue-change': '2c2576679add3482c5f871493d490351baa300f3eee571f8706f3911dac7c7ef',
   'superpowers-apply-change': 'ba0bee0e283d49608c577876fbe83111d3df354121787c761d98d36f98a73b9a',

@@ -47,6 +47,178 @@ Use for ANY technical issue:
 
 You MUST complete each phase before proceeding to the next.
 
+## Debug Checkpoint Protocol
+
+Use a Debug Checkpoint when an investigation spans multiple turns, crosses a
+context compaction or fresh-worker handoff, or shows a reread loop. A short one-turn investigation may omit it. Once activated, update it after every
+decisive experiment, when a phase closes, and before handing work to a fresh
+context. The checkpoint is the source of truth for recovery; it is not a
+replacement for the four phases or executable verification.
+
+### Track state and phase gates
+
+Split materially different symptoms or causal questions into independent
+tracks. Do not keep a confirmed sibling open just because another track is
+unresolved. Use these exact Track statuses:
+
+- `OPEN` — the track still needs evidence or a replacement hypothesis.
+- `CONFIRMED` — the root cause or behavior is established; freeze the track
+  unless new evidence explicitly invalidates the decision.
+- `BLOCKED` — a named prerequisite is unavailable; record the smallest input
+  needed to continue and stop broad rereads.
+- `HANDED_OFF` — the evidence is complete for the next Proposal or
+  implementation mode.
+
+Use these exact Hypothesis statuses independently from track status:
+`PROPOSED`, `TESTING`, `CONFIRMED`, and `REFUTED`. A `REFUTED` hypothesis does
+not close its track; record the refuting observation before proposing a new
+hypothesis. Each `OPEN` track has exactly one next decisive experiment.
+
+Exit a phase per track, not globally:
+
+| Phase | Exit gate |
+|---|---|
+| Phase 1 | Reproduction is reproducible or explicitly `BLOCKED`, the failing boundary is narrowed, and the evidence is recorded. |
+| Phase 2 | A working-vs-broken comparison is recorded with one prioritized difference. |
+| Phase 3 | One hypothesis and one minimal decisive experiment are stated. |
+| Phase 4 | A failing test exists before an implementation fix, followed by verification evidence after the fix. |
+
+When runtime access, credentials, or another prerequisite is missing, mark the
+track `BLOCKED`, name the exact prerequisite and smallest continuation input,
+and do not keep rereading source files while waiting.
+
+### Evidence ledger
+
+Keep facts, inferences, hypotheses, and decisions separate. Every Evidence ID
+must be stable within the checkpoint and include:
+
+- type: `source`, `test`, `runtime`, `log`, `image`, or `diagram`;
+- source path or command, plus a precise symbol/line, output, boundary, route,
+  or capture anchor;
+- the observed fact, the implication it supports, and confidence or a
+  limitation/reproducibility note.
+
+Prefer inspectable excerpts over summaries such as “checked” or “works”:
+
+| ID | Type | Source or command | Precise anchor | Observation | Implication | Confidence / limitation |
+|---|---|---|---|---|---|---|
+| E1 | source | `src/mapper.ts` | `projectRecord:42-49` | returned object omits `status` | explains the projection mismatch | high; exact source slice |
+| E2 | test | `npm test -- mapper.test.ts` | failing assertion `status` | reproduction fails deterministically | confirms the symptom | rerunnable command |
+| E3 | runtime | probe + environment | handler entry/exit | value enters as `pending`, exits as `undefined` | narrows the boundary | include artifact or output |
+| E4 | log | service log query | request ID and timestamp | downstream receives no transition event | identifies the missing handoff | timing window is a limitation |
+| E5 | image | `artifacts/status-mismatch.png` | route/state/capture time | badge remains stale after refresh | supports a visible mismatch | cannot prove persistence or backend timing |
+| E6 | diagram | Mermaid flow/data-flow diagram | observed edge `API -> reducer` | boundary is labeled `E3` | explains the path under test | inferred edges are labeled |
+
+### Visual and diagram evidence
+
+Use images, screenshots, ASCII diagrams, Mermaid `flowchart`/state diagrams,
+data-flow diagrams, and comparison tables when they make a boundary or state
+transition easier to inspect. For each image or diagram record its caption,
+source or capture context, visible/observed facts, expected-versus-actual
+interpretation when relevant, and uncertainty or limitations. Label edges and
+nodes as observed, inferred, or proposed, and link observed edges to their
+Evidence ID. Visual evidence is illustrative or evidentiary; it does not replace executable verification.
+
+Example:
+
+```mermaid
+flowchart LR
+    A[Observed request entry] -->|E3 observed| B[Reducer input]
+    B -->|E6 observed| C[Rendered state]
+    C -. inferred: H1 .-> D[Missing transition]
+```
+
+```text
+[source E1] -> [test E2] -> [runtime E3] -> [log E4]
+                                  |
+                                  v
+                         [image E5: visible only]
+```
+
+The screenshot can show what was visible at a route and time; it cannot prove
+backend persistence, hidden state, or timing outside the capture. A diagram
+can explain a proposed path, but its inferred edge is not a measured fact.
+
+### Canonical checkpoint shape
+
+Use this compact Markdown shape when the protocol is active:
+
+```md
+## Debug Checkpoint: <scope>
+
+### Scope and Track Map
+| Track | Track status | Current phase | Open question | Next decisive experiment |
+|---|---|---|---|---|
+| T1 | OPEN | Phase 2 | <question> | <one next decisive experiment> |
+
+### Current Phase and Exit Criteria
+<per-track gate and missing evidence>
+
+### Facts and Decisions
+- F1 [observed]: <fact with Evidence IDs>
+- I1 [inferred]: <inference, not a fact>
+- D1 [decision]: <closed branch or handoff>
+
+### Evidence Ledger
+| ID | Type | Source or command | Precise anchor | Observation | Implication | Confidence / limitation |
+|---|---|---|---|---|---|---|
+
+### Working-vs-Broken Comparison
+| Dimension | Working | Broken | Evidence IDs |
+|---|---|---|---|
+
+### Hypotheses
+- H1 [TESTING]: <one hypothesis>; next decisive experiment: <one experiment>
+- H2 [REFUTED]: <hypothesis>; refuting Evidence ID: <ID>
+
+### Verification
+| Check | Outcome | Command / environment | Evidence |
+|---|---|---|---|
+
+### Visual Analysis
+![<caption>](<renderable image path>)
+<capture context, observed facts, inference, expected/actual, limitations>
+
+```mermaid
+flowchart LR
+    A[Observed boundary] -->|Evidence ID E1| B[Observed state]
+    B -. inferred -.-> C[Hypothesis H1]
+```
+
+### Reread Budget and No-Progress Log
+- Reread: <path/symbol> — reason: changed revision | new symbol/line range | hypothesis slice
+- No-progress action 1: <repeated inspection>
+- No-progress action 2: <repeated inspection>
+- Escalation: probe | fresh context | BLOCKED — <reason>
+
+### Handoff / Next Action
+<one next action, preserved paths/Evidence IDs, and whether implementation
+requires leaving read-only explore mode>
+```
+
+### Context recovery and bounded rereads
+
+Before compaction or a fresh-worker handoff, write/update the checkpoint and
+preserve exact paths, symbols, commands, output anchors, image references, and
+Evidence IDs. A recovering agent reads the checkpoint first, restates track
+statuses and preserved conclusions, and performs only the recorded next
+decisive experiment or a narrowly justified new read. It must not restart a
+broad repository scan by default.
+
+Record why any previously inspected file is being reread. It is allowed only
+when the source has a changed revision, the new slice has a new symbol/line
+range, or the active hypothesis requires a new hypothesis slice. Use platform-
+safe path handling such as `path.join()` and `path.resolve()` for generated
+references; preserve a Windows display path such as
+`C:\\workspace\\debug-checkpoints\\incident\\checkpoint.md` instead of
+assuming POSIX separators.
+
+After two consecutive investigation actions that add no new evidence, append
+both actions to the No-Progress Log, checkpoint immediately, and choose one
+escalation: run a minimal runtime probe/instrumentation, start a fresh context
+with this checkpoint, or mark the track `BLOCKED` and request the missing input.
+Do not silently continue the same broad loop.
+
 ### Phase 1: Root Cause Investigation
 
 **BEFORE attempting ANY fix:**
@@ -286,4 +458,3 @@ These techniques are part of systematic debugging and available in this director
 **Related skills:**
 - **superpowers:test-driven-development** - For creating failing test case (Phase 4, Step 1)
 - **superpowers:verification-before-completion** - Verify fix worked before claiming success
-
