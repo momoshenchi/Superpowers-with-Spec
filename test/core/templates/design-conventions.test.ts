@@ -146,7 +146,10 @@ describe('change design conventions sources', () => {
   });
 
   it('repo change-review skill stays aligned with generated review design-convention anchors', () => {
-    const skill = fs.readFileSync(path.join(ROOT, 'skills', 'change-review', 'SKILL.md'), 'utf8');
+    const skill = fs.readFileSync(
+      path.join(ROOT, '.vscode', 'important_skills', 'change-review', 'SKILL.md'),
+      'utf8'
+    );
     const generated = getChangeReviewSkillTemplate().instructions;
 
     for (const anchor of DESIGN_CONVENTION_ANCHORS) {

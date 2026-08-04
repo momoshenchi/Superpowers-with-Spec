@@ -51,4 +51,4 @@ If Direct work hits a Proposal trigger (contract, migration, multi-wave ownershi
 2. Check for ownership conflicts — same files edited?
 3. Run the full relevant suite — fixes must compose
 4. Spot-check — agents can share systematic mistakes
-5. On Proposal Apply: one final cross-unit integration review after all units integrate (see `when-to-dispatch-code-review`)
+5. On Proposal Apply: hand off after all units integrate to Test Hardening and Apply's ordered Final Quality Gates (see `when-to-dispatch-code-review`)

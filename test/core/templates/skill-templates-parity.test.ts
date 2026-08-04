@@ -38,14 +38,14 @@ import {
 import { generateSkillContent } from '../../../src/core/shared/skill-generation.js';
 
 const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
-  getExploreSkillTemplate: 'd3cd9a58e8b4ef3b119d9cb476e36d3c719e322a346ac79e6bddc570eb9f1a5d',
+  getExploreSkillTemplate: '1d25e7f242d47d0d19410072e929eda25f720f6e3b489c0cc767350646b9a0ad',
   getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
   getContinueChangeSkillTemplate: 'a20b37ab5f70315351edbd4883fe6031a844cf8c067943379c70cadb23610f4a',
   getApplyChangeSkillTemplate: 'ad34dfede606671f98e0c1c02b44ec3abbfdcb161b650b0dc55a4af0a007dab7',
   getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'cb44c89f7b66c3991134b0f4b2d04c591deccdf3c92ce255af6b0caabcdfa86f',
-  getSpExploreCommandTemplate: '6cd455628eef47236a018d8dcaa8bc45b79bbbcbb7325d5299d8d59adf23b20c',
+  getSpExploreCommandTemplate: '76f20d227059b07330fe41bbf4b91955194ec31876888a2f80dd7a2e1c13152e',
   getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
   getSpContinueCommandTemplate: '6d77d9c35d82ffed073692445237d0e0af38bb47e5a8ac546f2dfca7b7b38e94',
   getSpApplyCommandTemplate: '804fbaefc094290ac60f25197c755414abc29d38b122dba716377e96b1325a59',
@@ -65,12 +65,12 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getSpProposeSkillTemplate: 'f6210e7d15883d5462d43b694491c3fda6643789fc5a695d606f0c9fb2ec1332',
   getSpProposeCommandTemplate: '5d7a1211870b84c3332b8912f93ede837a43f46f58b505532579e07d08db1148',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
-  getChangeReviewSkillTemplate: '6457d5d4d92220c0efcd9babe1db4439b0e11b506047ebf53345f8a43e51b148',
-  getSpReviewCommandTemplate: '3d4b6c475b389556d75a2f384bef97aa214606dfb28b4c2a0c615c8994d83f09',
+  getChangeReviewSkillTemplate: '1171bffd19747c54c2d2f6e9cda1c24f4996554b99921ebc5a851e9ed68e628d',
+  getSpReviewCommandTemplate: '0c66ac69c1b9c37bded7f36800e00fea1ab0f4d2ebf4408131308511f504c0e1',
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
-  'superpowers-explore': '034e2010be3e400b450b761c9ef5ca9efe42d4a7fdbf51758c930d30d0d7ad69',
+  'superpowers-explore': 'bcfe8ad716d221ea206b594a787f101ec0606be7241ec61fc0470189e815a494',
   'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
   'superpowers-continue-change': '2c2576679add3482c5f871493d490351baa300f3eee571f8706f3911dac7c7ef',
   'superpowers-apply-change': 'ba0bee0e283d49608c577876fbe83111d3df354121787c761d98d36f98a73b9a',
@@ -83,7 +83,7 @@ const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-design-verify': '50a6a25f20bd749bfee135b384702ae4aa7adcc0fb06345c18de0902f505bab7',
   'superpowers-onboard': '1e40083eae207872b397d141c4f2660e9d8ec3a705f46ab6a0e2b3a0facab580',
   'superpowers-propose': '11d6ebe0ddf106ba04adeaf75210652842fb374d273044feb33373a4456088fe',
-  'superpowers-change-review': '6e5be70bde3038d216934e8ca071ad597e173837bb9a1aa0b15252aed84e65d0',
+  'superpowers-change-review': 'bbe8171ab6d006668cb47a09593288663c3ebb236d0e00035600d1deb42ef428',
 };
 
 function stableStringify(value: unknown): string {

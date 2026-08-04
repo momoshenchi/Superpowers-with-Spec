@@ -1109,10 +1109,6 @@ Expand every detailed task in the dispatch unit below under clean \`### <number>
 4. **Step 4: Run focused verification**
 5. **Step 5: Self-review and handoff**
 
-## Final Integration Review and Validation
-
-- Integrate all dispatch units before formal review.
-- Perform one cross-unit review after integration; fix blockers with targeted verification.
 `;
 
     case 'test-plan':

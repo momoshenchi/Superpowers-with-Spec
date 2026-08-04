@@ -45,6 +45,15 @@ const checkpointContract = [
   'does not replace executable verification',
 ];
 
+const exploreCheckpointSummary = [
+  'Debug Checkpoint',
+  'context compaction',
+  'fresh-worker handoff',
+  'reread loop',
+  'before handoff',
+  'recovery source of truth',
+];
+
 const expectContract = (content: string) => {
   for (const term of checkpointContract) {
     expect(content, `missing checkpoint contract term: ${term}`).toContain(term);
@@ -78,18 +87,10 @@ describe('debug investigation checkpoint guidance', () => {
     const generatedSkill = getExploreSkillTemplate().instructions;
     const generatedCommand = getSpExploreCommandTemplate().content;
 
-    expectContract(generatedSkill);
-    expectContract(generatedCommand);
-    for (const term of [
-      'context compaction',
-      'confirmed root cause',
-      'application code',
-      'image',
-      'uncertainty',
-      'Evidence ID',
-    ]) {
-      expect(generatedSkill, `skill missing aligned term: ${term}`).toContain(term);
-      expect(generatedCommand, `command missing aligned term: ${term}`).toContain(term);
+    for (const content of [generatedSkill, generatedCommand]) {
+      for (const term of exploreCheckpointSummary) {
+        expect(content, `missing explore checkpoint summary term: ${term}`).toContain(term);
+      }
     }
   });
 

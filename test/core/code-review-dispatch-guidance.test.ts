@@ -26,7 +26,8 @@ describe('code-review dispatch guidance', () => {
     expect(guidance).toContain('Subagent-Driven Development');
     expect(guidance).toContain('Proposal → Review → Apply');
     expect(guidance).toContain('after Test Hardening');
-    expect(guidance).toContain('one final cross-unit integration review');
+    expect(guidance).toContain('Apply owns the mandatory host-native code-review gate');
+    expect(guidance).not.toContain('one final cross-unit integration review');
     expect(guidance).not.toMatch(/review after (each|every) (task|batch)/i);
     expect(guidance).not.toContain('Review after each batch (3 tasks)');
   });

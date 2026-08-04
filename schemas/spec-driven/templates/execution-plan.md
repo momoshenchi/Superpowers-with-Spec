@@ -53,9 +53,4 @@ Expand every detailed task from `tasks.md` beneath its dispatch unit. These step
 
 Repeat Steps 1–5 with concrete files, tests, commands, expected results, and implementation detail for Task 1.2.
 
-## Final Integration Review and Validation
 
-- Integrate all dispatch units before formal review.
-- Perform one cross-unit review of requirements, interactions, code quality, test coverage, and full-change verification.
-- Fix blocking findings and run targeted verification. Do not restart a complete review unless the reviewer explicitly requests confirmation of a specified finding.
-- Record post-implementation coverage gaps and Test Hardening evidence in `test-plan.md`.

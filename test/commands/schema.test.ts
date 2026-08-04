@@ -381,7 +381,6 @@ artifacts:
       expect(executionPlanTemplate).toContain('Dispatch Execution');
       expect(executionPlanTemplate).toContain('Step 1: Write or extend focused tests');
       expect(executionPlanTemplate).toContain('Step 5: Self-review and handoff');
-      expect(executionPlanTemplate).toContain('Final Integration Review and Validation');
       expect(executionPlanTemplate).not.toContain('Review tests before production code');
     });
 

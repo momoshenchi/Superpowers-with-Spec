@@ -40,7 +40,7 @@ describe('change review workflow templates', () => {
       content.indexOf('present the complete review report')
     );
     expect(content).toContain('fresh subagent');
-    expect(content).toContain('coordinator chooses');
+    expect(content).toContain('**Coordinator**');
     expect(content).toContain('three rounds');
     expect(content).not.toContain('change-reviewer-prompt');
     expect(content).toContain('Change reviewer');

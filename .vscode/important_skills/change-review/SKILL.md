@@ -46,7 +46,7 @@ description: 用户在开始实现 Superpowers 变更前、希望审核变更提
 - 宣布 ready 的条件是 no unresolved BLOCKER；residual WARNING/SUGGESTION notes may remain visible。
 - 若修复依赖用户、产品、安全、schema 或外部依赖决策，报告该 BLOCKER 并暂停；不得猜测或宣称 ready。
 - Do not create `review.md`、approval metadata 或 review artifact。proposal review 是瞬态行为；`/sp:apply` does not automatically repeat proposal review。
-- 本 skill 是实施前的 proposal review；实现完成后仍保留独立的 **final integration review**，审跨 dispatch unit 行为、完整 diff 与全量验证，二者不得混同。
+- 本 skill 是实施前的 proposal review；实现完成后的全量验证由 `/sp:apply` 的 **Final Quality Gates** 负责
 
 ## 审查维度
 

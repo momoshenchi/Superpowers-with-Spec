@@ -203,7 +203,9 @@ describe('instruction-loader', () => {
       expect(instructions.template).toContain('Dispatch Execution');
       expect(instructions.template).toContain('Step 1: Write or extend focused tests');
       expect(instructions.template).toContain('Step 5: Self-review and handoff');
-      expect(instructions.template).toContain('Final Integration Review and Validation');
+      expect(instructions.template).toContain('Apply Handoff and Final Quality Gates');
+      expect(instructions.template).toContain('Final Quality Gates');
+      expect(instructions.template).not.toContain('Perform one cross-unit review');
       expect(instructions.template).toContain('dispatch unit');
       expect(instructions.template).not.toContain('Review test coverage before production code');
     });

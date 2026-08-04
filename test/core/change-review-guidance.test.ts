@@ -7,7 +7,7 @@ import { getChangeReviewSkillTemplate } from '../../src/core/templates/skill-tem
 describe('change review guidance contract', () => {
   it('keeps repository-local guidance aligned with generated review behavior', () => {
     const rootSkill = fs.readFileSync(
-      path.join(process.cwd(), 'skills', 'change-review', 'SKILL.md'),
+      path.join(process.cwd(), '.vscode', 'important_skills', 'change-review', 'SKILL.md'),
       'utf8'
     );
     const generated = getChangeReviewSkillTemplate().instructions;
@@ -22,7 +22,6 @@ describe('change review guidance contract', () => {
       'fresh subagent',
       'three rounds',
       'Step 1–5',
-      'final integration review',
       'Do not create `review.md`',
       'dispatch unit',
     ]) {
@@ -34,6 +33,8 @@ describe('change review guidance contract', () => {
     expect(rootSkill.toLowerCase()).toContain('assignee policy');
     expect(generated.toLowerCase()).toContain('assignee policy');
     expect(generated).toContain('Dispatch Coordination');
+    expect(rootSkill).toContain('Final Quality Gates');
+    expect(generated).toContain('final integration review');
     expect(rootSkill).not.toContain('repair every resolvable BLOCKER and WARNING');
     expect(generated).not.toContain('repair every resolvable BLOCKER and WARNING');
     expect(rootSkill).not.toContain('2–20 minutes');
