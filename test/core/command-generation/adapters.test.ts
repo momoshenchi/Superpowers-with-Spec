@@ -24,6 +24,7 @@ import { qwenAdapter } from '../../../src/core/command-generation/adapters/qwen.
 import { roocodeAdapter } from '../../../src/core/command-generation/adapters/roocode.js';
 import { windsurfAdapter } from '../../../src/core/command-generation/adapters/windsurf.js';
 import type { CommandContent } from '../../../src/core/command-generation/types.js';
+import { getCommandContents } from '../../../src/core/shared/skill-generation.js';
 
 describe('command-generation/adapters', () => {
   const sampleContent: CommandContent = {
@@ -44,6 +45,21 @@ describe('command-generation/adapters', () => {
         expect(generatedPath).toContain(commandId);
         expect(generatedPath).toMatch(/sp[-/]/);
       }
+    }
+  });
+
+  it('preserves the shared Propose body through representative adapters', () => {
+    const [propose] = getCommandContents(['propose']);
+    const adapters = [claudeAdapter, cursorAdapter, windsurfAdapter];
+
+    expect(propose.body).toContain('Before any change creation or artifact write');
+    expect(propose.body).toContain('Offer exactly three semantic final outcomes');
+
+    for (const adapter of adapters) {
+      const formatted = adapter.formatFile(propose);
+      expect(formatted).toContain('Before any change creation or artifact write');
+      expect(formatted).toContain('Offer exactly three semantic final outcomes');
+      expect(adapter.getFilePath('propose')).toContain('propose');
     }
   });
 

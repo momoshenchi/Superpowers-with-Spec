@@ -175,6 +175,12 @@ Old instructions content
         expect(content).toContain('description:');
       }
 
+      const proposeCommand = path.join(testDir, '.claude', 'commands', 'sp', 'propose.md');
+      expect(await FileSystemUtils.fileExists(proposeCommand)).toBe(true);
+      const proposeContent = await fs.readFile(proposeCommand, 'utf-8');
+      expect(proposeContent).toContain('Before any change creation or artifact write');
+      expect(proposeContent).toContain('Offer exactly three semantic final outcomes');
+
       // Verify non-core skills are NOT created
       const nonCoreSkillNames = [
         'superpowers-new-change',

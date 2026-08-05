@@ -6,6 +6,39 @@
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
 
+const PROPOSE_INTERVIEW_GUIDANCE = `
+### Pre-confirmation understanding gate
+
+Before any change creation or artifact write, perform a read-only preflight. Inspect the request, existing specs, project configuration, relevant documentation, and other environment facts with read-only operations. Resolve project, spec, and change paths with platform-neutral path handling. Do not run superpowers new change or write proposal.md, specs/<capability>/spec.md, design.md, tasks.md, execution-plan.md, or test-plan.md during this phase.
+
+Treat discovered environment facts as facts, not user decisions. Ask the user only about unresolved, consequential decisions needed to make the proposal coherent:
+- product decisions about the problem and urgency, goal, scope, non-goals, capabilities, impact, or acceptance expectations;
+- high-impact technical decisions about architecture, data or migration, public API or CLI contracts, security, reliability or recovery, performance, compatibility, deployment or operations, or an important dependency.
+
+Routine local implementation details remain agent-owned. A clear low-risk request may have zero interview questions when its goal, scope, capabilities, impact, acceptance expectation, and high-impact technical choices are sufficiently determined by the request or existing constraints. Zero questions still require the final understanding summary and explicit confirmation.
+
+Ask one decision question at a time and wait for the answer before asking another. Each question must state:
+- Known facts;
+- Decision to resolve and why it matters;
+- Recommended answer and its trade-off;
+- Two or three meaningful alternatives when they exist;
+- A free-form response invitation.
+
+Use AskUserQuestion or the host's equivalent when available. If no structured question tool is available, use ordinary natural-language conversation while preserving the same one-question-at-a-time format. If the user delegates a decision, adopt the stated recommendation, record it as a decision in the running summary, and re-evaluate dependent decisions before continuing.
+
+Continue until decisions are closed: the problem and urgency, scope and non-goals, capabilities, impact, acceptance expectations, and every user-owned high-impact decision must be concrete enough for artifact generation. Then present one complete final understanding summary that separates confirmed decisions from agent-owned implementation assumptions.
+
+Offer exactly three semantic final outcomes:
+1. Confirm and create — after explicit confirmation, run the existing change and artifact workflow.
+2. Request changes — keep the write boundary closed, accept or ask for one correction at a time, re-evaluate dependent decisions, and present a new complete summary.
+3. Stop without creating — end without creating a change directory or any change artifact and report that no change was created.
+
+The confirm-and-create outcome is required even when there were zero interview questions. Do not create the change or write any explicit artifact until that outcome is selected.
+
+After confirmation, route confirmed product decisions into proposal.md. Route each high-impact technical decision into design.md with the selected choice, meaningful alternatives, rationale, and trade-offs; major decisions must compare at least three options. Do not create interview.md or any separate interview transcript. Preserve the schema-defined artifact list, dependency-ordered generation, automatic proposal review, and final status flow below.
+
+`;
+
 export function getSpProposeSkillTemplate(): SkillTemplate {
   return {
     name: 'superpowers-propose',
@@ -26,18 +59,22 @@ When ready to implement, run /sp:apply
 
 **Input**: The user's request should include a change name (kebab-case) OR a description of what they want to build.
 
+${PROPOSE_INTERVIEW_GUIDANCE}
+
 **Steps**
 
 1. **If no clear input provided, ask what they want to build**
 
-   Use the **AskUserQuestion tool** (open-ended, no preset options) to ask:
+   Use the **AskUserQuestion tool** (open-ended, no preset options) when available to ask:
    > "What change do you want to work on? Describe what you want to build or fix."
+
+   If AskUserQuestion is unavailable, ask the same open-ended question in ordinary conversation and wait for the answer.
 
    From their description, derive a kebab-case name (e.g., "add user authentication" → \`add-user-auth\`).
 
    **IMPORTANT**: Do NOT proceed without understanding what the user wants to build.
 
-2. **Create the change directory**
+2. **After the user selects Confirm and create, create the change directory**
    \`\`\`bash
    superpowers new change "<name>"
    \`\`\`
@@ -80,7 +117,7 @@ When ready to implement, run /sp:apply
       - Stop when all \`applyRequires\` artifacts are done
 
    c. **If an artifact requires user input** (unclear context):
-      - Use **AskUserQuestion tool** to clarify
+      - Use AskUserQuestion to clarify when available. If AskUserQuestion is unavailable, ask the clarification in ordinary conversation and wait for the answer.
       - Then continue with creation
 
 5. **Review the complete proposal before readiness**
@@ -160,18 +197,22 @@ When ready to implement, run /sp:apply
 
 **Input**: The argument after \`/sp:propose\` is the change name (kebab-case), OR a description of what the user wants to build.
 
+${PROPOSE_INTERVIEW_GUIDANCE}
+
 **Steps**
 
 1. **If no input provided, ask what they want to build**
 
-   Use the **AskUserQuestion tool** (open-ended, no preset options) to ask:
+   Use the **AskUserQuestion tool** (open-ended, no preset options) when available to ask:
    > "What change do you want to work on? Describe what you want to build or fix."
+
+   If AskUserQuestion is unavailable, ask the same open-ended question in ordinary conversation and wait for the answer.
 
    From their description, derive a kebab-case name (e.g., "add user authentication" → \`add-user-auth\`).
 
    **IMPORTANT**: Do NOT proceed without understanding what the user wants to build.
 
-2. **Create the change directory**
+2. **After the user selects Confirm and create, create the change directory**
    \`\`\`bash
    superpowers new change "<name>"
    \`\`\`
@@ -214,7 +255,7 @@ When ready to implement, run /sp:apply
       - Stop when all \`applyRequires\` artifacts are done
 
    c. **If an artifact requires user input** (unclear context):
-      - Use **AskUserQuestion tool** to clarify
+      - Use AskUserQuestion to clarify when available. If AskUserQuestion is unavailable, ask the clarification in ordinary conversation and wait for the answer.
       - Then continue with creation
 
 5. **Review the complete proposal before readiness**

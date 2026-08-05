@@ -157,7 +157,7 @@ rules:
 
 | Command | What it does |
 |---------|--------------|
-| `/sp:propose` | Create a change and generate planning artifacts in one step (default quick path) |
+| `/sp:propose` | Run the adaptive understanding gate, then create a change and generate planning artifacts after confirmation (default quick path) |
 | `/sp:explore` | Think through ideas, investigate problems, clarify requirements |
 | `/sp:new` | Start a new change scaffold (expanded workflow) |
 | `/sp:continue` | Create the next artifact (expanded workflow) |
@@ -181,7 +181,9 @@ Think through ideas, investigate problems, compare options. No structure require
 ```
 /sp:propose
 ```
-Creates the change and generates planning artifacts needed before implementation.
+Performs read-only discovery and an adaptive, one-question-at-a-time understanding gate before creating the change and generating planning artifacts. Clear low-risk requests may have zero interview questions, but the final summary still requires explicit confirmation. The final gate can confirm and create, request changes without writing, or stop without creating a change.
+
+After confirmation, confirmed product decisions are recorded in `proposal.md`; high-impact technical decisions, alternatives, rationale, and trade-offs are recorded in `design.md`. No separate interview transcript is created.
 
 If you've enabled expanded workflows, you can instead use:
 

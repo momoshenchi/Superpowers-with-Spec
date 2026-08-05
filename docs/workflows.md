@@ -57,6 +57,8 @@ Typical flow:
 /sp:propose ──► /sp:apply ──► /sp:archive
 ```
 
+`/sp:propose` has a proportional understanding gate before this flow starts. It performs read-only discovery first, then asks only unresolved product or high-impact technical decisions, one question at a time. A clear, low-risk request may need zero interview questions, but it still receives a final understanding summary and explicit confirmation. The final gate can confirm and create, request changes while keeping the write boundary closed, or stop without creating a change. Change creation and artifact writes begin only after confirm-and-create; confirmed product decisions go to `proposal.md` and high-impact technical decisions go to `design.md`.
+
 ### Expanded/Full Workflow (custom selection)
 
 If you want explicit scaffold-and-build commands (`/sp:new`, `/sp:continue`, `/sp:ff`, `/sp:verify`, `/sp:simplify`, `/sp:design-verify`, `/sp:sync`, `/sp:bulk-archive`, `/sp:onboard`), enable them with:
@@ -463,7 +465,7 @@ For full command details and options, see [Commands](commands.md).
 
 | Command | Purpose | When to Use |
 |---------|---------|-------------|
-| `/sp:propose` | Create change + planning artifacts | Fast default path (`core` profile) |
+| `/sp:propose` | Run the adaptive understanding gate, then create change and planning artifacts after confirmation | Fast default path (`core` profile) |
 | `/sp:explore` | Think through ideas | Unclear requirements, investigation |
 | `/sp:new` | Start a change scaffold | Expanded mode, explicit artifact control |
 | `/sp:continue` | Create next artifact | Expanded mode, step-by-step artifact creation |

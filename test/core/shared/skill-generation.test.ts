@@ -89,6 +89,16 @@ describe('skill-generation', () => {
       expect(filtered[0].workflowId).toBe('propose');
       expect(filtered[0].dirName).toBe('superpowers-propose');
     });
+
+    it('should emit the adaptive Propose interview contract in the generated skill', () => {
+      const [propose] = getSkillTemplates(['propose']);
+      const generated = generateSkillContent(propose.template, 'TEST-VERSION');
+
+      expect(generated).toContain('Before any change creation or artifact write');
+      expect(generated).toContain('A clear low-risk request may have zero interview questions');
+      expect(generated).toContain('Offer exactly three semantic final outcomes');
+      expect(generated).toContain('route confirmed product decisions into proposal.md');
+    });
   });
 
   describe('getCommandTemplates', () => {

@@ -62,8 +62,8 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getSpSimplifyCommandTemplate: '6b2cbe5bfaf2de3912de7f8a252f7481121d76ebfe29a1cd32e4edfd4faa26a9',
   getDesignVerifySkillTemplate: '4920e25dce697b90b8031620b63085856bf09cfc275d1fec45d7873dcef7c14b',
   getSpDesignVerifyCommandTemplate: '65f9b0ea063d942aed1d148781f1022007de0d38a0cb7502e6375a5fa3ffa7cd',
-  getSpProposeSkillTemplate: '79f217bbfef1d16e4edc21830f5d70b036fb1e1b0e30aeb3367a4849c0689f86',
-  getSpProposeCommandTemplate: 'ed4bebb48b785041b92451839cd02d8d2bd823b29082601a575bee965f162abf',
+  getSpProposeSkillTemplate: '7db445e0678313a6294c29a41b938ebd478a3c800494320a0d5d6360524d4431',
+  getSpProposeCommandTemplate: '4f43660298e0d84ab348496dc1aa273553b909944ac4315aa8204d70fbbb64df',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
   getChangeReviewSkillTemplate: 'a344cd501aa985d15364e4c2e77654c0864f0519cbe1342623fc1342bae8f8d3',
   getSpReviewCommandTemplate: 'c677f371c5515e8ae169d13b102a594c176246c777f601b0a47266d820b783bd',
@@ -82,7 +82,7 @@ const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-simplify': 'ded11077d5f03a74fd393307599a3339e221677a54b04bfbbcd7195ae41b0c8b',
   'superpowers-design-verify': '50a6a25f20bd749bfee135b384702ae4aa7adcc0fb06345c18de0902f505bab7',
   'superpowers-onboard': '736257835836c326f0286e0da55232799a9809a29a2ed2b63d1f9beee9bf6a34',
-  'superpowers-propose': '08cdef1443ff84f02bde3d8b2fa681e0c10481496412d357d7ac65e94fca094e',
+  'superpowers-propose': '4fe5277e0da3ab114fc1b31c0646884b04ed3f9de8a15cc74c819d5358d5b3a5',
   'superpowers-change-review': 'ea3fc1a27e4f641a3e6fa2d39f70346504e15d4d9a47548b5e3a80ab236ebf2a',
 };
 
@@ -107,6 +107,70 @@ function hash(value: string): string {
 }
 
 describe('skill templates split parity', () => {
+  it('describes the adaptive Propose interview gate in both projections', () => {
+    for (const template of [getSpProposeSkillTemplate(), getSpProposeCommandTemplate()]) {
+      const content = 'instructions' in template ? template.instructions : template.content;
+
+      expect(content).toContain('Before any change creation or artifact write');
+      expect(content).toContain('A clear low-risk request may have zero interview questions');
+      expect(content).toContain('product decisions about the problem and urgency');
+      for (const trigger of [
+        'architecture',
+        'data or migration',
+        'public API or CLI contracts',
+        'security',
+        'reliability or recovery',
+        'performance',
+        'compatibility',
+        'deployment or operations',
+        'important dependency',
+      ]) {
+        expect(content).toContain(trigger);
+      }
+
+      expect(content).toContain('Ask one decision question at a time and wait for the answer');
+      expect(content).toContain('Known facts');
+      expect(content).toContain('Decision to resolve and why it matters');
+      expect(content).toContain('Recommended answer and its trade-off');
+      expect(content).toContain('Two or three meaningful alternatives');
+      expect(content).toContain('free-form response invitation');
+      expect(content).toContain('ordinary natural-language conversation');
+      expect(content).toContain('If AskUserQuestion is unavailable, ask the same open-ended question in ordinary conversation');
+      expect(content).toContain('If AskUserQuestion is unavailable, ask the clarification in ordinary conversation');
+      expect(content).toContain('If the user delegates a decision');
+      expect(content).toContain('re-evaluate dependent decisions');
+
+      expect(content).toContain('one complete final understanding summary');
+      expect(content).toContain('confirmed decisions from agent-owned implementation assumptions');
+      expect(content).toContain('Offer exactly three semantic final outcomes');
+      expect(content).toContain('1. Confirm and create');
+      expect(content).toContain('2. Request changes');
+      expect(content).toContain('3. Stop without creating');
+      expect(content).toContain('The confirm-and-create outcome is required even when there were zero interview questions');
+
+      expect(content).toContain('route confirmed product decisions into proposal.md');
+      expect(content).toContain('Route each high-impact technical decision into design.md');
+      expect(content).toContain('selected choice, meaningful alternatives, rationale, and trade-offs');
+      expect(content).toContain('major decisions must compare at least three options');
+      expect(content).toContain('Do not create interview.md');
+
+      const confirmationIndex = content.indexOf('1. Confirm and create —');
+      const creationIndex = content.indexOf('superpowers new change "<name>"');
+      const reviewIndex = content.indexOf('Dispatch a fresh change reviewer subagent');
+      expect(confirmationIndex).toBeGreaterThan(-1);
+      expect(creationIndex).toBeGreaterThan(confirmationIndex);
+      expect(reviewIndex).toBeGreaterThan(creationIndex);
+    }
+  });
+
+  it('keeps the Propose quick-reference documentation aligned with the gate', () => {
+    const workflows = readFileSync(path.join(process.cwd(), 'docs', 'workflows.md'), 'utf8');
+
+    expect(workflows).toContain(
+      '| `/sp:propose` | Run the adaptive understanding gate, then create change and planning artifacts after confirmation |'
+    );
+  });
+
   it('describes execution-plan in generated workflow instructions', () => {
     for (const template of [
       getSpProposeSkillTemplate(),

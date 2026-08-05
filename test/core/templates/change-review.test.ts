@@ -72,6 +72,13 @@ describe('change review workflow templates', () => {
       expect(content).toContain('Dispatch Units in tasks.md');
       expect(content).toContain('# <number>. <scope>');
       expect(content).not.toContain('Repair every resolvable BLOCKER and WARNING');
+
+      expect(content.indexOf('1. Confirm and create —')).toBeLessThan(
+        content.indexOf('superpowers new change "<name>"')
+      );
+      expect(content.indexOf('superpowers new change "<name>"')).toBeLessThan(
+        content.indexOf('Dispatch a fresh change reviewer subagent')
+      );
     }
 
     for (const template of [getApplyChangeSkillTemplate(), getSpApplyCommandTemplate()]) {
