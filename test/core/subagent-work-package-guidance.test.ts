@@ -38,23 +38,21 @@ describe('subagent dispatch-unit guidance', () => {
     const development = readGuidance('skills', 'subagent-driven-development', 'SKILL.md');
     const review = readGuidance('skills', 'when-to-dispatch-code-review', 'SKILL.md');
 
-    expect(development).toContain('/sp:propose');
     expect(development).toContain('/sp:apply');
     expect(development).not.toContain('one final cross-unit integration review');
     expect(development).not.toContain('final integration review');
-    expect(development).toContain('## Final Quality Gates');
-    expect(development).toContain('one fresh, distinct subagent');
+    expect(development).toContain('### Final Quality Gates');
     expect(development).toContain('Host-native code review');
     expect(development).toContain('Simplify');
     expect(development).toContain('Verify');
     expect(development).toContain('Design verify');
     expect(development).toContain('read-only by default');
     expect(development).toContain('Do not dispatch a separate complete review');
-    expect(development).toContain('### Subagent allocation');
+    expect(development).toContain('#### Subagent allocation');
     expect(development).toContain('one gate → one fresh worker');
     expect(development).toContain('await and integrate its report before dispatching the next');
 
-    const gatesIndex = development.indexOf('## Final Quality Gates');
+    const gatesIndex = development.indexOf('### Final Quality Gates');
     const verificationIndex = development.indexOf('verification-before-completion', gatesIndex);
     const finishingIndex = development.indexOf('finishing-a-development-branch', verificationIndex);
     expect(verificationIndex).toBeGreaterThan(gatesIndex);
@@ -65,17 +63,12 @@ describe('subagent dispatch-unit guidance', () => {
     expect(review).not.toContain('After all units are integrated and local verification passes');
   });
 
-  it('separates Explore and Debug investigation assignments from implementation units', () => {
+  it('routes Explore and Debug investigation before implementation dispatch', () => {
     const development = readGuidance('skills', 'subagent-driven-development', 'SKILL.md');
 
-    expect(development).toContain('## Explore and Debug Dispatch');
-    expect(development).toContain('Explore assignments are read-only');
-    expect(development).toContain('Do not fan out an open-ended Explore investigation');
-    expect(development).toContain('parallelize only after investigation tracks are disjoint');
-    expect(development).toContain('Debug assignments use `superpowers:systematic-debugging`');
-    expect(development).toContain('NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST');
-    expect(development).toContain('Debug Checkpoint');
-    expect(development).toContain('handoff evidence before assigning implementation');
-    expect(development).toContain('Explore and Debug workers are not Final Quality Gates');
+    expect(development).toContain('Manual execution, Explore, or Debug first');
+    expect(development).toContain('## Work Mode');
+    expect(development).toContain('Direct Modification');
+    expect(development).toContain('Proposal → Review → Apply');
   });
 });
