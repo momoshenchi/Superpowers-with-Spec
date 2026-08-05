@@ -36,6 +36,17 @@ Explain what each file is, why it matters, which task or requirement it supports
 
 Expand every detailed task from `tasks.md` beneath its dispatch unit. These steps explain how to execute a feature-scale task; they are not separate subagent assignments or required 2–5 minute units. Keep checkbox completion only in `tasks.md`. Use clean `### <number>. <scope>` headings — do not nest code-wrapped `# ...` heading text.
 
+## Implementation Notes
+
+After any Step 1–5, a worker MAY append a concise `#### Implementation Notes` subsection directly below that step when the implementation produces useful knowledge. These notes are non-normative narrative context, not an execution status tracker, and do not replace `tasks.md` progress or verification evidence. Do not use task checkboxes or status fields in the notes. Prefer observations that help a later worker or the main agent understand:
+
+- **Findings** — facts discovered in the code, tests, runtime, or tooling
+- **Reasoning** — the thought process behind an implementation choice
+- **Viewpoints / Trade-offs** — alternatives considered and why one was preferred
+- **Summary / Takeaway** — a concise conclusion or reusable tip
+
+Keep planned Step 1–5 instructions intact. Append notes rather than rewriting the plan, and distinguish observed facts from inferences or decisions. When multiple dispatch units execute in parallel, the coordinator SHALL serialize writes to this shared file or append worker-provided notes after handoff; a worker must not overwrite another unit's notes.
+
 ### 1. [scope]
 
 #### Task 1.1: [Detailed task description]
@@ -49,8 +60,9 @@ Expand every detailed task from `tasks.md` beneath its dispatch unit. These step
 4. **Step 4: Run focused verification** — Run the exact focused command and state the expected passing result.
 5. **Step 5: Self-review and handoff** — Check the task against its requirements, report files and verification, then continue with the next detailed task in this dispatch unit.
 
+   Append `#### Implementation Notes` after any of the five steps when there is a meaningful finding, reasoning note, viewpoint/trade-off, or summary/takeaway. Notes are optional and explanatory; they are not a second task checklist.
+
 #### Task 1.2: [Detailed task description]
 
 Repeat Steps 1–5 with concrete files, tests, commands, expected results, and implementation detail for Task 1.2.
-
 

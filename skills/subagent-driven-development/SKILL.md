@@ -48,14 +48,15 @@ Direct Modification does not create a Change Proposal or Dispatch Unit merely to
 2. Use `execution-plan.md` to identify ownership, dependencies, and safe parallelism.
 3. In `tasks.md`, a heading in the form `# <number>. <scope>` is a logical dispatch-unit boundary, not a promise to dispatch a particular live subagent. 
 4. If an existing task list has no dispatch-unit heading, preserve it and treat all incomplete tasks as one sequential dispatch unit.
+5. Read any existing `Implementation Notes` in the relevant dispatch unit as non-normative context. Keep `tasks.md` as the only progress source and do not infer completion from notes.
 
 #### Per Dispatch Unit
 
 1. Dispatch the complete dispatch unit with its task text, dependencies, ownership boundaries, assignee policy, and verification expectations. The coordinator may assign one unit to one subagent, combine compatible dispatch units in one assignment, or execute all dispatch units sequentially itself.
 2. If a worker asks questions, resolve them before implementation.
-3. The worker implements every detailed checkbox in the block, runs the planned checks, self-reviews, and reports changed files, verification, and concerns.
-4. Integrate the completed package and mark its detailed checkboxes only after its own verification succeeds.
-5. Dispatch in parallel only when the execution plan declares disjoint ownership and no unmet dependency. Serialize any overlap.
+3. The worker implements every detailed checkbox in the block, runs the planned checks, self-reviews, and reports changed files, verification, and concerns. After each Step 1–5, the worker may append concise `Implementation Notes` directly below the step when there is a meaningful finding, reasoning point, viewpoint / trade-off, or summary / takeaway. Notes are non-normative narrative context, not an execution status tracker, and must not add task checkboxes or status fields.
+4. The main agent reviews the worker's `Implementation Notes` against the diff, planned verification, and handoff concerns before marking detailed checkboxes. Notes help explain the work but do not substitute for tests, self-review, or acceptance evidence.
+5. Dispatch in parallel only when the execution plan declares disjoint ownership and no unmet dependency. Serialize writes to shared execution-plan.md; if workers cannot safely edit their own note sections, they return the notes to the coordinator for append after handoff. Serialize any overlap.
 
 
 ### Final Quality Gates
@@ -101,4 +102,3 @@ Each dispatch needs:
 - The coordinator evaluates and repairs accepted findings.
 - Run the targeted verification named by the finding.
 - Follow the Apply gate's retry boundary; do not restart earlier gates without an explicit retry rule.
-

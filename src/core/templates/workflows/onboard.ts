@@ -401,7 +401,7 @@ Save to \`superpowers/changes/<name>/tasks.md\`.
 \`\`\`
 ## Execution Plan
 
-Before implementation, we create \`execution-plan.md\`: the dispatch-unit coordination and final validation plan. \`tasks.md\` stays the progress checklist; \`execution-plan.md\` carries file ownership, dependencies, safe parallelism, integration order, Step 1–5 execution guidance for every detailed task, and final review guidance.
+Before implementation, we create \`execution-plan.md\`: the dispatch-unit coordination and final validation plan. \`tasks.md\` stays the progress checklist; \`execution-plan.md\` carries file ownership, dependencies, safe parallelism, integration order, Step 1–5 execution guidance for every detailed task, and final review guidance. During implementation, workers may append optional non-normative \`Implementation Notes\` after meaningful steps to preserve findings and reasoning without creating execution status.
 
 Then we create \`test-plan.md\`: the pre-implementation coverage draft and post-implementation Test Hardening record.
 \`\`\`

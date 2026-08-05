@@ -36,6 +36,14 @@ Task tool (general-purpose):
     5. Self-review (see below)
     6. Report back for integration; do not request a formal review after individual checkboxes
 
+    **Implementation Notes while working:**
+    - Read any existing `Implementation Notes` in this dispatch unit before starting; they are non-normative context, not progress state.
+    - Keep `tasks.md` as the only progress source; notes explain the work but do not define completion.
+    - After each Step 1–5, append concise notes directly below that step when the work produces a useful finding, reasoning point, viewpoint / trade-off, or summary / takeaway.
+    - Use the labels `Findings`, `Reasoning`, `Viewpoints / Trade-offs`, and `Summary / Takeaway` when they make the insight easy to review.
+    - Do not turn notes into a status tracker, add task checkboxes, or rewrite the planned steps. Use exact file, symbol, command, or test anchors when they make a note auditable.
+    - When dispatch units run in parallel, do not overwrite another dispatch unit's notes. Return note content to the coordinator when shared-file writes must be serialized.
+
     Work from: [directory]
 
     **While you work:** If you encounter something unexpected or unclear, **ask questions**.
@@ -59,6 +67,7 @@ Task tool (general-purpose):
     - Did I avoid overbuilding (YAGNI)?
     - Did I only build what was requested?
     - Did I follow existing patterns in the codebase?
+    - Did I capture the meaningful implementation insights under the relevant steps without turning them into progress state?
 
     **Testing:**
     - Do tests actually verify behavior (not just mock behavior)?
@@ -73,6 +82,7 @@ Task tool (general-purpose):
     - What you implemented
     - What you tested and test results
     - Files changed
+    - Implementation insights: findings, reasoning, viewpoints / trade-offs, and summary / takeaway
     - Self-review findings (if any)
     - Any issues or concerns
 ```

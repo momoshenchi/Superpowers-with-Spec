@@ -104,7 +104,7 @@ Common artifact patterns:
 - **specs/<capability>/spec.md**: Create one spec per capability listed in the proposal's Capabilities section (use the capability name, not the change name).
 - **design.md**: Document technical decisions, architecture, and implementation approach.
 - **tasks.md**: Break down implementation into checkboxed tasks.
-- **execution-plan.md**: A schema artifact discovered from status output. Read completed dependency artifacts, especially tasks.md, then create the detailed implementation plan.
+- **execution-plan.md**: A schema artifact discovered from status output. Read completed dependency artifacts, especially tasks.md, then create the detailed implementation plan. Include optional non-normative \`Implementation Notes\` guidance after meaningful Step 1–5 work so later workers can preserve findings and reasoning without creating a second progress tracker.
 - **test-plan.md**: A schema artifact discovered from status output after execution-plan.md. Capture the pre-implementation coverage draft and the post-implementation Test Hardening evidence.
 
 Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning \`attachments/\`. Preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
@@ -227,7 +227,7 @@ Common artifact patterns:
 - **specs/<capability>/spec.md**: Create one spec per capability listed in the proposal's Capabilities section (use the capability name, not the change name).
 - **design.md**: Document technical decisions, architecture, and implementation approach.
 - **tasks.md**: Break down implementation into checkboxed tasks.
-- **execution-plan.md**: A schema artifact discovered from status output. Read completed dependency artifacts, especially tasks.md, then create the detailed implementation plan.
+- **execution-plan.md**: A schema artifact discovered from status output. Read completed dependency artifacts, especially tasks.md, then create the detailed implementation plan. Include optional non-normative \`Implementation Notes\` guidance after meaningful Step 1–5 work so later workers can preserve findings and reasoning without creating a second progress tracker.
 - **test-plan.md**: A schema artifact discovered from status output after execution-plan.md. Capture the pre-implementation coverage draft and the post-implementation Test Hardening evidence.
 
 Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning \`attachments/\`. Preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.

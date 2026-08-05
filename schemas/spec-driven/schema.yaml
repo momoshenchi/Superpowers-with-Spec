@@ -214,6 +214,9 @@ artifacts:
       - State that a dispatch unit is an allocation boundary, not a required one-to-one subagent assignment; put assignee policy in the coordination table rather than in `tasks.md` headings. Accept legacy `agent<logical-id>` headings as dispatch units.
       - For every detailed task, provide concrete files, focused tests, commands, expected results, implementation detail, verification, and self-review/handoff guidance across its Step 1–5 sequence.
       - Treat those five steps as task-level execution detail, not as separate subagent assignments or required 2–5 minute units.
+      - Reserve optional `Implementation Notes` directly after any Step 1–5 when execution produces useful knowledge. Notes SHALL capture concise Findings, Reasoning, Viewpoints / Trade-offs, and Summary / Takeaway content for later workers and the main agent. They are non-normative narrative context and must not become an execution status tracker.
+      - Keep `tasks.md` as the only checkbox progress source. Implementation Notes SHALL NOT add task checkboxes, status fields, or a second completion model. Preserve the planned steps and append notes rather than rewriting them.
+      - When dispatch units run in parallel, require the coordinator to serialize writes to shared `execution-plan.md` or append worker-provided notes after handoff; workers must not overwrite another unit's notes.
       - Require workers to run the verification named by their detailed tasks and self-review before handoff.
       - Require one formal cross-unit review and full validation only after all dispatch units are integrated; fixes receive targeted verification without a second complete review unless explicitly requested.
       - Keep broad post-diff coverage planning and evidence in `test-plan.md`.

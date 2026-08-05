@@ -129,6 +129,7 @@ After completing all artifacts, summarize:
 - A dispatch unit is a logical allocation boundary, not a live subagent identity. Record assignee policy in \`execution-plan.md\` Dispatch Coordination. A coordinator may dispatch units separately, combine compatible units, or execute all units sequentially. Legacy \`# <number>. agent<logical-id> — <scope>\` headings remain acceptable.
 - Keep detailed tasks verifiable and ordered by dependency. In \`execution-plan.md\`, expand every detailed task into concrete Step 1–5 execution guidance under clean \`### <number>. <scope>\` headings while recording file ownership, dependencies, assignee policy, safe parallelism, and final validation.
 - Keep each dispatch unit coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
+- After any Step 1–5, allow an optional \`Implementation Notes\` subsection for non-normative findings, reasoning, viewpoints / trade-offs, and summary / takeaway content. Notes explain implementation context; they do not add status fields or task checkboxes, and \`tasks.md\` remains the progress source.
 - Follow DRY, YAGNI, TDD principles. Ensure frequent commits.
 `,
     license: 'MIT',
@@ -262,6 +263,7 @@ After completing all artifacts, summarize:
 - A dispatch unit is a logical allocation boundary, not a live subagent identity. Record assignee policy in \`execution-plan.md\` Dispatch Coordination. A coordinator may dispatch units separately, combine compatible units, or execute all units sequentially. Legacy \`# <number>. agent<logical-id> — <scope>\` headings remain acceptable.
 - Keep detailed tasks verifiable and ordered by dependency. In \`execution-plan.md\`, expand every detailed task into concrete Step 1–5 execution guidance under clean \`### <number>. <scope>\` headings while recording file ownership, dependencies, assignee policy, safe parallelism, and final validation.
 - Keep each dispatch unit coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
+- After any Step 1–5, allow an optional \`Implementation Notes\` subsection for non-normative findings, reasoning, viewpoints / trade-offs, and summary / takeaway content. Notes explain implementation context; they do not add status fields or task checkboxes, and \`tasks.md\` remains the progress source.
 - Follow DRY, YAGNI, TDD principles. Ensure frequent commits.`
   };
 }

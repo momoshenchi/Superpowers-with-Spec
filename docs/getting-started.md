@@ -60,7 +60,7 @@ Each change folder contains artifacts that guide the work:
 | `specs/` | Delta specs showing ADDED/MODIFIED/REMOVED requirements |
 | `design.md` | The "how" - technical approach and architecture decisions |
 | `tasks.md` | Implementation checklist with checkboxes |
-| `execution-plan.md` | Detailed implementation/TDD plan |
+| `execution-plan.md` | Detailed implementation/TDD plan with optional non-normative Implementation Notes after meaningful steps |
 | `test-plan.md` | Pre-implementation coverage draft and post-implementation Test Hardening record |
 
 **Artifacts build on each other:**
@@ -136,7 +136,7 @@ AI:  Created superpowers/changes/add-dark-mode/
      ✓ specs/       — requirements and scenarios
      ✓ design.md    — technical approach
      ✓ tasks.md     — implementation checklist
-     ✓ execution-plan.md — detailed implementation/TDD plan
+     ✓ execution-plan.md — detailed implementation/TDD plan and implementation notes
      ✓ test-plan.md — coverage draft and hardening record
      Ready for implementation!
 ```
