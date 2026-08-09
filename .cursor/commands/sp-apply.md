@@ -53,6 +53,7 @@ Implement tasks from an Superpowers change.
    The files depend on the schema being used:
    - **spec-driven**: proposal, specs, design, tasks, execution-plan, test-plan
    - Other schemas: follow the contextFiles from CLI output
+   - When `execution-plan.md` contains `Implementation Notes`, read them as non-normative context for the relevant task. They preserve findings and reasoning, but do not define progress or completion.
 
 5. **Show current progress**
 
@@ -68,6 +69,7 @@ Implement tasks from an Superpowers change.
    - Show which task is being worked on
    - Make the code changes required
    - Keep changes minimal and focused
+   - Follow the task's planned Step 1–5 sequence and append concise `Implementation Notes` after a step when it produces a useful finding, reasoning point, viewpoint / trade-off, or summary / takeaway. Notes are narrative context, not status fields or a second checklist.
    - Mark task complete in the tasks file: `- [ ]` → `- [x]`
    - Continue to next task
 
@@ -213,6 +215,8 @@ What would you like to do?
 - Keep code changes minimal and scoped to each task
 - Update task checkbox immediately after completing each task
 - Treat execution-plan.md as implementation context and tasks.md as the progress-tracking checklist.
+- Treat `Implementation Notes` in execution-plan.md as non-normative narrative context. Read them when resuming or reviewing a task, but never infer task status from them or use them instead of verification.
+- Keep writes to shared execution-plan.md serialized when dispatch units run in parallel; workers may return notes to the coordinator for append after handoff.
 - Treat `tasks.md` completion as the transition into Test Hardening when `test-plan.md` exists.
 - Treat Test Hardening as incomplete while any concrete testing/hardening status row outside `## Final Quality Gates` is `planned`, `failing`, blank, or still a placeholder.
 - Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.

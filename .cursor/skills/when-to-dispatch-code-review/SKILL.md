@@ -38,6 +38,7 @@ Provide the reviewer:
 - The applicable requirements, Proposal artifacts, or direct-work acceptance criteria.
 - The complete integrated diff or explicit owned paths; include base/head SHAs when available.
 - Reports from integrated Dispatch Units and relevant interaction boundaries.
+- Existing `Implementation Notes` from integrated Dispatch Units when available, treated as non-normative context about findings and reasoning rather than as completion evidence.
 - Fresh test, build, lint, E2E, or manual evidence already collected.
 - Known constraints, intentional deferrals, and the active workflow's severity scale.
 

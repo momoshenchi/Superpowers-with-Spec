@@ -25,15 +25,16 @@ If the host cannot launch a subagent, mark proposal review `blocked`, name the m
 
 When running automatically from `/sp:propose` after every `applyRequires` artifact is complete, or manually from `/sp:review`:
 
-A **round** is one fresh reviewer dispatch plus its integrated report. Proposal review allows at most **three rounds** total.
+A **round** is one fresh reviewer dispatch plus its integrated report. Under normal conditions, proposal review allows at most **two rounds** total.
 
 1. Dispatch one fresh change reviewer subagent (round 1).
 2. **Present the complete review report** from the worker before editing any proposal artifact in response to findings.
 3. Then **repair every resolvable BLOCKER** in the coordinator context. WARNING findings are recommended repairs: you may fix them after the report, but they do not block readiness by themselves. SUGGESTION findings are non-blocking and may remain visible in the report.
 4. **Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs** (re-run review only after repairing one or more BLOCKERs). Each re-dispatch starts the next numbered round. Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired.
-5. If round three still reports unresolved BLOCKERs, pause and report the remaining BLOCKERs; do not start a fourth round or claim readiness.
-6. Announce readiness only when no unresolved BLOCKER remains within the three-round limit. Residual WARNING and SUGGESTION notes may stay visible.
-7. If a repair needs a product, security, schema, or external-dependency decision, report the blocker and pause; do not guess or claim readiness.
+5. If round two still reports unresolved BLOCKERs, pause and report the remaining BLOCKERs; do not start a third round for additional blocker repairs or claim readiness.
+6. **Infrastructure failure extension**: If a round fails to complete normally — network error, subagent timeout, or an incomplete or missing review report — you may dispatch one additional fresh reviewer, for at most **three rounds** total. Use this extension only to recover from incomplete rounds, not to add another BLOCKER-repair cycle after round two.
+7. Announce readiness only when no unresolved BLOCKER remains within the applicable round limit. Residual WARNING and SUGGESTION notes may stay visible.
+8. If a repair needs a product, security, schema, or external-dependency decision, report the blocker and pause; do not guess or claim readiness.
 
 Do not create `review.md`, approval metadata, or a review artifact. Proposal review is ephemeral. `/sp:apply` does not automatically repeat proposal review; users may invoke `/sp:review <change>` voluntarily.
 
@@ -44,7 +45,7 @@ Do not create `review.md`, approval metadata, or a review artifact. Proposal rev
 3. Read only artifacts required or generated for the selected schema, plus `attachments/` referenced from those artifacts. Optionally run `superpowers instructions <artifact-id> --change "<name>" --json` for template/section expectations.
 4. When the schema includes a `specs` artifact, compare `Modified Capabilities` against `superpowers/specs/<capability>/spec.md` master specs.
 5. Assess the four dimensions below. Report every finding as BLOCKER, WARNING, or SUGGESTION with artifact location and a concrete repair.
-6. For spec-driven tasks, treat top-level `# <number>. <scope>` headings as logical **dispatch unit** boundaries. Accept legacy `# <number>. agent<logical-id> — <scope>` headings as equivalent dispatch units. Verify `execution-plan.md` Dispatch Coordination covers each unit's ownership, dependencies, assignee policy, parallel eligibility, and handoff evidence, and that every detailed task has concrete Step 1–5 execution guidance under clean `### <number>. <scope>` headings. Do not require per-checkbox delegation, per-checkbox formal review, or 2–5 minute work units.
+6. For spec-driven tasks, treat top-level `# <number>. <scope>` headings as logical **dispatch unit** boundaries. Accept legacy `# <number>. agent<logical-id> — <scope>` headings as equivalent dispatch units. Verify `execution-plan.md` Dispatch Coordination covers each unit's ownership, dependencies, assignee policy, parallel eligibility, and handoff evidence, and that every detailed task has concrete Step 1–5 execution guidance under clean `### <number>. <scope>` headings. Do not require per-checkbox delegation, per-checkbox formal review, or 2–5 minute work units. When existing `Implementation Notes` are present, read them as non-normative implementation context and do not treat them as task completion evidence.
 
 ## Review dimensions
 
@@ -79,7 +80,7 @@ Define what "complete" means from the schema first. Artifacts outside the select
 | `design.md` | all | Context, **Current system** (may be short), Relationship pointers, Goals/Non-Goals, Decisions (major: ≥3-option comparison; minor: rationale only), **Contracts** (N/A allowed when no surface change), Risks | missing Current system/Contracts; major decision without comparison; reuse without pointer; options without Non-Goals |
 | `specs/<capability>/spec.md` | `spec-driven` | ADDED/MODIFIED/REMOVED Requirements; each Requirement has ≥1 Scenario | Requirement without Scenario; unclear delta vs master spec |
 | `tasks.md` | `spec-driven` | checkable tasks with concrete file paths | tasks too large; missing verification steps |
-| `execution-plan.md` | `spec-driven` | File Structure; stepwise Task Plan (red test → implement → verify) | drift from `tasks.md`; missing commands and expected signals |
+| `execution-plan.md` | `spec-driven` | File Structure; stepwise Task Plan (red test → implement → verify); optional non-normative Implementation Notes | drift from `tasks.md`; missing commands and expected signals |
 | `test-plan.md` | all | Testing Gap Analysis; Requirement/Scenario coverage matrix aligned to delta spec; edge/exception scan; post-implementation Test Hardening notes when applicable | happy path only; matrix missing key scenarios |
 
 ### 2. Clarity
@@ -92,6 +93,7 @@ Can an implementer derive **what to do, where, and how to verify** directly from
 - **Decisions**: each Decision names the chosen option. **Major** decisions (new source of truth, cross-subsystem, security/billing/idempotency/recovery, irreversible migration, important dependency, user-declared module-scale work) need a **≥3-option comparison** with trade-offs. **Minor** decisions (local rename, single helper, file placement) need one-line rationale only—do **not** flag missing three-option tables for minor work.
 - **File targets**: Create/Modify/Test use real repo paths, not "relevant module" or "appropriate location."
 - **Task granularity**: each checkbox maps to Step 1–5 guidance in `execution-plan.md` with concrete test files, implementation files, commands, and **expected pass/fail signals**. Assignee policy lives in Dispatch Coordination, not in task headings. (`test-harden`: judge matrix rows and harness; `spec-driven`: judge `tasks.md` + `execution-plan.md`.)
+- **Implementation Notes**: if present, use them to understand findings, reasoning, viewpoints / trade-offs, and summaries from prior work; they are non-normative context and never replace checkbox progress or verification.
 - **Testable requirements**: `spec-driven` Requirements use SHALL/MUST; Scenarios use WHEN/THEN/AND with observable THEN assertions. `test-harden` matrix rows name primary assertions and recommended test layer.
 - **Data and contracts**: API fields, error codes, state machines, enums, and i18n keys use stable names and examples—not intent-only prose.
 - **Edges and exceptions**: cover null/unknown input, mid-flow failure, duplicate operations, auth/ownership, timeout/cancel, and legacy compatibility when applicable.

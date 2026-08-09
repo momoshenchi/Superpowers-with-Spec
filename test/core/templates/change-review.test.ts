@@ -41,6 +41,8 @@ describe('change review workflow templates', () => {
     );
     expect(content).toContain('fresh subagent');
     expect(content).toContain('**Coordinator**');
+    expect(content).toContain('two rounds');
+    expect(content).toContain('Infrastructure failure extension');
     expect(content).toContain('three rounds');
     expect(content).not.toContain('change-reviewer-prompt');
     expect(content).toContain('Change reviewer');
@@ -67,7 +69,8 @@ describe('change review workflow templates', () => {
       expect(content).toContain('present the complete review report');
       expect(content).toContain('Repair every resolvable BLOCKER.');
       expect(content).toContain('re-run review only after repairing one or more BLOCKERs');
-      expect(content).toContain('at most three rounds');
+      expect(content).toContain('at most two rounds');
+      expect(content).toContain('three rounds absolute maximum');
       expect(content).toContain('Do not create `review.md`');
       expect(content).toContain('Dispatch Units in tasks.md');
       expect(content).toContain('# <number>. <scope>');

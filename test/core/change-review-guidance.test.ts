@@ -20,7 +20,9 @@ describe('change review guidance contract', () => {
       'repair every resolvable BLOCKER',
       're-run review only after repairing one or more BLOCKERs',
       'fresh subagent',
+      'two rounds',
       'three rounds',
+      'Infrastructure failure extension',
       'Step 1–5',
       'Do not create `review.md`',
       'dispatch unit',
@@ -29,7 +31,8 @@ describe('change review guidance contract', () => {
       expect(generated).toContain(requirement);
     }
 
-    expect(rootSkill).toContain('最多三轮');
+    expect(rootSkill).toContain('正常最多两轮');
+    expect(rootSkill).toContain('基础设施故障扩展');
     expect(rootSkill.toLowerCase()).toContain('assignee policy');
     expect(generated.toLowerCase()).toContain('assignee policy');
     expect(generated).toContain('Dispatch Coordination');

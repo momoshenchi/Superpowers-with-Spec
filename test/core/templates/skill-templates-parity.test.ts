@@ -62,11 +62,11 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getSpSimplifyCommandTemplate: '6b2cbe5bfaf2de3912de7f8a252f7481121d76ebfe29a1cd32e4edfd4faa26a9',
   getDesignVerifySkillTemplate: '4920e25dce697b90b8031620b63085856bf09cfc275d1fec45d7873dcef7c14b',
   getSpDesignVerifyCommandTemplate: '65f9b0ea063d942aed1d148781f1022007de0d38a0cb7502e6375a5fa3ffa7cd',
-  getSpProposeSkillTemplate: '7db445e0678313a6294c29a41b938ebd478a3c800494320a0d5d6360524d4431',
-  getSpProposeCommandTemplate: '4f43660298e0d84ab348496dc1aa273553b909944ac4315aa8204d70fbbb64df',
+  getSpProposeSkillTemplate: '1cd7d4a73a02a62d1c74cea1812a477208f230704c250ba05d0d34e2c6147087',
+  getSpProposeCommandTemplate: '04eabc2936bd35eeff5709e9409aa7b1490395d9348200eeb0107ee146e5015a',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
-  getChangeReviewSkillTemplate: 'a344cd501aa985d15364e4c2e77654c0864f0519cbe1342623fc1342bae8f8d3',
-  getSpReviewCommandTemplate: 'c677f371c5515e8ae169d13b102a594c176246c777f601b0a47266d820b783bd',
+  getChangeReviewSkillTemplate: '47650e8ad1bb1beb353da5f2288224f720ca586431dd3234ca3e2f1655e34714',
+  getSpReviewCommandTemplate: '60003cf9c03d1c1e589b7ed3b95ed225c20f15121ddf0a478f2e002e80fe711d',
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
@@ -82,8 +82,8 @@ const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-simplify': 'ded11077d5f03a74fd393307599a3339e221677a54b04bfbbcd7195ae41b0c8b',
   'superpowers-design-verify': '50a6a25f20bd749bfee135b384702ae4aa7adcc0fb06345c18de0902f505bab7',
   'superpowers-onboard': '736257835836c326f0286e0da55232799a9809a29a2ed2b63d1f9beee9bf6a34',
-  'superpowers-propose': '4fe5277e0da3ab114fc1b31c0646884b04ed3f9de8a15cc74c819d5358d5b3a5',
-  'superpowers-change-review': 'ea3fc1a27e4f641a3e6fa2d39f70346504e15d4d9a47548b5e3a80ab236ebf2a',
+  'superpowers-propose': '8f940c7af2d0c93c3746baa4136bc0db8f52612c676b47f1bd4fcfcbb3bb9565',
+  'superpowers-change-review': '1b7ef9807c231ebdd9f1e83b35ca56015a7074ca81cdb5e33fc771c3c267e8c2',
 };
 
 function stableStringify(value: unknown): string {

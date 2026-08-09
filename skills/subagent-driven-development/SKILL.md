@@ -54,9 +54,9 @@ Direct Modification does not create a Change Proposal or Dispatch Unit merely to
 
 1. Dispatch the complete dispatch unit with its task text, dependencies, ownership boundaries, assignee policy, and verification expectations. The coordinator may assign one unit to one subagent, combine compatible dispatch units in one assignment, or execute all dispatch units sequentially itself.
 2. If a worker asks questions, resolve them before implementation.
-3. The worker implements every detailed checkbox in the block, runs the planned checks, self-reviews, and reports changed files, verification, and concerns. After each Step 1–5, the worker may append concise `Implementation Notes` directly below the step when there is a meaningful finding, reasoning point, viewpoint / trade-off, or summary / takeaway. Notes are non-normative narrative context, not an execution status tracker, and must not add task checkboxes or status fields.
+3. The worker implements every detailed checkbox in the block, runs the planned checks, self-reviews, and reports changed files, verification, and concerns. After each Step 1–5, the worker may append concise `Implementation Notes` directly below the step when there is a meaningful finding, reasoning point, viewpoint / trade-off, or summary / takeaway. 
 4. The main agent reviews the worker's `Implementation Notes` against the diff, planned verification, and handoff concerns before marking detailed checkboxes. Notes help explain the work but do not substitute for tests, self-review, or acceptance evidence.
-5. Dispatch in parallel only when the execution plan declares disjoint ownership and no unmet dependency. Serialize writes to shared execution-plan.md; if workers cannot safely edit their own note sections, they return the notes to the coordinator for append after handoff. Serialize any overlap.
+5. Dispatch in parallel only when the execution plan declares disjoint ownership and no unmet dependency. Serialize writes to shared execution-plan.md.
 
 
 ### Final Quality Gates

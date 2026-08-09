@@ -38,7 +38,8 @@ description: 用户在开始实现 Superpowers 变更前、希望审核变更提
 
 当 `/sp:propose` 在所有 `applyRequires` artifact 完成后自动使用本 skill 时，严格执行：派遣 reviewer → **present the complete review report** → 按严重级别修复 → 仅在修复 BLOCKER 后 **re-dispatch a fresh reviewer** → 宣布 ready 或暂停。
 
-- **最多三轮**（three rounds）：一轮 = 一次 fresh reviewer dispatch + 其报告。round 3 后仍有 unresolved BLOCKER 则暂停并报告，不得开启第四轮或宣称 ready。
+- **正常最多两轮**（two rounds）：一轮 = 一次 fresh reviewer dispatch + 其报告。round 2 完成后仍有 unresolved BLOCKER 则暂停并报告，不得为继续修复 BLOCKER 开启第三轮或宣称 ready。
+- **Infrastructure failure extension**（基础设施故障扩展）：若某轮因网络错误、子代理超时或未产出完整 review 报告而未能正常完成，可追加一轮 fresh reviewer，**绝对上限三轮**（three rounds total）。此扩展仅用于恢复未完成的 review，不得用于 round 2 完成后的额外 BLOCKER 修复循环。
 - 每轮先 dispatch one fresh change reviewer subagent。
 - 报告输出前不得修改因本次发现而需调整的 proposal artifacts。
 - 报告后必须 **repair every resolvable BLOCKER**。WARNING 为建议修复：可在报告后修复，但本身不阻塞 ready。`SUGGESTION` findings are non-blocking，可保留在报告中。

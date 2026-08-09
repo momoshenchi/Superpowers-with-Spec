@@ -25,15 +25,16 @@ If the host cannot launch a subagent, mark proposal review \`blocked\`, name the
 
 When running automatically from \`/sp:propose\` after every \`applyRequires\` artifact is complete, or manually from \`/sp:review\`:
 
-A **round** is one fresh reviewer dispatch plus its integrated report. Proposal review allows at most **three rounds** total.
+A **round** is one fresh reviewer dispatch plus its integrated report. Under normal conditions, proposal review allows at most **two rounds** total.
 
 1. Dispatch one fresh change reviewer subagent (round 1).
 2. **Present the complete review report** from the worker before editing any proposal artifact in response to findings.
 3. Then **repair every resolvable BLOCKER** in the coordinator context. WARNING findings are recommended repairs: you may fix them after the report, but they do not block readiness by themselves. SUGGESTION findings are non-blocking and may remain visible in the report.
 4. **Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs** (re-run review only after repairing one or more BLOCKERs). Each re-dispatch starts the next numbered round. Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired.
-5. If round three still reports unresolved BLOCKERs, pause and report the remaining BLOCKERs; do not start a fourth round or claim readiness.
-6. Announce readiness only when no unresolved BLOCKER remains within the three-round limit. Residual WARNING and SUGGESTION notes may stay visible.
-7. If a repair needs a product, security, schema, or external-dependency decision, report the blocker and pause; do not guess or claim readiness.
+5. If round two still reports unresolved BLOCKERs, pause and report the remaining BLOCKERs; do not start a third round for additional blocker repairs or claim readiness.
+6. **Infrastructure failure extension**: If a round fails to complete normally — network error, subagent timeout, or an incomplete or missing review report — you may dispatch one additional fresh reviewer, for at most **three rounds** total. Use this extension only to recover from incomplete rounds, not to add another BLOCKER-repair cycle after round two.
+7. Announce readiness only when no unresolved BLOCKER remains within the applicable round limit. Residual WARNING and SUGGESTION notes may stay visible.
+8. If a repair needs a product, security, schema, or external-dependency decision, report the blocker and pause; do not guess or claim readiness.
 
 Do not create \`review.md\`, approval metadata, or a review artifact. Proposal review is ephemeral. \`/sp:apply\` does not automatically repeat proposal review; users may invoke \`/sp:review <change>\` voluntarily.
 

@@ -15,6 +15,17 @@ Enter explore mode. Think deeply. Visualize freely. Follow the conversation wher
 
 **This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
 
+
+---
+
+## Debug Checkpoint for long investigations
+
+Use a Debug Checkpoint when exploration spans multiple turns, context compaction,
+a fresh-worker handoff, or a reread loop. Once active, update it after a decisive experiment, a phase close, and
+before handoff. The checkpoint is the recovery source of truth; 
+
+
+
 ---
 
 ## The Stance

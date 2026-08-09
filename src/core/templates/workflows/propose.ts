@@ -125,7 +125,7 @@ ${PROPOSE_INTERVIEW_GUIDANCE}
    After every \`applyRequires\` artifact is done, automatically follow the \`superpowers-change-review\` workflow:
    - Dispatch a fresh change reviewer subagent; **present the complete review report** from the worker before editing any artifact in response to findings.
    - Repair every resolvable BLOCKER. WARNING findings are recommended repairs and do not block readiness by themselves.
-   - Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs (re-run review only after repairing one or more BLOCKERs). Proposal review allows at most three rounds; if round three still has unresolved BLOCKERs, pause and report them without claiming readiness.
+   - Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs (re-run review only after repairing one or more BLOCKERs). Normally allow at most two rounds; if a round fails due to network error, subagent timeout, or an incomplete review report, one additional round is allowed (three rounds absolute maximum). If round two still has unresolved BLOCKERs after a completed review, pause and report them without claiming readiness.
    - Keep SUGGESTION findings visible but non-blocking. Residual WARNING notes may remain visible when announcing readiness.
    - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
    - Do not create \`review.md\`, approval metadata, or a review artifact.
@@ -263,7 +263,7 @@ ${PROPOSE_INTERVIEW_GUIDANCE}
    After every \`applyRequires\` artifact is done, automatically follow the \`superpowers-change-review\` workflow:
    - Dispatch a fresh change reviewer subagent; **present the complete review report** from the worker before editing any artifact in response to findings.
    - Repair every resolvable BLOCKER. WARNING findings are recommended repairs and do not block readiness by themselves.
-   - Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs (re-run review only after repairing one or more BLOCKERs). Proposal review allows at most three rounds; if round three still has unresolved BLOCKERs, pause and report them without claiming readiness.
+   - Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs (re-run review only after repairing one or more BLOCKERs). Normally allow at most two rounds; if a round fails due to network error, subagent timeout, or an incomplete review report, one additional round is allowed (three rounds absolute maximum). If round two still has unresolved BLOCKERs after a completed review, pause and report them without claiming readiness.
    - Keep SUGGESTION findings visible but non-blocking. Residual WARNING notes may remain visible when announcing readiness.
    - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
    - Do not create \`review.md\`, approval metadata, or a review artifact.
