@@ -12,7 +12,7 @@ Check relevant or explicitly requested skills before any response or action, inc
 Exactly two work modes exist:
 
 1. **Direct Modification** — Implement low-risk, local, unambiguous, reversible work directly, then run relevant checks and apply `verification-before-completion` before claiming success.
-2. **Proposal → Review → Apply** — Create the required artifacts, review them, and run `/sp:apply`. Apply retains schema-aware review, Test Hardening, and the final gate order: host-native code review → Simplify → Verify → Design Verify.
+2. **Proposal → Review → Apply** — Create the required artifacts, review them, and run `/sp:apply`. Apply retains schema-aware review, Test Hardening, and the final gate order: code review → Simplify → Verify → Design Verify.
 
 A requested plan is an execution aid inside the selected mode, not a third mode. If the work still qualifies for Direct Modification after a plan is written or approved, execute it directly. Do not add a Plan Mode artifact or schema.
 

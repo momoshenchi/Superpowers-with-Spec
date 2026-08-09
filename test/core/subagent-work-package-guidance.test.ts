@@ -14,7 +14,7 @@ describe('subagent dispatch-unit guidance', () => {
       '1. **Direct Modification** — Implement low-risk, local, unambiguous, reversible work directly, then run relevant checks and apply `verification-before-completion` before claiming success.'
     );
     expect(skill).toContain(
-      '2. **Proposal → Review → Apply** — Create the required artifacts, review them, and run `/sp:apply`. Apply retains schema-aware review, Test Hardening, and the final gate order: host-native code review → Simplify → Verify → Design Verify.'
+      '2. **Proposal → Review → Apply** — Create the required artifacts, review them, and run `/sp:apply`. Apply retains schema-aware review, Test Hardening, and the final gate order: code review → Simplify → Verify → Design Verify.'
     );
     expect(skill).toContain('Direct Modification does not create a Change Proposal');
     expect(skill).toContain('Proposal → Review → Apply owns Dispatch Unit execution');
@@ -42,7 +42,7 @@ describe('subagent dispatch-unit guidance', () => {
     expect(development).not.toContain('one final cross-unit integration review');
     expect(development).not.toContain('final integration review');
     expect(development).toContain('### Final Quality Gates');
-    expect(development).toContain('Host-native code review');
+    expect(development).toContain('code review');
     expect(development).toContain('Simplify');
     expect(development).toContain('Verify');
     expect(development).toContain('Design verify');
@@ -58,7 +58,7 @@ describe('subagent dispatch-unit guidance', () => {
     expect(verificationIndex).toBeGreaterThan(gatesIndex);
     expect(finishingIndex).toBeGreaterThan(verificationIndex);
 
-    expect(review).toContain('Apply owns the mandatory host-native code-review gate');
+    expect(review).toContain('Apply owns the mandatory code review gate');
     expect(review).not.toContain('one final cross-unit integration review');
     expect(review).not.toContain('After all units are integrated and local verification passes');
   });

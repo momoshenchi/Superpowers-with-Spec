@@ -156,7 +156,7 @@ Working on task 4/7: <task description>
 ### Final Quality Gates
 | Gate | Outcome | Fresh worker evidence |
 | --- | --- | --- |
-| Host-native code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
+| code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
 | \`/sp:simplify\` | passed / failed / blocked / not applicable | <worker report and cleanup/skip summary> |
 | \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, E2E disposition> |
 | \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |
@@ -368,7 +368,7 @@ Working on task 4/7: <task description>
 ### Final Quality Gates
 | Gate | Outcome | Fresh worker evidence |
 | --- | --- | --- |
-| Host-native code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
+| code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
 | \`/sp:simplify\` | passed / failed / blocked / not applicable | <worker report and cleanup/skip summary> |
 | \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, E2E disposition> |
 | \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |

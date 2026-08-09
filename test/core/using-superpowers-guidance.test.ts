@@ -127,7 +127,7 @@ describe('using-superpowers work-mode guidance', () => {
     const content = skill();
 
     expect(content).toContain('Test Hardening');
-    expect(content).toContain('host-native code review → Simplify → Verify → Design Verify');
+    expect(content).toContain('code review → Simplify → Verify → Design Verify');
     expect(content).toContain('Do not add a Plan Mode artifact or schema');
   });
 });

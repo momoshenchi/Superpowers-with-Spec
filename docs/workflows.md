@@ -249,7 +249,7 @@ The recommended completion flow:
  final quality gates               if needed
 ```
 
-`/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass discovers and runs the complete canonical non-visual suite from scripts, CI, test documentation, and the test plan; it records authority, commands, results, and excluded visual-only checks. After hardening, apply delegates host-native final code review (or a labelled equivalent fallback), `/sp:simplify`, `/sp:verify`, and `/sp:design-verify`—in that order—to fresh, distinct subagents, awaiting and integrating each report before starting the next. These gates are mandatory inside apply even if their standalone workflows are not selected; a host unable to launch a gate worker blocks completion.
+`/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass discovers and runs the complete canonical non-visual suite from scripts, CI, test documentation, and the test plan; it records authority, commands, results, and excluded visual-only checks. After hardening, apply delegates final code review (or a labelled equivalent fallback), `/sp:simplify`, `/sp:verify`, and `/sp:design-verify`—in that order—to fresh, distinct subagents, awaiting and integrating each report before starting the next. These gates are mandatory inside apply even if their standalone workflows are not selected; a host unable to launch a gate worker blocks completion.
 
 Standalone `/sp:verify` remains available for an explicit independent diagnostic or when work was completed outside `/sp:apply`; it is not an additional routine step after an Apply run.
 

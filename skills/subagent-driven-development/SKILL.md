@@ -36,7 +36,7 @@ digraph when_to_use {
 Choose one of exactly two work modes before deciding whether SDD dispatch is needed:
 
 1. **Direct Modification** — Implement low-risk, local, unambiguous, reversible work directly, then run relevant checks and apply `verification-before-completion` before claiming success.
-2. **Proposal → Review → Apply** — Create the required artifacts, review them, and run `/sp:apply`. Apply retains schema-aware review, Test Hardening, and the final gate order: host-native code review → Simplify → Verify → Design Verify.
+2. **Proposal → Review → Apply** — Create the required artifacts, review them, and run `/sp:apply`. Apply retains schema-aware review, Test Hardening, and the final gate order: code review → Simplify → Verify → Design Verify.
 
 Direct Modification does not create a Change Proposal or Dispatch Unit merely to invoke SDD. Use the SDD dispatch-unit loop only when the selected Proposal → Review → Apply path has assignable implementation units. Proposal → Review → Apply owns Dispatch Unit execution through `/sp:apply`; the coordinator still chooses whether each unit is delegated, combined, or executed inline.
 
@@ -63,7 +63,7 @@ Direct Modification does not create a Change Proposal or Dispatch Unit merely to
 
 Within `/sp:apply`, after all dispatch units are integrated, complete Test Hardening and then delegate the Final Quality Gates in exactly this order:
 
-1. **Host-native code review**
+1. **code review**
 2. **Simplify**
 3. **Verify**
 4. **Design verify**
@@ -72,7 +72,7 @@ Within `/sp:apply`, after all dispatch units are integrated, complete Test Harde
 
 These gates apply to Proposal → Review → Apply. The allocation rule is **one gate → one fresh worker**: await and integrate its report before dispatching the next gate. Direct Modification ends with its relevant checks and `verification-before-completion`; it does not inherit Apply's gate sequence.
 
-Code review, Verify, and Design verify workers are read-only by default; the coordinator repairs accepted findings and follows the Apply severity and retry rules. Simplify may edit only within its behavior-preserving cleanup boundary. Do not dispatch a separate complete review before or after Apply's host-native code-review gate.
+Code review, Verify, and Design verify workers are read-only by default; the coordinator repairs accepted findings and follows the Apply severity and retry rules. Simplify may edit only within its behavior-preserving cleanup boundary. Do not dispatch a separate complete review before or after Apply's code review gate.
 
 Only after all applicable Final Quality Gates are complete, use `superpowers: verification-before-completion` with fresh evidence, then use `superpowers: finishing-a-development-branch`.
 
@@ -87,7 +87,7 @@ Each dispatch needs:
 **Never:**
 - Start implementation on main/master branch without explicit user consent
 - Skip worker verification, self-review, or Apply's Final Quality Gates
-- Dispatch a separate complete review before or after Apply's host-native code-review gate
+- Dispatch a separate complete review before or after Apply's code review gate
 - Use `verification-before-completion` or `finishing-a-development-branch` before all applicable Final Quality Gates are complete
 - Proceed with unfixed blocking findings
 - Dispatch parallel dispatch units with overlapping ownership or unmet dependencies

@@ -17,11 +17,53 @@ const e2eAcceptanceInstructions = `   **End-to-end acceptance**:
    - Report E2E as \`passed\`, \`failed\`, \`blocked\`, or \`not applicable\`: include route/entry point, environment/command, selected driver, exercised states, and captured evidence. An unexpected observable outcome or relevant console/network failure is \`failed\` and must include remediation; missing runtime, credentials, dependencies, or browser capability is \`blocked\`; non-runnable scope is \`not applicable\` with a concrete reason. Source inspection, screenshots, and unaided human checks never substitute for an applicable E2E pass.
    - An applicable E2E journey reported \`blocked\` or \`failed\` makes both Correctness and the overall Verify outcome \`blocked\` or \`failed\`; resolve it before archive. Only a concrete, scope-backed \`not applicable\` outcome is non-blocking.`;
 
-const finalQualityRetryInstructions = `   **Final-quality Verify retries**:
+const finalQualityRetryInstructions = `### Final-quality Verify retries:
    - When Verify is delegated by \`/sp:apply\`, label the report \`Verify round 1\` through \`Verify round 4\`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
    - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable E2E acceptance. Preserve separate command and E2E evidence for every numbered round.
    - Treat \`CRITICAL\` as \`P0\` for final-quality retry decisions. Before round four, the worker reports each resolvable failed check, applicable E2E failure, or P0/CRITICAL finding. When the coordinator repairs an accepted failure or CRITICAL finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
    - A missing runtime, credential, browser capability, dependency, or other prerequisite is \`BLOCKER\`: report \`blocked\`, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable E2E failure, or P0/CRITICAL finding, report \`failed\`; do not begin a fifth round or recommend archive.`;
+
+const verifyCompletenessSteps = `4. **Verify Completeness**
+
+   **Task Completion**:
+   - If tasks.md exists in contextFiles, read it
+   - Review each task individually for actual completion; do not rely on checkbox state alone — \`- [x]\` does not prove the work is done. Judge completion from evidence in the actual code implementation.
+   - If incomplete tasks exist:
+     - Add CRITICAL issue for each incomplete task
+     - Recommendation: "Complete task: <description>" or "Mark as done if already implemented"
+
+   **Spec Coverage**:
+   - If delta specs exist in \`superpowers/changes/<name>/specs/\`:
+     - Extract all requirements (marked with "### Requirement:")
+     - For each requirement:
+       - Search codebase for keywords related to the requirement
+       - Assess if implementation likely exists
+       - Assess if implementation matches requirement intent
+     - If divergence detected:
+       - Add WARNING: "Implementation may diverge from spec: <details>"
+       - Recommendation: "Review <file>:<lines> against requirement X"
+     - If requirements appear unimplemented:
+       - Add CRITICAL issue: "Requirement not found: <requirement name>"
+       - Recommendation: "Implement requirement X: <description>"
+     - For each scenario in delta specs (marked with "#### Scenario:"):
+       - Check if conditions are handled in code
+       - Check if tests exist covering the scenario
+       - If scenario appears uncovered:
+         - Add WARNING: "Scenario not covered: <scenario name>"
+         - Recommendation: "Add test or implementation for scenario: <description>"
+
+   **Test Coverage**:
+   - Read and follow the \`full-qa-test\` skill. If it is unavailable, use the closest test-coverage skill in the environment.
+   - Treat \`design.md\`, delta specs, \`test-plan.md\`, and the current implementation as the input set. Assess whether \`test-plan.md\` still adequately covers the change:
+     - Map requirements, scenarios, design decisions, and identified risk paths to concrete rows or matrix entries in \`test-plan.md\`.
+     - Find missing coverage: spec or implementation scope with no corresponding automated, manual, or justified deferred row.
+     - Find stale coverage: rows that no longer match the implementation, were superseded by code changes, or describe tests that should be updated or removed.
+     - Find shallow coverage: happy-path-only rows where delta specs or design call for boundaries, errors, permissions, state transitions, or integration paths.
+   - When using \`full-qa-test\`, use its dimensions as a gap-analysis lens. During Verify, assess the plan and existing tests; do not claim full six-dimensional execution unless the active skill phase requires it.
+   - When gaps, stale rows, or unjustified deferrals are found:
+     - Add WARNING: "Test plan gap: <details>"
+     - Recommendation: "Add or update test-plan.md for <requirement/scenario/risk>; cite the missing case or dimension"
+   - The Verify worker reports findings by default; do not edit \`test-plan.md\` unless the host workflow explicitly authorizes repair.`;
 
 const repairOwnershipInstructions = `**Repair ownership**
 
@@ -38,7 +80,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
 **Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
-**Steps**
+## Steps
 
 1. **If no change name provided, prompt for selection**
 
@@ -50,15 +92,15 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
    **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
 
-2. **Check status to understand the schema**
+2. **Check status and load artifacts**
+
    \`\`\`bash
    superpowers status --change "<name>" --json
    \`\`\`
+
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven")
    - Which artifacts exist for this change
-
-3. **Get the change directory and load artifacts**
 
    \`\`\`bash
    superpowers instructions apply --change "<name>" --json
@@ -66,65 +108,26 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
    This returns the change directory, context files, and attachment files. Read all available artifacts from \`contextFiles\`, and read or inspect files from \`attachmentFiles\` when present. Treat artifacts as the source of normative meaning for each attachment.
 
-4. **Initialize verification report structure**
+3. **Initialize verification report structure**
 
    Create a report structure with three dimensions:
-   - **Completeness**: Track tasks and spec coverage
-   - **Correctness**: Track requirement implementation and scenario coverage
+   - **Completeness**: Track tasks, spec coverage, scenario mapping, and test-plan coverage
+   - **Correctness**: Track test-suite preflight, manual coverage, and E2E acceptance
    - **Coherence**: Track design adherence and pattern consistency
 
    Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
 
-${repairOwnershipInstructions}
+${verifyCompletenessSteps}
 
-5. **Verify Completeness**
-
-   **Task Completion**:
-   - If tasks.md exists in contextFiles, read it
-   - Parse checkboxes: \`- [ ]\` (incomplete) vs \`- [x]\` (complete)
-   - Count complete vs total tasks
-   - If incomplete tasks exist:
-     - Add CRITICAL issue for each incomplete task
-     - Recommendation: "Complete task: <description>" or "Mark as done if already implemented"
-
-   **Spec Coverage**:
-   - If delta specs exist in \`superpowers/changes/<name>/specs/\`:
-     - Extract all requirements (marked with "### Requirement:")
-     - For each requirement:
-       - Search codebase for keywords related to the requirement
-       - Assess if implementation likely exists
-     - If requirements appear unimplemented:
-       - Add CRITICAL issue: "Requirement not found: <requirement name>"
-       - Recommendation: "Implement requirement X: <description>"
-
-6. **Verify Correctness**
+5. **Verify Correctness**
 
 ${getCanonicalNonVisualSuiteInstructions('verify')}
 
 ${getManualCoverageInstructions('verify')}
 
-   **Requirement Implementation Mapping**:
-   - For each requirement from delta specs:
-     - Search codebase for implementation evidence
-     - If found, note file paths and line ranges
-     - Assess if implementation matches requirement intent
-     - If divergence detected:
-       - Add WARNING: "Implementation may diverge from spec: <details>"
-       - Recommendation: "Review <file>:<lines> against requirement X"
-
-   **Scenario Coverage**:
-   - For each scenario in delta specs (marked with "#### Scenario:"):
-     - Check if conditions are handled in code
-     - Check if tests exist covering the scenario
-     - If scenario appears uncovered:
-       - Add WARNING: "Scenario not covered: <scenario name>"
-       - Recommendation: "Add test or implementation for scenario: <description>"
-
 ${e2eAcceptanceInstructions}
 
-${finalQualityRetryInstructions}
-
-7. **Verify Coherence**
+6. **Verify Coherence**
 
    **Design Adherence**:
    - If design.md exists in contextFiles:
@@ -142,7 +145,7 @@ ${finalQualityRetryInstructions}
      - Add SUGGESTION: "Code pattern deviation: <details>"
      - Recommendation: "Consider following project pattern: <example>"
 
-8. **Generate Verification Report**
+7. **Generate Verification Report**
 
    **Summary Scorecard**:
    \`\`\`
@@ -167,6 +170,7 @@ ${finalQualityRetryInstructions}
    2. **WARNING** (Should fix):
       - Spec/design divergences
       - Missing scenario coverage
+      - Test plan gaps or stale test rows
       - Each with specific recommendation
 
    3. **SUGGESTION** (Nice to fix):
@@ -180,13 +184,19 @@ ${finalQualityRetryInstructions}
    - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
    - If all clear: "All checks passed. Ready for archive."
 
-**Verification Heuristics**
+## Other Rules
 
-- **Completeness**: Focus on objective checklist items (checkboxes, requirements list)
-- **Correctness**: Use keyword search, file path analysis, reasonable inference - don't require perfect certainty
+${finalQualityRetryInstructions}
+
+### Verification Heuristics
+
+- **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
+- **Correctness**: Run the canonical test suite, manual coverage, and applicable E2E journeys; use inspectable evidence rather than inference alone
 - **Coherence**: Look for glaring inconsistencies, don't nitpick style
 - **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
 - **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
+
+${repairOwnershipInstructions}
 
 **Graceful Degradation**
 
@@ -195,7 +205,7 @@ ${finalQualityRetryInstructions}
 - If full artifacts: verify all three dimensions
 - Always note which checks were skipped and why
 
-**Output Format**
+## Output Format
 
 Use clear markdown with:
 - Table for summary scorecard
@@ -221,7 +231,7 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
 
 **Input**: Optionally specify a change name after \`/sp:verify\` (e.g., \`/sp:verify add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
-**Steps**
+## Steps
 
 1. **If no change name provided, prompt for selection**
 
@@ -233,15 +243,15 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
 
    **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
 
-2. **Check status to understand the schema**
+2. **Check status and load artifacts**
+
    \`\`\`bash
    superpowers status --change "<name>" --json
    \`\`\`
+
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven")
    - Which artifacts exist for this change
-
-3. **Get the change directory and load artifacts**
 
    \`\`\`bash
    superpowers instructions apply --change "<name>" --json
@@ -249,65 +259,26 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
 
    This returns the change directory, context files, and attachment files. Read all available artifacts from \`contextFiles\`, and read or inspect files from \`attachmentFiles\` when present. Treat artifacts as the source of normative meaning for each attachment.
 
-4. **Initialize verification report structure**
+3. **Initialize verification report structure**
 
    Create a report structure with three dimensions:
-   - **Completeness**: Track tasks and spec coverage
-   - **Correctness**: Track requirement implementation and scenario coverage
+   - **Completeness**: Track tasks, spec coverage, scenario mapping, and test-plan coverage
+   - **Correctness**: Track test-suite preflight, manual coverage, and E2E acceptance
    - **Coherence**: Track design adherence and pattern consistency
 
    Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
 
-${repairOwnershipInstructions}
+${verifyCompletenessSteps}
 
-5. **Verify Completeness**
-
-   **Task Completion**:
-   - If tasks.md exists in contextFiles, read it
-   - Parse checkboxes: \`- [ ]\` (incomplete) vs \`- [x]\` (complete)
-   - Count complete vs total tasks
-   - If incomplete tasks exist:
-     - Add CRITICAL issue for each incomplete task
-     - Recommendation: "Complete task: <description>" or "Mark as done if already implemented"
-
-   **Spec Coverage**:
-   - If delta specs exist in \`superpowers/changes/<name>/specs/\`:
-     - Extract all requirements (marked with "### Requirement:")
-     - For each requirement:
-       - Search codebase for keywords related to the requirement
-       - Assess if implementation likely exists
-     - If requirements appear unimplemented:
-       - Add CRITICAL issue: "Requirement not found: <requirement name>"
-       - Recommendation: "Implement requirement X: <description>"
-
-6. **Verify Correctness**
+5. **Verify Correctness**
 
 ${getCanonicalNonVisualSuiteInstructions('verify')}
 
 ${getManualCoverageInstructions('verify')}
 
-   **Requirement Implementation Mapping**:
-   - For each requirement from delta specs:
-     - Search codebase for implementation evidence
-     - If found, note file paths and line ranges
-     - Assess if implementation matches requirement intent
-     - If divergence detected:
-       - Add WARNING: "Implementation may diverge from spec: <details>"
-       - Recommendation: "Review <file>:<lines> against requirement X"
-
-   **Scenario Coverage**:
-   - For each scenario in delta specs (marked with "#### Scenario:"):
-     - Check if conditions are handled in code
-     - Check if tests exist covering the scenario
-     - If scenario appears uncovered:
-       - Add WARNING: "Scenario not covered: <scenario name>"
-       - Recommendation: "Add test or implementation for scenario: <description>"
-
 ${e2eAcceptanceInstructions}
 
-${finalQualityRetryInstructions}
-
-7. **Verify Coherence**
+6. **Verify Coherence**
 
    **Design Adherence**:
    - If design.md exists in contextFiles:
@@ -325,7 +296,7 @@ ${finalQualityRetryInstructions}
      - Add SUGGESTION: "Code pattern deviation: <details>"
      - Recommendation: "Consider following project pattern: <example>"
 
-8. **Generate Verification Report**
+7. **Generate Verification Report**
 
    **Summary Scorecard**:
    \`\`\`
@@ -350,6 +321,7 @@ ${finalQualityRetryInstructions}
    2. **WARNING** (Should fix):
       - Spec/design divergences
       - Missing scenario coverage
+      - Test plan gaps or stale test rows
       - Each with specific recommendation
 
    3. **SUGGESTION** (Nice to fix):
@@ -363,13 +335,19 @@ ${finalQualityRetryInstructions}
    - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
    - If all clear: "All checks passed. Ready for archive."
 
-**Verification Heuristics**
+## Other Rules
 
-- **Completeness**: Focus on objective checklist items (checkboxes, requirements list)
-- **Correctness**: Use keyword search, file path analysis, reasonable inference - don't require perfect certainty
+${finalQualityRetryInstructions}
+
+### Verification Heuristics
+
+- **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
+- **Correctness**: Run the canonical test suite, manual coverage, and applicable E2E journeys; use inspectable evidence rather than inference alone
 - **Coherence**: Look for glaring inconsistencies, don't nitpick style
 - **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
 - **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
+
+${repairOwnershipInstructions}
 
 **Graceful Degradation**
 
@@ -378,7 +356,7 @@ ${finalQualityRetryInstructions}
 - If full artifacts: verify all three dimensions
 - Always note which checks were skipped and why
 
-**Output Format**
+## Output Format
 
 Use clear markdown with:
 - Table for summary scorecard

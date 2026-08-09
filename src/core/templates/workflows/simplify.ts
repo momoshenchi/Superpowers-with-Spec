@@ -3,7 +3,7 @@ import type { CommandTemplate, SkillTemplate } from '../types.js';
 const instructions = `\`/sp:simplify → 4 cleanup agents in parallel → apply the fixes\`
 You are improving the quality of the changed code, not hunting for bugs. Review
 it for reuse, simplification, efficiency, and altitude issues, then fix what you
-find. Do not look for correctness bugs — that is what host-native code review is for.
+find. Do not look for correctness bugs — that is what code review is for.
 
 **Repair ownership:** Simplify is authorized to edit the reviewed scope directly, but only for behavior-preserving cleanup. Do not repair product correctness, requirements, architecture, or visual-design findings; report those outside-scope concerns for the coordinator instead. If a proposed cleanup is uncertain, crosses the resolved scope, or changes observable behavior, revert or skip it and report the reason.
 
