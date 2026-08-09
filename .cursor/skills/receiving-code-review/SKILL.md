@@ -13,7 +13,7 @@ Code review requires technical evaluation, not emotional performance.
 
 ## Workflow Boundary
 
-Use this skill as the coordinator's feedback-evaluation protocol after a reviewer reports findings. It is not a code-review worker or an additional final-quality gate: it does not dispatch review, set Apply retry policy, or replace host-native code review. Evaluate each finding against the codebase and requirements, repair accepted findings in the coordinator context, and run targeted verification before reporting resolution.
+Use this skill as the coordinator's feedback-evaluation protocol after a reviewer reports findings. It is not a code-review worker or an additional final-quality gate: it does not dispatch review, set Apply retry policy, or replace code review. Evaluate each finding against the codebase and requirements, repair accepted findings in the coordinator context, and run targeted verification before reporting resolution.
 
 ## The Response Pattern
 
