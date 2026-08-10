@@ -1029,6 +1029,26 @@ describe('artifact-workflow CLI commands', () => {
       }
     );
 
+    it('allows Test Hardening completion while an agent-browser Manual Coverage row remains planned', async () => {
+      const changeDir = await createTestChange(
+        'manual-coverage-agent-browser-deferred',
+        ['proposal', 'design', 'specs', 'tasks', 'execution-plan', 'test-plan']
+      );
+      await fs.writeFile(path.join(changeDir, 'tasks.md'), '## Tasks\n- [x] Task 1');
+      await fs.writeFile(
+        path.join(changeDir, 'test-plan.md'),
+        `${completeTestPlanContent()}\n| Critical path human acceptance | agent-browser: /login → dashboard ; disposable env | planned | Deferred to Verify |`
+      );
+
+      const result = await runCLI(
+        ['instructions', 'apply', '--change', path.basename(changeDir)],
+        { cwd: tempDir }
+      );
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout).toContain('implementation tasks and Test Hardening are complete');
+      expect(result.stdout).not.toContain('Continue into Test Hardening');
+    });
+
     it('uses spec-driven schema apply configuration', async () => {
       // Create a spec-driven style change with all artifacts
       await createTestChange('apply-schema-test', [

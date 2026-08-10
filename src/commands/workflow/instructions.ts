@@ -400,8 +400,8 @@ export async function generateApplyInstructions(
       state = 'ready';
       instruction = [
         'All implementation tasks are complete. Continue into Test Hardening before claiming apply completion.',
-        `Read \`${testPlanArtifact.generates}\` and treat Test Hardening as complete only when every concrete testing/hardening status row outside \`## Final Quality Gates\` is complete, including required \`## Manual Coverage\` rows; \`## Deferred Coverage\` is not execution evidence.`,
-        'Use completed statuses such as `covered`, `passed`, or `not applicable`; `planned`, `failing`, blank, or placeholder rows keep hardening incomplete.',
+        `Read \`${testPlanArtifact.generates}\` and treat Test Hardening as complete only when every concrete testing/hardening status row outside \`## Final Quality Gates\` is complete, including required \`## Manual Coverage\` rows except \`agent-browser\` rows deferred to Verify; \`## Deferred Coverage\` is not execution evidence.`,
+        'Use completed statuses such as `covered`, `passed`, or `not applicable`; `planned`, `failing`, blank, or placeholder rows keep hardening incomplete, except `agent-browser` Manual Coverage rows may remain `planned` until Verify.',
         'Analyze which earlier tests were insufficient or not broad enough, add feasible missing tests, document what this stage strengthened, and pause if unrelated changes make the hardening scope ambiguous.',
         'Failing hardening tests or unresolved product defects block apply completion; fix them or pause as blocked before marking the related table rows complete.',
       ].join('\n');
@@ -474,6 +474,8 @@ function isTestPlanComplete(content: string): boolean {
       : [];
     if (requiredManualColumnIndexes.some((columnIndex) => columnIndex === -1)) return false;
 
+    const methodIndex = isManualCoverageTable ? requiredManualColumnIndexes[1] : -1;
+
     index += 2;
     while (index < lines.length) {
       const rowCells = parseMarkdownTableRow(lines[index]);
@@ -491,6 +493,15 @@ function isTestPlanComplete(content: string): boolean {
         })
       ) {
         return false;
+      }
+
+      // agent-browser Manual Coverage is executed during Verify, not Test Hardening.
+      if (
+        isManualCoverageTable &&
+        normalizeTableCell(rowCells[methodIndex] ?? '').includes('agent-browser')
+      ) {
+        index += 1;
+        continue;
       }
 
       const status = normalizeTableCell(rowCells[statusIndex] ?? '');
