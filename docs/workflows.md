@@ -35,7 +35,7 @@ Superpowers has exactly two work modes:
 - **Direct Modification** for clear, local, reversible, low-risk work with a focused verification path.
 - **Proposal → Review → Apply** for new capabilities or public contracts, security/data boundaries, migrations, cross-cutting or ambiguous work, and work whose estimated agent workload is too large for one context budget.
 
-A requested plan is an execution aid inside either mode; it is not a third Plan Mode or a new artifact. Direct work must still run relevant tests, E2E, and visual checks. Proposal work uses the schema artifacts, Test Hardening, and Apply's final gates.
+A requested plan is an execution aid inside either mode; it is not a third Plan Mode or a new artifact. Direct work must still run relevant tests, Manual Coverage (including browser methods when applicable), and visual checks. Proposal work uses the schema artifacts, Test Hardening, and Apply's final gates.
 
 Size a Proposal by six workload dimensions—implementation surface, layer breadth, behavior complexity, verification cost, orchestration cost, and context churn—on a 0–3 scale. Use `0–5` (small), `6–10` (medium), `11–14` (large), and `15+` (very large) as calibration bands. A normal combined Proposal targets a score of 14 or less, at most 3–5 Dispatch Units, and at most 2–3 dependency waves; these are judgment aids, not file-count gates.
 
@@ -255,14 +255,14 @@ Standalone `/sp:verify` remains available for an explicit independent diagnostic
 
 The `test-plan.md` coverage tables distinguish checks that must be executed from gaps that are intentionally deferred:
 
-- `## Manual Coverage` lists every applicable manual or runtime check with its normal entry point, method and safe environment, status, and inspectable evidence. Test Hardening must execute each applicable row after the canonical preflight and record the actions, observed outcome, and evidence. Blank, placeholder, `planned`, failed, or blocked rows keep hardening incomplete; `not applicable` needs concrete scope evidence.
+- `## Manual Coverage` lists every applicable manual or runtime check with its normal entry point, method and safe environment, status, and inspectable evidence. Browser and other runnable end-to-end journeys are methods on this table: declare `programmatic-browser` (Playwright/Cypress/repo E2E) or `agent-browser` (agent-controlled human-like UI). Honor declared methods; when undeclared, apply risk layering. A Critical Path may require both modes with overlapping coverage, and any `agent-browser` run must cover that Critical Path. Test Hardening must execute each applicable row after the canonical preflight and record the actions, observed outcome, and evidence. Blank, placeholder, `planned`, failed, or blocked rows keep hardening incomplete; `not applicable` needs concrete scope evidence.
 - `## Deferred Coverage` records a gap, why it is deferred, and a safer alternative or follow-up. A deferred row is planning information only and never counts as execution evidence or a passing check.
 
 Final gates use bounded, local retries. `P0` is the same severity as Verify `CRITICAL`; review repairs every resolvable finding and only repeats with a fresh reviewer when the round contains P0. `P1` and `P2` are repaired and recorded in the current round but do not themselves trigger another review. `BLOCKER` is neither P0 nor P1: it is a missing prerequisite or external decision that pauses immediately without consuming a round. Code review, Verify, and Design verify each allow at most four numbered fresh-worker rounds; a remaining P0 or failed check in round four is terminal. Simplify has no retry loop: a safe cleanup proceeds to Verify round one. Verify retries from Verify and Design verify retries from Design verify, rather than restarting all gates from review.
 
 #### Verify: Check Your Work
 
-`/sp:verify` validates implementation against your artifacts across three dimensions. It reruns the canonical non-visual suite before applicable runnable journey E2E. Browser journeys must use real UI input rather than API-only substitutes and retain inspectable driver, route, DOM/response, console/network, and useful screenshot evidence; source inspection, screenshots, and manual confidence alone do not substitute for E2E evidence.
+`/sp:verify` validates implementation against your artifacts across three dimensions. It reruns the canonical non-visual suite before applicable Manual Coverage. Browser and other runnable end-to-end journeys are Manual Coverage methods (`programmatic-browser` or `agent-browser`), not a separate acceptance gate; retain inspectable method, route, DOM/response, console/network, and useful screenshot evidence. Source inspection, screenshots, and manual confidence alone do not substitute for executing an applicable Manual Coverage row.
 
 After that canonical preflight, Verify executes every applicable row in `## Manual Coverage` through the stated normal entry point, method, and safe environment. Each row receives a status (`passed`, `failed`, `blocked`, or scope-backed `not applicable`) plus method/environment, actions, observed outcome, and inspectable evidence. An unexecuted, failed, or blocked applicable row blocks Verify; entries under `## Deferred Coverage` are not substitutes. In apply's final-quality loop, a repairable manual failure retries from Verify within the four-round limit, while `BLOCKER` pauses without consuming a round.
 
@@ -305,7 +305,7 @@ AI:  Verifying add-auth...
 | Correctness | Implementation matches spec intent, edge cases handled |
 | Coherence | Design decisions reflected in code, patterns consistent |
 
-Verify surfaces ordinary warnings without blocking archive. An applicable E2E failure or blocked prerequisite, however, blocks Verify and must be resolved before archive. Inside apply, Verify's first post-Simplify run is round one of four; every retry uses a fresh worker and reruns the complete canonical non-visual suite plus applicable E2E. A missing prerequisite is a `BLOCKER` pause rather than a spent round.
+Verify surfaces ordinary warnings without blocking archive. An applicable Manual Coverage failure or blocked prerequisite, however, blocks Verify and must be resolved before archive. Inside apply, Verify's first post-Simplify run is round one of four; every retry uses a fresh worker and reruns the complete canonical non-visual suite plus applicable Manual Coverage. A missing prerequisite is a `BLOCKER` pause rather than a spent round.
 
 #### Archive: Finalize the Change
 

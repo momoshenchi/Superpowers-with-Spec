@@ -32,7 +32,7 @@ Test Hardening is complete when every concrete test/status row in the tables bel
 
 | Check / Scenario | Execution Method and Environment | Status | Evidence |
 | --- | --- | --- | --- |
-| <!-- concrete manual check --> | <!-- normal entry point, method, and safe environment --> | <!-- planned / passed / failed / blocked / not applicable --> | <!-- command, steps, observed outcome, and inspectable evidence --> |
+| <!-- concrete manual check --> | <!-- programmatic-browser (Playwright/Cypress) | agent-browser | cli | other; entry point; safe environment. Critical Path may list both browser modes. --> | <!-- planned / passed / failed / blocked / not applicable --> | <!-- command, steps, observed outcome, and inspectable evidence --> |
 
 ## Deferred Coverage
 

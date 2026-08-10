@@ -158,7 +158,7 @@ Working on task 4/7: <task description>
 | --- | --- | --- |
 | code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
 | \`/sp:simplify\` | passed / failed / blocked / not applicable | <worker report and cleanup/skip summary> |
-| \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, E2E disposition> |
+| \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, Manual Coverage disposition> |
 | \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |
 
 Implementation, Test Hardening, and every applicable final quality gate are complete. You can archive this change with \`/sp:archive\`.
@@ -370,7 +370,7 @@ Working on task 4/7: <task description>
 | --- | --- | --- |
 | code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
 | \`/sp:simplify\` | passed / failed / blocked / not applicable | <worker report and cleanup/skip summary> |
-| \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, E2E disposition> |
+| \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, Manual Coverage disposition> |
 | \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |
 
 Implementation, Test Hardening, and every applicable final quality gate are complete. You can archive this change with \`/sp:archive\`.

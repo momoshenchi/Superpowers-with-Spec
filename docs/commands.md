@@ -337,7 +337,7 @@ AI:  Implementing add-dark-mode...
 - Test Hardening runs the repository's complete canonical non-visual suite. Apply then delegates final code review, `/sp:simplify`, `/sp:verify`, and `/sp:design-verify` in that order to fresh, distinct subagents, integrating each result before the next; standalone workflow selection never disables those gates.
 - Final-gate retries are bounded and local: `P0` equals Verify `CRITICAL`, while `P1`/`P2` are repaired in the current review round without forcing another round. A `BLOCKER` is a missing prerequisite or external decision, not a priority level; it pauses without consuming an attempt. Code review, Verify, and Design verify each stop with `failed` if round four still fails. Simplify has no retry loop and hands off to Verify round one.
 
-`test-plan.md` keeps execution requirements separate from intentional gaps. In `## Manual Coverage`, every applicable row specifies its normal entry point, method/environment, status, and inspectable evidence. Test Hardening executes all applicable rows after the canonical non-visual preflight and cannot complete while a row is blank, placeholder, `planned`, failed, or blocked; `not applicable` must be supported by concrete scope evidence. `## Deferred Coverage` contains the gap, deferral reason, and safer follow-up, but never counts as executed evidence.
+`test-plan.md` keeps execution requirements separate from intentional gaps. In `## Manual Coverage`, every applicable row specifies its normal entry point, method/environment (`programmatic-browser` such as Playwright/Cypress, `agent-browser` for agent-controlled human-like UI, or other methods), status, and inspectable evidence. Honor declared methods; when undeclared, apply risk layering (prefer programmatic for low-risk/happy paths with a stable script; require agent-browser for high-risk or interaction-heavy paths). A change's Critical Path may require both browser modes with overlapping coverage, and any `agent-browser` run must exercise that Critical Path. Test Hardening executes all applicable rows after the canonical non-visual preflight and cannot complete while a row is blank, placeholder, `planned`, failed, or blocked; `not applicable` must be supported by concrete scope evidence. `## Deferred Coverage` contains the gap, deferral reason, and safer follow-up, but never counts as executed evidence.
 
 ---
 
@@ -357,13 +357,12 @@ Validate that implementation matches your change artifacts. Checks completeness,
 
 **What it does:**
 - Checks three dimensions of implementation quality
-- Discovers and runs the complete canonical non-visual suite before applicable E2E acceptance
-- Requires executable journey evidence through real UI input where applicable, including a risk path, selected driver, inspectable runtime artifacts, and browser/network signals for changed runnable journeys
-- After canonical preflight, executes every applicable `## Manual Coverage` row through its normal entry point and records method/environment, actions, observed outcome, and inspectable evidence. A required row that is unexecuted, failed, or blocked prevents Verify from passing; `## Deferred Coverage` is not execution evidence
+- Discovers and runs the complete canonical non-visual suite before Manual Coverage
+- After canonical preflight, executes every applicable `## Manual Coverage` row through its normal entry point and records method/environment, actions, observed outcome, and inspectable evidence. Browser and other runnable end-to-end journeys are Manual Coverage methods (`programmatic-browser` or `agent-browser`); a required row that is unexecuted, failed, or blocked prevents Verify from passing; `## Deferred Coverage` is not execution evidence
 - Searches codebase for implementation evidence
 - Reports issues categorized as CRITICAL, WARNING, or SUGGESTION
-- Surfaces ordinary warnings without blocking archive; however, an applicable E2E failure or blocked prerequisite blocks Verify and must be resolved before archive
-- When delegated by apply, labels fresh Verify rounds 1–4; each round reruns the complete canonical non-visual suite and applicable E2E. Repairable failures retry from Verify, while a `BLOCKER` pauses without consuming a round and a fourth failed round is terminal
+- Surfaces ordinary warnings without blocking archive; however, an applicable Manual Coverage failure or blocked prerequisite blocks Verify and must be resolved before archive
+- When delegated by apply, labels fresh Verify rounds 1–4; each round reruns the complete canonical non-visual suite and applicable Manual Coverage. Repairable failures retry from Verify, while a `BLOCKER` pauses without consuming a round and a fourth failed round is terminal
 
 **Verification dimensions:**
 

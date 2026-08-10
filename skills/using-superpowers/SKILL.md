@@ -48,15 +48,6 @@ While working directly, stop and promote to one or more Proposals before further
 
 Preserve what was learned, explain the boundary that was crossed, and do not silently continue expanding the direct session.
 
-### Diagnostic context boundaries during investigation
-
-Repeated broad diagnostic rereads are a context-boundary signal even when the
-work is still read-only. Before another diagnostic reread, create or update a
-Debug Checkpoint with the current track statuses, Evidence IDs, exact anchors,
-and one next decisive experiment. If the next step is only recovery, hand the
-checkpoint to a fresh context; if the next step is implementation, use the
-existing Proposal → Review → Apply or Direct Modification decision. 
-
 ## Size Proposals by workload
 
 Estimate each logical capability separately across six dimensions. Assign `0–3` on every dimension using these common anchors: **0 = no meaningful contribution**, **1 = one local and familiar concern**, **2 = several related concerns or one non-trivial risk**, and **3 = broad, cross-boundary, or highly uncertain**.
@@ -160,3 +151,61 @@ The Proposal lifecycle stores durable intent and evidence under `superpowers/cha
 
 Repository specs under `superpowers/specs/<capability>/spec.md` remain the source of truth for behavior. Requirements state what must happen; scenarios provide concrete verifiable cases.
 
+## Understand the schema
+
+Schemas define the artifact types and their dependencies for a workflow.
+
+### How Schemas Work
+
+```yaml
+# superpowers/schemas/spec-driven/schema.yaml
+name: spec-driven
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    requires: []              # No dependencies, can create first
+
+  - id: specs
+    generates: specs/**/*.md
+    requires: [proposal]      # Needs proposal before creating
+
+  - id: design
+    generates: design.md
+    requires: [proposal]      # Can create in parallel with specs
+
+  - id: tasks
+    generates: tasks.md
+    requires: [specs, design] # Needs both specs and design first
+  
+  - id: execution-plan
+    generates: execution-plan.md
+    requires: [tasks] # Needs tasks
+
+  - id: test-plan
+    generates: test-plan.md
+    requires: [execution-plan] # Needs execution-plan
+```
+
+
+### Built-in Schemas
+
+**spec-driven** (default)
+
+The standard workflow for spec-driven development:
+
+```
+proposal → specs → design → tasks → implement-plan → test-plan → review → apply → final quality gate
+```
+
+
+### Custom Schemas
+
+Create custom schemas for your team's workflow:
+
+```bash
+# Create from scratch
+superpowers schema init research-first
+
+# Or fork an existing one
+superpowers schema fork spec-driven research-first
+```

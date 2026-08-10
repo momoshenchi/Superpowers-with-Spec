@@ -7,21 +7,11 @@
 import type { SkillTemplate, CommandTemplate } from '../types.js';
 import { getCanonicalNonVisualSuiteInstructions, getManualCoverageInstructions } from './final-quality-gates.js';
 
-const e2eAcceptanceInstructions = `   **End-to-end acceptance**:
-   - Classify changed requirements/scenarios as runnable user, browser, or end-to-end journeys.
-   - After the canonical preflight passes, exercise every affected runnable journey through its normal entry point using repository E2E automation or an equivalent agent-controlled browser. For browser-facing journeys, drive the real UI with the same clicks, keyboard input, and navigation a user uses; an API call or curl request is not a substitute for an interactive UI flow.
-   - Select a concrete available driver (repository E2E runner, Playwright/browser automation, or agent-controlled browser), wait for the application to be ready, and capture inspectable evidence: command output, route/URL transitions, relevant DOM or response assertions, screenshots or pane dumps where useful, and relevant console and failed-network signals. Memory alone is not evidence.
-   - Verify the observable success outcome plus applicable risk paths. Consider error, empty, permission, repeat-operation, refresh/navigation, invalid or missing input, rapid repeated interaction, and resize/responsive behavior when they apply to the changed journey.
-   - Drive destructive flows only against a documented safe target, fixture, dry run, or disposable environment. If none exists, report the affected path as \`blocked\` rather than risking real data or systems.
-   - A plan containing only build, typecheck, or isolated test commands is a CI rerun, not E2E verification. Find a step that reaches the changed surface or report it \`blocked\`.
-   - Report E2E as \`passed\`, \`failed\`, \`blocked\`, or \`not applicable\`: include route/entry point, environment/command, selected driver, exercised states, and captured evidence. An unexpected observable outcome or relevant console/network failure is \`failed\` and must include remediation; missing runtime, credentials, dependencies, or browser capability is \`blocked\`; non-runnable scope is \`not applicable\` with a concrete reason. Source inspection, screenshots, and unaided human checks never substitute for an applicable E2E pass.
-   - An applicable E2E journey reported \`blocked\` or \`failed\` makes both Correctness and the overall Verify outcome \`blocked\` or \`failed\`; resolve it before archive. Only a concrete, scope-backed \`not applicable\` outcome is non-blocking.`;
-
 const finalQualityRetryInstructions = `### Final-quality Verify retries:
    - When Verify is delegated by \`/sp:apply\`, label the report \`Verify round 1\` through \`Verify round 4\`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
-   - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable E2E acceptance. Preserve separate command and E2E evidence for every numbered round.
-   - Treat \`CRITICAL\` as \`P0\` for final-quality retry decisions. Before round four, the worker reports each resolvable failed check, applicable E2E failure, or P0/CRITICAL finding. When the coordinator repairs an accepted failure or CRITICAL finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
-   - A missing runtime, credential, browser capability, dependency, or other prerequisite is \`BLOCKER\`: report \`blocked\`, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable E2E failure, or P0/CRITICAL finding, report \`failed\`; do not begin a fifth round or recommend archive.`;
+   - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable Manual Coverage. Preserve separate command and Manual Coverage evidence for every numbered round.
+   - Treat \`CRITICAL\` as \`P0\` for final-quality retry decisions. Before round four, the worker reports each resolvable failed check, applicable Manual Coverage failure, or P0/CRITICAL finding. When the coordinator repairs an accepted failure or CRITICAL finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
+   - A missing runtime, credential, browser capability, dependency, or other prerequisite is \`BLOCKER\`: report \`blocked\`, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable Manual Coverage failure, or P0/CRITICAL finding, report \`failed\`; do not begin a fifth round or recommend archive.`;
 
 const verifyCompletenessSteps = `4. **Verify Completeness**
 
@@ -72,6 +62,114 @@ const repairOwnershipInstructions = `**Repair ownership**
 - If a finding cannot be reproduced or its required repair is ambiguous, investigate or clarify before editing. Do not modify the implementation merely to make the report appear clean.
 - In final-quality Verify, a repair ends the current worker's result. The coordinator starts the next required fresh Verify round; the reporting worker does not silently approve its own repair.`;
 
+const verifyCorrectnessAndReportTail = `5. **Verify Correctness**
+
+${getCanonicalNonVisualSuiteInstructions('verify')}
+
+${getManualCoverageInstructions('verify')}
+
+6. **Verify Coherence**
+
+   **Design Adherence**:
+   - If design.md exists in contextFiles:
+     - Extract key decisions (look for sections like "Decision:", "Approach:", "Architecture:")
+     - Verify implementation follows those decisions
+     - If contradiction detected:
+       - Add WARNING: "Design decision not followed: <decision>"
+       - Recommendation: "Update implementation or revise design.md to match reality"
+   - If no design.md: Skip design adherence check, note "No design.md to verify against"
+
+   **Code Pattern Consistency**:
+   - Review new code for consistency with project patterns
+   - Check file naming, directory structure, coding style
+   - If significant deviations found:
+     - Add SUGGESTION: "Code pattern deviation: <details>"
+     - Recommendation: "Consider following project pattern: <example>"
+
+7. **Generate Verification Report**
+
+   **Summary Scorecard**:
+   \`\`\`
+   ## Verification Report: <change-name>
+
+   ### Summary
+   | Dimension    | Status           |
+   |--------------|------------------|
+   | Completeness | X/Y tasks, N reqs|
+   | Correctness  | M/N reqs covered |
+   | Manual Coverage | M/N rows, methods, evidence |
+   | Coherence    | Followed/Issues  |
+   \`\`\`
+
+   **Issues by Priority**:
+
+   1. **CRITICAL** (Must fix before archive):
+      - Incomplete tasks
+      - Missing requirement implementations
+      - Each with specific, actionable recommendation
+
+   2. **WARNING** (Should fix):
+      - Spec/design divergences
+      - Missing scenario coverage
+      - Test plan gaps or stale test rows
+      - Each with specific recommendation
+
+   3. **SUGGESTION** (Nice to fix):
+      - Pattern inconsistencies
+      - Minor improvements
+      - Each with specific recommendation
+
+   **Final Assessment**:
+   - If any applicable Manual Coverage row is \`blocked\` or \`failed\`: "Verify blocked/failed: resolve the Manual Coverage outcome before archiving." Do not report Correctness as passed.
+   - If CRITICAL issues: "X critical issue(s) found. Fix before archiving."
+   - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
+   - If all clear: "All checks passed. Ready for archive."
+
+## Other Rules
+
+${finalQualityRetryInstructions}
+
+### Verification Heuristics
+
+- **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
+- **Correctness**: Run the canonical test suite and Manual Coverage (including \`programmatic-browser\` / \`agent-browser\` methods); use inspectable evidence rather than inference alone
+- **Coherence**: Look for glaring inconsistencies, don't nitpick style
+- **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
+- **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
+
+${repairOwnershipInstructions}
+
+**Graceful Degradation**
+
+- If only tasks.md exists: verify task completion only, skip spec/design checks
+- If tasks + specs exist: verify completeness and correctness, skip design
+- If full artifacts: verify all three dimensions
+- Always note which checks were skipped and why
+
+## Output Format
+
+Use clear markdown with:
+- Table for summary scorecard
+- Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
+- When running as an apply final-quality gate: \`Verify round: <1-4>\`, \`Fresh worker: <identity>\`, retry disposition, canonical preflight/Manual Coverage evidence for that round, and the terminal \`failed\` or \`blocked\` reason where applicable
+- Repair ownership: findings reported without edits by default; coordinator remediation and targeted-validation evidence when applicable
+- Code references in format: \`file.ts:123\`
+- Specific, actionable recommendations
+- No vague suggestions like "consider reviewing"`;
+
+const verifyReportStructure = `3. **Initialize verification report structure**
+
+   Create a report structure with three dimensions:
+   - **Completeness**: Track tasks, spec coverage, scenario mapping, and test-plan coverage
+   - **Correctness**: Track test-suite preflight and Manual Coverage (including browser methods)
+   - **Coherence**: Track design adherence and pattern consistency
+
+   Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
+
+${verifyCompletenessSteps}
+
+${verifyCorrectnessAndReportTail}`;
+
 export function getVerifyChangeSkillTemplate(): SkillTemplate {
   return {
     name: 'superpowers-verify-change',
@@ -108,113 +206,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
    This returns the change directory, context files, and attachment files. Read all available artifacts from \`contextFiles\`, and read or inspect files from \`attachmentFiles\` when present. Treat artifacts as the source of normative meaning for each attachment.
 
-3. **Initialize verification report structure**
-
-   Create a report structure with three dimensions:
-   - **Completeness**: Track tasks, spec coverage, scenario mapping, and test-plan coverage
-   - **Correctness**: Track test-suite preflight, manual coverage, and E2E acceptance
-   - **Coherence**: Track design adherence and pattern consistency
-
-   Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
-
-${verifyCompletenessSteps}
-
-5. **Verify Correctness**
-
-${getCanonicalNonVisualSuiteInstructions('verify')}
-
-${getManualCoverageInstructions('verify')}
-
-${e2eAcceptanceInstructions}
-
-6. **Verify Coherence**
-
-   **Design Adherence**:
-   - If design.md exists in contextFiles:
-     - Extract key decisions (look for sections like "Decision:", "Approach:", "Architecture:")
-     - Verify implementation follows those decisions
-     - If contradiction detected:
-       - Add WARNING: "Design decision not followed: <decision>"
-       - Recommendation: "Update implementation or revise design.md to match reality"
-   - If no design.md: Skip design adherence check, note "No design.md to verify against"
-
-   **Code Pattern Consistency**:
-   - Review new code for consistency with project patterns
-   - Check file naming, directory structure, coding style
-   - If significant deviations found:
-     - Add SUGGESTION: "Code pattern deviation: <details>"
-     - Recommendation: "Consider following project pattern: <example>"
-
-7. **Generate Verification Report**
-
-   **Summary Scorecard**:
-   \`\`\`
-   ## Verification Report: <change-name>
-
-   ### Summary
-   | Dimension    | Status           |
-   |--------------|------------------|
-   | Completeness | X/Y tasks, N reqs|
-   | Correctness  | M/N reqs covered |
-   | E2E evidence | Outcome, driver, states, artifacts |
-   | Coherence    | Followed/Issues  |
-   \`\`\`
-
-   **Issues by Priority**:
-
-   1. **CRITICAL** (Must fix before archive):
-      - Incomplete tasks
-      - Missing requirement implementations
-      - Each with specific, actionable recommendation
-
-   2. **WARNING** (Should fix):
-      - Spec/design divergences
-      - Missing scenario coverage
-      - Test plan gaps or stale test rows
-      - Each with specific recommendation
-
-   3. **SUGGESTION** (Nice to fix):
-      - Pattern inconsistencies
-      - Minor improvements
-      - Each with specific recommendation
-
-   **Final Assessment**:
-   - If any applicable E2E journey is \`blocked\` or \`failed\`: "Verify blocked/failed: resolve the E2E outcome before archiving." Do not report Correctness as passed.
-   - If CRITICAL issues: "X critical issue(s) found. Fix before archiving."
-   - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
-   - If all clear: "All checks passed. Ready for archive."
-
-## Other Rules
-
-${finalQualityRetryInstructions}
-
-### Verification Heuristics
-
-- **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
-- **Correctness**: Run the canonical test suite, manual coverage, and applicable E2E journeys; use inspectable evidence rather than inference alone
-- **Coherence**: Look for glaring inconsistencies, don't nitpick style
-- **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
-- **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
-
-${repairOwnershipInstructions}
-
-**Graceful Degradation**
-
-- If only tasks.md exists: verify task completion only, skip spec/design checks
-- If tasks + specs exist: verify completeness and correctness, skip design
-- If full artifacts: verify all three dimensions
-- Always note which checks were skipped and why
-
-## Output Format
-
-Use clear markdown with:
-- Table for summary scorecard
-- Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
-- When running as an apply final-quality gate: \`Verify round: <1-4>\`, \`Fresh worker: <identity>\`, retry disposition, canonical preflight/E2E evidence for that round, and the terminal \`failed\` or \`blocked\` reason where applicable
-- Repair ownership: findings reported without edits by default; coordinator remediation and targeted-validation evidence when applicable
-- Code references in format: \`file.ts:123\`
-- Specific, actionable recommendations
-- No vague suggestions like "consider reviewing"`,
+${verifyReportStructure}`,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
     metadata: { author: 'superpowers', version: '1.0' },
@@ -259,112 +251,6 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
 
    This returns the change directory, context files, and attachment files. Read all available artifacts from \`contextFiles\`, and read or inspect files from \`attachmentFiles\` when present. Treat artifacts as the source of normative meaning for each attachment.
 
-3. **Initialize verification report structure**
-
-   Create a report structure with three dimensions:
-   - **Completeness**: Track tasks, spec coverage, scenario mapping, and test-plan coverage
-   - **Correctness**: Track test-suite preflight, manual coverage, and E2E acceptance
-   - **Coherence**: Track design adherence and pattern consistency
-
-   Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
-
-${verifyCompletenessSteps}
-
-5. **Verify Correctness**
-
-${getCanonicalNonVisualSuiteInstructions('verify')}
-
-${getManualCoverageInstructions('verify')}
-
-${e2eAcceptanceInstructions}
-
-6. **Verify Coherence**
-
-   **Design Adherence**:
-   - If design.md exists in contextFiles:
-     - Extract key decisions (look for sections like "Decision:", "Approach:", "Architecture:")
-     - Verify implementation follows those decisions
-     - If contradiction detected:
-       - Add WARNING: "Design decision not followed: <decision>"
-       - Recommendation: "Update implementation or revise design.md to match reality"
-   - If no design.md: Skip design adherence check, note "No design.md to verify against"
-
-   **Code Pattern Consistency**:
-   - Review new code for consistency with project patterns
-   - Check file naming, directory structure, coding style
-   - If significant deviations found:
-     - Add SUGGESTION: "Code pattern deviation: <details>"
-     - Recommendation: "Consider following project pattern: <example>"
-
-7. **Generate Verification Report**
-
-   **Summary Scorecard**:
-   \`\`\`
-   ## Verification Report: <change-name>
-
-   ### Summary
-   | Dimension    | Status           |
-   |--------------|------------------|
-   | Completeness | X/Y tasks, N reqs|
-   | Correctness  | M/N reqs covered |
-   | E2E evidence | Outcome, driver, states, artifacts |
-   | Coherence    | Followed/Issues  |
-   \`\`\`
-
-   **Issues by Priority**:
-
-   1. **CRITICAL** (Must fix before archive):
-      - Incomplete tasks
-      - Missing requirement implementations
-      - Each with specific, actionable recommendation
-
-   2. **WARNING** (Should fix):
-      - Spec/design divergences
-      - Missing scenario coverage
-      - Test plan gaps or stale test rows
-      - Each with specific recommendation
-
-   3. **SUGGESTION** (Nice to fix):
-      - Pattern inconsistencies
-      - Minor improvements
-      - Each with specific recommendation
-
-   **Final Assessment**:
-   - If any applicable E2E journey is \`blocked\` or \`failed\`: "Verify blocked/failed: resolve the E2E outcome before archiving." Do not report Correctness as passed.
-   - If CRITICAL issues: "X critical issue(s) found. Fix before archiving."
-   - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
-   - If all clear: "All checks passed. Ready for archive."
-
-## Other Rules
-
-${finalQualityRetryInstructions}
-
-### Verification Heuristics
-
-- **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
-- **Correctness**: Run the canonical test suite, manual coverage, and applicable E2E journeys; use inspectable evidence rather than inference alone
-- **Coherence**: Look for glaring inconsistencies, don't nitpick style
-- **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
-- **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
-
-${repairOwnershipInstructions}
-
-**Graceful Degradation**
-
-- If only tasks.md exists: verify task completion only, skip spec/design checks
-- If tasks + specs exist: verify completeness and correctness, skip design
-- If full artifacts: verify all three dimensions
-- Always note which checks were skipped and why
-
-## Output Format
-
-Use clear markdown with:
-- Table for summary scorecard
-- Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
-- When running as an apply final-quality gate: \`Verify round: <1-4>\`, \`Fresh worker: <identity>\`, retry disposition, canonical preflight/E2E evidence for that round, and the terminal \`failed\` or \`blocked\` reason where applicable
-- Repair ownership: findings reported without edits by default; coordinator remediation and targeted-validation evidence when applicable
-- Code references in format: \`file.ts:123\`
-- Specific, actionable recommendations
-- No vague suggestions like "consider reviewing"`
+${verifyReportStructure}`
   };
 }

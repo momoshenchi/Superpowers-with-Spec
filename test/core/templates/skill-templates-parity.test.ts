@@ -41,23 +41,23 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getExploreSkillTemplate: '1d25e7f242d47d0d19410072e929eda25f720f6e3b489c0cc767350646b9a0ad',
   getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
   getContinueChangeSkillTemplate: 'd2a03cab2a3adc303a223718d574c8f74b28acdf2a11baa0dea916db2ab3d2aa',
-  getApplyChangeSkillTemplate: 'c21438ec5a51e853c2ea33f5959b457d7a434d6c3635d03ce4e13a0977109844',
+  getApplyChangeSkillTemplate: 'f82ce305515c21c630547fac4c34c52e9fa9df5f9d704b831f4fbc5795a8f906',
   getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'bf39ddec86960f599d857fc6ec68ab32f420bd7ee2d2f272b59a05c7d79773fa',
   getSpExploreCommandTemplate: '76f20d227059b07330fe41bbf4b91955194ec31876888a2f80dd7a2e1c13152e',
   getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
   getSpContinueCommandTemplate: 'a5bff71ba5ea053d61aad846d9d39053a185ba3aeb993bcadfe15b00779b158e',
-  getSpApplyCommandTemplate: '62a21854f3553a0fd4c2bbb02df3d1cd9caf1151e72c956911002c1ce0fd6310',
+  getSpApplyCommandTemplate: '4970a73f20b68066b3f47f55193f466dff34f6a21676aad1a533f464a1a7c624',
   getSpFfCommandTemplate: 'a1f27b1120565937907ed8bd7209bfd3682e23aa07cc1b4da0a501bd8cd8d158',
   getArchiveChangeSkillTemplate: 'aadb596f4c1787809290603f7bd02d0fdfec40489fde03c5f0b40048682d33d1',
   getBulkArchiveChangeSkillTemplate: '5f80cc40af4beb29180d7a0266dc6aa21d62ee1826182623d21acbb35e8d376c',
   getSpSyncCommandTemplate: 'cc1ff958f3b66201e1b044c5fc4ab74c542d22520a8ab6338cf24bc50937aeb4',
-  getVerifyChangeSkillTemplate: 'ef87974961fc5ddda474b4019d30292ae1b55c8bf9755111db110e159b00c463',
+  getVerifyChangeSkillTemplate: '63f207fc7d44d980402fbd4ef244a00b0322d0aa2e8bc11d3443b5d58870879c',
   getSpArchiveCommandTemplate: 'a6d8bbbfd0de892f525e720bd1b32d5f8ec548ad27bfab7df4f803137180d3d0',
   getSpOnboardCommandTemplate: '83ecbdb7c05c0b485b9a4911853e689468b421970bed45b96d19d9dc087a7745',
   getSpBulkArchiveCommandTemplate: 'f8ad96bf71f2c8e5c5c24d31d25054974e24219ee910aa1ddee25ce9f3c843c1',
-  getSpVerifyCommandTemplate: '46dd9c77a01b148452a72605d03ff2a771dc3cbe6abb0c5c28eaa66f383c8df2',
+  getSpVerifyCommandTemplate: '4a80359020ece1d8a9ff6a4bc2a626b04b1517ad906201286a7a1aeb65d6caf7',
   getSimplifySkillTemplate: '5d26571f977ae20e01afeec54037a6fabeb84fdb8a492a18f4acdfbcb1551ca5',
   getSpSimplifyCommandTemplate: 'ea0ca542aff154ff51bbf2d6169540dc4d8d51d1d3fd1676bd9c09e1313d592a',
   getDesignVerifySkillTemplate: '4920e25dce697b90b8031620b63085856bf09cfc275d1fec45d7873dcef7c14b',
@@ -73,12 +73,12 @@ const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-explore': 'bcfe8ad716d221ea206b594a787f101ec0606be7241ec61fc0470189e815a494',
   'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
   'superpowers-continue-change': '28a0c25d94b03a658e2a5b9291d8a11b469b2709ac080017604f324d46056fe7',
-  'superpowers-apply-change': '570bc9dd0c1ddc141ab3bb4116f09f1c52f754b0e43fa06e034f42753780f58e',
+  'superpowers-apply-change': '3abc72bf5459917dac7b7ae92cbc36110c1a74c2b9d6fa770b8f87e5dac35520',
   'superpowers-ff-change': '0ceb62124b4b26a9fe00edcff8576d1e27bb00197794ca4228ab61534a18a299',
   'superpowers-sync-specs': '54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2',
   'superpowers-archive-change': 'a50623f1936b93f63d405038cc05bdd04fbe4c0c51b0dc9bf0d64c79a8822920',
   'superpowers-bulk-archive-change': '62e0d64f3b80cf3f7c29073dcd4842c00a2c55d139eb3f7b52bdd3aa59cfecd0',
-  'superpowers-verify-change': '2dd9cea526ffd30914833861cb2802c4846444dac7a11308b2ce8d0eab84d7c7',
+  'superpowers-verify-change': '65b17554a58eb74ae30d462ea1ab06773880d08cad9a2680a96557fdbebf9783',
   'superpowers-simplify': '85d6860d6567fe2ad1738f9f4648e074f6793c670de1aa07b2466447e293505d',
   'superpowers-design-verify': '50a6a25f20bd749bfee135b384702ae4aa7adcc0fb06345c18de0902f505bab7',
   'superpowers-onboard': '736257835836c326f0286e0da55232799a9809a29a2ed2b63d1f9beee9bf6a34',
@@ -269,7 +269,7 @@ describe('skill templates split parity', () => {
       expect(content).toContain('Simplify (one pass, then Verify)');
       expect(content).toContain('transitions directly to Verify round one');
       expect(content).toContain('Verify (rounds 1–4)');
-      expect(content).toContain('including the full canonical preflight and applicable E2E again');
+      expect(content).toContain('including the full canonical preflight and applicable Manual Coverage again');
       expect(content).toContain('Design verify (rounds 1–4)');
       expect(content).toContain('Retry only Design verify');
       expect(content).toContain('do not impose a global restart from code review');
@@ -286,7 +286,11 @@ describe('skill templates split parity', () => {
       expect(content).toContain('run or resume final quality gates instead of suggesting archive');
       expect(content).toContain('### Final Quality Gates');
       expect(content).toContain('| Gate | Outcome | Fresh worker evidence |');
-      expect(content).toContain('canonical suite, E2E disposition');
+      expect(content).toContain('canonical suite, Manual Coverage disposition');
+      expect(content).toContain('`programmatic-browser`');
+      expect(content).toContain('`agent-browser`');
+      expect(content).toContain('Critical Path may require both modes');
+      expect(content).toContain('agent-browser` execution for a change that has a Critical Path MUST exercise that Critical Path');
     }
   });
 
@@ -337,20 +341,22 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('failed-network signals');
     expect(verify).toContain('unaided human checks never substitute');
     expect(verify).toContain('API call or curl request is not a substitute');
-    expect(verify).toContain('Playwright/browser automation');
+    expect(verify).toContain('`programmatic-browser`');
+    expect(verify).toContain('`agent-browser`');
+    expect(verify).toContain('Playwright/Cypress');
     expect(verify).toContain('Memory alone is not evidence');
-    expect(verify).toContain('rapid repeated interaction');
     expect(verify).toContain('documented safe target, fixture, dry run');
-    expect(verify).toContain('CI rerun, not E2E verification');
-    expect(verify).toContain('E2E evidence | Outcome, driver, states, artifacts');
-    expect(verify).toContain('`passed`, `failed`, `blocked`, or `not applicable`');
-    expect(verify).toContain('relevant console/network failure is `failed`');
-    expect(verify).toContain('makes both Correctness and the overall Verify outcome');
-    expect(verify).toContain('resolve the E2E outcome before archiving');
+    expect(verify).toContain('browser and other runnable end-to-end journeys as Manual Coverage methods');
+    expect(verify).not.toContain('**End-to-end acceptance**');
+    expect(verify).toContain('Manual Coverage | M/N rows, methods, evidence');
+    expect(verify).toContain('`passed`, `failed`, `blocked`, or scope-backed `not applicable`');
+    expect(verify).toContain('Critical Path may require both modes');
+    expect(verify).toContain('agent-browser` execution for a change that has a Critical Path MUST exercise that Critical Path');
+    expect(verify).toContain('resolve the Manual Coverage outcome before archiving');
     expect(verify).toContain('## Manual Coverage');
     expect(verify).toContain('After the canonical non-visual preflight');
     expect(verify).toContain('execute every applicable Manual Coverage row');
-    expect(verify).toContain('through its normal entry point');
+    expect(verify).toContain('through its stated normal entry point');
     expect(verify).toContain('method/environment, actions, observed outcome, and inspectable evidence');
     expect(verify).toContain('unexecuted, failed, or blocked');
     expect(verify).toContain('Deferred Coverage is not execution evidence');
@@ -361,6 +367,7 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('Verify round 1');
     expect(verify).toContain('every attempt, including a retry, uses a fresh subagent');
     expect(verify).toContain('Every round reruns this complete canonical non-visual preflight');
+    expect(verify).toContain('applicable Manual Coverage');
     expect(verify).toContain('Treat `CRITICAL` as `P0`');
     expect(verify).toContain('do not consume a round');
     expect(verify).toContain('do not begin a fifth round');

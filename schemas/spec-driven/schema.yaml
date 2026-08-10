@@ -248,6 +248,7 @@ artifacts:
       - Start by analyzing which earlier tests were insufficient or not broad enough, then describe which tests this stage added or strengthened.
       - Include boundary, abnormal, failure, non-critical-path, integration, and cross-platform path risks where relevant.
       - Put executable manual checks in a `## Manual Coverage` table with Check / Scenario, Execution Method and Environment, Status, and Evidence columns.
+      - Treat browser and other runnable end-to-end journeys as Manual Coverage methods. Declare `programmatic-browser` (Playwright/Cypress/repo E2E runner) or `agent-browser` (agent-controlled human-like UI) in Execution Method and Environment; honor declared methods, apply risk-layering defaults when undeclared, allow Critical Path rows to require both modes with overlapping coverage, and require any `agent-browser` execution to cover the change's Critical Path.
       - Put intentionally postponed work in a separate `## Deferred Coverage` table with a specific reason and safer alternative or follow-up; deferred rows are not execution evidence.
       - Treat every concrete Manual Coverage status row as incomplete while it is `planned`, `failing`, `blocked`, blank, or a placeholder; only `passed` or scope-backed `not applicable` completes it.
       - Make Test Hardening completion depend on concrete testing/hardening status rows outside any `## Final Quality Gates` table, not on a standalone completion checkbox. Final-gate rows are evaluated separately after Test Hardening.
@@ -262,5 +263,5 @@ apply:
     Read context files, work through pending tasks, mark complete as you go.
     When implementation tasks are complete, continue into Test Hardening using `test-plan.md`.
     Apply completion requires all tasks, every concrete Test Hardening row outside `## Final Quality Gates`, and every applicable final gate to be complete.
-    During Test Hardening, read `## Manual Coverage` separately from `## Deferred Coverage`, execute each applicable manual row through its stated method, and record status plus inspectable evidence. An applicable manual row that is unexecuted, failed, or blocked keeps hardening incomplete; deferred rows must never be counted as executed checks.
+    During Test Hardening, read `## Manual Coverage` separately from `## Deferred Coverage`, execute each applicable manual row through its stated method (including `programmatic-browser` / `agent-browser` when declared), and record status plus inspectable evidence. An applicable manual row that is unexecuted, failed, or blocked keeps hardening incomplete; deferred rows must never be counted as executed checks.
     Pause if you hit blockers, failing hardening tests, unresolved defects, ambiguous diff ownership, or unclear requirements.

@@ -238,6 +238,8 @@ describe('instruction-loader', () => {
       expect(instructions.template).toContain('Requirement And Scenario Coverage Matrix');
       expect(instructions.template).toContain('## Manual Coverage');
       expect(instructions.template).toContain('Execution Method and Environment');
+      expect(instructions.template).toContain('programmatic-browser');
+      expect(instructions.template).toContain('agent-browser');
       expect(instructions.template).toContain('Status');
       expect(instructions.template).toContain('Evidence');
       expect(instructions.template).toContain('## Deferred Coverage');
