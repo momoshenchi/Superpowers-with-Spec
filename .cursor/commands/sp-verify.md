@@ -83,9 +83,9 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
      - Find stale coverage: rows that no longer match the implementation, were superseded by code changes, or describe tests that should be updated or removed.
      - Find shallow coverage: happy-path-only rows where delta specs or design call for boundaries, errors, permissions, state transitions, or integration paths.
    - When using `full-qa-test`, use its dimensions as a gap-analysis lens. During Verify, assess the plan and existing tests; do not claim full six-dimensional execution unless the active skill phase requires it.
-   - When gaps, stale rows, or unjustified deferrals are found:
-     - Add WARNING: "Test plan gap: <details>"
-     - Recommendation: "Add or update test-plan.md for <requirement/scenario/risk>; cite the missing case or dimension"
+      - When gaps, stale rows, or unjustified deferrals are found:
+      - Add WARNING: "Test plan gap: <details>"
+      - Recommendation: "Add or update test-plan.md for <requirement/scenario/risk>; cite the missing case or dimension"
    - The Verify worker reports findings by default; do not edit `test-plan.md` unless the host workflow explicitly authorizes repair.
 
 5. **Verify Correctness**

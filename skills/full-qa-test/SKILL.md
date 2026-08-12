@@ -229,6 +229,28 @@ description: Use when designing comprehensive test coverage, writing comprehensi
 
 ## Step 8 — 交付输出包
 
+### 六维用例总表 — 示例（格式示范，交付时替换为 Step 0–6 实际产出）
+
+> 测试对象：`POST /api/orders/{id}/cancel`（订单取消 API；Diff 涉及 `OrderService.cancel`）
+
+| ID | 维度 | 测试目标 | 输入/前置 | 步骤 | 预期 |
+|----|------|----------|-----------|------|------|
+| TC-D1-001 | D1 | REQ-取消-01：待支付订单可取消（正向） | 订单 status=pending，归属当前用户 | 1. 登录 2. POST cancel | 200；status→cancelled；返回取消时间 |
+| TC-D1-002 | D1 | REQ-取消-02：已发货不可取消（分支） | 订单 status=shipped | 1. POST cancel | 409；code=ORDER_NOT_CANCELLABLE；status 不变 |
+| TC-D1-003 | D1 | REQ-取消-03：中断后可重试取消（异常） | pending 订单；首次 cancel 网络中断 | 1. 查 status 仍为 pending 2. 再次 POST cancel | 第二次 200；最终 cancelled；无重复退款 |
+| TC-D1-004 | D1 | 隐性：防重复提交 | 同一 pending 订单 | 200ms 内连续 POST cancel 两次 | 仅一次生效；第二次幂等或 409 |
+| TC-D2-001 | D2 | orderService.ts:cancel — status===shipped 分支 True | orderId 有效；DB status=shipped | 调用 cancel(orderId) | 早返回/抛 ORDER_NOT_CANCELLABLE；不调用 payment.refund |
+| TC-D2-002 | D2 | orderService.ts:cancel — refund 失败 catch | pending；mock refund 抛 PaymentError | 调用 cancel | 无半取消；502；status 保持 pending 或回滚 |
+| TC-D3-001 | D3 | orderId — 空串边界 | orderId="" | POST /api/orders//cancel | 404 或 400；不访问 DB |
+| TC-D3-004 | D3 | reason — 超长 BVA（max=200, N+1） | reason=201 字符 | POST cancel + body.reason | 400 字段校验失败 |
+| TC-D4-001 | D4 | pending→cancelled（合法） | status=pending | cancel | status=cancelled |
+| TC-D4-002 | D4 | shipped→cancelled（非法跳跃） | status=shipped | cancel | 拒绝；status 仍为 shipped |
+| TC-D5-001 | D5 | 安全：垂直越权 | 用户 A 订单；用户 B token | B 调用 cancel A 的 orderId | 403 FORBIDDEN |
+| TC-D5-002 | D5 | 容灾：payment 超时 | payment 延迟 30s | POST cancel | 504/超时；无半取消状态 |
+| TC-D6-001 | D6 | payment-service — refund 502 | mock payment 502 | POST cancel pending 订单 | 错误上抛；可重试；无脏数据 |
+
+### 输出格式
+
 **最终回复必须包含（按此顺序）：**
 
 1. **对象与风险摘要**（来自 Step 0）
@@ -240,6 +262,7 @@ description: Use when designing comprehensive test coverage, writing comprehensi
 7. **残留风险**：明确未自动化 / 需人工 / 环境受限 / 未杀死 mutant 项
 
 完成后勾选 Step 8。未完成进度清单不得声称「全覆盖完成」。
+
 
 ## Common Mistakes
 
