@@ -305,7 +305,7 @@ AI:  Verifying add-auth...
 | Correctness | Implementation matches spec intent, edge cases handled |
 | Coherence | Design decisions reflected in code, patterns consistent |
 
-Verify surfaces ordinary warnings without blocking archive. An applicable Manual Coverage failure or blocked prerequisite, however, blocks Verify and must be resolved before archive. Inside apply, Verify's first post-Simplify run is round one of four; every retry uses a fresh worker and reruns the complete canonical non-visual suite plus applicable Manual Coverage. A missing prerequisite is a `BLOCKER` pause rather than a spent round.
+Verify surfaces ordinary warnings without blocking archive. An applicable Manual Coverage failure or blocked prerequisite, however, blocks Verify and must be resolved before archive. Inside apply, Verify's first post-Simplify run is round one of four; every retry uses a fresh worker and reruns the complete canonical non-visual suite plus applicable Manual Coverage. A missing prerequisite is a `BLOCKER` pause rather than a spent round. Verify workers hunt for as many real, evidence-backed issues as possible and keep the existing uncertain-severity downgrade (SUGGESTION over WARNING over CRITICAL).
 
 #### Archive: Finalize the Change
 

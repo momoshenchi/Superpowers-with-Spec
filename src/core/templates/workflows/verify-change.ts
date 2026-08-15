@@ -5,7 +5,7 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
-import { getCanonicalNonVisualSuiteInstructions, getManualCoverageInstructions } from './final-quality-gates.js';
+import { getCanonicalNonVisualSuiteInstructions, getManualCoverageInstructions, VERIFY_ADVERSARIAL_HUNT_INTENT } from './final-quality-gates.js';
 
 const finalQualityRetryInstructions = `### Final-quality Verify retries:
    - When Verify is delegated by \`/sp:apply\`, label the report \`Verify round 1\` through \`Verify round 4\`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
@@ -157,7 +157,9 @@ Use clear markdown with:
 - Specific, actionable recommendations
 - No vague suggestions like "consider reviewing"`;
 
-const verifyReportStructure = `3. **Initialize verification report structure**
+const verifyReportStructure = `${VERIFY_ADVERSARIAL_HUNT_INTENT}
+
+3. **Initialize verification report structure**
 
    Create a report structure with three dimensions:
    - **Completeness**: Track tasks, spec coverage, scenario mapping, and test-plan coverage

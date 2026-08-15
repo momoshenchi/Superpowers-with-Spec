@@ -187,3 +187,21 @@ The agent SHALL gracefully handle changes with varying artifact completeness.
 - **WHEN** change has proposal, design, specs, and tasks
 - **THEN** perform all verification checks
 - **AND** cross-reference artifacts for consistency
+
+### Requirement: Adversarial Hunt Intent
+The `/sp:verify` worker SHALL hunt for as many evidence-backed issues as possible rather than clearing a checklist. Severity calibration SHALL remain unchanged: when uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL.
+
+#### Scenario: Evidence-driven hunting
+- **WHEN** verifying a change
+- **THEN** the worker assumes remaining gaps, spec or design divergences, missing coverage, and failed journeys exist until evidence proves otherwise
+- **AND** continues after the first finding
+- **AND** reports every reproducible, actionable issue with file/line or runtime evidence
+- **AND** does not invent findings
+
+#### Scenario: Uncertain severity stays downgraded
+- **WHEN** the worker is uncertain about an issue's severity
+- **THEN** it prefers SUGGESTION over WARNING, WARNING over CRITICAL
+
+#### Scenario: Apply-delegated verify receives the same intent
+- **WHEN** `/sp:apply` delegates Verify to a fresh subagent
+- **THEN** the dispatch brief includes the same adversarial hunt intent

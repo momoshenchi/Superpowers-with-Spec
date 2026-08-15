@@ -357,6 +357,7 @@ Validate that implementation matches your change artifacts. Checks completeness,
 
 **What it does:**
 - Checks three dimensions of implementation quality
+- Hunts for as many real, evidence-backed issues as possible; continues after the first finding and does not invent problems. When uncertain about severity, prefer SUGGESTION over WARNING, WARNING over CRITICAL
 - Discovers and runs the complete canonical non-visual suite before Manual Coverage
 - After canonical preflight, executes every applicable `## Manual Coverage` row through its normal entry point and records method/environment, actions, observed outcome, and inspectable evidence. Browser and other runnable end-to-end journeys are Manual Coverage methods (`programmatic-browser` or `agent-browser`); Verify is where `agent-browser` rows deferred from Test Hardening are executed. A required row that is unexecuted, failed, or blocked prevents Verify from passing; `## Deferred Coverage` is not execution evidence
 - Searches codebase for implementation evidence
