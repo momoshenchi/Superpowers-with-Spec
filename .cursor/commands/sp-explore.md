@@ -168,7 +168,7 @@ There's no required ending. Discovery might:
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"
 
-When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later **converges**: record the comparison table, choice, and trade-offs—do not re-brainstorm from scratch.
+When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, design writes the approach and rationale without inventing a comparison table. Do not invent A/B/C.
 
 For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
 

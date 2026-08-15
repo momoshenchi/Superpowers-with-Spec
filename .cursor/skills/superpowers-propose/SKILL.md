@@ -54,7 +54,7 @@ Offer exactly three semantic final outcomes:
 
 The confirm-and-create outcome is required even when there were zero interview questions. Do not create the change or write any explicit artifact until that outcome is selected.
 
-After confirmation, route confirmed product decisions into proposal.md. Route each high-impact technical decision into design.md with the selected choice, meaningful alternatives, rationale, and trade-offs; major decisions must compare at least three options. Do not create interview.md or any separate interview transcript. Preserve the schema-defined artifact list, dependency-ordered generation, automatic proposal review, and final status flow below.
+After confirmation, route confirmed product decisions into proposal.md. Route each high-impact technical decision into design.md. Include an option comparison table only when the user actually chose among those options (including delegated recommendations after seeing alternatives); record the exact options the user saw, the selected choice, rationale, and trade-offs. Agent-owned implementation assumptions go into design.md as rationale-only decisions. Do not invent A/B/C. Do not create interview.md or any separate interview transcript. Preserve the schema-defined artifact list, dependency-ordered generation, automatic proposal review, and final status flow below.
 
 
 

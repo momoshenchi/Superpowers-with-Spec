@@ -4,15 +4,20 @@
 
 ## Current system
 
-<!-- Technical landscape slice for THIS change only. Short is fine.
-     Describe the starting point implementers must understand—modules,
-     data flow, entry points—not a full system encyclopedia. -->
+<!-- Teach a new engineer the relevant current design—not a file dump.
+     Explain: what this subsystem does, entry points, control/data flow,
+     current behavior this change touches, and the gap or defect.
+     A table or bullet list of file paths is not Current system.
+     Pointers go in Relationship below. Short is fine only when the
+     prose still explains behavior. A mermaid/ASCII diagram is welcome
+     when it clarifies flow. -->
 
 ### Relationship to existing tech
 
 <!-- How this work hangs off what already exists.
      Relations: reuse | extend | replace | boundary | retire
-     Always include a Pointer (path, symbol, command, or doc section). -->
+     Always include a Pointer (path, symbol, command, or doc section).
+     This table supplements Current system prose; it does not replace it. -->
 
 | Existing capability | Relation | Pointer | Note |
 |---|---|---|---|
@@ -28,36 +33,41 @@
 
 ## Decisions
 
-<!-- Key design decisions and rationale.
+<!-- Record each consequential technical choice.
 
-     Major decisions (new source of truth, cross-subsystem, security/billing/
-     idempotency/recovery, irreversible migration, important dependency, or
-     user-declared module-scale work): record ≥3 options in a comparison
-     table, then state the choice and trade-offs. Explore should have
-     diverged on these options; design converges and records the choice.
+     User-confirmed selection: include an option comparison table ONLY
+     when the user actually chose among those options (explore, propose
+     interview, or another explicit confirmation), including when the
+     user delegated to the stated recommendation after seeing the options.
+     Record the exact options the user saw, the user's choice, and
+     trade-offs. Do not add options the user never saw.
 
-     Minor decisions (local naming, single-helper fix, file placement):
-     short rationale only—do not invent three fake alternatives. -->
+     Agent-owned implementation: write problem + approach + rationale
+     only. Do not invent A/B/C. Do not present a model-inferred result
+     as a user Choice. -->
 
-### 1. <!-- Major decision name -->
+### 1. <!-- User-confirmed decision (delete this section if the user did not choose among options) -->
 
-**Problem:** <!-- what must be chosen -->
+**Problem:** <!-- what the user was asked to choose -->
 
-<!-- Keep this comparison table for major decisions only. For minor decisions, delete the table and use section 2 style. -->
+**User selection:** <!-- quote or paraphrase the user's choice, or that they delegated after seeing these options -->
 
 | Option | <!-- dimension --> | <!-- dimension --> | <!-- dimension --> |
 |---|---|---|---|
-| A. <!-- ... --> | | | |
-| B. <!-- ... --> | | | |
-| C. <!-- ... --> | | | |
+| A. <!-- option the user saw --> | | | |
+| B. <!-- option the user saw --> | | | |
 
-**Choice:** <!-- A/B/C and why -->
+**Choice:** <!-- the user's selection -->
 
 **Trade-offs / cost:** <!-- what we accept -->
 
-### 2. <!-- Minor decision name -->
+### 2. <!-- Agent-owned implementation decision -->
 
-<!-- Local naming, single-helper fix, or file placement: short rationale only—no three-option table. -->
+**Problem:** <!-- what must be decided in implementation -->
+
+**Approach:** <!-- the derived approach -->
+
+**Rationale:** <!-- why this is the local default; no invented alternatives -->
 
 ## Contracts
 

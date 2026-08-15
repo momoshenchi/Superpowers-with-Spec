@@ -145,7 +145,7 @@ If the user mentions a change or you detect one is relevant:
 
 ### Ending Discovery
 
-When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later **converges**: record the comparison table, choice, and trade-offs—do not re-brainstorm from scratch.
+When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, design writes the approach and rationale without inventing a comparison table. Do not invent A/B/C.
 
 For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
 
@@ -272,7 +272,7 @@ You: That changes everything.
 
 There's no required ending. Discovery might:
 
-- **Flow into a proposal**: "Ready to start? I can create a change proposal." For **major** features, present **≥3 approaches** with trade-offs first; design will record the comparison and choice.
+- **Flow into a proposal**: "Ready to start? I can create a change proposal." For **major** features, present **≥3 approaches** with trade-offs first; design records that comparison **only if the user chose**.
 - **Result in artifact updates**: "Updated design.md with these decisions"
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"

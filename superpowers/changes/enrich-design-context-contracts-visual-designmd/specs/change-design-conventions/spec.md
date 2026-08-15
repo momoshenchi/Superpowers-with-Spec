@@ -10,16 +10,22 @@ The default spec-driven `design.md` template SHALL include, after `## Context`, 
 
 #### Scenario: Small change may use short Current system
 - **WHEN** a change only adjusts a local helper with no architectural surface
-- **THEN** `## Current system` MAY be one short paragraph or bullet list
+- **THEN** `## Current system` MAY be one short paragraph
+- **AND** that paragraph SHALL still explain current behavior, not only list file paths
 - **AND** `## Contracts` MAY be exactly an explicit no-surface-change statement such as `N/A — no API/state/error surface change`
 
 ### Requirement: Design instruction defines Current system content
-The design artifact instruction SHALL require `## Current system` to describe the relevant technical landscape for the change: entry points, sources of truth, module boundaries, and constraints that matter to implementation. It SHALL require `### Relationship to existing tech` to state how the change reuses, extends, replaces, retires, or leaves existing capabilities as a boundary, and to attach navigable **pointers** (module path, symbol, command, or section of a project file).
+The design artifact instruction SHALL require `## Current system` to teach a developer new to the area the relevant current design: what the subsystem does, entry points, control and data flow, current behavior this change touches, and the gap or defect. A table or bullet list of file paths is not Current system. It SHALL require `### Relationship to existing tech` to state how the change reuses, extends, replaces, retires, or leaves existing capabilities as a boundary, and to attach navigable **pointers** (module path, symbol, command, or section of a project file). The Relationship table SHALL supplement Current system prose and SHALL NOT replace it.
 
 #### Scenario: Relationship row carries a pointer
 - **WHEN** design states that existing validation logic is reused
 - **THEN** the Relationship content SHALL identify a concrete pointer such as a file path and symbol name
 - **AND** it SHALL NOT use bare phrases such as “reuse existing logic” without a pointer
+
+#### Scenario: Forbidden file-path dump as Current system
+- **WHEN** `## Current system` contains only a table or bullet list of code paths with no behavioral prose
+- **THEN** that section SHALL be treated as incomplete
+- **AND** authors SHALL rewrite it so a new engineer can understand the current design from the section
 
 #### Scenario: Forbidden bare reuse language
 - **WHEN** design or proposal text claims reuse, extend, or keep-current behavior
@@ -37,22 +43,24 @@ The design artifact instruction SHALL require `## Contracts` whenever the change
 - **WHEN** a change does not alter API, CLI, state machines, or error semantics
 - **THEN** `## Contracts` SHALL explicitly record that no such surface changes
 
-### Requirement: Scale-aware decision comparisons
-The design artifact instruction and explore workflow guidance SHALL distinguish major versus minor decisions. For major architectural or cross-cutting decisions, design SHALL record a comparison of at least three options with dimensions, the chosen option, and trade-offs (usually after explore diverged on those options). For minor local decisions, a clear rationale is enough and three options SHALL NOT be required. Explore SHALL diverge with at least three approaches for major features before locking direction; design SHALL converge and record the choice rather than re-brainstorm.
+### Requirement: Decisions record only user-confirmed option tables
+The design artifact instruction and explore workflow guidance SHALL distinguish user-confirmed selections from agent-owned implementation decisions. An option comparison table SHALL appear only when the user actually chose among those options (explore, propose interview, or another explicit confirmation, including when the user delegated to the stated recommendation after seeing the options). Design SHALL record the exact options the user saw, the user's choice, and trade-offs, and SHALL label the section with `**User selection:**`. Authors SHALL NOT invent A/B/C alternatives the user never saw, and SHALL NOT present a model-inferred result as a user Choice. Agent-owned implementation decisions SHALL use problem, approach, and rationale only, with no option table. Explore MAY still diverge with at least three approaches in conversation so the user can choose; design SHALL record that comparison only if the user chose.
 
-#### Scenario: Major decision has three-option comparison
-- **WHEN** design records a decision that changes a source of truth, crosses subsystems, or affects security, billing, idempotency, recovery, or irreversible migration
-- **THEN** that decision section SHALL include at least three compared options and an explicit choice with trade-offs
+#### Scenario: User-confirmed decision records the options the user saw
+- **WHEN** the user chose among presented approaches during explore or propose interview
+- **THEN** that decision section SHALL include those exact options, `**User selection:**`, the chosen option, and trade-offs
+- **AND** it SHALL NOT add options the user never saw
 
-#### Scenario: Minor decision skips triple options
-- **WHEN** design records a local naming, file placement, or single-helper fix decision
-- **THEN** a short rationale SHALL suffice
-- **AND** review SHALL NOT treat missing three-option tables as a defect for that decision
+#### Scenario: Agent-owned decision skips invented alternatives
+- **WHEN** design records an implementation approach the user did not select among options
+- **THEN** a short problem + approach + rationale SHALL suffice
+- **AND** the section SHALL NOT include an A/B/C comparison table
+- **AND** review SHALL NOT treat missing three-option tables as a defect
 
 #### Scenario: Explore hands off major options
 - **WHEN** explore mode is used for a major feature before `/sp:propose`
 - **THEN** the explore guidance SHALL direct the agent to present at least three approaches with trade-offs and let the user choose before artifact creation hard-locks the path
-- **AND** design guidance SHALL treat design as the place that records the comparison and choice
+- **AND** design guidance SHALL record that comparison only if the user chose, otherwise write rationale without inventing alternatives
 
 ### Requirement: Visual DESIGN.md is distinct from change design
 Workflow design/explore/review guidance SHALL treat a repository visual `DESIGN.md` in the [google-labs-code/design.md](https://github.com/google-labs-code/design.md) sense (YAML tokens + prose identity) as optional visual identity source of truth, distinct from change-local `design.md`, engineering living architecture docs, and ADRs. Guidance SHALL describe discovery of common paths (repo-root `DESIGN.md` / `design.md`, `docs/DESIGN.md`, paths declared in project context). UI-facing changes SHALL read and cite an existing visual `DESIGN.md` when present; look-and-feel token or rule changes SHALL update that file in the same change via tasks. Authors SHALL NOT paste the full visual system into change `design.md`. Diagrams and mockups for a change SHALL use `attachments/` per existing attachment rules. This capability SHALL NOT require installing `@google/design.md` as a Superpowers runtime dependency.

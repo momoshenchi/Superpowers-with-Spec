@@ -102,24 +102,35 @@ artifacts:
       Sections (follow the template; keep Context rich when helpful, but do not
       bury the technical starting point only inside Context):
       - **Context**: Background, motivation, constraints, stakeholders
-      - **Current system**: Technical landscape *slice for this change* (modules,
-        entry points, data flow). Title is exactly `## Current system`.
+      - **Current system**: Teach a new engineer the relevant current
+        design. Write prose that explains what the subsystem does, entry
+        points, control/data flow, current behavior this change touches,
+        and the gap or defect. Title is exactly `## Current system`.
+        A table or bullet list of file paths is not Current system.
+        Pointers belong under Relationship. Short is fine only when the
+        prose still explains behavior—not when it only names files.
+        A diagram is welcome when it clarifies flow.
       - **Relationship to existing tech** (under Current system): How this work
         relates to what already exists. Use relations
         `reuse | extend | replace | boundary | retire` and always give a
         **Pointer** (path, symbol, command, or documented section). Bare
-        "reuse existing" without a pointer is not acceptable.
+        "reuse existing" without a pointer is not acceptable. This table
+        supplements Current system prose; it does not replace it.
       - **Goals / Non-Goals**: What this design achieves and explicitly excludes
       - **Decisions**: Key technical choices with rationale.
-          - **Major** decisions (new source of truth; cross-subsystem boundary;
-            security, billing, idempotency, or recovery behavior; irreversible
-            migration; important new dependency; or user-declared module-scale
-            work): record a comparison of **at least three** options (usually
-            after explore diverged), with dimensions, explicit choice, and
-            trade-offs. Design converges and records; it should not re-brainstorm
-            from scratch.
-          - **Minor** decisions (local naming, single-helper fix, file placement):
-            short rationale only—do **not** invent three fake alternatives.
+          - **User-confirmed selection**: include an option comparison
+            table ONLY when the user actually chose among those options
+            (explore, propose interview, or another explicit confirmation),
+            including when the user delegated to the stated recommendation
+            after seeing the options. Record the exact options the user
+            saw, the user's choice, and trade-offs. Label the section with
+            `**User selection:**`. Do not add options the user never saw.
+            Do not require three options unless the user was shown and
+            chose among them.
+          - **Agent-owned implementation**: if the approach was derived
+            by the agent and not selected by the user, write problem +
+            approach + rationale only. Do not invent A/B/C. Do not present
+            a model-inferred result as a user Choice.
       - **Contracts**: Stable anchors for API/CLI fields, states, and errors this
         change touches. Always include the section. If nothing changes on those
         surfaces, write an explicit line such as
@@ -151,8 +162,9 @@ artifacts:
       context. Diagrams and mockups for the change belong under `attachments/`.
 
       Good design docs explain the "why" behind technical decisions and leave a
-      stranger able to answer: where we start, what we reuse (with pointers),
-      what contracts matter, and why major options lost.
+      stranger able to answer: where we start, how the current system actually
+      works, what we reuse (with pointers), what contracts matter, and
+      which choices the user actually made.
     requires:
       - proposal
 

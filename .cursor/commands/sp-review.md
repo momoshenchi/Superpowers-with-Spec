@@ -77,7 +77,7 @@ Define what "complete" means from the schema first. Artifacts outside the select
 | Artifact | Schemas | Must include | Common gaps |
 | --- | --- | --- | --- |
 | `proposal.md` | `spec-driven` | Why, What Changes, Capabilities (New/Modified), Impact | motivation without scope; Impact missing key modules |
-| `design.md` | all | Context, **Current system** (may be short), Relationship pointers, Goals/Non-Goals, Decisions (major: ≥3-option comparison; minor: rationale only), **Contracts** (N/A allowed when no surface change), Risks | missing Current system/Contracts; major decision without comparison; reuse without pointer; options without Non-Goals |
+| `design.md` | all | Context, **Current system** (onboarding prose, not a file-path dump), Relationship pointers, Goals/Non-Goals, Decisions (option tables only for choices the user actually made; agent-owned rationale only), **Contracts** (N/A allowed when no surface change), Risks | missing Current system/Contracts; Current system is only a path table; invented A/B/C presented as user Choice; reuse without pointer; options without Non-Goals |
 | `specs/<capability>/spec.md` | `spec-driven` | ADDED/MODIFIED/REMOVED Requirements; each Requirement has ≥1 Scenario | Requirement without Scenario; unclear delta vs master spec |
 | `tasks.md` | `spec-driven` | checkable tasks with concrete file paths | tasks too large; missing verification steps |
 | `execution-plan.md` | `spec-driven` | File Structure; stepwise Task Plan (red test → implement → verify); optional non-normative Implementation Notes | drift from `tasks.md`; missing commands and expected signals |
@@ -90,7 +90,7 @@ Can an implementer derive **what to do, where, and how to verify** directly from
 **Must be unambiguous:**
 
 - **Scope**: Goals and Non-Goals are mutually exclusive and testable; no "TBD"/"as needed" without an explicit defer note.
-- **Decisions**: each Decision names the chosen option. **Major** decisions (new source of truth, cross-subsystem, security/billing/idempotency/recovery, irreversible migration, important dependency, user-declared module-scale work) need a **≥3-option comparison** with trade-offs. **Minor** decisions (local rename, single helper, file placement) need one-line rationale only—do **not** flag missing three-option tables for minor work.
+- **Decisions**: each Decision names the chosen approach. Include an option comparison table **only** when the user actually chose among those options (explore, interview, or explicit confirmation, including delegated recommendations after seeing alternatives). Those sections must include `**User selection:**`. **Agent-owned** implementation decisions need problem + approach + rationale only. Do **not** invent A/B/C. Do **not** flag missing three-option tables.
 - **File targets**: Create/Modify/Test use real repo paths, not "relevant module" or "appropriate location."
 - **Task granularity**: each checkbox maps to Step 1–5 guidance in `execution-plan.md` with concrete test files, implementation files, commands, and **expected pass/fail signals**. Assignee policy lives in Dispatch Coordination, not in task headings. (`test-harden`: judge matrix rows and harness; `spec-driven`: judge `tasks.md` + `execution-plan.md`.)
 - **Implementation Notes**: if present, use them to understand findings, reasoning, viewpoints / trade-offs, and summaries from prior work; they are non-normative context and never replace checkbox progress or verification.
@@ -109,9 +109,9 @@ Can an implementer derive **what to do, where, and how to verify** directly from
 
 Apply in addition to general clarity checks. Default **WARNING**; escalate to **BLOCKER** only when missing landscape or contracts would block a cross-cutting change.
 
-- **Current system and Contracts**: expect exact `## Current system` (technical slice for this change; short OK) and `## Contracts` (accept `N/A — no API/state/error surface change` when specs/tasks show no API/CLI/state/error change; escalate if Contracts says N/A but specs add surface behavior).
-- **Relationship / reuse pointers**: prefer a Relationship table with `reuse | extend | replace | boundary | retire` and a **Pointer** column (path, symbol, command, or documented section). Bare reuse without pointer → WARNING; BLOCKER across module or trust boundaries.
-- **Scale-aware comparisons**: major decisions need **≥3 options** recorded; minor decisions need rationale only; ambiguous scale → WARNING asking author to classify.
+- **Current system and Contracts**: expect exact `## Current system` that **teaches a new engineer** the relevant current design (what it does, entry points, flow, current behavior, gap/defect). A **file-path dump** (table or bullets of paths with no behavioral prose) is a WARNING; escalate to BLOCKER on a cross-cutting change. Short is OK only when the prose still explains behavior. Expect `## Contracts` (accept `N/A — no API/state/error surface change` when specs/tasks show no API/CLI/state/error change; escalate if Contracts says N/A but specs add surface behavior).
+- **Relationship / reuse pointers**: prefer a Relationship table with `reuse | extend | replace | boundary | retire` and a **Pointer** column (path, symbol, command, or documented section). The table supplements Current system prose; it does not replace it. Bare reuse without pointer → WARNING; BLOCKER across module or trust boundaries.
+- **User-real choices**: comparison tables are allowed only for choices the user actually chose. Missing `**User selection:**` on a comparison table, or A/B/C that the author invented to fill a ritual → WARNING (**invented alternatives**). Agent-owned rationale-only decisions → **not a finding**. Missing three-option tables → **not a finding**.
 - **Visual DESIGN.md** (UI identity; not change `design.md`): google-labs-style YAML tokens + prose identity at repo `DESIGN.md`/`design.md`, `docs/DESIGN.md`, or project-context paths. UI change + file exists but uncited → WARNING; look-and-feel token changes need a task to update that file. Non-UI change or no visual DESIGN.md found → **not a finding**.
 
 ### 3. Coherence

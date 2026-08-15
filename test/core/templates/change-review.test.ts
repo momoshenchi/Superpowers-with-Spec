@@ -101,7 +101,7 @@ describe('change review workflow templates', () => {
     expect(schema).not.toContain('review.md');
   });
 
-  it('includes design convention checks for Current system, Contracts, pointers, scale-aware decisions, and visual DESIGN.md', () => {
+  it('includes design convention checks for Current system, Contracts, pointers, user-real choices, and visual DESIGN.md', () => {
     for (const content of [
       getChangeReviewSkillTemplate().instructions,
       getSpReviewCommandTemplate().content,
@@ -113,9 +113,11 @@ describe('change review workflow templates', () => {
       expect(content).toContain('Pointer');
       expect(content).toContain('visual DESIGN.md');
       expect(content).toContain('google-labs');
-      expect(content).toMatch(/≥3 options/);
-      expect(content).toContain('Minor');
+      expect(content).toContain('file-path dump');
+      expect(content).toContain('invented alternatives');
+      expect(content).toContain('user actually chose');
       expect(content).toContain('not a finding');
+      expect(content).not.toMatch(/major decisions need \*\*≥3 options\*\* recorded/i);
     }
   });
 });

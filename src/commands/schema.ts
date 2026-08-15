@@ -988,11 +988,17 @@ Description of the requirement.
 
 ## Current system
 
-<!-- Technical landscape slice for this change. Short is fine. -->
+<!-- Teach a new engineer the relevant current design—not a file dump.
+     Explain what the subsystem does, entry points, control/data flow,
+     current behavior this change touches, and the gap or defect.
+     A table or bullet list of file paths is not Current system.
+     Pointers go in Relationship. Short is fine only when the
+     prose still explains behavior. -->
 
 ### Relationship to existing tech
 
-<!-- Relations: reuse | extend | replace | boundary | retire. Always include a Pointer. -->
+<!-- Relations: reuse | extend | replace | boundary | retire. Always include a Pointer.
+     This table supplements Current system prose; it does not replace it. -->
 
 | Existing capability | Relation | Pointer | Note |
 |---|---|---|---|
@@ -1008,24 +1014,31 @@ Description of the requirement.
 
 ## Decisions
 
-<!-- Major decisions: compare >=3 options (table below), then choice + trade-offs.
-     Minor decisions: short rationale only—delete the comparison table; do not invent fake alternatives. -->
+<!-- User-confirmed selection: option table ONLY when the user actually chose
+     among those options. Record the exact options the user saw.
+     Agent-owned implementation: problem + approach + rationale only.
+     Do not invent A/B/C. -->
 
-### 1. Major decision name
+### 1. User-confirmed decision
 
-**Problem:** <!-- what must be chosen -->
+**Problem:** <!-- what the user was asked to choose -->
+
+**User selection:** <!-- the user's choice, or that they delegated after seeing these options -->
 
 | Option | Pros | Cons |
 |---|---|---|
-| A. <!-- ... --> | | |
-| B. <!-- ... --> | | |
-| C. <!-- ... --> | | |
+| A. <!-- option the user saw --> | | |
+| B. <!-- option the user saw --> | | |
 
-**Choice:** <!-- selected option and why -->
+**Choice:** <!-- the user's selection -->
 
-### 2. Minor decision name
+### 2. Agent-owned implementation decision
 
-<!-- Rationale only for local naming, single-helper, or file-placement choices. -->
+**Problem:** <!-- what must be decided in implementation -->
+
+**Approach:** <!-- the derived approach -->
+
+**Rationale:** <!-- why this is the local default; no invented alternatives -->
 
 ## Contracts
 

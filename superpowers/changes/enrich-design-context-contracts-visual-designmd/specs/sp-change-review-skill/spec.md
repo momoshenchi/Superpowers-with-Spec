@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Review enforces design Current system and Contracts
-Proposal review (`/sp:review` and automatic propose review) SHALL treat missing `## Current system` or missing `## Contracts` in a present `design.md` as a finding. Empty or placeholder-only sections SHALL be at least `WARNING`. Review SHALL accept explicitly short Current system content and explicit Contracts `N/A` lines when they match change scope.
+Proposal review (`/sp:review` and automatic propose review) SHALL treat missing `## Current system` or missing `## Contracts` in a present `design.md` as a finding. Empty, placeholder-only, or file-path-dump Current system sections SHALL be at least `WARNING`. Review SHALL accept explicitly short Current system content when the prose still explains behavior, and explicit Contracts `N/A` lines when they match change scope.
 
 #### Scenario: Design lacks Current system heading
 - **WHEN** proposal review inspects a change that includes `design.md` without `## Current system`
@@ -19,15 +19,15 @@ When proposal artifacts claim reuse, extend, keep-current, or equivalent depende
 - **WHEN** design Decisions say “reuse existing auth checks” with no file or symbol pointer
 - **THEN** review SHALL emit a finding that demands a concrete pointer
 
-### Requirement: Review enforces major decision comparisons scale-aware
-Proposal review SHALL require multi-option comparison records for major decisions in `design.md` and SHALL NOT require three-option tables for minor local decisions. If major vs minor is ambiguous, review MAY emit `WARNING` asking the author to classify or add comparison.
+### Requirement: Review enforces user-real decision tables
+Proposal review SHALL require option comparison tables in `design.md` only when the user actually chose among those options. Comparison tables without `**User selection:**`, or A/B/C alternatives invented by the author, SHALL be at least `WARNING` as invented alternatives. Agent-owned rationale-only decisions and missing three-option tables SHALL NOT be findings.
 
-#### Scenario: Major decision without comparison
-- **WHEN** a decision changes a source of truth or cross-service boundary and lists only the chosen approach
-- **THEN** review SHALL report a finding requesting a ≥3 option comparison with choice and trade-offs
+#### Scenario: Invented alternatives flagged
+- **WHEN** a decision includes an A/B/C comparison table with no `**User selection:**` showing the user chose among those options
+- **THEN** review SHALL report a finding for invented alternatives
 
-#### Scenario: Minor decision without comparison passes
-- **WHEN** a decision only renames a local helper inside one file and states a one-line rationale
+#### Scenario: Agent-owned decision without comparison passes
+- **WHEN** a decision states a problem, approach, and rationale with no option table
 - **THEN** review SHALL NOT fail the change solely for lacking three alternatives
 
 ### Requirement: Review enforces visual DESIGN.md rules for UI changes
