@@ -38,10 +38,20 @@ function expectCurrentSystemOnboarding(content: string) {
   expect(content).toMatch(/prose still explains behavior/i);
 }
 
+function expectImplementableDetail(content: string) {
+  expect(content).toContain('Do not add required extra headings');
+  expect(content).toContain('Authors MAY add extra subsections');
+  expect(content).toContain('implementable detail');
+  expect(content).toContain('worked example');
+  expect(content).toContain('mapping rules');
+}
+
 function expectUserRealChoiceRules(content: string) {
   expect(content).toContain('user actually chose');
-  expect(content).toContain('Do not invent A/B/C');
   expect(content).toMatch(/agent-owned/i);
+  expect(content).toContain('MAY include an A/B/C');
+  expect(content).toContain('strict, detailed analysis');
+  expect(content).toContain('Do not present a model-inferred result as a user Choice');
 }
 
 describe('change design conventions sources', () => {
@@ -67,6 +77,8 @@ describe('change design conventions sources', () => {
     expect(template).toContain('N/A — no API/state/error surface change');
     expectCurrentSystemOnboarding(template);
     expectUserRealChoiceRules(template);
+    expectImplementableDetail(template);
+    expect(template).not.toContain('## Target flow');
     expect(template).toContain('**User selection:**');
     expect(template).toContain('### 2. <!-- Agent-owned implementation decision -->');
     expect(template).not.toMatch(/Major decisions[\s\S]{0,200}at least three/i);
@@ -94,6 +106,8 @@ describe('change design conventions sources', () => {
     expect(instruction).toContain('Contracts');
     expect(instruction).toContain('N/A — no API/state/error surface change');
     expectUserRealChoiceRules(instruction);
+    expectImplementableDetail(instruction);
+    expect(instruction).not.toContain('## Target flow');
     expect(instruction).not.toContain('record a comparison of **at least three** options');
     expect(instruction).toContain('visual DESIGN.md');
     expect(instruction).toContain('google-labs');
@@ -128,6 +142,8 @@ describe('change design conventions sources', () => {
     expect(fallback).toContain('N/A — no API/state/error surface change');
     expectCurrentSystemOnboarding(fallback);
     expectUserRealChoiceRules(fallback);
+    expectImplementableDetail(fallback);
+    expect(fallback).not.toContain('## Target flow');
     expect(fallback).toContain('**User selection:**');
     expect(fallback).toContain('Agent-owned');
     expect(fallback).toContain('### API / CLI');
@@ -139,7 +155,8 @@ describe('change design conventions sources', () => {
       const content = 'instructions' in template ? template.instructions : template.content;
       expect(content).toMatch(/at least three approaches/i);
       expect(content).toContain('only if the user chose');
-      expect(content).toContain('Do not invent A/B/C');
+      expect(content).toContain('MAY include an A/B/C');
+      expect(content).toContain('strict, detailed analysis');
       expect(content).toMatch(/[Mm]inor/);
       expect(content).toContain('DESIGN.md');
       expect(content).not.toContain('propose 2-3 approaches');
@@ -158,12 +175,18 @@ describe('change design conventions sources', () => {
       expect(content).toContain('Design convention checks');
       expect(content).toMatch(/reuse \| extend \| replace \| boundary \| retire/);
       expect(content).toContain('file-path dump');
-      expect(content).toContain('invented alternatives');
+      expect(content).toContain('shallow rationale');
+      expect(content).toContain('misattributed user Choice');
       expect(content).toContain('user actually chose');
       expect(content).toContain('**User selection:**');
       expect(content).toContain('agent-owned');
+      expect(content).toContain('strict, detailed analysis');
+      expect(content).toContain('implementable detail');
+      expect(content).toContain('worked example');
+      expect(content).toContain('principle-only');
       expect(content).toContain('not a finding');
       expect(content).not.toMatch(/major decisions need \*\*≥3 options\*\* recorded/i);
+      expect(content).not.toContain('Do not invent A/B/C');
     }
   });
 
@@ -183,20 +206,27 @@ describe('change design conventions sources', () => {
     expect(skill).toMatch(/真实选择|用户.*选择/);
     expect(skill).toMatch(/文件路径|路径表|文件清单/);
     expect(generated).toContain('not a finding');
-    expect(generated).toContain('invented alternatives');
+    expect(generated).toContain('shallow rationale');
+    expect(skill).toMatch(/严格.*详细|详细.*分析/);
+    expect(skill).toMatch(/可实施|工作实例|映射/);
     expect(skill).toContain('Pointer');
     expect(skill).toContain('视觉 DESIGN.md');
   });
 
-  it('Propose records option tables only for user-confirmed choices', () => {
+  it('Propose records user-confirmed tables and allows agent-owned A/B/C with strict analysis', () => {
     for (const template of [getSpProposeSkillTemplate(), getSpProposeCommandTemplate()]) {
       const content = 'instructions' in template ? template.instructions : template.content;
       expect(content).toContain('route confirmed product decisions into proposal.md');
       expect(content).toContain('Route each high-impact technical decision into design.md');
       expect(content).toContain('user actually chose');
-      expect(content).toContain('Do not invent A/B/C');
+      expect(content).toContain('MAY include an A/B/C');
+      expect(content).toContain('strict, detailed analysis');
       expect(content).toContain('agent-owned');
+      expect(content).toContain('implementable detail');
+      expect(content).toContain('Authors MAY add extra subsections');
+      expect(content).toContain('Do not add required extra headings');
       expect(content).not.toContain('major decisions must compare at least three options');
+      expect(content).not.toContain('Do not invent A/B/C');
     }
   });
 });

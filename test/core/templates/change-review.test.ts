@@ -114,7 +114,11 @@ describe('change review workflow templates', () => {
       expect(content).toContain('visual DESIGN.md');
       expect(content).toContain('google-labs');
       expect(content).toContain('file-path dump');
-      expect(content).toContain('invented alternatives');
+      expect(content).toContain('shallow rationale');
+      expect(content).toContain('misattributed user Choice');
+      expect(content).toContain('implementable detail');
+      expect(content).toContain('worked example');
+      expect(content).toContain('principle-only');
       expect(content).toContain('user actually chose');
       expect(content).toContain('not a finding');
       expect(content).not.toMatch(/major decisions need \*\*≥3 options\*\* recorded/i);

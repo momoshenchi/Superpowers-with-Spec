@@ -82,7 +82,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 | Artifact | 适用 schema | 必须包含 | 常见缺口 |
 |----------|-------------|----------|----------|
 | `proposal.md` | `spec-driven` | Why、What Changes、Capabilities（New/Modified）、Impact | 只写动机不写范围；Impact 缺关键模块 |
-| `design.md` | 全部 | Context、**Current system**（给新工程师的行为说明，不是文件路径表）、Relationship 指针、Goals/Non-Goals、Decisions（方案比较表仅记录用户真实选择；agent-owned 仅需理由）、**Contracts**（无表面变更可写 N/A）、Risks | 缺 Current system/Contracts；Current system 只有路径表；编造 A/B/C 冒充用户 Choice；“复用现有”无指针；只有方案罗列、没有 Non-Goals |
+| `design.md` | 全部 | Context、**Current system**（给新工程师的行为说明，不是文件路径表）、Relationship 指针、Goals/Non-Goals、Decisions（用户真实选择才写 User selection；agent-owned 可列 A/B/C 但选择理由必须严格、详细，并含可实施细节）、**Contracts**（无表面变更可写 N/A）、Risks | 缺 Current system/Contracts；Current system 只有路径表；把模型推导写成用户 Choice；agent-owned 选择理由空泛；只有原则没有映射/工作实例；“复用现有”无指针；只有方案罗列、没有 Non-Goals |
 | `specs/<capability>/spec.md` | `spec-driven` | ADDED/MODIFIED/REMOVED Requirements；每个 Requirement 至少一个 Scenario | Requirement 无 Scenario；delta 与主 spec 关系不清 |
 | `tasks.md` | `spec-driven` | 可勾选任务清单，带具体文件路径 | 任务过大、缺验证步骤 |
 | `execution-plan.md` | `spec-driven` | File Structure、分步 Task Plan（红测→实现→验证） | 与 tasks.md 脱节；缺命令与预期结果 |
@@ -96,7 +96,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 ### 必须无歧义的要素
 
 - **范围边界**：Goals 与 Non-Goals 互斥、可判定；不出现“视情况”“酌情”“后续再定”而无明确 defer 说明。
-- **决策结论**：每个 Decision 有明确选用方案。方案比较表 **仅** 在用户真实选择过这些选项时出现（explore / 访谈 / 显式确认，含用户在看过选项后采纳推荐）。此类决策须含 `**User selection:**`。**agent-owned** 实现决策只写问题 + 做法 + 理由。**不得**编造 A/B/C，**不得**因缺少三方案表而判缺陷。
+- **决策结论**：每个 Decision 有明确选用方案。`**User selection:**` 比较表 **仅** 在用户真实选择过这些选项时出现（explore / 访谈 / 显式确认，含用户在看过选项后采纳推荐）。**agent-owned** 实现决策可以列出 A/B/C，但最终选择理由必须严格、详细：写清为何胜出、其他选项为何不满足约束、接受什么代价，并在现有标题下写出映射规则和工作实例。**不得**把模型推导结果写成用户 Choice，**不得**因缺少三方案表或缺少自创一级标题而判缺陷。
 - **Current system / Contracts**：`design.md` 含精确的 `## Current system` 标题（给新工程师的行为说明，不是文件路径表）与 `## Contracts`。无 API/状态/错误表面变更时，Contracts 可写 `N/A — no API/state/error surface change`。
 - **复用指针**：凡 reuse/extend/keep-current 类依赖，须有可导航 Pointer（路径、符号、命令或文档章节）。
 - **文件落点**：Create/Modify/Test 使用仓库内真实路径，不用“相关模块”“适当位置”等模糊指代。
@@ -126,9 +126,15 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 - 裸复用表述无指针 → WARNING；跨模块/信任边界 → 可 BLOCKER。
 
 ### 用户真实选择 vs 模型推导
-- 方案比较表仅记录用户真实选择过的选项；须含 `**User selection:**`。缺失 User selection、或作者为凑仪式编造的 A/B/C → WARNING（invented alternatives）。
-- agent-owned 仅有理由的决策 → **不成问题**。
+- `**User selection:**` 表仅记录用户真实选择过的选项。把模型推导结果标成用户 Choice → WARNING（misattributed user Choice）。
+- agent-owned 可以列出 A/B/C；最终选择理由必须严格、详细。一行「选 C」或仪式化 Choice → WARNING（shallow rationale）。
+- agent-owned 有严格详细分析的 A/B/C → **不成问题**。
 - 缺少三方案表 → **不成问题**。不得因重大决策没有 ≥3 方案表判缺陷。
+
+### 可实施细节（不新增必填标题）
+- 行为变更的 design 若只有原则、没有目标流程、映射或工作实例 → WARNING；足以阻塞开工时升 BLOCKER。
+- 允许在现有 `##` 下自由加 `###`、表格、mermaid、例子。
+- 缺少自创的 Target flow 一级标题 → **不成问题**。
 
 ### 视觉 DESIGN.md（UI 身份文件；不是 change design.md）
 - 英文规范名：**visual DESIGN.md**；指 google-labs design.md 思路（YAML tokens + 散文身份），**不是** change-local `design.md`、不是工程 living doc、不是 ADR。

@@ -108,7 +108,7 @@ After the summary, Propose SHALL offer exactly these semantic outcomes: confirm 
 
 ### Requirement: Propose SHALL preserve confirmed decisions in existing artifacts
 
-After confirmation, Propose SHALL place confirmed product decisions in `proposal.md` and confirmed high-impact technical decisions in `design.md`; option comparison tables SHALL appear only for choices the user actually made; agent-owned implementation assumptions SHALL be rationale-only without invented alternatives; it SHALL not create a separate interview transcript artifact.
+After confirmation, Propose SHALL place confirmed product decisions in `proposal.md` and confirmed high-impact technical decisions in `design.md`; `**User selection:**` option comparison tables SHALL appear only for choices the user actually made; agent-owned implementation assumptions MAY include an A/B/C comparison whose final Choice is a strict, detailed analysis; design SHALL fill existing headings with implementable detail (mapping rules, fail-closed paths, a worked example) and MAY add extra subsections without adding required extra headings; it SHALL not create a separate interview transcript artifact.
 
 #### Scenario: Product decisions are recorded in proposal
 
@@ -119,8 +119,9 @@ After confirmation, Propose SHALL place confirmed product decisions in `proposal
 
 - **WHEN** the interview resolved a high-impact technical choice
 - **THEN** `design.md` SHALL record the choice, rationale, and accepted trade-offs
-- **AND** an option comparison table SHALL appear only when the user actually chose among those options, including delegated recommendations after seeing alternatives
-- **AND** agent-owned implementation assumptions SHALL be recorded as rationale-only decisions without invented A/B/C alternatives
+- **AND** a `**User selection:**` option comparison table SHALL appear only when the user actually chose among those options, including delegated recommendations after seeing alternatives
+- **AND** agent-owned implementation assumptions MAY include an A/B/C comparison whose final Choice is a strict, detailed analysis, and SHALL NOT be presented as a user Choice
+- **AND** the design SHALL include implementable detail under existing headings and SHALL NOT require extra top-level headings
 
 #### Scenario: No separate interview artifact
 

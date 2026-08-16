@@ -106,9 +106,8 @@ artifacts:
         design. Write prose that explains what the subsystem does, entry
         points, control/data flow, current behavior this change touches,
         and the gap or defect. Title is exactly `## Current system`.
-        A table or bullet list of file paths is not Current system.
-        Pointers belong under Relationship. Short is fine only when the
-        prose still explains behavior—not when it only names files.
+        A table or bullet list of file paths is not Current system, 你必须添加充足的解释性文字. 
+        Short is fine only when the prose still explains behavior—not when it only names files.
         A diagram is welcome when it clarifies flow.
       - **Relationship to existing tech** (under Current system): How this work
         relates to what already exists. Use relations
@@ -127,14 +126,33 @@ artifacts:
             `**User selection:**`. Do not add options the user never saw.
             Do not require three options unless the user was shown and
             chose among them.
+            Do not present a model-inferred result as a user Choice.
           - **Agent-owned implementation**: if the approach was derived
-            by the agent and not selected by the user, write problem +
-            approach + rationale only. Do not invent A/B/C. Do not present
-            a model-inferred result as a user Choice.
+            by the agent and not selected by the user, it MAY include an A/B/C
+            comparison. The final Choice MUST be a strict, detailed analysis
+            of why that option wins and why the others lose.
+            A one-line ritual is not enough.
+            Do not present a model-inferred result as a user Choice.
+            After the choice, write the resulting behavior with implementable
+            detail: mapping rules, fail-closed paths, ownership, and at least
+            one worked example.
       - **Contracts**: Stable anchors for API/CLI fields, states, and errors this
         change touches. Always include the section. If nothing changes on those
         surfaces, write an explicit line such as
         `N/A — no API/state/error surface change`.
+        When a surface does change, name fields, states, and errors with
+        enough implementable detail (including a worked example when behavior
+        branches) that an implementer need not guess mapping rules.
+
+      Do not add required extra headings. Authors MAY add extra subsections
+      under the existing titles (diagrams, mapping tables, worked examples)
+      wherever the change needs more implementable detail. Do not invent
+      mandatory top-level sections such as Target flow or Invariants.
+
+      Write enough that a stranger can implement from design + specs without
+      guessing control flow or field mapping. Principle-only prose is not
+      enough. Do not copy TDD steps, checkboxes, or commands into design;
+      those belong in execution-plan.md and tasks.md.
       - **Risks / Trade-offs**: Known limitations, things that could go wrong.
         Format: [Risk] → Mitigation
       - **Migration Plan**: Steps to deploy, rollback strategy (if applicable)
@@ -154,7 +172,9 @@ artifacts:
         components/CSS are the de facto guide; mockups may still use
         `attachments/`.
 
-      Focus on architecture and approach, not line-by-line implementation.
+      Write to implement, not to decorate. Keep architecture and approach,
+      but specify the normative how (flow, mapping rules, worked examples).
+      Do not write line-by-line code or TDD checklists.
       Reference the proposal for motivation and specs for requirements.
       Design docs may reference supporting change-local files with Markdown
       targets beginning `attachments/`. When they do, explain what each file is,
@@ -163,8 +183,9 @@ artifacts:
 
       Good design docs explain the "why" behind technical decisions and leave a
       stranger able to answer: where we start, how the current system actually
-      works, what we reuse (with pointers), what contracts matter, and
-      which choices the user actually made.
+      works, what we reuse (with pointers), what contracts matter,
+      which choices the user actually made, and how a concrete input
+      would flow through the change.
     requires:
       - proposal
 

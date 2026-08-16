@@ -15,7 +15,7 @@ The default spec-driven `design.md` template SHALL include, after `## Context`, 
 - **AND** `## Contracts` MAY be exactly an explicit no-surface-change statement such as `N/A — no API/state/error surface change`
 
 ### Requirement: Design instruction defines Current system content
-The design artifact instruction SHALL require `## Current system` to teach a developer new to the area the relevant current design: what the subsystem does, entry points, control and data flow, current behavior this change touches, and the gap or defect. A table or bullet list of file paths is not Current system. It SHALL require `### Relationship to existing tech` to state how the change reuses, extends, replaces, retires, or leaves existing capabilities as a boundary, and to attach navigable **pointers** (module path, symbol, command, or section of a project file). The Relationship table SHALL supplement Current system prose and SHALL NOT replace it.
+The design artifact instruction SHALL require `## Current system` to teach a developer new to the area the relevant current design: what the subsystem does, entry points, control and data flow, current behavior this change touches, and the gap or defect. A table or bullet list of file paths is not Current system, 你必须添加充足的解释性文字. It SHALL require `### Relationship to existing tech` to state how the change reuses, extends, replaces, retires, or leaves existing capabilities as a boundary, and to attach navigable **pointers** (module path, symbol, command, or section of a project file). The Relationship table SHALL supplement Current system prose and SHALL NOT replace it.
 
 #### Scenario: Relationship row carries a pointer
 - **WHEN** design states that existing validation logic is reused
@@ -43,24 +43,37 @@ The design artifact instruction SHALL require `## Contracts` whenever the change
 - **WHEN** a change does not alter API, CLI, state machines, or error semantics
 - **THEN** `## Contracts` SHALL explicitly record that no such surface changes
 
-### Requirement: Decisions record only user-confirmed option tables
-The design artifact instruction and explore workflow guidance SHALL distinguish user-confirmed selections from agent-owned implementation decisions. An option comparison table SHALL appear only when the user actually chose among those options (explore, propose interview, or another explicit confirmation, including when the user delegated to the stated recommendation after seeing the options). Design SHALL record the exact options the user saw, the user's choice, and trade-offs, and SHALL label the section with `**User selection:**`. Authors SHALL NOT invent A/B/C alternatives the user never saw, and SHALL NOT present a model-inferred result as a user Choice. Agent-owned implementation decisions SHALL use problem, approach, and rationale only, with no option table. Explore MAY still diverge with at least three approaches in conversation so the user can choose; design SHALL record that comparison only if the user chose.
+### Requirement: Decisions distinguish user-confirmed selections from agent-owned analysis
+The design artifact instruction and explore workflow guidance SHALL distinguish user-confirmed selections from agent-owned implementation decisions. A `**User selection:**` comparison table SHALL appear only when the user actually chose among those options (explore, propose interview, or another explicit confirmation, including when the user delegated to the stated recommendation after seeing the options). Design SHALL record the exact options the user saw, the user's choice, and trade-offs. Authors SHALL NOT present a model-inferred result as a user Choice. Agent-owned implementation decisions MAY include an A/B/C comparison; the final Choice SHALL be a strict, detailed analysis of why that option wins and why the others lose. Explore MAY still diverge with at least three approaches in conversation so the user can choose; design SHALL record that comparison as user-confirmed only if the user chose.
 
 #### Scenario: User-confirmed decision records the options the user saw
 - **WHEN** the user chose among presented approaches during explore or propose interview
 - **THEN** that decision section SHALL include those exact options, `**User selection:**`, the chosen option, and trade-offs
 - **AND** it SHALL NOT add options the user never saw
 
-#### Scenario: Agent-owned decision skips invented alternatives
+#### Scenario: Agent-owned decision may compare options with strict analysis
 - **WHEN** design records an implementation approach the user did not select among options
-- **THEN** a short problem + approach + rationale SHALL suffice
-- **AND** the section SHALL NOT include an A/B/C comparison table
+- **THEN** the section MAY include an A/B/C comparison
+- **AND** the Choice SHALL include a strict, detailed analysis of why the selected option wins and why the others lose
+- **AND** the section SHALL NOT be labeled as a user Choice
 - **AND** review SHALL NOT treat missing three-option tables as a defect
 
 #### Scenario: Explore hands off major options
 - **WHEN** explore mode is used for a major feature before `/sp:propose`
 - **THEN** the explore guidance SHALL direct the agent to present at least three approaches with trade-offs and let the user choose before artifact creation hard-locks the path
-- **AND** design guidance SHALL record that comparison only if the user chose, otherwise write rationale without inventing alternatives
+- **AND** design guidance SHALL record that comparison as user-confirmed only if the user chose; otherwise an agent-owned A/B/C is allowed only with strict, detailed analysis
+
+### Requirement: Design stays in existing headings with implementable detail
+The design artifact instruction SHALL keep the existing top-level heading set and SHALL NOT add required extra headings. Authors MAY add extra subsections under those headings. For a behavioral change, Current system, Decisions, or Contracts SHALL include implementable detail: the resulting control flow, mapping rules, fail-closed behavior, and at least one worked example. Principle-only prose SHALL NOT be sufficient. Step-by-step TDD checklists and commands SHALL remain in `execution-plan.md` and `tasks.md`.
+
+#### Scenario: Extra subsections are allowed
+- **WHEN** an author adds a mermaid diagram and a mapping table under `## Decisions`
+- **THEN** that SHALL be acceptable
+- **AND** review SHALL NOT require a new top-level heading such as Target flow
+
+#### Scenario: Principle-only design is incomplete
+- **WHEN** a behavioral change's design states only "keep existing consistency" with no mapping rules or worked example
+- **THEN** review SHALL treat the design as missing implementable detail
 
 ### Requirement: Visual DESIGN.md is distinct from change design
 Workflow design/explore/review guidance SHALL treat a repository visual `DESIGN.md` in the [google-labs-code/design.md](https://github.com/google-labs-code/design.md) sense (YAML tokens + prose identity) as optional visual identity source of truth, distinct from change-local `design.md`, engineering living architecture docs, and ADRs. Guidance SHALL describe discovery of common paths (repo-root `DESIGN.md` / `design.md`, `docs/DESIGN.md`, paths declared in project context). UI-facing changes SHALL read and cite an existing visual `DESIGN.md` when present; look-and-feel token or rule changes SHALL update that file in the same change via tasks. Authors SHALL NOT paste the full visual system into change `design.md`. Diagrams and mockups for a change SHALL use `attachments/` per existing attachment rules. This capability SHALL NOT require installing `@google/design.md` as a Superpowers runtime dependency.

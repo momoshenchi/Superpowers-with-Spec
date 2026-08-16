@@ -991,9 +991,10 @@ Description of the requirement.
 <!-- Teach a new engineer the relevant current design—not a file dump.
      Explain what the subsystem does, entry points, control/data flow,
      current behavior this change touches, and the gap or defect.
-     A table or bullet list of file paths is not Current system.
-     Pointers go in Relationship. Short is fine only when the
-     prose still explains behavior. -->
+     A table or bullet list of file paths is not Current system, 你必须添加充足的解释性文字.
+     Short is fine only when the prose still explains behavior.
+     Do not add required extra headings. Authors MAY add extra subsections
+     with implementable detail (flow, mapping rules, a worked example). -->
 
 ### Relationship to existing tech
 
@@ -1016,8 +1017,12 @@ Description of the requirement.
 
 <!-- User-confirmed selection: option table ONLY when the user actually chose
      among those options. Record the exact options the user saw.
-     Agent-owned implementation: problem + approach + rationale only.
-     Do not invent A/B/C. -->
+     Agent-owned implementation: MAY include an A/B/C comparison. The final
+     Choice MUST be a strict, detailed analysis.
+     Do not present a model-inferred result as a user Choice.
+     After the choice, write implementable detail: mapping rules and a
+     worked example. Authors MAY add extra subsections.
+     Do not add required extra headings. -->
 
 ### 1. User-confirmed decision
 
@@ -1036,14 +1041,22 @@ Description of the requirement.
 
 **Problem:** <!-- what must be decided in implementation -->
 
-**Approach:** <!-- the derived approach -->
+| Option | Pros | Cons |
+|---|---|---|
+| A. <!-- ... --> | | |
+| B. <!-- ... --> | | |
+| C. <!-- ... --> | | |
 
-**Rationale:** <!-- why this is the local default; no invented alternatives -->
+**Choice:** <!-- selected option -->
+
+**Rationale:** <!-- strict, detailed analysis: why this option wins and why the others lose; include mapping rules and a worked example -->
 
 ## Contracts
 
 <!-- API/CLI, states, errors—or write exactly:
-     N/A — no API/state/error surface change -->
+     N/A — no API/state/error surface change
+     When a surface changes, add implementable detail under these headings.
+     Authors MAY add extra subsections. Do not add required extra headings. -->
 
 ### API / CLI
 

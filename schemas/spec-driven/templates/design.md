@@ -7,10 +7,11 @@
 <!-- Teach a new engineer the relevant current design—not a file dump.
      Explain: what this subsystem does, entry points, control/data flow,
      current behavior this change touches, and the gap or defect.
-     A table or bullet list of file paths is not Current system.
-     Pointers go in Relationship below. Short is fine only when the
-     prose still explains behavior. A mermaid/ASCII diagram is welcome
-     when it clarifies flow. -->
+     A table or bullet list of file paths is not Current system, 你必须添加充足的解释性文字.
+     Short is fine only when the prose still explains behavior. A mermaid/ASCII diagram is welcome
+     when it clarifies flow.
+     Do not add required extra headings. Authors MAY add extra subsections
+     (target flow after the change, diagrams) when they add implementable detail. -->
 
 ### Relationship to existing tech
 
@@ -41,10 +42,15 @@
      user delegated to the stated recommendation after seeing the options.
      Record the exact options the user saw, the user's choice, and
      trade-offs. Do not add options the user never saw.
+     Do not present a model-inferred result as a user Choice.
 
-     Agent-owned implementation: write problem + approach + rationale
-     only. Do not invent A/B/C. Do not present a model-inferred result
-     as a user Choice. -->
+     Agent-owned implementation: MAY include an A/B/C comparison. The
+     final Choice MUST be a strict, detailed analysis of why that option
+     wins and why the others lose—not a one-line ritual.
+     Do not present a model-inferred result as a user Choice.
+     After the choice, add implementable detail under this heading:
+     mapping rules, fail-closed paths, ownership, and a worked example.
+     Authors MAY add extra subsections. Do not add required extra headings. -->
 
 ### 1. <!-- User-confirmed decision (delete this section if the user did not choose among options) -->
 
@@ -65,15 +71,24 @@
 
 **Problem:** <!-- what must be decided in implementation -->
 
-**Approach:** <!-- the derived approach -->
+| Option | <!-- dimension --> | <!-- dimension --> | <!-- dimension --> |
+|---|---|---|---|
+| A. <!-- ... --> | | | |
+| B. <!-- ... --> | | | |
+| C. <!-- ... --> | | | |
 
-**Rationale:** <!-- why this is the local default; no invented alternatives -->
+**Choice:** <!-- selected option -->
+
+**Rationale:** <!-- strict, detailed analysis: why this option wins, why A/B/C losers fail the constraints, and what cost we accept. A one-line "pick C" is not enough. Then write mapping rules and a worked example so an implementer need not guess. -->
 
 ## Contracts
 
 <!-- Stable anchors for API/CLI fields, states, and errors this change
      touches. If the change does not alter any of those surfaces, write:
-     N/A — no API/state/error surface change -->
+     N/A — no API/state/error surface change
+     When a surface changes, include implementable detail (mapping rules,
+     a worked example) under these headings. Authors MAY add extra subsections.
+     Do not add required extra headings. -->
 
 ### API / CLI
 

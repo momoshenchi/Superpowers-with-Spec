@@ -38,14 +38,14 @@ import {
 import { generateSkillContent } from '../../../src/core/shared/skill-generation.js';
 
 const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
-  getExploreSkillTemplate: '9623b9d619b07bb5d0763dc3873ad2048aac99dd55ce3a7a385a09d2010a1258',
+  getExploreSkillTemplate: 'dc413f63aeed82bb523e6dbbb11ffcb8fe6671080ad2b6eaed33cdd76c9443ef',
   getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
   getContinueChangeSkillTemplate: 'd2a03cab2a3adc303a223718d574c8f74b28acdf2a11baa0dea916db2ab3d2aa',
   getApplyChangeSkillTemplate: '0c7bf516afcabec24f1bf5a3ee318c20ab076e5cbbbe85a231fc9a9a7c24ecaf',
   getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'bf39ddec86960f599d857fc6ec68ab32f420bd7ee2d2f272b59a05c7d79773fa',
-  getSpExploreCommandTemplate: '0d311ebf0c7b0b8c21cd97b79a2dc34300872908cac4a9e2332fc5cdd393da58',
+  getSpExploreCommandTemplate: 'e077a486229e0caa5b9a6f8cfe07f84a8cfb833d01c37184551722a182835cf1',
   getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
   getSpContinueCommandTemplate: 'a5bff71ba5ea053d61aad846d9d39053a185ba3aeb993bcadfe15b00779b158e',
   getSpApplyCommandTemplate: 'e3056c593ae816e748ac063a41f3cfdb9777e6ff1fa82cfe1ed34faf0c59bf77',
@@ -62,15 +62,15 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getSpSimplifyCommandTemplate: 'ea0ca542aff154ff51bbf2d6169540dc4d8d51d1d3fd1676bd9c09e1313d592a',
   getDesignVerifySkillTemplate: '4920e25dce697b90b8031620b63085856bf09cfc275d1fec45d7873dcef7c14b',
   getSpDesignVerifyCommandTemplate: '65f9b0ea063d942aed1d148781f1022007de0d38a0cb7502e6375a5fa3ffa7cd',
-  getSpProposeSkillTemplate: 'cf7bb22a7d0b7e089630f2d37e8c5333f516359ba5e1bb50e1504920e2b35c2f',
-  getSpProposeCommandTemplate: '9675f466ef1de84c8ae2820b3b80485bebf65f9b0c2744a7d50f534f4de15167',
+  getSpProposeSkillTemplate: '0be3042e8dba170dc307e42e70edea6822ef2c126b82750c704bd0ccfd584e4e',
+  getSpProposeCommandTemplate: '895a7fb9b552ce1d6884abba2cd3ecf5bf41b8af40e928466d570b818e8a8a5c',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
-  getChangeReviewSkillTemplate: 'e0a0bbda7a8cd2ce58bb4f580979815bb7ddac647edca7876df70f98fcf786d6',
-  getSpReviewCommandTemplate: '7a98c71d769fa20e15c5e2a160354a2d9d926073dbbc88e79605da98e7855e75',
+  getChangeReviewSkillTemplate: '50ac255f828bb4e34d737685935b6225326196b58a5267a2c4430c6faf1fcbc8',
+  getSpReviewCommandTemplate: 'a963c0f727e1c152cbf8aaa84cb8187fe7c46528fe2a53f46dffecbb749f8ef2',
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
-  'superpowers-explore': '50696b4d32e0d3e76fcadeb438a65ed4355260d8131982e73c32af7e029b0074',
+  'superpowers-explore': '86dd7012a96b600d1ccfec24f4a2adba5cc38ec821225dd80d8c6f6ed32f0fbd',
   'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
   'superpowers-continue-change': '28a0c25d94b03a658e2a5b9291d8a11b469b2709ac080017604f324d46056fe7',
   'superpowers-apply-change': '2564b3194da7a01a266578f47f7c4633f80ac777bfa87747b715b0f0f5667ed5',
@@ -82,8 +82,8 @@ const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-simplify': '85d6860d6567fe2ad1738f9f4648e074f6793c670de1aa07b2466447e293505d',
   'superpowers-design-verify': '50a6a25f20bd749bfee135b384702ae4aa7adcc0fb06345c18de0902f505bab7',
   'superpowers-onboard': '736257835836c326f0286e0da55232799a9809a29a2ed2b63d1f9beee9bf6a34',
-  'superpowers-propose': '16f9e3e437685709a54c01f5983cf9dae095e77257e2661fa6efa5d3adaa01fe',
-  'superpowers-change-review': 'c43d859018254a38be5a133753ae4be1334f317edf8e539cd9b91edea22a51a0',
+  'superpowers-propose': 'dcae2b52fb584d73d3b957871a65a80b2f2f05db5b28614c6a6dd82e0e0c84aa',
+  'superpowers-change-review': 'bdb1439ed602ca99d1f584fd657d9052df8008d6ae9becd9e2841db083f20361',
 };
 
 function stableStringify(value: unknown): string {
@@ -151,9 +151,14 @@ describe('skill templates split parity', () => {
       expect(content).toContain('route confirmed product decisions into proposal.md');
       expect(content).toContain('Route each high-impact technical decision into design.md');
       expect(content).toContain('user actually chose');
-      expect(content).toContain('Do not invent A/B/C');
+      expect(content).toContain('MAY include an A/B/C');
+      expect(content).toContain('strict, detailed analysis');
       expect(content).toContain('agent-owned');
+      expect(content).toContain('implementable detail');
+      expect(content).toContain('Authors MAY add extra subsections');
+      expect(content).toContain('Do not add required extra headings');
       expect(content).not.toContain('major decisions must compare at least three options');
+      expect(content).not.toContain('Do not invent A/B/C');
       expect(content).toContain('Do not create interview.md');
 
       const confirmationIndex = content.indexOf('1. Confirm and create —');

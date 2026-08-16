@@ -168,7 +168,7 @@ There's no required ending. Discovery might:
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"
 
-When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, design writes the approach and rationale without inventing a comparison table. Do not invent A/B/C.
+When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, an agent-owned decision MAY include an A/B/C comparison, but the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Do not present a model-inferred result as a user Choice.
 
 For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
 

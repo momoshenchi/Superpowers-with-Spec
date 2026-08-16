@@ -19,16 +19,32 @@ When proposal artifacts claim reuse, extend, keep-current, or equivalent depende
 - **WHEN** design Decisions say “reuse existing auth checks” with no file or symbol pointer
 - **THEN** review SHALL emit a finding that demands a concrete pointer
 
-### Requirement: Review enforces user-real decision tables
-Proposal review SHALL require option comparison tables in `design.md` only when the user actually chose among those options. Comparison tables without `**User selection:**`, or A/B/C alternatives invented by the author, SHALL be at least `WARNING` as invented alternatives. Agent-owned rationale-only decisions and missing three-option tables SHALL NOT be findings.
+### Requirement: Review enforces user-real choice labels and strict agent-owned analysis
+Proposal review SHALL require `**User selection:**` comparison tables in `design.md` only when the user actually chose among those options. An A/B/C table presented as a user Choice when the user did not choose SHALL be at least `WARNING` as a misattributed user Choice. Agent-owned decisions MAY include an A/B/C comparison; a Choice without strict, detailed analysis SHALL be at least `WARNING` as shallow rationale. Missing three-option tables SHALL NOT be findings.
 
-#### Scenario: Invented alternatives flagged
-- **WHEN** a decision includes an A/B/C comparison table with no `**User selection:**` showing the user chose among those options
-- **THEN** review SHALL report a finding for invented alternatives
+#### Scenario: Misattributed user Choice flagged
+- **WHEN** a decision labels an A/B/C comparison as a user Choice but the user did not choose among those options
+- **THEN** review SHALL report a finding for misattributed user Choice
 
-#### Scenario: Agent-owned decision without comparison passes
-- **WHEN** a decision states a problem, approach, and rationale with no option table
-- **THEN** review SHALL NOT fail the change solely for lacking three alternatives
+#### Scenario: Shallow agent-owned Choice flagged
+- **WHEN** an agent-owned decision lists A/B/C but the Choice is only a one-line ritual without why winners and losers
+- **THEN** review SHALL report a finding for shallow rationale
+
+#### Scenario: Agent-owned decision with strict analysis passes
+- **WHEN** an agent-owned decision includes an A/B/C comparison and a strict, detailed analysis of the chosen option
+- **THEN** review SHALL NOT fail the change solely for the presence of that comparison
+- **AND** review SHALL NOT fail the change solely for lacking three alternatives
+
+### Requirement: Review judges implementable detail without requiring extra headings
+Proposal review SHALL expect implementable detail (mapping rules, fail-closed paths, a worked example) under existing design headings. A behavioral change whose design is principle-only SHALL be at least `WARNING`. Extra subsections under existing headings SHALL be welcome. Missing invented top-level headings such as Target flow SHALL NOT be findings.
+
+#### Scenario: Principle-only design flagged
+- **WHEN** a behavioral change's design states only a principle with no mapping rules or worked example
+- **THEN** review SHALL report a finding for missing implementable detail
+
+#### Scenario: Missing invented heading is not a finding
+- **WHEN** design has no `## Target flow` heading but existing sections include mapping rules and a worked example
+- **THEN** review SHALL NOT fail the change for lacking that heading
 
 ### Requirement: Review enforces visual DESIGN.md rules for UI changes
 When a change affects user-visible UI and a repository visual `DESIGN.md` (google-labs design.md format or equivalently named project visual identity file) exists, proposal review SHALL expect citation from change design (Current system or Relationship pointer). When look-and-feel rules or tokens change, review SHALL expect a task (or completed edit plan) that updates that visual `DESIGN.md`. Review SHALL NOT fail non-UI changes for missing visual DESIGN.md, and SHALL NOT require pasting the full visual system into change design.
