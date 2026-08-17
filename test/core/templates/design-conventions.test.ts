@@ -16,7 +16,9 @@ const ROOT = process.cwd();
 const DESIGN_CONVENTION_ANCHORS = [
   '## Current system',
   '## Contracts',
+  '## Invariants',
   'N/A — no API/state/error surface change',
+  'N/A — no cross-path invariants',
   'Pointer',
   'visual DESIGN.md',
   'google-labs',
@@ -55,7 +57,7 @@ function expectUserRealChoiceRules(content: string) {
 }
 
 describe('change design conventions sources', () => {
-  it('package design template includes Current system, Relationship, Contracts, user-real choice, and ordered sections', () => {
+  it('package design template includes Current system, Relationship, Contracts, Invariants, user-real choice, and ordered sections', () => {
     const template = fs.readFileSync(
       path.join(ROOT, 'schemas', 'spec-driven', 'templates', 'design.md'),
       'utf8'
@@ -68,6 +70,7 @@ describe('change design conventions sources', () => {
       '## Goals / Non-Goals',
       '## Decisions',
       '## Contracts',
+      '## Invariants',
       '## Attachments',
       '## Risks / Trade-offs',
     ]);
@@ -75,6 +78,9 @@ describe('change design conventions sources', () => {
     expect(template).toContain('Pointer');
     expect(template).toContain('reuse | extend | replace | boundary | retire');
     expect(template).toContain('N/A — no API/state/error surface change');
+    expect(template).toContain('N/A — no cross-path invariants');
+    expect(template).toMatch(/falsif/i);
+    expect(template).toMatch(/owner (test|check)/i);
     expectCurrentSystemOnboarding(template);
     expectUserRealChoiceRules(template);
     expectImplementableDetail(template);
@@ -105,6 +111,11 @@ describe('change design conventions sources', () => {
     expect(instruction).toContain('reuse | extend | replace | boundary | retire');
     expect(instruction).toContain('Contracts');
     expect(instruction).toContain('N/A — no API/state/error surface change');
+    expect(instruction).toContain('## Invariants');
+    expect(instruction).toContain('N/A — no cross-path invariants');
+    expect(instruction).toMatch(/falsif/i);
+    expect(instruction).toMatch(/owner (test|check)/i);
+    expect(instruction).not.toMatch(/Target flow or Invariants/);
     expectUserRealChoiceRules(instruction);
     expectImplementableDetail(instruction);
     expect(instruction).not.toContain('## Target flow');
@@ -132,6 +143,7 @@ describe('change design conventions sources', () => {
       '## Goals / Non-Goals',
       '## Decisions',
       '## Contracts',
+      '## Invariants',
       '## Attachments',
       '## Risks / Trade-offs',
       '## Migration Plan',
@@ -140,6 +152,7 @@ describe('change design conventions sources', () => {
 
     expect(fallback).toContain('Pointer');
     expect(fallback).toContain('N/A — no API/state/error surface change');
+    expect(fallback).toContain('N/A — no cross-path invariants');
     expectCurrentSystemOnboarding(fallback);
     expectUserRealChoiceRules(fallback);
     expectImplementableDetail(fallback);
@@ -185,6 +198,9 @@ describe('change design conventions sources', () => {
       expect(content).toContain('worked example');
       expect(content).toContain('principle-only');
       expect(content).toContain('not a finding');
+      expect(content).toContain('## Invariants');
+      expect(content).toContain('N/A — no cross-path invariants');
+      expect(content).toMatch(/missing.*Invariants.*BLOCKER|Invariants.*BLOCKER/i);
       expect(content).not.toMatch(/major decisions need \*\*≥3 options\*\* recorded/i);
       expect(content).not.toContain('Do not invent A/B/C');
     }

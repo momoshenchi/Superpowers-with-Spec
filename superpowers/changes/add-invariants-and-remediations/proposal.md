@@ -15,7 +15,7 @@ Design currently anchors Contracts and Risks but not cross-path invariants, so i
 ### New Capabilities
 
 - `change-design-invariants`: Normative rules for the required `## Invariants` section in change-local `design.md` (content, N/A, falsifiability, and review expectations).
-- `change-remediations`: Normative rules for `remediations.md` lifecycle, multi-option repair selection, guards, evidence, and Apply/Verify integration.
+- `change-remediations`: Normative rules for `remediations.md` lifecycle, multi-solution repair selection, guards, evidence, and Apply/Verify integration.
 
 ### Modified Capabilities
 

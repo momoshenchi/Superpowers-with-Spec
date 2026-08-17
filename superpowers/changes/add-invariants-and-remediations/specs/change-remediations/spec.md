@@ -26,14 +26,14 @@ When a coordinator accepts a **code review** or **Verify** finding with severity
 ### Requirement: Each remediation compares multiple fixes and selects one
 Every remediation entry for an accepted P0 or P1 SHALL document at least two meaningfully different candidate fixes, select one optimal fix, and provide a rationale explaining why the chosen fix wins and why the alternatives lose.
 
-#### Scenario: Multi-option selection is mandatory
+#### Scenario: Multi-solution selection is mandatory
 - **WHEN** recording an accepted P0 or P1 remediation
-- **THEN** the entry SHALL list ≥2 candidate options
-- **AND** SHALL name the chosen option
+- **THEN** the entry SHALL list ≥2 candidate solutions
+- **AND** SHALL name the chosen solution
 - **AND** SHALL include a rationale for the choice
 
-#### Scenario: Clone options are insufficient
-- **WHEN** two listed options differ only by wording and not by approach
+#### Scenario: Clone solutions are insufficient
+- **WHEN** two listed solutions differ only by wording and not by approach
 - **THEN** reviewers or Apply self-check SHALL treat the comparison as incomplete
 
 ### Requirement: Remediation entries include root cause, fix, guard, and evidence
@@ -65,7 +65,7 @@ When `remediations.md` exists on disk under the change directory, subsequent Fin
 #### Scenario: Gate row may cite R-id
 - **WHEN** a Final Quality Gates table row corresponds to an accepted repair
 - **THEN** authors MAY cite a remediation ID such as `R1` on that row
-- **AND** long-form option comparison SHALL live in `remediations.md`, not duplicated as the sole record in `test-plan.md`
+- **AND** long-form solution comparison SHALL live in `remediations.md`, not duplicated as the sole record in `test-plan.md`
 
 #### Scenario: Missing from contextFiles still discovered
 - **WHEN** CLI apply/verify context file lists omit `remediations.md` because it is outside the artifact graph
@@ -77,4 +77,4 @@ The repository SHALL provide a `remediations.md` template under the default sche
 
 #### Scenario: Template lists required fields
 - **WHEN** an agent opens the packaged remediations template
-- **THEN** the template SHALL include placeholders for Options, Choice, Rationale, Root cause, Fix, Guard, Evidence, and Status
+- **THEN** the template SHALL include placeholders for Solutions, Choice, Rationale, Root cause, Fix, Guard, Evidence, and Status

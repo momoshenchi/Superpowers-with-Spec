@@ -102,6 +102,18 @@
 
 <!-- Error codes, empty/deny behavior. Omit or N/A if none. -->
 
+## Invariants
+
+<!-- Cross-path properties that must remain true for in-scope behavior.
+     Each non-N/A row needs a stable ID, falsifiable statement, how to falsify,
+     and an owner test/check pointer. If none apply, write exactly:
+     N/A — no cross-path invariants
+     Authors MAY add extra subsections. Do not add required extra headings. -->
+
+| ID | Invariant | How to falsify | Owner test / check |
+|---|---|---|---|
+| <!-- I1 --> | <!-- must always hold --> | <!-- input/state that would break it --> | <!-- test path, command, or assertion --> |
+
 ## Attachments
 
 <!-- Optional.  Explain what each file is, why it matters, and whether it is normative, illustrative, or background context.

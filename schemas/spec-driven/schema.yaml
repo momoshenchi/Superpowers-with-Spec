@@ -143,11 +143,17 @@ artifacts:
         When a surface does change, name fields, states, and errors with
         enough implementable detail (including a worked example when behavior
         branches) that an implementer need not guess mapping rules.
+      - **Invariants**: Always include exact `## Invariants` after Contracts.
+        Record cross-path properties that must remain true: stable ID, falsifiable
+        statement, how to falsify, and an owner test/check pointer. If none apply,
+        write exactly `N/A — no cross-path invariants`. Empty Invariants with
+        neither rows nor N/A is incomplete.
 
-      Do not add required extra headings. Authors MAY add extra subsections
+      Do not add required extra headings beyond the formal template sections
+      (including Current system, Contracts, and Invariants). Authors MAY add extra subsections
       under the existing titles (diagrams, mapping tables, worked examples)
-      wherever the change needs more implementable detail. Do not invent
-      mandatory top-level sections such as Target flow or Invariants.
+      wherever the change needs more implementable detail.
+      Do not invent other mandatory top-level sections such as Target flow.
 
       Write enough that a stranger can implement from design + specs without
       guessing control flow or field mapping. Principle-only prose is not

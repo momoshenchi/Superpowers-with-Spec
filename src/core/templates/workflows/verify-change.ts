@@ -79,6 +79,14 @@ ${getManualCoverageInstructions('verify')}
        - Recommendation: "Update implementation or revise design.md to match reality"
    - If no design.md: Skip design adherence check, note "No design.md to verify against"
 
+   **Invariants**:
+   - If \`design.md\` contains \`## Invariants\` that is not \`N/A — no cross-path invariants\`:
+     - For each invariant ID, check the owner test/check when available
+     - Owner check failure or implementation that breaks the stated invariant → add **CRITICAL** citing the invariant ID (Final Quality Gates P0-equivalent); recommend restore invariant or update design with explicit rationale
+     - Soft documentary drift while the owner check still passes → WARNING only (do not escalate to CRITICAL solely on soft drift)
+   - If Invariants is an explicit N/A line: do not fail coherence solely for lack of invariant rows
+
+
    **Code Pattern Consistency**:
    - Review new code for consistency with project patterns
    - Check file naming, directory structure, coding style
@@ -136,6 +144,13 @@ ${finalQualityRetryInstructions}
 - **Coherence**: Look for glaring inconsistencies, don't nitpick style
 - **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
 - **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
+
+### Remediations
+   - Probe \`superpowers/changes/<name>/remediations.md\` on the change directory even when it is absent from schema \`contextFiles\`
+   - When the file exists (especially on Verify retry rounds after coordinator repairs): read entries as repair context
+   - A P0 entry marked \`resolved\` without a Guard → incomplete repair evidence; do not treat that finding as fully closed from the status label alone
+   - An entry with Status \`open\` → incomplete for that finding; do not treat the finding as closed for gate success
+   - Absent \`remediations.md\` on a first Verify with no accepted P0/P1 repairs yet → proceed without requiring the file
 
 ${repairOwnershipInstructions}
 

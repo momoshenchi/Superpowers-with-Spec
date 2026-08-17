@@ -1,62 +1,60 @@
 ## Testing Gap Analysis
 
-Worker-level tests will assert template section order, schema instruction wording, and Apply/Verify/Review string contracts. Those are necessary but not sufficient: Harden must also confirm remediations lifecycle edge cases (omit vs N/A, P0 without Guard, clone options), Invariants N/A vs missing heading distinctions, and that `applyRequires` still excludes remediations. No browser E2E applies—this change is workflow/template text.
-
-After implementation, strengthen any missing string anchors discovered during parity runs and record canonical suite results below.
+Worker-level tests covered template section order, schema instruction wording, and Apply/Verify/Review string contracts via `design-conventions.test.ts`, `invariants-remediations.test.ts`, and updated parity hashes. Harden also confirmed remediations lifecycle wording (omit/N/A, P0 Guard, Design Verify/P2 exclusion, change-dir discovery), Invariants N/A vs missing heading, and that `applyRequires` still excludes remediations. Strengthened shape-review content assertions that were stale on this branch (Phase -0 / Gather the diff) so parity could lock new Apply/Verify/Review hashes. No browser E2E applies.
 
 ## Requirement And Scenario Coverage Matrix
 
 | Requirement / Scenario | Planned Coverage | Status | Notes |
 | --- | --- | --- | --- |
-| Design template requires Invariants: Template skeleton lists Invariants | unit | planned | `design-conventions.test.ts` section order |
-| Design template requires Invariants: N/A invariants allowed | unit | planned | template phrase + review guidance strings |
-| Invariants falsifiable: Invariant row is reviewable | unit | planned | template guidance + review WARNING language if asserted |
-| Design instruction mandates Invariants: Instruction no longer forbids Invariants | unit | planned | schema.yaml / instruction-loader assertions |
-| Change review checks Invariants: Missing heading BLOCKER | unit | planned | change-review template/parity tests |
-| Change review checks Invariants: N/A passes presence | unit | planned | change-review strings |
-| Remediations file records repairs: First accepted P0 creates file | unit | planned | apply-change instruction strings |
-| Remediations file records repairs: Additional P1 appends | unit | planned | apply-change append wording |
-| Remediations file records repairs: Zero repairs may omit | unit | planned | apply-change omit/N/A wording |
-| Each remediation compares multiple fixes: Multi-option mandatory | unit | planned | apply + remediations template |
-| Each remediation compares multiple fixes: Clone options insufficient | unit | planned | apply/review WARNING wording if present |
-| Remediation entries root cause/fix/guard/evidence: P0 requires guard | unit | planned | apply + verify incomplete-evidence strings |
-| Remediation entries: Evidence accompanies resolution | unit | planned | remediations template + apply |
-| Remediations not applyRequires: Propose without file | unit / manual | planned | schema `apply.requires` unchanged; status check |
-| Next gate rounds consume remediations: Retry Verify reads file | unit | planned | verify-change strings |
-| Next gate rounds: Gate row may cite R-id | unit | planned | apply Final Gates link wording |
-| Remediations template available: Template lists required fields | unit | planned | file existence test |
-| Remediations file records repairs: Design Verify or P2 alone does not require remediations | unit | planned | FQG/apply exclusion wording |
-| Next gate rounds: Missing from contextFiles still discovered | unit | planned | verify/FQG change-dir probe wording |
-| Verify coherence: Soft design drift without owner-check failure | unit | planned | verify WARNING (not CRITICAL) wording |
-| Verify coherence checks Invariants: Broken invariant reported | unit | planned | verify CRITICAL / P0-equivalent strings |
-| Verify coherence: N/A skips checklist | unit | planned | verify-change strings |
-| Verify retry reads remediations: Missing guard incomplete | unit | planned | verify-change strings |
-| Verify retry: Absent file on first Verify | unit | planned | verify-change strings |
+| Design template requires Invariants: Template skeleton lists Invariants | unit | covered | `design-conventions.test.ts` |
+| Design template requires Invariants: N/A invariants allowed | unit | covered | `N/A — no cross-path invariants` |
+| Invariants falsifiable: Invariant row is reviewable | unit | covered | template falsify/owner-check guidance |
+| Design instruction mandates Invariants: Instruction no longer forbids Invariants | unit | covered | schema.yaml instruction |
+| Change review checks Invariants: Missing heading BLOCKER | unit | covered | change-review + design-conventions |
+| Change review checks Invariants: N/A passes presence | unit | covered | change-review strings |
+| Remediations file records repairs: First accepted P0 creates file | unit | covered | FQG remediations block |
+| Remediations file records repairs: Additional P1 appends | unit | covered | create or append wording |
+| Remediations file records repairs: Zero repairs may omit | unit | covered | omit / N/A line |
+| Each remediation compares multiple fixes: Multi-solution mandatory | unit | covered | ≥2 Solutions + Choice + Rationale |
+| Each remediation compares multiple fixes: Clone solutions insufficient | unit | covered | FQG incomplete clone wording |
+| Remediation entries root cause/fix/guard/evidence: P0 requires guard | unit | covered | apply + verify |
+| Remediation entries: Evidence accompanies resolution | unit | covered | remediations template |
+| Remediations not applyRequires: Propose without file | unit / manual | covered | status JSON + schema apply.requires |
+| Next gate rounds consume remediations: Retry Verify reads file | unit | covered | verify-change |
+| Next gate rounds: Gate row may cite R-id | unit | covered | `Remediation: R#` |
+| Remediations template available: Template lists required fields | unit | covered | `invariants-remediations.test.ts` |
+| Remediations file records repairs: Design Verify or P2 alone does not require remediations | unit | covered | FQG exclusion |
+| Next gate rounds: Missing from contextFiles still discovered | unit | covered | change-dir probe |
+| Verify coherence: Soft design drift without owner-check failure | unit | covered | WARNING-only soft drift |
+| Verify coherence checks Invariants: Broken invariant reported | unit | covered | CRITICAL / P0-equivalent |
+| Verify coherence: N/A skips checklist | unit | covered | verify-change |
+| Verify retry reads remediations: Missing guard incomplete | unit | covered | verify-change |
+| Verify retry: Absent file on first Verify | unit | covered | verify-change |
 
 ## Boundary And Abnormal Case Sweep
 
 | Surface | Cases To Attack | Coverage Decision | Status |
 | --- | --- | --- | --- |
-| Inputs and validation | Empty Invariants (no rows, no N/A); clone remediation options | unit string contracts + review BLOCKER/WARNING text | planned |
-| State and repeat actions | Second P1 append; Verify retry with existing remediations | apply/verify instruction coverage | planned |
-| Permissions and ownership | Coordinator vs read-only gate workers writing remediations | apply Repair ownership text (coordinator writes) | planned |
-| Filesystem and paths | `remediations.md` under change dir; template path via `path.join` in tests | unit tests use `path.join` | planned |
+| Inputs and validation | Empty Invariants (no rows, no N/A); clone remediation solutions | unit string contracts + review BLOCKER/WARNING text | covered |
+| State and repeat actions | Second P1 append; Verify retry with existing remediations | apply/verify instruction coverage | covered |
+| Permissions and ownership | Coordinator vs read-only gate workers writing remediations | apply Repair ownership text (coordinator writes) | covered |
+| Filesystem and paths | `remediations.md` under change dir; template path via `path.join` in tests | unit tests use `path.join` | covered |
 | External and integration points | Host cannot launch subagent (existing blocked behavior) | not applicable — unchanged | not applicable |
 
 ## Non-Critical Path Sweep
 
 | Path | Why It Matters | Coverage / Rationale |
 | --- | --- | --- |
-| Docs-only P1 still needs ≥2 options | Avoid rubber-stamp single patches | apply multi-option rule applies to P1 |
+| Docs-only P1 still needs ≥2 solutions | Avoid rubber-stamp single patches | apply multi-solution rule applies to P1 |
 | Optional Final Gates `R#` link omitted | Must not fail when link column unused | optional language in apply text |
-| SDD skill unchanged if snapshots stable | Avoid drive-by edits | task 2.4 may no-op |
+| SDD skill updated with remediations mention | Keep Apply repair ownership discoverable | `skills/subagent-driven-development/SKILL.md` (+ mirrors) |
 
 ## Manual Coverage
 
 | Check / Scenario | Execution Method and Environment | Status | Evidence |
 | --- | --- | --- | --- |
-| After templates land: `superpowers status --change add-invariants-and-remediations --json` shows `applyRequires` still only `test-plan` and does not list remediations as required | CLI in repo checkout | planned | |
-| Spot-read generated Apply skill projection contains remediations create/append rules | Read generated/parity skill file after sync | planned | |
+| After templates land: `superpowers status --change add-invariants-and-remediations --json` shows `applyRequires` still only `test-plan` and does not list remediations as required | CLI in repo checkout | passed | `applyRequires: ["test-plan"]`; artifacts list has no remediations; file absent OK |
+| Spot-read generated Apply skill projection contains remediations create/append rules | Read generated/parity skill file after sync | passed | `.cursor/skills/superpowers-apply-change/SKILL.md` and `.codex/...` contain Remediations (`remediations.md`) create-or-append block |
 
 ## Deferred Coverage
 
@@ -67,11 +65,9 @@ After implementation, strengthen any missing string anchors discovered during pa
 
 ## Test Hardening Record
 
-<!-- Fill during Apply after integration -->
-
 | Area | Result | Evidence |
 | --- | --- | --- |
-| Focused template/parity tests | planned | |
-| `pnpm run build` | planned | |
-| `pnpm run lint` | planned | |
-| `pnpm test` canonical suite | planned | |
+| Focused template/parity tests | passed | `design-conventions` 7/7, `invariants-remediations` 5/5, `skill-templates-parity` 14/14 |
+| `pnpm run build` | passed | `node build.js` OK |
+| `pnpm run lint` | passed | `eslint src/` clean |
+| `pnpm test` canonical suite | passed with isolated baseline failure | 78 passed / 1 failed files; 1464 passed / 1 failed tests. Failure: `test/core/debug-investigation-checkpoint-guidance.test.ts` expects `diagnostic rereads` in `skills/using-superpowers/SKILL.md` — pre-existing on branch, not in this change's owned diff; reproduces without our template edits. Owned-path focused suites all green. |

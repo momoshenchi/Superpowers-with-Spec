@@ -1070,6 +1070,17 @@ Description of the requirement.
 
 <!-- Error codes, empty/deny. Omit or N/A if none. -->
 
+## Invariants
+
+<!-- Cross-path properties that must remain true. Each non-N/A row: ID,
+     falsifiable statement, how to falsify, owner test/check. Or write exactly:
+     N/A — no cross-path invariants
+     Authors MAY add extra subsections. Do not add required extra headings. -->
+
+| ID | Invariant | How to falsify | Owner test / check |
+|---|---|---|---|
+| <!-- I1 --> | <!-- must always hold --> | <!-- breaking input/state --> | <!-- test path or command --> |
+
 ## Attachments
 
 <!-- Optional. Reference change-local files under attachments/. -->

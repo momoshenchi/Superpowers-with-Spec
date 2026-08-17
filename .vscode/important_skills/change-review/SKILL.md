@@ -82,7 +82,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 | Artifact | 适用 schema | 必须包含 | 常见缺口 |
 |----------|-------------|----------|----------|
 | `proposal.md` | `spec-driven` | Why、What Changes、Capabilities（New/Modified）、Impact | 只写动机不写范围；Impact 缺关键模块 |
-| `design.md` | 全部 | Context、**Current system**（给新工程师的行为说明，不是文件路径表）、Relationship 指针、Goals/Non-Goals、Decisions（用户真实选择才写 User selection；agent-owned 可列 A/B/C 但选择理由必须严格、详细，并含可实施细节）、**Contracts**（无表面变更可写 N/A）、Risks | 缺 Current system/Contracts；Current system 只有路径表；把模型推导写成用户 Choice；agent-owned 选择理由空泛；只有原则没有映射/工作实例；“复用现有”无指针；只有方案罗列、没有 Non-Goals |
+| `design.md` | 全部 | Context、**Current system**（给新工程师的行为说明，不是文件路径表）、Relationship 指针、Goals/Non-Goals、Decisions（用户真实选择才写 User selection；agent-owned 可列 A/B/C 但选择理由必须严格、详细，并含可实施细节）、**Contracts**（无表面变更可写 N/A）、**Invariants**（可写 `N/A — no cross-path invariants`）、Risks | 缺 Current system/Contracts/Invariants；Current system 只有路径表；把模型推导写成用户 Choice；agent-owned 选择理由空泛；只有原则没有映射/工作实例；“复用现有”无指针；只有方案罗列、没有 Non-Goals |
 | `specs/<capability>/spec.md` | `spec-driven` | ADDED/MODIFIED/REMOVED Requirements；每个 Requirement 至少一个 Scenario | Requirement 无 Scenario；delta 与主 spec 关系不清 |
 | `tasks.md` | `spec-driven` | 可勾选任务清单，带具体文件路径 | 任务过大、缺验证步骤 |
 | `execution-plan.md` | `spec-driven` | File Structure、分步 Task Plan（红测→实现→验证） | 与 tasks.md 脱节；缺命令与预期结果 |
@@ -98,6 +98,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 - **范围边界**：Goals 与 Non-Goals 互斥、可判定；不出现“视情况”“酌情”“后续再定”而无明确 defer 说明。
 - **决策结论**：每个 Decision 有明确选用方案。`**User selection:**` 比较表 **仅** 在用户真实选择过这些选项时出现（explore / 访谈 / 显式确认，含用户在看过选项后采纳推荐）。**agent-owned** 实现决策可以列出 A/B/C，但最终选择理由必须严格、详细：写清为何胜出、其他选项为何不满足约束、接受什么代价，并在现有标题下写出映射规则和工作实例。**不得**把模型推导结果写成用户 Choice，**不得**因缺少三方案表或缺少自创一级标题而判缺陷。
 - **Current system / Contracts**：`design.md` 含精确的 `## Current system` 标题（给新工程师的行为说明，不是文件路径表）与 `## Contracts`。无 API/状态/错误表面变更时，Contracts 可写 `N/A — no API/state/error surface change`。
+- **Invariants**：`design.md` 含精确的 `## Invariants`；可写 `N/A — no cross-path invariants`。缺 Invariants 标题为 BLOCKER。
 - **复用指针**：凡 reuse/extend/keep-current 类依赖，须有可导航 Pointer（路径、符号、命令或文档章节）。
 - **文件落点**：Create/Modify/Test 使用仓库内真实路径，不用“相关模块”“适当位置”等模糊指代。
 - **任务粒度**：`tasks.md` 的顶层 `# <number>. <scope>` 是逻辑 **dispatch unit**（可分派边界，不是 live subagent 身份）。也接受遗留的 `# <number>. agent<logical-id> — <scope>` 作为等价 dispatch unit。每个细分 checkbox 都应在 `execution-plan.md` 中有可执行的 Step 1–5 说明，包含具体测试文件、实现文件、运行命令与**预期通过/失败信号**；分配策略写在 Dispatch Coordination 表的 Assignee policy 列，而不是 heading 里。（`test-harden` 看 test-plan 矩阵与 harness；`spec-driven` 看 tasks/execution-plan）
@@ -120,6 +121,12 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 - 期望精确的 `## Current system` 标题：让接触不久的开发工程师能看懂相关当前设计（职责、入口、控制/数据流、本变更触及的现有行为、缺口/缺陷）。**文件路径表**（只有路径的表格或列表、没有行为说明）至少 WARNING；跨切变更可升 BLOCKER。短文可接受，但散文仍须解释行为。
 - 期望 `## Contracts` 始终存在。specs/tasks 无 API/CLI/状态/错误变更时，接受明确的 N/A 声明。Contracts 写 N/A 但 specs 新增 API/状态/错误 → 升级。
 - 有 `design.md` 却缺 Current system 或 Contracts 标题 → WARNING（跨切且全文无技术图景 → 可 BLOCKER）。
+
+### Invariants
+- 期望精确的 `## Invariants` 标题。无跨路径不变量时，接受 `N/A — no cross-path invariants`。
+- 缺 `## Invariants` 标题 → **BLOCKER**。既无表格行也无 N/A → **BLOCKER**。
+- 非 N/A 行缺少稳定 ID、可证伪陈述、如何证伪、或 owner test/check → WARNING。auth/钱/数据完整性类变更却只有 N/A → WARNING（建议至少一条不变量）。
+- 审查文案中应能看到 `## Invariants` 与 missing Invariants → BLOCKER 的对应关系。
 
 ### Relationship / 复用指针
 - 优先 Relationship 表（或等价列表），关系取 `reuse | extend | replace | boundary | retire`，并含 **Pointer** 列。该表补充 Current system 散文，不能替代它。

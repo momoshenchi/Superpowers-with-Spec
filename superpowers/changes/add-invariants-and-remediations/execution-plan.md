@@ -68,7 +68,7 @@ A dispatch unit is an allocation boundary, not a required one-to-one subagent as
 
 #### Task 2.1: Add remediations template
 
-1. **Step 1: Write failing test** — Assert `schemas/spec-driven/templates/remediations.md` exists and contains Options, Choice, Rationale, Root cause, Fix, Guard, Evidence, Status.
+1. **Step 1: Write failing test** — Assert `schemas/spec-driven/templates/remediations.md` exists and contains Solutions, Choice, Rationale, Root cause, Fix, Guard, Evidence, Status.
 2. **Step 2: Run test to verify it fails** — File missing → fail.
 3. **Step 3: Implement minimal code** — Create the template with an `R1` example skeleton matching design contracts.
 4. **Step 4: Run test to verify it passes** — New/extended test green.
@@ -76,7 +76,7 @@ A dispatch unit is an allocation boundary, not a required one-to-one subagent as
 
 #### Task 2.2: FQG repair ownership → remediations
 
-1. **Step 1: Write failing test** — Assert Final Quality Gates instruction text (from `final-quality-gates.ts` / generated Apply skill) requires create/append remediations before code edits for accepted code-review/Verify P0/P1, change-directory path discovery, multi-option selection, omit/N/A when zero such repairs, exclusion of Design Verify-only and P2-only, P0 Guard before resolved, optional `R#` link.
+1. **Step 1: Write failing test** — Assert Final Quality Gates instruction text (from `final-quality-gates.ts` / generated Apply skill) requires create/append remediations before code edits for accepted code-review/Verify P0/P1, change-directory path discovery, multi-solution selection, omit/N/A when zero such repairs, exclusion of Design Verify-only and P2-only, P0 Guard before resolved, optional `R#` link.
 2. **Step 2: Run test to verify it fails** — Missing strings in FQG/Apply templates.
 3. **Step 3: Implement minimal code** — Update `getFinalQualityGateInstructions()` in `final-quality-gates.ts`; touch `apply-change.ts` only if needed outside that shared block; sync generated skills/commands.
 4. **Step 4: Run test to verify it passes** — Apply/FQG instruction assertions green.

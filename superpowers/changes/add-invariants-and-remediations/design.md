@@ -6,7 +6,7 @@ This change tightens two quality levers in the Superpowers artifact workflow: (1
 
 Today, change-local `design.md` (package template under `schemas/spec-driven/templates/design.md`, mirrored in `src/commands/schema.ts` fallbacks) requires Context, Current system, Decisions, and Contracts. Specs and design instruction explicitly tell authors **not** to invent mandatory top-level sections such as Invariants. Cross-path “must never break” properties therefore live only in prose Risks or informal notes, and Verify’s coherence check looks at design decisions generally without an invariants checklist.
 
-Final Quality Gates (Apply after Test Hardening) run code review → Simplify → Verify → Design Verify. Repair ownership is coordinator-led: workers report findings; the coordinator repairs accepted resolvable P0/P1 and retries. Outcomes are summarized in `test-plan.md` under `## Final Quality Gates`, but that table records gate outcome and evidence—not a structured comparison of repair options, root cause, or regression guards. The next fresh gate worker therefore often re-reads only the diff and prior gate summary, without a normative repair playbook. `applyRequires` still ends at `test-plan`; no remediations artifact exists.
+Final Quality Gates (Apply after Test Hardening) run code review → Simplify → Verify → Design Verify. Repair ownership is coordinator-led: workers report findings; the coordinator repairs accepted resolvable P0/P1 and retries. Outcomes are summarized in `test-plan.md` under `## Final Quality Gates`, but that table records gate outcome and evidence—not a structured comparison of repair solutions, root cause, or regression guards. The next fresh gate worker therefore often re-reads only the diff and prior gate summary, without a normative repair playbook. `applyRequires` still ends at `test-plan`; no remediations artifact exists.
 
 The gap: invariants are underspecified upstream; accepted gate repairs are underspecified mid-stream—both raise residual bug risk after a “green” Apply.
 
@@ -37,7 +37,7 @@ The gap: invariants are underspecified upstream; accepted gate repairs are under
 - Structural CLI `validate` parsers that fail builds solely for missing Invariants headings (convention + review/Verify guidance first).
 - Expanding Final Quality Gates with a fifth gate or restoring per-task full code review.
 - Changing Manual Coverage / Deferred Coverage semantics.
-- Requiring three fake alternatives for trivial docs-only P1 when two meaningful options exist (minimum is ≥2 distinct approaches).
+- Requiring three fake alternatives for trivial docs-only P1 when two meaningful solutions exist (minimum is ≥2 distinct approaches).
 - Requiring `remediations.md` for Design Verify repairs, for code-review/Verify **P2** findings, or for Simplify-only cleanups (those stay outside this artifact unless a finding is separately accepted as P0/P1 under code review or Verify).
 
 ## Decisions
@@ -66,8 +66,8 @@ The gap: invariants are underspecified upstream; accepted gate repairs are under
 
 | Option | Dimension: auditability | Dimension: cost | Dimension: false rigor |
 |---|---|---|---|
-| A. Multi-option (≥2) + Choice + Rationale for every accepted P0 and P1 | High | Medium | Low if options must be meaningful |
-| B. Multi-option only for P0; P1 single fix + reason | Medium | Lower | P1 blind patches remain |
+| A. Multi-solution (≥2) + Choice + Rationale for every accepted P0 and P1 | High | Medium | Low if solutions must be meaningful |
+| B. Multi-solution only for P0; P1 single fix + reason | Medium | Lower | P1 blind patches remain |
 | C. Free-form narrative only | Low | Low | High |
 
 **Choice:** A (applies to both P0 and P1)
@@ -108,11 +108,11 @@ The gap: invariants are underspecified upstream; accepted gate repairs are under
 - Discovery: Apply/Verify/Review workers MUST probe that change-directory path when assessing repairs or retry rounds. Do **not** rely on schema `contextFiles` / artifact-graph membership—the file is intentionally outside `applyRequires` and may be absent from CLI context file lists.
 - Scope: only accepted **code review** or **Verify** findings with severity **P0 or P1**. Design Verify findings, P2-only findings, and Simplify cleanups do not require remediations entries.
 - Entry IDs: `R1`, `R2`, … stable within the change
-- Minimum fields per entry: Finding (gate + severity + summary), Root cause, Options (≥2), Choice, Rationale, Fix (paths/behavior), Guard (test and/or invariant `I#`), Evidence (command + outcome), Status (`open` \| `resolved`)
+- Minimum fields per entry: Finding (gate + severity + summary), Root cause, Solutions (≥2), Choice, Rationale, Fix (paths/behavior), Guard (test and/or invariant `I#`), Evidence (command + outcome), Status (`open` \| `resolved`)
 - P0 cannot move to `resolved` without Guard; P1 should have Guard when behavior changed
 - `test-plan.md` Final Quality Gates rows MAY cite `Remediation: R#`
 
-**Worked example:** Verify round 1 reports P0 “invariant I2 unbroken on empty input, but handler returns 500”. Coordinator appends `R1` with options (A) add null guard in parser (B) reject at CLI boundary with typed error (C) widen invariant). Chooses B with rationale (fail-closed at boundary matches Contracts.Errors). Adds failing test, implements, records evidence, marks `resolved`, links Final Gates Verify row to `R1`, then starts Verify round 2 with remediations in contextFiles/read list.
+**Worked example:** Verify round 1 reports P0 “invariant I2 unbroken on empty input, but handler returns 500”. Coordinator appends `R1` with solutions (A) add null guard in parser (B) reject at CLI boundary with typed error (C) widen invariant). Chooses B with rationale (fail-closed at boundary matches Contracts.Errors). Adds failing test, implements, records evidence, marks `resolved`, links Final Gates Verify row to `R1`, then starts Verify round 2; the fresh Verify worker probes `superpowers/changes/<name>/remediations.md` on the change directory (not via schema `contextFiles`).
 
 ### 5. Invariants content contract (agent-owned)
 
@@ -158,13 +158,20 @@ N/A — no user-facing CLI flag or command output schema change. Workflow instru
 | Design missing `## Invariants` heading | Change-review BLOCKER |
 | Design Invariants is empty with neither rows nor N/A | Change-review BLOCKER |
 
+## Invariants
+
+| ID | Invariant | How to falsify | Owner test / check |
+|---|---|---|---|
+| I1 | Accepted code-review/Verify P0/P1 repairs are not applied without a `remediations.md` entry that records ≥2 solutions, Choice, and Rationale | Edit implementation for an accepted P0 with no `R#` entry | Apply/FQG instruction string contracts in `invariants-remediations.test.ts` |
+| I2 | Change-local `design.md` always has `## Invariants` (content or explicit N/A) | Generate a design template missing the heading | `design-conventions.test.ts` section order + change-review BLOCKER wording |
+
 ## Attachments
 
 None.
 
 ## Risks / Trade-offs
 
-- [Agents pad two duplicate “options”] → Review/Apply text requires meaningfully different approaches; change-review WARNING for clone options.
+- [Agents pad two duplicate “solutions”] → Review/Apply text requires meaningfully different approaches; change-review WARNING for clone solutions.
 - [Remediations drift from Final Gates table] → Prefer single link column `R#`; do not duplicate long rationale in test-plan.
 - [Template tests still expect “never invent Invariants”] → Update design-conventions and schema instruction tests in the same change.
 - [Concurrent edits to design section order / schema design instruction] → Rebase carefully if another in-flight change also touches `schemas/spec-driven/templates/design.md` or the design `instruction` block.

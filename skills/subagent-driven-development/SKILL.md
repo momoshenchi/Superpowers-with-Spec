@@ -72,7 +72,7 @@ Within `/sp:apply`, after all dispatch units are integrated, complete Test Harde
 
 These gates apply to Proposal → Review → Apply. The allocation rule is **one gate → one fresh worker**: await and integrate its report before dispatching the next gate. Direct Modification ends with its relevant checks and `verification-before-completion`; it does not inherit Apply's gate sequence.
 
-Code review, Verify, and Design verify workers are read-only by default; the coordinator repairs accepted findings and follows the Apply severity and retry rules. Simplify may edit only within its behavior-preserving cleanup boundary. Do not dispatch a separate complete review before or after Apply's code review gate.
+Code review, Verify, and Design verify workers are read-only by default; the coordinator repairs accepted findings and follows the Apply severity and retry rules. When the coordinator accepts a code-review or Verify P0/P1 and edits implementation, it MUST create or append `remediations.md` under the change directory first (see Apply Final Quality Gates remediations rules). Simplify may edit only within its behavior-preserving cleanup boundary. Do not dispatch a separate complete review before or after Apply's code review gate.
 
 Only after all applicable Final Quality Gates are complete, use `superpowers: verification-before-completion` with fresh evidence, then use `superpowers: finishing-a-development-branch`.
 

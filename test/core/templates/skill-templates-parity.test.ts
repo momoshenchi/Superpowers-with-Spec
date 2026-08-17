@@ -45,23 +45,23 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getExploreSkillTemplate: 'dc413f63aeed82bb523e6dbbb11ffcb8fe6671080ad2b6eaed33cdd76c9443ef',
   getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
   getContinueChangeSkillTemplate: 'd2a03cab2a3adc303a223718d574c8f74b28acdf2a11baa0dea916db2ab3d2aa',
-  getApplyChangeSkillTemplate: 'cdd14239561ccda98c0a9ad96e10225ec1e9478a85b063909956f3f81b906569',
+  getApplyChangeSkillTemplate: '9dd231360bc2cf1eac47c279b857bb40961962739ef0ede238c06fc8e28e1fec',
   getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'bf39ddec86960f599d857fc6ec68ab32f420bd7ee2d2f272b59a05c7d79773fa',
   getSpExploreCommandTemplate: 'e077a486229e0caa5b9a6f8cfe07f84a8cfb833d01c37184551722a182835cf1',
   getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
   getSpContinueCommandTemplate: 'a5bff71ba5ea053d61aad846d9d39053a185ba3aeb993bcadfe15b00779b158e',
-  getSpApplyCommandTemplate: '04154bf96da20a3f8c27015f8ec4dcd77df58808fe6a016a2be6fbe768a7f0f6',
+  getSpApplyCommandTemplate: '61f9ed0d50f74cf0fe4a1c4d2c6aaa4b5d4fdefd9f2bcaf7f8b2b734e128d0d3',
   getSpFfCommandTemplate: 'a1f27b1120565937907ed8bd7209bfd3682e23aa07cc1b4da0a501bd8cd8d158',
   getArchiveChangeSkillTemplate: 'aadb596f4c1787809290603f7bd02d0fdfec40489fde03c5f0b40048682d33d1',
   getBulkArchiveChangeSkillTemplate: '5f80cc40af4beb29180d7a0266dc6aa21d62ee1826182623d21acbb35e8d376c',
   getSpSyncCommandTemplate: 'cc1ff958f3b66201e1b044c5fc4ab74c542d22520a8ab6338cf24bc50937aeb4',
-  getVerifyChangeSkillTemplate: '3a334da79db1038a57112f33a7a468300611fcd76d49d091aa92011b52ce87d3',
+  getVerifyChangeSkillTemplate: '88042eea4776bb91c287227501cd7013783f0fca6c700354233159df0779311c',
   getSpArchiveCommandTemplate: 'a6d8bbbfd0de892f525e720bd1b32d5f8ec548ad27bfab7df4f803137180d3d0',
   getSpOnboardCommandTemplate: '83ecbdb7c05c0b485b9a4911853e689468b421970bed45b96d19d9dc087a7745',
   getSpBulkArchiveCommandTemplate: 'f8ad96bf71f2c8e5c5c24d31d25054974e24219ee910aa1ddee25ce9f3c843c1',
-  getSpVerifyCommandTemplate: 'e5fa082a101da3ca9a5007c40938af275f73680ff9ce9762514aa95441c4b97f',
+  getSpVerifyCommandTemplate: '54dd48d9e8eb1fd33229a7be87af1411da3bd6580d837af852562f36bccf71e4',
   getSimplifySkillTemplate: '5d26571f977ae20e01afeec54037a6fabeb84fdb8a492a18f4acdfbcb1551ca5',
   getSpSimplifyCommandTemplate: 'ea0ca542aff154ff51bbf2d6169540dc4d8d51d1d3fd1676bd9c09e1313d592a',
   getDesignVerifySkillTemplate: '4920e25dce697b90b8031620b63085856bf09cfc275d1fec45d7873dcef7c14b',
@@ -69,28 +69,28 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getSpProposeSkillTemplate: '0be3042e8dba170dc307e42e70edea6822ef2c126b82750c704bd0ccfd584e4e',
   getSpProposeCommandTemplate: '895a7fb9b552ce1d6884abba2cd3ecf5bf41b8af40e928466d570b818e8a8a5c',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
-  getChangeReviewSkillTemplate: '50ac255f828bb4e34d737685935b6225326196b58a5267a2c4430c6faf1fcbc8',
-  getSpReviewCommandTemplate: 'a963c0f727e1c152cbf8aaa84cb8187fe7c46528fe2a53f46dffecbb749f8ef2',
-  getShapeReviewSkillTemplate: '0be7d3c24963b37009a086559e2c7904b2ef9d6241f2426a866b12dabe9ea715',
-  getSpShapeReviewCommandTemplate: 'd8e4e102b6e4771d7891e27845f38455893d7eca0ed8ff28e47c8f30d311a121',
+  getChangeReviewSkillTemplate: '1d252632d3c7710035c5940acdefcdae08c0fec5aadeb75de0b6d05fe6b6252b',
+  getSpReviewCommandTemplate: 'a2d3cebf771da7682bc3182ab0e5f8e9da9b97c0e88f3272ab7425d63dde2a2a',
+  getShapeReviewSkillTemplate: 'c1bf320fb394e0a3453b099e228edc6ec0eb68a2cb1e84ade7091eff461478ce',
+  getSpShapeReviewCommandTemplate: '0e14c7edb312c1689eebb3e200d26a1873159e2edea976b9644dec612f770a44',
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-explore': '86dd7012a96b600d1ccfec24f4a2adba5cc38ec821225dd80d8c6f6ed32f0fbd',
   'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
   'superpowers-continue-change': '28a0c25d94b03a658e2a5b9291d8a11b469b2709ac080017604f324d46056fe7',
-  'superpowers-apply-change': 'a3477b612d1a36de3074bee27b079f1c198517d5f097eff85e511b82200b7830',
+  'superpowers-apply-change': '296013ca51a59fa34023904bc707b45609bedef0626fb873973fe1ee9fc9f662',
   'superpowers-ff-change': '0ceb62124b4b26a9fe00edcff8576d1e27bb00197794ca4228ab61534a18a299',
   'superpowers-sync-specs': '54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2',
   'superpowers-archive-change': 'a50623f1936b93f63d405038cc05bdd04fbe4c0c51b0dc9bf0d64c79a8822920',
   'superpowers-bulk-archive-change': '62e0d64f3b80cf3f7c29073dcd4842c00a2c55d139eb3f7b52bdd3aa59cfecd0',
-  'superpowers-verify-change': '388994fdc2713aa71752edebeb297f76ccec08f7446439573bd9b4da4c2c5d10',
+  'superpowers-verify-change': 'b566d82fbb229946873d5ae98cc549c632fb91ed0c6ec6df3e422554c09273b9',
   'superpowers-simplify': '85d6860d6567fe2ad1738f9f4648e074f6793c670de1aa07b2466447e293505d',
   'superpowers-design-verify': '50a6a25f20bd749bfee135b384702ae4aa7adcc0fb06345c18de0902f505bab7',
   'superpowers-onboard': '736257835836c326f0286e0da55232799a9809a29a2ed2b63d1f9beee9bf6a34',
   'superpowers-propose': 'dcae2b52fb584d73d3b957871a65a80b2f2f05db5b28614c6a6dd82e0e0c84aa',
-  'superpowers-change-review': 'bdb1439ed602ca99d1f584fd657d9052df8008d6ae9becd9e2841db083f20361',
-  'superpowers-shape-review': '3ab9c63d8a0061848b7e16f2557aa360972b308273c305be0bbd73ee02311aa8',
+  'superpowers-change-review': '7a36f74b67ab4d38921499626ee2e4d75c99adedbe18ab5d9134c29b4af240e3',
+  'superpowers-shape-review': '53a75b2dd486fb0ef75d4dfce319cef649dc99111d5cd91a9cc47c7ba658eb1a',
 };
 
 function stableStringify(value: unknown): string {
@@ -394,12 +394,12 @@ describe('skill templates split parity', () => {
   it('provides an explicit shape-review contract', () => {
     const shapeReview = [getShapeReviewSkillTemplate().instructions, getSpShapeReviewCommandTemplate().content].join('\n');
     expect(shapeReview).toContain('/sp:shape-review');
-    expect(shapeReview).toContain('Phase -1 — Resolve Superpowers change scope');
+    expect(shapeReview).toContain('Phase -0 — Resolve Superpowers change scope');
     expect(shapeReview).toContain('superpowers status --change "<change-name>" --json');
     expect(shapeReview).toContain('superpowers instructions apply --change "<change-name>" --json');
     expect(shapeReview).toContain('Do not absorb unrelated working-tree changes');
     expect(shapeReview).toContain('require an explicit PR, branch, or file/diff');
-    expect(shapeReview).toContain('Phase 0 — Gather the diff');
+    expect(shapeReview).toContain('### Gather the diff');
     expect(shapeReview).toContain('Phase 1 — Review (4 shape agents in parallel)');
     expect(shapeReview).toContain('### Surface');
     expect(shapeReview).toContain('### Boundaries');
@@ -425,7 +425,8 @@ describe('skill templates split parity', () => {
     expect(shapeReview).toContain('file:line or symbol');
     expect(shapeReview).toContain('cost');
     expect(shapeReview).not.toContain('apply each remaining behavior-preserving cleanup directly');
-    expect(shapeReview).toContain('This is `/sp:shape-review`, not `/sp:review`');
+    expect(shapeReview).toContain('/sp:shape-review');
+    expect(shapeReview).toContain('/sp:review');
 
     expect(SHAPE_REVIEW_CONTRACT).toContain('### Surface');
     expect(SHAPE_REVIEW_CONTRACT).toContain('public API, CLI, events, flags');
