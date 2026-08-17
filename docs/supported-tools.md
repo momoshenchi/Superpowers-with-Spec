@@ -12,10 +12,13 @@ For each selected tool, Superpowers can install:
 By default, Superpowers uses the `core` profile, which includes:
 - `propose`
 - `explore`
+- `review`
 - `apply`
 - `archive`
 
-You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `simplify`, `design-verify`, `sync`, `bulk-archive`, `onboard`) via `superpowers config profile`, then run `superpowers update`.
+You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `simplify`, `design-verify`, `shape-review`, `sync`, `bulk-archive`, `onboard`) via `superpowers config profile`, then run `superpowers update`.
+
+`/sp:shape-review` is custom-only and does not block archive. Core still includes `/sp:review` (proposal-artifact review). `/sp:review` is not an abbreviation of `/sp:shape-review`.
 
 ## Tool Directory Reference
 
@@ -74,9 +77,9 @@ superpowers init --profile core
 
 Superpowers installs workflow artifacts based on selected workflows:
 
-- **Core profile (default):** `propose`, `explore`, `apply`, `archive`
+- **Core profile (default):** `propose`, `explore`, `review`, `apply`, `archive`
 - **Custom selection:** any subset of all workflow IDs:
-  `propose`, `explore`, `new`, `continue`, `apply`, `ff`, `sync`, `archive`, `bulk-archive`, `verify`, `simplify`, `design-verify`, `onboard`
+  `propose`, `explore`, `review`, `new`, `continue`, `apply`, `ff`, `sync`, `archive`, `bulk-archive`, `verify`, `simplify`, `design-verify`, `shape-review`, `onboard`
 
 In other words, skill/command counts are profile-dependent and delivery-dependent, not fixed.
 
@@ -86,6 +89,7 @@ When selected by profile/workflow config, Superpowers generates these skills:
 
 - `superpowers-propose`
 - `superpowers-explore`
+- `superpowers-change-review`
 - `superpowers-new-change`
 - `superpowers-continue-change`
 - `superpowers-apply-change`
@@ -96,6 +100,7 @@ When selected by profile/workflow config, Superpowers generates these skills:
 - `superpowers-verify-change`
 - `superpowers-simplify`
 - `superpowers-design-verify`
+- `superpowers-shape-review`
 - `superpowers-onboard`
 
 See [Commands](commands.md) for command behavior and [CLI](cli.md) for `init`/`update` options.

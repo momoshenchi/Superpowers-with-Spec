@@ -14,7 +14,7 @@
 
 - [x] 2.1 Extend `skills/systematic-debugging/SKILL.md` with the per-track checkpoint format, separate track/hypothesis statuses, phase exit criteria, typed evidence ledger, visual/image/diagram evidence rules, reread budget, no-progress escalation, and fresh-context recovery instructions while preserving the root-cause and read-only boundaries. (R1, R2, R4, R5, R6)
 - [x] 2.2 Extend `src/core/templates/workflows/explore.ts` in both the generated explore skill and `/sp:explore` command content with checkpoint creation/recovery, rich code/runtime/image evidence, Mermaid/ASCII flow and data-flow guidance, and the rule that confirmed fixes hand off instead of modifying application code in explore mode. (R2, R3, R5, R7)
-- [x] 2.3 Extend `skills/using-superpowers/SKILL.md` so repeated broad diagnostic rereads trigger a checkpoint and context-boundary reassessment before further inspection, while keeping the existing Proposal workload and Direct Modification rules intact. (R5, R6)
+
 
 # 3. Cross-tool parity and verification
 

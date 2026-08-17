@@ -34,6 +34,10 @@ import {
   getVerifyChangeSkillTemplate,
   getSimplifySkillTemplate,
   getDesignVerifySkillTemplate,
+  getShapeReviewSkillTemplate,
+  getSpShapeReviewCommandTemplate,
+  SHAPE_REVIEW_APPLY_HANDOFF,
+  SHAPE_REVIEW_CONTRACT,
 } from '../../../src/core/templates/skill-templates.js';
 import { generateSkillContent } from '../../../src/core/shared/skill-generation.js';
 
@@ -41,14 +45,14 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getExploreSkillTemplate: 'dc413f63aeed82bb523e6dbbb11ffcb8fe6671080ad2b6eaed33cdd76c9443ef',
   getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
   getContinueChangeSkillTemplate: 'd2a03cab2a3adc303a223718d574c8f74b28acdf2a11baa0dea916db2ab3d2aa',
-  getApplyChangeSkillTemplate: '0c7bf516afcabec24f1bf5a3ee318c20ab076e5cbbbe85a231fc9a9a7c24ecaf',
+  getApplyChangeSkillTemplate: 'cdd14239561ccda98c0a9ad96e10225ec1e9478a85b063909956f3f81b906569',
   getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
   getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
   getOnboardSkillTemplate: 'bf39ddec86960f599d857fc6ec68ab32f420bd7ee2d2f272b59a05c7d79773fa',
   getSpExploreCommandTemplate: 'e077a486229e0caa5b9a6f8cfe07f84a8cfb833d01c37184551722a182835cf1',
   getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
   getSpContinueCommandTemplate: 'a5bff71ba5ea053d61aad846d9d39053a185ba3aeb993bcadfe15b00779b158e',
-  getSpApplyCommandTemplate: 'e3056c593ae816e748ac063a41f3cfdb9777e6ff1fa82cfe1ed34faf0c59bf77',
+  getSpApplyCommandTemplate: '04154bf96da20a3f8c27015f8ec4dcd77df58808fe6a016a2be6fbe768a7f0f6',
   getSpFfCommandTemplate: 'a1f27b1120565937907ed8bd7209bfd3682e23aa07cc1b4da0a501bd8cd8d158',
   getArchiveChangeSkillTemplate: 'aadb596f4c1787809290603f7bd02d0fdfec40489fde03c5f0b40048682d33d1',
   getBulkArchiveChangeSkillTemplate: '5f80cc40af4beb29180d7a0266dc6aa21d62ee1826182623d21acbb35e8d376c',
@@ -67,13 +71,15 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
   getChangeReviewSkillTemplate: '50ac255f828bb4e34d737685935b6225326196b58a5267a2c4430c6faf1fcbc8',
   getSpReviewCommandTemplate: 'a963c0f727e1c152cbf8aaa84cb8187fe7c46528fe2a53f46dffecbb749f8ef2',
+  getShapeReviewSkillTemplate: '0be7d3c24963b37009a086559e2c7904b2ef9d6241f2426a866b12dabe9ea715',
+  getSpShapeReviewCommandTemplate: 'd8e4e102b6e4771d7891e27845f38455893d7eca0ed8ff28e47c8f30d311a121',
 };
 
 const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-explore': '86dd7012a96b600d1ccfec24f4a2adba5cc38ec821225dd80d8c6f6ed32f0fbd',
   'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
   'superpowers-continue-change': '28a0c25d94b03a658e2a5b9291d8a11b469b2709ac080017604f324d46056fe7',
-  'superpowers-apply-change': '2564b3194da7a01a266578f47f7c4633f80ac777bfa87747b715b0f0f5667ed5',
+  'superpowers-apply-change': 'a3477b612d1a36de3074bee27b079f1c198517d5f097eff85e511b82200b7830',
   'superpowers-ff-change': '0ceb62124b4b26a9fe00edcff8576d1e27bb00197794ca4228ab61534a18a299',
   'superpowers-sync-specs': '54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2',
   'superpowers-archive-change': 'a50623f1936b93f63d405038cc05bdd04fbe4c0c51b0dc9bf0d64c79a8822920',
@@ -84,6 +90,7 @@ const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-onboard': '736257835836c326f0286e0da55232799a9809a29a2ed2b63d1f9beee9bf6a34',
   'superpowers-propose': 'dcae2b52fb584d73d3b957871a65a80b2f2f05db5b28614c6a6dd82e0e0c84aa',
   'superpowers-change-review': 'bdb1439ed602ca99d1f584fd657d9052df8008d6ae9becd9e2841db083f20361',
+  'superpowers-shape-review': '3ab9c63d8a0061848b7e16f2557aa360972b308273c305be0bbd73ee02311aa8',
 };
 
 function stableStringify(value: unknown): string {
@@ -384,6 +391,108 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('`Verify round: <1-4>`');
   });
 
+  it('provides an explicit shape-review contract', () => {
+    const shapeReview = [getShapeReviewSkillTemplate().instructions, getSpShapeReviewCommandTemplate().content].join('\n');
+    expect(shapeReview).toContain('/sp:shape-review');
+    expect(shapeReview).toContain('Phase -1 — Resolve Superpowers change scope');
+    expect(shapeReview).toContain('superpowers status --change "<change-name>" --json');
+    expect(shapeReview).toContain('superpowers instructions apply --change "<change-name>" --json');
+    expect(shapeReview).toContain('Do not absorb unrelated working-tree changes');
+    expect(shapeReview).toContain('require an explicit PR, branch, or file/diff');
+    expect(shapeReview).toContain('Phase 0 — Gather the diff');
+    expect(shapeReview).toContain('Phase 1 — Review (4 shape agents in parallel)');
+    expect(shapeReview).toContain('### Surface');
+    expect(shapeReview).toContain('### Boundaries');
+    expect(shapeReview).toContain('### Model');
+    expect(shapeReview).toContain('### Composition');
+    expect(shapeReview).toContain('single-pass review, not the four-agent fan-out');
+    expect(shapeReview).toContain('public API, CLI, events, flags');
+    expect(shapeReview).toContain('module cohesion');
+    expect(shapeReview).toContain('representable invalid states');
+    expect(shapeReview).toContain('where rules live');
+    expect(shapeReview).toContain('read-only by default');
+    expect(shapeReview).toContain('simplify');
+    expect(shapeReview).toContain('structural');
+    expect(shapeReview).toContain('skip');
+    expect(shapeReview).toContain('expand-current-change');
+    expect(shapeReview).toContain('new-proposal');
+    expect(shapeReview).toContain('slash-after-apply remaining same-session');
+    expect(shapeReview).toContain('same-session wins');
+    expect(shapeReview).toContain('summarizing pass');
+    expect(shapeReview).toContain('fail-closed');
+    expect(shapeReview).toContain('## Shape Review Result');
+    expect(shapeReview).toContain('Outcome: passed | failed | blocked');
+    expect(shapeReview).toContain('file:line or symbol');
+    expect(shapeReview).toContain('cost');
+    expect(shapeReview).not.toContain('apply each remaining behavior-preserving cleanup directly');
+    expect(shapeReview).toContain('This is `/sp:shape-review`, not `/sp:review`');
+
+    expect(SHAPE_REVIEW_CONTRACT).toContain('### Surface');
+    expect(SHAPE_REVIEW_CONTRACT).toContain('public API, CLI, events, flags');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('/sp:shape-review');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('Surface');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('Boundaries');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('Model');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('Composition');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('Always run all four');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('not applicable');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('read-only');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('## Shape Review Result');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('same-session wins');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('say you want a shape review in this conversation');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('does not block archive');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('summarizing pass');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).not.toContain('public API, CLI, events, flags');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).not.toContain('module cohesion');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).not.toContain('representable invalid states');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).not.toContain('where rules live');
+  });
+
+  it('invites optional shape-review after apply completion without making it a gate', () => {
+    for (const template of [getApplyChangeSkillTemplate(), getSpApplyCommandTemplate()]) {
+      const content = 'instructions' in template ? template.instructions : template.content;
+      const completion = content.split('**Output On Completion**')[1].split('**Output On Pause')[0];
+      expect(completion).toContain('You can archive this change with `/sp:archive`.');
+      expect(completion).toContain('Optional: review shape with `/sp:shape-review` (does not block archive).');
+      expect(completion).toContain('If that command is not installed, say you want a shape review in this conversation.');
+
+      const gates = content.split('### Final Quality Gates')[1].split('Implementation, Test Hardening')[0];
+      expect(gates).toContain('| `/sp:simplify` |');
+      expect(gates).toContain('| `/sp:verify` |');
+      expect(gates).toContain('| `/sp:design-verify` |');
+      expect(gates).not.toContain('shape-review');
+
+      const pause = content.split('**Output On Pause')[1].split('**Guardrails**')[0];
+      expect(pause).not.toContain('/sp:shape-review');
+      expect(pause).not.toContain('Optional: review shape');
+    }
+  });
+
+  it('embeds a runnable same-session shape-review contract in apply', () => {
+    for (const template of [getApplyChangeSkillTemplate(), getSpApplyCommandTemplate()]) {
+      const content = 'instructions' in template ? template.instructions : template.content;
+      expect(content).toContain(SHAPE_REVIEW_APPLY_HANDOFF.trim());
+      expect(content).toContain('suggest archive and optional shape-review');
+      expect(content).toContain('slash-after-apply remaining same-session');
+      expect(content).toContain('same-session wins');
+      expect(content).toContain('fail-closed');
+      expect(content).toContain('expand the current change in place');
+      expect(content).toContain('stop recommending');
+      expect(content).toContain('run `/sp:review` before');
+      expect(content).toContain('create a new change with');
+      expect(content).toContain('a prerequisite');
+      expect(content).toContain('re-run final quality gates after');
+      expect(content).toContain('Do not require `superpowers config profile`');
+      expect(content).toContain('Do not skip because the');
+      expect(content).toContain('Do not point at');
+      expect(content).not.toContain('read `superpowers-shape-review`');
+      expect(content).not.toContain('public API, CLI, events, flags');
+      expect(content).not.toContain('module cohesion');
+      expect(content).not.toContain('representable invalid states');
+      expect(content).not.toContain('where rules live');
+    }
+  });
+
   it('gives verify workers an evidence-driven adversarial hunt intent', () => {
     const huntPhrases = [
       'Adversarial hunt intent',
@@ -531,6 +640,8 @@ describe('skill templates split parity', () => {
       getFeedbackSkillTemplate,
       getChangeReviewSkillTemplate,
       getSpReviewCommandTemplate,
+      getShapeReviewSkillTemplate,
+      getSpShapeReviewCommandTemplate,
     };
 
     const actualHashes = Object.fromEntries(
@@ -558,6 +669,7 @@ describe('skill templates split parity', () => {
       ['superpowers-onboard', getOnboardSkillTemplate],
       ['superpowers-propose', getSpProposeSkillTemplate],
       ['superpowers-change-review', getChangeReviewSkillTemplate],
+      ['superpowers-shape-review', getShapeReviewSkillTemplate],
     ];
 
     const actualHashes = Object.fromEntries(

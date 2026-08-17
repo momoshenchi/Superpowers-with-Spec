@@ -48,6 +48,7 @@ Combine multiple small or medium fixes when their combined work and acceptance s
 New installs default to `core`, which provides:
 - `/sp:propose`
 - `/sp:explore`
+- `/sp:review`
 - `/sp:apply`
 - `/sp:archive`
 
@@ -61,7 +62,7 @@ Typical flow:
 
 ### Expanded/Full Workflow (custom selection)
 
-If you want explicit scaffold-and-build commands (`/sp:new`, `/sp:continue`, `/sp:ff`, `/sp:verify`, `/sp:simplify`, `/sp:design-verify`, `/sp:sync`, `/sp:bulk-archive`, `/sp:onboard`), enable them with:
+If you want explicit scaffold-and-build commands (`/sp:new`, `/sp:continue`, `/sp:ff`, `/sp:verify`, `/sp:simplify`, `/sp:design-verify`, `/sp:shape-review`, `/sp:sync`, `/sp:bulk-archive`, `/sp:onboard`), enable them with:
 
 ```bash
 superpowers config profile
@@ -250,6 +251,10 @@ The recommended completion flow:
 ```
 
 `/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass discovers and runs the complete canonical non-visual suite from scripts, CI, test documentation, and the test plan; it records authority, commands, results, and excluded visual-only checks. After hardening, apply delegates final code review (or a labelled equivalent fallback), `/sp:simplify`, `/sp:verify`, and `/sp:design-verify`—in that order—to fresh, distinct subagents, awaiting and integrating each report before starting the next. These gates are mandatory inside apply even if their standalone workflows are not selected; a host unable to launch a gate worker blocks completion.
+
+After every applicable gate passes, apply invites `/sp:archive` and optionally `/sp:shape-review`. Shape-review is not a fifth gate and does not block archive. If `/sp:shape-review` is not installed, say you want a shape review in this conversation. `/sp:review` is not an abbreviation of `/sp:shape-review`: `/sp:review` is proposal-artifact review; `/sp:shape-review` is a read-only Surface / Boundaries / Model / Composition review of the implemented (or design-time) shape.
+
+Same-session acceptance of structural suggestions expands the current change in place and withdraws archive until tasks, Test Hardening, and applicable gates complete again. If specs or design change, run `/sp:review` before implementing that expansion. A new session creates a new change with the prior change as prerequisite. Ignoring the invitation and archiving is allowed.
 
 Standalone `/sp:verify` remains available for an explicit independent diagnostic or when work was completed outside `/sp:apply`; it is not an additional routine step after an Apply run.
 
@@ -467,6 +472,7 @@ For full command details and options, see [Commands](commands.md).
 |---------|---------|-------------|
 | `/sp:propose` | Run the adaptive understanding gate, then create change and planning artifacts after confirmation | Fast default path (`core` profile) |
 | `/sp:explore` | Think through ideas | Unclear requirements, investigation |
+| `/sp:review` | Review proposal artifacts | After `/sp:propose`, or voluntarily before apply |
 | `/sp:new` | Start a change scaffold | Expanded mode, explicit artifact control |
 | `/sp:continue` | Create next artifact | Expanded mode, step-by-step artifact creation |
 | `/sp:ff` | Create all planning artifacts | Expanded mode, clear scope |
@@ -474,6 +480,7 @@ For full command details and options, see [Commands](commands.md).
 | `/sp:verify` | Validate implementation | Expanded mode, before archiving |
 | `/sp:simplify` | Behavior-preserving cleanup | Expanded mode or apply final gate |
 | `/sp:design-verify` | Runtime visual conformance | Expanded mode or apply final gate |
+| `/sp:shape-review` | Surface, Boundaries, Model, Composition | Optional after apply; does not block archive |
 | `/sp:sync` | Merge delta specs | Expanded mode, optional |
 | `/sp:archive` | Complete the change | All work finished |
 | `/sp:bulk-archive` | Archive multiple changes | Expanded mode, parallel work |

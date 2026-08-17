@@ -94,6 +94,10 @@ const WORKFLOW_PROMPT_META: Record<string, WorkflowPromptMeta> = {
     name: 'Design verify',
     description: 'Verify runtime UI conformance for a change',
   },
+  'shape-review': {
+    name: 'Shape review',
+    description: 'Review Surface, Boundaries, Model, and Composition for a change',
+  },
   onboard: {
     name: 'Onboard',
     description: 'Guided onboarding flow for Superpowers',

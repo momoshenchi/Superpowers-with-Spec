@@ -75,6 +75,7 @@ const WORKFLOW_TO_SKILL_DIR: Record<string, string> = {
   'verify': 'superpowers-verify-change',
   'simplify': 'superpowers-simplify',
   'design-verify': 'superpowers-design-verify',
+  'shape-review': 'superpowers-shape-review',
   'onboard': 'superpowers-onboard',
   'propose': 'superpowers-propose',
 };

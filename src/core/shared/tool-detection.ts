@@ -24,6 +24,7 @@ export const SKILL_NAMES = [
   'superpowers-verify-change',
   'superpowers-simplify',
   'superpowers-design-verify',
+  'superpowers-shape-review',
   'superpowers-onboard',
   'superpowers-propose',
 ] as const;
@@ -46,6 +47,7 @@ export const COMMAND_IDS = [
   'verify',
   'simplify',
   'design-verify',
+  'shape-review',
   'onboard',
   'propose',
 ] as const;

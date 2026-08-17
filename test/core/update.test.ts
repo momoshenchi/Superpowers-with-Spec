@@ -1534,7 +1534,7 @@ More user content after markers.
         featureFlags: {},
         profile: 'custom',
         delivery: 'both',
-        workflows: ['explore', 'new', 'simplify', 'design-verify'],
+        workflows: ['explore', 'new', 'simplify', 'design-verify', 'shape-review'],
       });
 
       // Set up a configured tool
@@ -1557,10 +1557,14 @@ More user content after markers.
       expect(await FileSystemUtils.fileExists(
         path.join(skillsDir, 'superpowers-design-verify', 'SKILL.md')
       )).toBe(true);
+      expect(await FileSystemUtils.fileExists(
+        path.join(skillsDir, 'superpowers-shape-review', 'SKILL.md')
+      )).toBe(true);
 
       const commandsDir = path.join(testDir, '.claude', 'commands', 'sp');
       expect(await FileSystemUtils.fileExists(path.join(commandsDir, 'simplify.md'))).toBe(true);
       expect(await FileSystemUtils.fileExists(path.join(commandsDir, 'design-verify.md'))).toBe(true);
+      expect(await FileSystemUtils.fileExists(path.join(commandsDir, 'shape-review.md'))).toBe(true);
 
       // Should NOT create non-profile skills
       expect(await FileSystemUtils.fileExists(

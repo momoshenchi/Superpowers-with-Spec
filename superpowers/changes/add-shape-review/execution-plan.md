@@ -178,3 +178,17 @@ None.
 - Docs distinction → Unit 3.
 
 No TBD/TODO placeholders. No fifth gate. No core install.
+
+## Implementation Notes
+
+### 1. Shape-review workflow surface and registries
+
+Added `shape-review.ts` with `SHAPE_REVIEW_CONTRACT` and `SHAPE_REVIEW_APPLY_HANDOFF`. Registered `shape-review` next to `design-verify` in every explicit ID map; `CORE_WORKFLOWS` remains propose/explore/review/apply/archive. Handoff omits per-angle checklist bullets.
+
+### 2. Apply invitation and embedded contract
+
+Both apply variants now print the archive + optional shape-review invitation, keep a four-row gate table, omit the invitation from pause output, and concatenate `SHAPE_REVIEW_APPLY_HANDOFF` so a core-profile same-session accept can run without the standalone command.
+
+### 3. Documentation and integration
+
+Docs list core as propose/explore/review/apply/archive and add `shape-review` only to custom lists. Parity hashes updated for apply and the new shape-review templates only. Full suite: build, lint, 78 files / 1460 tests passed.

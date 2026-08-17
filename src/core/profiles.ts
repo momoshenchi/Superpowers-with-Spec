@@ -30,6 +30,7 @@ export const ALL_WORKFLOWS = [
   'verify',
   'simplify',
   'design-verify',
+  'shape-review',
   'onboard',
 ] as const;
 

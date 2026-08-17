@@ -6,6 +6,7 @@
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
 import { getCanonicalNonVisualSuiteInstructions, getFinalQualityGateInstructions, getManualCoverageInstructions } from './final-quality-gates.js';
+import { SHAPE_REVIEW_APPLY_HANDOFF } from './shape-review.js';
 
 export function getApplyChangeSkillTemplate(): SkillTemplate {
   return {
@@ -115,7 +116,7 @@ ${getFinalQualityGateInstructions()}
    - Tasks completed this session
    - Overall progress: "N/M tasks complete"
    - Test Hardening status separately from implementation progress
-   - If all tasks, Test Hardening, and every applicable final quality gate are done: show the four-gate outcome/evidence summary below, then suggest archive
+   - If all tasks, Test Hardening, and every applicable final quality gate are done: show the four-gate outcome/evidence summary below, then suggest archive and optional shape-review
    - If paused: explain why and wait for guidance
 
 **Output During Implementation**
@@ -161,7 +162,10 @@ Working on task 4/7: <task description>
 | \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, Manual Coverage disposition> |
 | \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |
 
-Implementation, Test Hardening, and every applicable final quality gate are complete. You can archive this change with \`/sp:archive\`.
+Implementation, Test Hardening, and every applicable final quality gate are complete.
+You can archive this change with \`/sp:archive\`.
+Optional: review shape with \`/sp:shape-review\` (does not block archive).
+If that command is not installed, say you want a shape review in this conversation.
 \`\`\`
 
 **Output On Pause (Issue Encountered)**
@@ -212,7 +216,7 @@ This skill supports the "actions on a change" model:
 
 - **Can be invoked anytime**: Before all artifacts are done (if tasks exist), after partial implementation, interleaved with other actions
 - **Allows artifact updates**: If implementation reveals design issues, suggest updating artifacts - not phase-locked, work fluidly
-
+${SHAPE_REVIEW_APPLY_HANDOFF}
 `,
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
@@ -327,7 +331,7 @@ ${getFinalQualityGateInstructions()}
    - Tasks completed this session
    - Overall progress: "N/M tasks complete"
    - Test Hardening status separately from implementation progress
-   - If all tasks, Test Hardening, and every applicable final quality gate are done: show the four-gate outcome/evidence summary below, then suggest archive
+   - If all tasks, Test Hardening, and every applicable final quality gate are done: show the four-gate outcome/evidence summary below, then suggest archive and optional shape-review
    - If paused: explain why and wait for guidance
 
 **Output During Implementation**
@@ -373,7 +377,10 @@ Working on task 4/7: <task description>
 | \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, Manual Coverage disposition> |
 | \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |
 
-Implementation, Test Hardening, and every applicable final quality gate are complete. You can archive this change with \`/sp:archive\`.
+Implementation, Test Hardening, and every applicable final quality gate are complete.
+You can archive this change with \`/sp:archive\`.
+Optional: review shape with \`/sp:shape-review\` (does not block archive).
+If that command is not installed, say you want a shape review in this conversation.
 \`\`\`
 
 **Output On Pause (Issue Encountered)**
@@ -421,6 +428,7 @@ What would you like to do?
 This skill supports the "actions on a change" model:
 
 - **Can be invoked anytime**: Before all artifacts are done (if tasks exist), after partial implementation, interleaved with other actions
-- **Allows artifact updates**: If implementation reveals design issues, suggest updating artifacts - not phase-locked, work fluidly`
+- **Allows artifact updates**: If implementation reveals design issues, suggest updating artifacts - not phase-locked, work fluidly
+${SHAPE_REVIEW_APPLY_HANDOFF}`
   };
 }

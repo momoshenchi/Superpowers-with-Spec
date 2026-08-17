@@ -8,9 +8,9 @@ import {
 
 describe('skill-generation', () => {
   describe('getSkillTemplates', () => {
-    it('should return all 14 skill templates', () => {
+    it('should return all 15 skill templates', () => {
       const templates = getSkillTemplates();
-      expect(templates).toHaveLength(14);
+      expect(templates).toHaveLength(15);
     });
 
     it('should have unique directory names', () => {
@@ -35,6 +35,7 @@ describe('skill-generation', () => {
       expect(dirNames).toContain('superpowers-verify-change');
       expect(dirNames).toContain('superpowers-simplify');
       expect(dirNames).toContain('superpowers-design-verify');
+      expect(dirNames).toContain('superpowers-shape-review');
       expect(dirNames).not.toContain('superpowers-code-review');
       expect(dirNames).toContain('superpowers-onboard');
       expect(dirNames).toContain('superpowers-propose');
@@ -90,6 +91,15 @@ describe('skill-generation', () => {
       expect(filtered[0].dirName).toBe('superpowers-propose');
     });
 
+    it('should omit shape-review from a core filter and emit it when selected', () => {
+      const core = getSkillTemplates(['propose', 'explore', 'review', 'apply', 'archive']);
+      expect(core.map((entry) => entry.workflowId)).not.toContain('shape-review');
+      const only = getSkillTemplates(['shape-review']);
+      expect(only).toHaveLength(1);
+      expect(only[0].dirName).toBe('superpowers-shape-review');
+      expect(only[0].workflowId).toBe('shape-review');
+    });
+
     it('should emit the adaptive Propose interview contract in the generated skill', () => {
       const [propose] = getSkillTemplates(['propose']);
       const generated = generateSkillContent(propose.template, 'TEST-VERSION');
@@ -102,9 +112,9 @@ describe('skill-generation', () => {
   });
 
   describe('getCommandTemplates', () => {
-    it('should return all 14 command templates', () => {
+    it('should return all 15 command templates', () => {
       const templates = getCommandTemplates();
-      expect(templates).toHaveLength(14);
+      expect(templates).toHaveLength(15);
     });
 
     it('should have unique IDs', () => {
@@ -129,6 +139,7 @@ describe('skill-generation', () => {
       expect(ids).toContain('verify');
       expect(ids).toContain('simplify');
       expect(ids).toContain('design-verify');
+      expect(ids).toContain('shape-review');
       expect(ids).not.toContain('code-review');
       expect(ids).toContain('onboard');
       expect(ids).toContain('propose');
@@ -147,6 +158,14 @@ describe('skill-generation', () => {
       expect(ids).not.toContain('ff');
     });
 
+    it('should omit shape-review from a core command filter and emit it when selected', () => {
+      const core = getCommandTemplates(['propose', 'explore', 'review', 'apply', 'archive']);
+      expect(core.map((entry) => entry.id)).not.toContain('shape-review');
+      const only = getCommandTemplates(['shape-review']);
+      expect(only).toHaveLength(1);
+      expect(only[0].id).toBe('shape-review');
+    });
+
     it('should return all templates when filter is undefined', () => {
       const all = getCommandTemplates();
       const noFilter = getCommandTemplates(undefined);
@@ -160,9 +179,9 @@ describe('skill-generation', () => {
   });
 
   describe('getCommandContents', () => {
-    it('should return all 14 command contents', () => {
+    it('should return all 15 command contents', () => {
       const contents = getCommandContents();
-      expect(contents).toHaveLength(14);
+      expect(contents).toHaveLength(15);
     });
 
     it('should have valid content structure', () => {

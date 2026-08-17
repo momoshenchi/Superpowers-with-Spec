@@ -125,9 +125,8 @@ The five steps below are task-level execution detail, not separate subagent assi
 
 1. **Step 1: Read current context-churn and promotion rules** — Keep the two-mode model, workload rubric, Proposal/Dispatch Unit boundary, and artifact guidance unchanged.
 2. **Step 2: Run focused tests** — Run `npm test -- test/core/debug-investigation-checkpoint-guidance.test.ts test/core/using-superpowers-guidance.test.ts`; confirm the new diagnostic assertions fail before editing.
-3. **Step 3: Implement the minimum guidance** — State that repeated broad diagnostic rereads require a checkpoint before further inspection; distinguish a read-only fresh-context handoff from promoting implementation work to a Proposal; direct agents to preserve evidence and not silently restart broad scans.
-4. **Step 4: Run focused verification** — Run both focused test files and expect existing work-mode assertions plus the new context-churn assertions to pass.
-5. **Step 5: Self-review and handoff** — Check that this addition does not create a third work mode or a mandatory new Proposal artifact; report the exact promotion/checkpoint boundary.
+4. **Step 3: Run focused verification** — Run both focused test files and expect existing work-mode assertions plus the new context-churn assertions to pass.
+5. **Step 4: Self-review and handoff** — Check that this addition does not create a third work mode or a mandatory new Proposal artifact; report the exact promotion/checkpoint boundary.
 
 ### 3. Cross-tool parity and verification
 

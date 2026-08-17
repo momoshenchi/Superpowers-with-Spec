@@ -24,6 +24,7 @@ export const WORKFLOW_TO_SKILL_DIR: Record<WorkflowId, string> = {
   'verify': 'superpowers-verify-change',
   'simplify': 'superpowers-simplify',
   'design-verify': 'superpowers-design-verify',
+  'shape-review': 'superpowers-shape-review',
   'onboard': 'superpowers-onboard',
   'propose': 'superpowers-propose',
 };

@@ -21,6 +21,7 @@ A user-requested plan does not create a third lifecycle. Estimate implementation
 |---------|---------|
 | `/sp:propose` | Create a change and generate planning artifacts in one step |
 | `/sp:explore` | Think through ideas before committing to a change |
+| `/sp:review` | Review proposal artifacts before implementation |
 | `/sp:apply` | Implement tasks and complete Test Hardening |
 | `/sp:archive` | Archive a completed change |
 
@@ -34,6 +35,7 @@ A user-requested plan does not create a third lifecycle. Estimate implementation
 | `/sp:verify` | Validate implementation matches artifacts |
 | `/sp:simplify` | Two-phase cleanup review and safe fixes |
 | `/sp:design-verify` | Runtime UI conformance to repository `DESIGN.md` |
+| `/sp:shape-review` | Optional read-only Surface / Boundaries / Model / Composition review |
 | `/sp:sync` | Merge delta specs into main specs |
 | `/sp:bulk-archive` | Archive multiple changes at once |
 | `/sp:onboard` | Guided tutorial through the complete workflow |
@@ -134,6 +136,18 @@ AI:  Ready when you are. Run /sp:propose add-jwt-auth to begin.
 - No artifacts are created during exploration
 - Good for comparing multiple approaches before deciding
 - Can read files and search the codebase
+
+---
+
+### `/sp:review`
+
+Review a complete Superpowers proposal before implementation. This is a core workflow. `/sp:review` is not an abbreviation of `/sp:shape-review`.
+
+```text
+/sp:review [change-name]
+```
+
+`/sp:propose` already runs this after required artifacts exist. Users may invoke it later. It assesses proposal artifacts for completeness and coherence. It does not review implemented code shape; that is `/sp:shape-review`.
 
 ---
 
@@ -336,6 +350,7 @@ AI:  Implementing add-dark-mode...
 - Final apply completion also requires Test Hardening in `test-plan.md`; task completion alone is not the archive signal
 - Test Hardening runs the repository's complete canonical non-visual suite. Apply then delegates final code review, `/sp:simplify`, `/sp:verify`, and `/sp:design-verify` in that order to fresh, distinct subagents, integrating each result before the next; standalone workflow selection never disables those gates.
 - Final-gate retries are bounded and local: `P0` equals Verify `CRITICAL`, while `P1`/`P2` are repaired in the current review round without forcing another round. A `BLOCKER` is a missing prerequisite or external decision, not a priority level; it pauses without consuming an attempt. Code review, Verify, and Design verify each stop with `failed` if round four still fails. Simplify has no retry loop and hands off to Verify round one.
+- After every applicable final quality gate passes, apply invites `/sp:archive` and optionally `/sp:shape-review`. Shape-review is not a fifth gate and does not block archive. If that command is not installed, say you want a shape review in this conversation.
 
 `test-plan.md` keeps execution requirements separate from intentional gaps. In `## Manual Coverage`, every applicable row specifies its normal entry point, method/environment (`programmatic-browser` such as Playwright/Cypress, `agent-browser` for agent-controlled human-like UI, or other methods), status, and inspectable evidence. Honor declared methods; when undeclared, apply risk layering (prefer programmatic for low-risk/happy paths with a stable script; require agent-browser for high-risk or interaction-heavy paths). A change's Critical Path may require both browser modes with overlapping coverage, and any `agent-browser` run must exercise that Critical Path. Test Hardening executes applicable non-`agent-browser` rows after the canonical non-visual preflight; `agent-browser` rows stay `planned` with evidence noting deferral to Verify and do not block Hardening completion. Hardening cannot complete while a non-`agent-browser` row is blank, placeholder, `planned`, failed, or blocked; `not applicable` must be supported by concrete scope evidence. `## Deferred Coverage` contains the gap, deferral reason, and safer follow-up, but never counts as executed evidence.
 
@@ -434,6 +449,20 @@ Verify a changed runtime UI against the repository's visual `DESIGN.md`.
 ```
 
 The workflow detects UI scope, uses a browser or equivalent controlled driver to inspect affected routes/states, and reports `passed`, `failed`, `blocked`, or `not applicable`. For UI work without a visual design source, formal conformance is unassessable; source inspection alone cannot produce a pass. This is separate from functional `/sp:verify`. Inside apply, repairable visual failures retry only Design verify with a fresh worker, up to four numbered rounds; a `BLOCKER` pauses without using a round.
+
+---
+
+### `/sp:shape-review`
+
+Optional read-only review of Surface, Boundaries, Model, and Composition. Produces suggestions. It is not `/sp:review`, `/sp:simplify`, or `/sp:design-verify`. `/sp:review` is not an abbreviation of this command.
+
+```text
+/sp:shape-review [change-name]
+```
+
+This command is part of the expanded workflow set (not included in the default `core` profile). After successful apply, `/sp:apply` still invites it. Saying you want a shape review in that conversation is enough if the slash command is not installed. Shape-review does not block archive and is not a fifth final quality gate.
+
+It always runs all four angles. A missing layer is per-angle `not applicable` with evidence. The worker stays read-only during the review pass. Behavior-preserving cleanup is classified `simplify` and routed to `/sp:simplify`. Structural suggestions accepted in the same post-apply conversation expand the current change in place and withdraw archive until gates re-run; if specs or design change, run `/sp:review` before implementing the expansion. A new session creates a new change with the prior change as prerequisite.
 
 ---
 

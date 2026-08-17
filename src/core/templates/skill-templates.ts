@@ -17,6 +17,12 @@ export { getBulkArchiveChangeSkillTemplate, getSpBulkArchiveCommandTemplate } fr
 export { getVerifyChangeSkillTemplate, getSpVerifyCommandTemplate } from './workflows/verify-change.js';
 export { getSimplifySkillTemplate, getSpSimplifyCommandTemplate } from './workflows/simplify.js';
 export { getDesignVerifySkillTemplate, getSpDesignVerifyCommandTemplate } from './workflows/design-verify.js';
+export {
+  getShapeReviewSkillTemplate,
+  getSpShapeReviewCommandTemplate,
+  SHAPE_REVIEW_CONTRACT,
+  SHAPE_REVIEW_APPLY_HANDOFF,
+} from './workflows/shape-review.js';
 export { getOnboardSkillTemplate, getSpOnboardCommandTemplate } from './workflows/onboard.js';
 export { getSpProposeSkillTemplate, getSpProposeCommandTemplate } from './workflows/propose.js';
 export { getChangeReviewSkillTemplate, getSpReviewCommandTemplate } from './workflows/change-review.js';
