@@ -34,6 +34,7 @@ This change has no runtime UI. Browser Manual Coverage is `not applicable` with 
 | Apply invitation: Failed or paused apply does not invite | unit | planned | pause/issue template omits invitation |
 | Same-session without command: Core profile user accepts invitation | unit | planned | apply embed present even when workflow deselected |
 | Same-session without command: Standalone command remains optional | unit | planned | core omit + apply still has invitation |
+| Embedded apply contract is runnable without the standalone skill | unit | planned | apply text contains handoff minimums, not a skill pointer |
 | Reopen apply: Archive invitation withdrawn after expansion | unit | planned | apply routing prose |
 | Reopen apply: Implementation changes after expansion | unit | planned | re-run FQG wording |
 | Reopen apply: In-place expansion that changes specs or design | unit | planned | `/sp:review` before implementing expansion |

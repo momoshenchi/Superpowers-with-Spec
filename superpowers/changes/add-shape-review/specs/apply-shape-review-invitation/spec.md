@@ -36,6 +36,13 @@ After implementation, Test Hardening, and every applicable final quality gate ar
 - **WHEN** a profile does not include workflow ID `shape-review`
 - **THEN** init and update SHALL still omit the standalone skill and command
 - **AND** `/sp:apply` SHALL still include the completion invitation and embedded contract
+- **AND** that embedded contract SHALL be the inlined handoff text in the generated apply skill/command, not a pointer to an uninstalled skill
+
+#### Scenario: Embedded apply contract is runnable without the standalone skill
+- **WHEN** a core-profile user accepts the invitation
+- **THEN** the generated apply instructions SHALL already contain enough procedure to run the review: the four angle names, always-run plus per-angle `not applicable` with evidence, read-only review, report schema, session routing, and archive withdrawal
+- **AND** those instructions SHALL NOT require reading `superpowers-shape-review` or `/sp:shape-review`
+- **AND** they SHALL NOT include the per-angle checklist bullets reserved for the standalone full contract
 
 ### Requirement: Same-Session Accepted Suggestions SHALL Reopen Apply Rather Than Archive
 If the user accepts structural shape-review suggestions in the same conversation after apply completion, `/sp:apply` SHALL treat the change as no longer complete. The agent SHALL expand the current change in place, withhold archive, continue implementation of the new work, and re-run applicable final quality gates after that implementation changes.

@@ -167,9 +167,21 @@ propose → review artifacts → apply → FQG
 | B. Standalone skill only; apply tells the user to install it | None in apply | Invitation is dead in core |
 | C. Duplicate the full workflow into apply prose | High | Works, but two sources of truth |
 
-**Choice:** A. Put the review procedure, four-angle checklists, report schema, and session-routing rules in `shape-review.ts`. Export two strings: the full contract for the skill/command, and a short invitation-plus-handoff fragment for `apply-change.ts`. Apply imports the short fragment and does not copy the four-angle checklists. This is the same layering `final-quality-gates.ts` uses.
+**Choice:** A. Put both the full contract and the apply handoff in `shape-review.ts`, then concatenate those strings into the generated templates at generation time. The generated `/sp:apply` skill/command Markdown MUST contain the handoff text itself. It MUST NOT point at `shape-review.ts`, an uninstalled `superpowers-shape-review` skill, or a missing `/sp:shape-review` command.
 
-**Rationale:** B contradicts the locked core-profile invitation. C will desync the four angles the first time one template is edited. A keeps one procedure, while apply still owns whether and when to mention it. Apply must not import the four-gate runner; shape-review stays off the gate list.
+**Rationale:** B contradicts the locked core-profile invitation. C duplicates the per-angle checklist bullets and will drift. A wins because TypeScript exports are inlined when templates are generated, which is how `final-quality-gates.ts` already feeds apply. A one-line “run the shape-review skill” in apply would be dead in core, so the handoff fragment has to be a runnable minimum, not a pointer.
+
+**Handoff fragment minimums (`SHAPE_REVIEW_APPLY_HANDOFF`, inlined into both apply variants):**
+
+- Invitation copy, including host-neutral accept (“say you want a shape review in this conversation”).
+- Do not auto-run; do not add a fifth gate; do not block archive by a `passed` shape-review.
+- Scope resolution (change name from the just-completed apply, dirty-tree pause, no whole-tree scan).
+- Four angle **names**: Surface, Boundaries, Model, Composition. Always run all four; missing layer is per-angle `not applicable` plus evidence.
+- Read-only during the review pass.
+- Classification `simplify` | `structural` | `skip`. The summarizing pass, not fan-out workers, assigns `structural` destination from **this conversation** using the session rule (same-session wins; slash after apply is still same-session).
+- Report schema, archive withdrawal on in-place expansion, `/sp:review` before implementing spec/design expansion, FQG re-run after implementation changes, fail-closed new change when session membership is uncertain.
+
+**Full contract only (`SHAPE_REVIEW_CONTRACT`):** the per-angle checklist bullets (what Surface/Boundaries/Model/Composition inspect). Apply MUST NOT copy those bullets. A core-profile same-session review uses angle names plus the handoff minimums; a standalone `/sp:shape-review` uses the full checklists.
 
 **Angle checklists (normative for the full contract):**
 

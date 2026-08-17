@@ -65,6 +65,7 @@ A shape-review finding SHALL be classified as `simplify`, `structural`, or `skip
 - **WHEN** a finding would change a public surface, data contract, module boundary, type/state model, or composition seam
 - **THEN** the report SHALL classify it `structural`
 - **AND** destination SHALL be `expand-current-change` when this conversation just completed apply for that change, otherwise `new-proposal`
+- **AND** that destination SHALL be filled by the summarizing pass, not by a fan-out angle worker
 - **AND** the agent SHALL NOT apply it as simplify cleanup
 
 #### Scenario: Finding is a false positive or out of scope
@@ -109,7 +110,8 @@ The workflow SHALL finish with a stable report containing its `passed`, `failed`
 
 #### Scenario: Review completes with suggestions
 - **WHEN** one or more structural suggestions are reported
-- **THEN** the report SHALL list each finding's angle, location, summary, and destination
+- **THEN** the report SHALL list each finding's angle, location (`file:line` or symbol), summary, cost, classification, and destination
+- **AND** destination for `structural` findings SHALL be assigned by the summarizing pass from this conversation's session rule, not by the four angle subagents
 - **AND** Outcome SHALL be `passed`
 - **AND** that `passed` result SHALL NOT by itself prevent an archive recommendation
 
