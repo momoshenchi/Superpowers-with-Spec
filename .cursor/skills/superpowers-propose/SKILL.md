@@ -6,7 +6,7 @@ compatibility: Requires superpowers CLI.
 metadata:
   author: superpowers
   version: "1.0"
-  generatedBy: "1.0.8"
+  generatedBy: "1.0.9"
 ---
 
 Propose a new change - create the change and generate all artifacts in one step.

@@ -1,6 +1,6 @@
 ---
 name: full-qa-test
-description: Use when designing comprehensive test coverage, writing comprehensive test plans or cases for features, hunting edge cases before release, or when the user asks for 无死角/全覆盖/六维测试/QA 拆解/分批覆盖/10+10+10
+description: Use when designing comprehensive test coverage, writing comprehensive test plans or cases for features, hunting edge cases before release, or when the user asks for 无死角/全覆盖/六维测试/QA 拆解
 ---
 
 # Full QA Test — 六维立体覆盖
@@ -93,7 +93,7 @@ Step N 分批进度:
 
 ## Progress Tracker（必须复制并勾选）
 
-开始前把下面清单贴到回复中，**完成一维勾一项，再进入下一维**：
+**每个step中， 完成一维勾一项，再进入下一维**：
 
 ```
 六维覆盖进度:
@@ -130,8 +130,6 @@ Step N 分批进度:
 
 **目标：** 做对的事情，防需求漏测。
 
-**分批覆盖：** 遵循「10→10→10 分批覆盖法」（本步最多 30 条）。
-
 **逐步动作：**
 1. 列出正向主流程（Happy Path）价值链
 2. 列出分支 / 异常流（取消、失败、中断后重入）
@@ -147,8 +145,6 @@ Step N 分批进度:
 ## Step 2 — 代码与分支覆盖
 
 **目标：** 白盒验证控制流，防未执行代码藏 Bug。
-
-**分批覆盖：** 遵循「10→10→10 分批覆盖法」（本步最多 30 条）。
 
 **逐步动作：**
 1. 标出关键路径上的分支点（if/else、switch、早返回、catch）
@@ -193,8 +189,6 @@ Step N 分批进度:
 
 **目标：** 防特殊数据崩溃与注入。
 
-**分批覆盖：** 遵循「10→10→10 分批覆盖法」（本步最多 30 条）。
-
 **逐步动作：**
 1. 对每个输入参数做等价类 + BVA（N-1, N, N+1、空、Null、超长）
 2. 多参数交互用 pairwise / 正交，避免笛卡尔爆炸
@@ -209,8 +203,6 @@ Step N 分批进度:
 ## Step 4 — 状态变迁与时序覆盖
 
 **目标：** 防非法状态跳跃、竞态、超时重试导致混乱。
-
-**分批覆盖：** 遵循「10→10→10 分批覆盖法」（本步最多 30 条）。
 
 **逐步动作：**
 1. 画出合法状态与转换（矩阵或列表）
@@ -228,8 +220,6 @@ Step N 分批进度:
 
 **目标：** 稳、快、安全，不只是「能跑」。
 
-**分批覆盖：** 遵循「10→10→10 分批覆盖法」（本步最多 30 条）。
-
 **逐步动作（按对象裁剪，但须显式说明跳过理由）：**
 1. 性能：峰值 / 稳态 / 容量（至少标出是否适用）
 2. 安全：水平/垂直越权、未授权访问、敏感数据脱敏
@@ -245,8 +235,6 @@ Step N 分批进度:
 ## Step 6 — 环境与上下文依赖覆盖
 
 **目标：** 防微服务「蝴蝶效应」。
-
-**分批覆盖：** 遵循「10→10→10 分批覆盖法」（本步最多 30 条）。
 
 **逐步动作：**
 1. 列出上下游依赖（HTTP / MQ / DB / 缓存 / 第三方）
@@ -286,6 +274,28 @@ Step N 分批进度:
 
 ## Step 8 — 交付输出包
 
+### 六维用例总表 — 示例（格式示范，交付时替换为 Step 0–6 实际产出）
+
+> 测试对象：`POST /api/orders/{id}/cancel`（订单取消 API；Diff 涉及 `OrderService.cancel`）
+
+| ID | 维度 | 测试目标 | 输入/前置 | 步骤 | 预期 |
+|----|------|----------|-----------|------|------|
+| TC-D1-001 | D1 | REQ-取消-01：待支付订单可取消（正向） | 订单 status=pending，归属当前用户 | 1. 登录 2. POST cancel | 200；status→cancelled；返回取消时间 |
+| TC-D1-002 | D1 | REQ-取消-02：已发货不可取消（分支） | 订单 status=shipped | 1. POST cancel | 409；code=ORDER_NOT_CANCELLABLE；status 不变 |
+| TC-D1-003 | D1 | REQ-取消-03：中断后可重试取消（异常） | pending 订单；首次 cancel 网络中断 | 1. 查 status 仍为 pending 2. 再次 POST cancel | 第二次 200；最终 cancelled；无重复退款 |
+| TC-D1-004 | D1 | 隐性：防重复提交 | 同一 pending 订单 | 200ms 内连续 POST cancel 两次 | 仅一次生效；第二次幂等或 409 |
+| TC-D2-001 | D2 | orderService.ts:cancel — status===shipped 分支 True | orderId 有效；DB status=shipped | 调用 cancel(orderId) | 早返回/抛 ORDER_NOT_CANCELLABLE；不调用 payment.refund |
+| TC-D2-002 | D2 | orderService.ts:cancel — refund 失败 catch | pending；mock refund 抛 PaymentError | 调用 cancel | 无半取消；502；status 保持 pending 或回滚 |
+| TC-D3-001 | D3 | orderId — 空串边界 | orderId="" | POST /api/orders//cancel | 404 或 400；不访问 DB |
+| TC-D3-004 | D3 | reason — 超长 BVA（max=200, N+1） | reason=201 字符 | POST cancel + body.reason | 400 字段校验失败 |
+| TC-D4-001 | D4 | pending→cancelled（合法） | status=pending | cancel | status=cancelled |
+| TC-D4-002 | D4 | shipped→cancelled（非法跳跃） | status=shipped | cancel | 拒绝；status 仍为 shipped |
+| TC-D5-001 | D5 | 安全：垂直越权 | 用户 A 订单；用户 B token | B 调用 cancel A 的 orderId | 403 FORBIDDEN |
+| TC-D5-002 | D5 | 容灾：payment 超时 | payment 延迟 30s | POST cancel | 504/超时；无半取消状态 |
+| TC-D6-001 | D6 | payment-service — refund 502 | mock payment 502 | POST cancel pending 订单 | 错误上抛；可重试；无脏数据 |
+
+### 输出格式
+
 **最终回复必须包含（按此顺序）：**
 
 1. **对象与风险摘要**（来自 Step 0）
@@ -298,80 +308,6 @@ Step N 分批进度:
 
 完成后勾选 Step 8。未完成进度清单不得声称「全覆盖完成」。
 
-### 六维用例总表 — 列合并规则
-
-Step 1–6 逐维产出后，**合并**为总表时按下列映射填写；禁止把六张分表原样粘贴，也禁止六维混在同一行：
-
-| 源维度 | 测试目标 | 输入/前置 | 步骤 | 预期 |
-|--------|----------|-----------|------|------|
-| D1 | 需求项（可附场景类型） | 用户/数据/权限等前置条件 | 原「步骤」列 | 原「预期」列 |
-| D2 | 代码锚点 + 覆盖类型 | 原「触发输入」 | 执行触发操作 | 原「预期」列 |
-| D3 | 参数 + 等价类/边界/脏数据 | 原「输入样例」 | 提交/调用该输入 | 原「预期」列 |
-| D4 | 状态/时序场景 + 合法性 | 初始状态 | 原「操作序列」 | 原「预期」列 |
-| D5 | 质量属性 + 场景 | 环境/负载/角色等前置 | 压测/注入/切换操作 | 判定标准 + 原「预期」 |
-| D6 | 依赖 + 故障类型 | 正常链路前置 | 故障注入 + 触发请求 | 期望隔离/补偿 + 原「预期」 |
-
-**ID 命名：** `TC-D{n}-{序号}`（如 `TC-D1-001`），序号在**各维度内**独立递增；P0 用例在 RTM 中标注。
-
-### 示例（格式示范，交付时替换为 Step 0–6 实际产出）
-
-> 测试对象：`POST /api/orders/{id}/cancel`（订单取消 API；Diff 涉及 `OrderService.cancel`）
-
-#### 1. 对象与风险摘要
-
-| 项 | 内容 |
-|----|------|
-| 测试对象 | `POST /api/orders/{id}/cancel` / `OrderService.cancel` |
-| 输入来源 | PRD §3.2 + `src/services/orderService.ts` Diff |
-| 风险假设 | 已发货仍可取消；支付回调与取消竞态导致双扣/双退 |
-
-#### 2. 六维用例总表
-
-| ID | 维度 | 测试目标 | 输入/前置 | 步骤 | 预期 |
-|----|------|----------|-----------|------|------|
-| TC-D1-001 | D1 | REQ-取消-01：待支付订单可取消（正向） | 订单 status=pending，归属当前用户 | 1. 登录 2. POST cancel | 200；status→cancelled；返回取消时间 |
-| TC-D1-002 | D1 | REQ-取消-02：已发货不可取消（分支） | 订单 status=shipped | 1. POST cancel | 409；code=ORDER_NOT_CANCELLABLE；status 不变 |
-| TC-D1-003 | D1 | REQ-取消-03：中断后可重试取消（异常） | pending 订单；首次 cancel 网络中断 | 1. 查 status 仍为 pending 2. 再次 POST cancel | 第二次 200；最终 cancelled；无重复退款 |
-| TC-D1-004 | D1 | 隐性：防重复提交 | 同一 pending 订单 | 200ms 内连续 POST cancel 两次 | 仅一次生效；第二次幂等或 409 |
-| TC-D2-001 | D2 | orderService.ts:cancel — status===shipped 分支 True | orderId 有效；DB status=shipped | 调用 cancel(orderId) | 早返回/抛 ORDER_NOT_CANCELLABLE；不调用 payment.refund |
-| TC-D2-002 | D2 | orderService.ts:cancel — refund 失败 catch | pending；mock refund 抛 PaymentError | 调用 cancel | 无半取消；502；status 保持 pending 或回滚 |
-| TC-D2-003 | D2 | Diff：幂等键检查 — 重复键 False 分支 | 同一 idempotencyKey | 带相同 Idempotency-Key 再 POST | 返回首次响应；refund 仅 1 次 |
-| TC-D3-001 | D3 | orderId — 空串边界 | orderId="" | POST /api/orders//cancel | 404 或 400；不访问 DB |
-| TC-D3-002 | D3 | orderId — 非法 UUID 等价类 | orderId="not-a-uuid" | POST cancel | 400 VALIDATION_ERROR |
-| TC-D3-003 | D3 | orderId — SQL 注入脏数据 | orderId="1' OR '1'='1" | POST cancel | 400；无 SQL 异常泄露 |
-| TC-D3-004 | D3 | reason — 超长 BVA（max=200, N+1） | reason=201 字符 | POST cancel + body.reason | 400 字段校验失败 |
-| TC-D4-001 | D4 | pending→cancelled（合法） | status=pending | cancel | status=cancelled |
-| TC-D4-002 | D4 | shipped→cancelled（非法跳跃） | status=shipped | cancel | 拒绝；status 仍为 shipped |
-| TC-D4-003 | D4 | 并发：双端同时 cancel | 两客户端；同一 pending 订单 | 并行 POST cancel | 仅一成功；refund 一次 |
-| TC-D4-004 | D4 | 支付回调与取消竞态 | pending；支付回调延迟 5s | 1. POST cancel 2. 模拟支付成功回调 | 最终状态一致；无双退 |
-| TC-D5-001 | D5 | 安全：垂直越权 | 用户 A 订单；用户 B token | B 调用 cancel A 的 orderId | 403 FORBIDDEN |
-| TC-D5-002 | D5 | 容灾：payment 超时 | payment 延迟 30s | POST cancel | 504/超时；无半取消状态 |
-| TC-D6-001 | D6 | payment-service — refund 502 | mock payment 502 | POST cancel pending 订单 | 错误上抛；可重试；无脏数据 |
-| TC-D6-002 | D6 | inventory-service — releaseStock 超时 | mock releaseStock 超时 | POST cancel | Saga/补偿回滚；库存最终释放 |
-| TC-D6-003 | D6 | Redis 缓存未命中 | 订单详情 cache miss | POST cancel | 回源 DB 正常取消；不 500 |
-
-#### 3. RTM（节选）
-
-| 需求项 | 用例 ID |
-|--------|---------|
-| REQ-取消-01 待支付可取消 | TC-D1-001, TC-D4-001, TC-D2-001(反向) |
-| REQ-取消-02 已发货不可取消 | TC-D1-002, TC-D2-001, TC-D4-002 |
-| REQ-取消-03 中断可重试 | TC-D1-003, TC-D4-004 |
-| 隐性防重复提交 | TC-D1-004, TC-D2-003, TC-D4-003 |
-
-#### 4. 自查 Checklist（节选）
-
-| 维度 | 必查项 | 覆盖? | 补充用例 ID / 说明 |
-|------|--------|-------|-------------------|
-| 功能 | 1. 正向主流程及所有分支逻辑 | [x] | TC-D1-001, TC-D1-002 |
-| 代码 | 3. Diff/关键路径分支 + 变异测试 | [ ] | 2b 延后：尚无单元测试落地 |
-| 依赖 | 8. 第三方超时/5xx 降级兜底 | [x] | TC-D5-002, TC-D6-001 |
-
-#### 5–7. 其余交付项（示意）
-
-- **自动化骨架（P0）：** `TC-D1-001` Arrange pending 订单 → Act POST cancel → Assert status=cancelled
-- **变异测试：** 延后 — Step 2 用例尚未落地为可执行测试
-- **残留风险：** 支付回调竞态（TC-D4-004）仅设计未自动化；2b 未跑
 
 ## Common Mistakes
 
