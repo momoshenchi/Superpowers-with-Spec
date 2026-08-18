@@ -8,6 +8,12 @@ import type { SkillTemplate, CommandTemplate } from '../types.js';
 import { getCanonicalNonVisualSuiteInstructions, getFinalQualityGateInstructions, getManualCoverageInstructions } from './final-quality-gates.js';
 import { SHAPE_REVIEW_APPLY_HANDOFF } from './shape-review.js';
 
+const APPLY_RUNTIME_BEFORE_CAPTURE = `6. **Runtime Before capture (predicted UI only).** Before the first implementation edit, decide whether the capture window is \`open\`. It is \`open\` only when all of: predicted UI scope; this invocation has not edited implementation yet; **UI-baseline evidence** holds. Predicted UI: a completed context artifact describes a rendered route, component, or responsive/state UI, or an owned path ends with one of \`.html\`, \`.css\`, \`.scss\`, \`.sass\`, \`.less\`, \`.vue\`, \`.svelte\`, \`.jsx\`, \`.tsx\` (explicit suffix list lookup, not regex). UI-baseline evidence: the union of \`git diff --name-only <merge-base> HEAD\`, \`git diff --name-only\`, and \`git diff --name-only --cached\` contains **no paths at all**, and \`git status --porcelain\` is empty. Any dirty or committed implementation change closes the window, including template/non-suffix UI, so a resumed After is never stored as runtime Before. Reusing an existing worktree defaults to \`closed\` unless that evidence holds. If this invocation created the worktree and evidence holds, the window is \`open\`. If merge-base cannot be determined or those commands cannot be run, the window is \`closed\` (fail-closed). Non-UI predicted scope skips Before capture.
+
+When \`open\`, start or use the documented application runtime and available browser. Capture each predicted route/state: the union of routes named in design, proposal, specs, and test-plan Manual Coverage; if none are named, capture the smallest documented app entry route once and record that limitation. Write files with \`path.join(changeDir, 'attachments', 'visual-diff', 'before', fileName)\` so Markdown targets begin \`attachments/visual-diff/before/\`. Label them Before kind \`runtime\`. Do not overwrite existing files in that directory. If runtime, credentials, or browser are missing, continue implementation and do not block apply. Do not reconstruct Before with a second git worktree or \`git checkout\` of merge-base.
+
+Explained current-product images under \`attachments/\` are Before kind \`illustrative\` only when the referencing artifact names source, route or state, and that the file is illustrative. Unexplained images are not Before.`;
+
 export function getApplyChangeSkillTemplate(): SkillTemplate {
   return {
     name: 'superpowers-apply-change',
@@ -71,7 +77,9 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Remaining tasks overview
    - Dynamic instruction from CLI
 
-6. **Implement tasks (loop until done or blocked)**
+${APPLY_RUNTIME_BEFORE_CAPTURE}
+
+7. **Implement tasks (loop until done or blocked)**
   
    In most cases, test-driven development should be used. Please refer to the \`test-driven-development\` skill.
 
@@ -89,7 +97,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    - Error or blocker encountered → report and wait for guidance
    - User interrupts
 
-7. **Run Test Hardening after implementation tasks are complete**
+8. **Run Test Hardening after implementation tasks are complete**
 
    For spec-driven changes with \`test-plan.md\`:
    - Task completion transitions into Test Hardening; it is not apply completion by itself.
@@ -106,11 +114,11 @@ ${getCanonicalNonVisualSuiteInstructions('Test Hardening')}
 
 ${getManualCoverageInstructions('Test Hardening')}
 
-8. **Run final quality gates**
+9. **Run final quality gates**
 
 ${getFinalQualityGateInstructions()}
 
-9. **On completion or pause, show status**
+10. **On completion or pause, show status**
 
    Display:
    - Tasks completed this session
@@ -288,7 +296,9 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
    - Remaining tasks overview
    - Dynamic instruction from CLI
 
-6. **Implement tasks (loop until done or blocked)**
+${APPLY_RUNTIME_BEFORE_CAPTURE}
+
+7. **Implement tasks (loop until done or blocked)**
 
    For each pending task:
    - Show which task is being worked on
@@ -304,7 +314,7 @@ export function getSpApplyCommandTemplate(): CommandTemplate {
    - Error or blocker encountered → report and wait for guidance
    - User interrupts
 
-7. **Run Test Hardening after implementation tasks are complete**
+8. **Run Test Hardening after implementation tasks are complete**
 
    For spec-driven changes with \`test-plan.md\`:
    - Task completion transitions into Test Hardening; it is not apply completion by itself.
@@ -321,11 +331,11 @@ ${getCanonicalNonVisualSuiteInstructions('Test Hardening')}
 
 ${getManualCoverageInstructions('Test Hardening')}
 
-8. **Run final quality gates**
+9. **Run final quality gates**
 
 ${getFinalQualityGateInstructions()}
 
-9. **On completion or pause, show status**
+10. **On completion or pause, show status**
 
    Display:
    - Tasks completed this session

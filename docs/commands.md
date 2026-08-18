@@ -448,7 +448,7 @@ Verify a changed runtime UI against the repository's visual `DESIGN.md`.
 /sp:design-verify [change-name]
 ```
 
-The workflow detects UI scope, uses a browser or equivalent controlled driver to inspect affected routes/states, and reports `passed`, `failed`, `blocked`, or `not applicable`. For UI work without a visual design source, formal conformance is unassessable; source inspection alone cannot produce a pass. This is separate from functional `/sp:verify`. Inside apply, repairable visual failures retry only Design verify with a fresh worker, up to four numbered rounds; a `BLOCKER` pauses without using a round.
+The workflow detects UI scope, uses a browser or equivalent controlled driver to inspect affected routes/states, and reports `passed`, `failed`, `blocked`, or `not applicable`. For UI work it also captures After screenshots under `attachments/visual-diff/after/`, consumes runtime Before (apply-start capture) and human status-quo images as illustrative Before when the referencing artifact names source, route or state, and that the file is illustrative, and presents a per-route visual-diff table. If Before is missing, it captures After only and records `Before: missing`; that omission does not fail, block, or prevent archive. For UI work without a visual design source, formal conformance is unassessable; source inspection alone cannot produce a pass. This is separate from functional `/sp:verify`. Inside apply, repairable visual failures retry only Design verify with a fresh worker, up to four numbered rounds; a `BLOCKER` pauses without using a round. This is not a fifth quality gate.
 
 ---
 
