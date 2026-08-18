@@ -144,6 +144,7 @@ ${finalQualityRetryInstructions}
 - **Coherence**: Look for glaring inconsistencies, don't nitpick style
 - **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
 - **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
+${VERIFY_ADVERSARIAL_HUNT_INTENT}
 
 ### Remediations
    - Probe \`superpowers/changes/<name>/remediations.md\` on the change directory even when it is absent from schema \`contextFiles\`
@@ -172,7 +173,7 @@ Use clear markdown with:
 - Specific, actionable recommendations
 - No vague suggestions like "consider reviewing"`;
 
-const verifyReportStructure = `${VERIFY_ADVERSARIAL_HUNT_INTENT}
+const verifyReportStructure = `
 
 3. **Initialize verification report structure**
 

@@ -7,11 +7,11 @@ export const VERIFY_ADVERSARIAL_HUNT_INTENT =
 
 export function getCanonicalNonVisualSuiteInstructions(stage: 'Test Hardening' | 'verify'): string {
   return `
-**Canonical non-visual test-suite preflight (${stage})**
+    **Canonical non-visual test-suite preflight (${stage})**
 
-- Discover the complete canonical non-visual suite from repository test scripts, CI configuration, testing documentation, and the active \`test-plan.md\`.
-- Record every selected command, its source of authority, and explicitly visual-only checks excluded. A convenient or partial test script is not full validation without repository evidence.
-- Run every selected command and record fresh results. If the suite is ambiguous, unavailable, cannot run, or fails, report \`blocked\` or \`failed\`; do not complete ${stage} or continue to Manual Coverage.
+    - Discover the complete canonical non-visual suite from repository test scripts, CI configuration, testing documentation, and the active \`test-plan.md\`.
+    - Record every selected command, its source of authority, and explicitly visual-only checks excluded. A convenient or partial test script is not full validation without repository evidence.
+    - Run every selected command and record fresh results. If the suite is ambiguous, unavailable, cannot run, or fails, report \`blocked\` or \`failed\`; do not complete ${stage} or continue to Manual Coverage.
 `;
 }
 
@@ -26,18 +26,18 @@ export function getManualCoverageInstructions(stage: 'Test Hardening' | 'verify'
 - When this is final-quality Verify, a Manual Coverage \`BLOCKER\` is an immediate \`blocked\` outcome and does not consume the Verify retry round; a repairable manual failure retries from Verify under the existing four-round limit.`;
 
   return `
-**Manual Coverage execution (${stage})**
+    **Manual Coverage execution (${stage})**
 
-- Read the active \`test-plan.md\` \`## Manual Coverage\` table separately from \`## Deferred Coverage\`. A Manual Coverage row is an executable check. Deferred Coverage is not execution evidence and must not be reported as passed or run.
-${stageExecutionRule}
-- Do not move a required manual row into Deferred Coverage merely to avoid execution. Use \`not applicable\` only with concrete scope evidence and use Deferred Coverage only for intentionally postponed work with a specific reason and safer follow-up.
-- Treat browser and other runnable end-to-end journeys as Manual Coverage methods, not as a separate Verify gate. Declare the method in the row's Execution Method and Environment field.
-- Distinguish two browser-control modes and record which one each row uses:
-  - \`programmatic-browser\`: repository E2E runners such as Playwright/Cypress — faster, scripted, CI-friendly; evidence is command output, assertions, traces, and useful screenshots.
-  - \`agent-browser\`: agent-controlled real UI — slower, human-like clicks/keyboard/navigation; evidence is route/URL transitions, DOM or pane dumps, step actions, screenshots, and relevant console/failed-network signals. An API call or curl request is not a substitute for either interactive browser mode. Reserve \`agent-browser\` execution for Verify rather than Test Hardening.
-- Method selection: honor an explicit method declared in the Manual Coverage row. When undeclared, apply risk layering — prefer \`programmatic-browser\` for low-risk/happy paths when a stable script exists; require \`agent-browser\` for high-risk, interaction-heavy, permission, destructive, or state-transition paths. A change's Critical Path may require both modes; overlapping coverage of the same path is allowed and both rows must pass.
-- Any \`agent-browser\` execution for a change that has a Critical Path MUST exercise that Critical Path; running only peripheral journeys does not satisfy agent-browser coverage.
-- Drive destructive flows only against a documented safe target, fixture, dry run, or disposable environment. If none exists, report the affected row as \`blocked\` rather than risking real data or systems. Memory alone is not evidence. Source inspection, screenshots, and unaided human checks never substitute for executing an applicable Manual Coverage row.`;
+    - Read the active \`test-plan.md\` \`## Manual Coverage\` table separately from \`## Deferred Coverage\`. A Manual Coverage row is an executable check. Deferred Coverage is not execution evidence and must not be reported as passed or run.
+    ${stageExecutionRule}
+    - Do not move a required manual row into Deferred Coverage merely to avoid execution. Use \`not applicable\` only with concrete scope evidence and use Deferred Coverage only for intentionally postponed work with a specific reason and safer follow-up.
+    - Treat browser and other runnable end-to-end journeys as Manual Coverage methods, not as a separate Verify gate. Declare the method in the row's Execution Method and Environment field.
+    - Distinguish two browser-control modes and record which one each row uses:
+      - \`programmatic-browser\`: repository E2E runners such as Playwright/Cypress — faster, scripted, CI-friendly; evidence is command output, assertions, traces, and useful screenshots.
+      - \`agent-browser\`: agent-controlled real UI — slower, human-like clicks/keyboard/navigation; evidence is route/URL transitions, DOM or pane dumps, step actions, screenshots, and relevant console/failed-network signals. An API call or curl request is not a substitute for either interactive browser mode. Reserve \`agent-browser\` execution for Verify rather than Test Hardening.
+    - Method selection: honor an explicit method declared in the Manual Coverage row. When undeclared, apply risk layering — prefer \`programmatic-browser\` for low-risk/happy paths when a stable script exists; require \`agent-browser\` for high-risk, interaction-heavy, permission, destructive, or state-transition paths. A change's Critical Path may require both modes; overlapping coverage of the same path is allowed and both rows must pass.
+    - Any \`agent-browser\` execution for a change that has a Critical Path MUST exercise that Critical Path; running only peripheral journeys does not satisfy agent-browser coverage.
+    - Drive destructive flows only against a documented safe target, fixture, dry run, or disposable environment. If none exists, report the affected row as \`blocked\` rather than risking real data or systems. Memory alone is not evidence. Source inspection, screenshots, and unaided human checks never substitute for executing an applicable Manual Coverage row.`;
 }
 
 export function getFinalQualityGateInstructions(): string {
