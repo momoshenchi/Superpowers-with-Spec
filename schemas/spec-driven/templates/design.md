@@ -50,7 +50,20 @@
      Do not present a model-inferred result as a user Choice.
      After the choice, add implementable detail under this heading:
      mapping rules, fail-closed paths, ownership, and a worked example.
-     Authors MAY add extra subsections. Do not add required extra headings. -->
+     Authors MAY add extra subsections. Do not add required extra headings.
+
+     Closed implication scan (behavioral changes): for each dimension
+     record a derived rule or a short N/A that states why it does not
+     apply. Local helpers MAY use one short N/A for the whole scan.
+     Dimensions: Actor, permission, and ownership; Empty, deny, error,
+     and fail-closed behavior; Lifecycle: create, update, cancel, retry,
+     and idempotency; Compatibility and migration; Data shape and
+     contracts; Important product-direction forks implied by the
+     confirmed goal. Label items as agent-owned / derived from the
+     confirmed direction. Do not use **User selection:** for them.
+     Write derived rules into existing ## Decisions, ## Contracts, and
+     ## Invariants as they apply. Do not add a displayed Derived
+     implications heading. -->
 
 ### 1. <!-- User-confirmed decision (delete this section if the user did not choose among options) -->
 
@@ -88,7 +101,10 @@
      N/A — no API/state/error surface change
      When a surface changes, include implementable detail (mapping rules,
      a worked example) under these headings. Authors MAY add extra subsections.
-     Do not add required extra headings. -->
+     Do not add required extra headings.
+     Place closed-scan data-shape, empty/deny/error, and contract rules
+     here when they belong. Do not add a displayed Derived implications
+     heading. -->
 
 ### API / CLI
 
@@ -108,7 +124,9 @@
      Each non-N/A row needs a stable ID, falsifiable statement, how to falsify,
      and an owner test/check pointer. If none apply, write exactly:
      N/A — no cross-path invariants
-     Authors MAY add extra subsections. Do not add required extra headings. -->
+     Authors MAY add extra subsections. Do not add required extra headings.
+     Place closed-scan ownership, fail-closed, and other cross-path
+     derived rules here when they belong. -->
 
 | ID | Invariant | How to falsify | Owner test / check |
 |---|---|---|---|

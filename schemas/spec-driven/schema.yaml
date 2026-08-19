@@ -154,6 +154,24 @@ artifacts:
       under the existing titles (diagrams, mapping tables, worked examples)
       wherever the change needs more implementable detail.
       Do not invent other mandatory top-level sections such as Target flow.
+      Write derived rules into existing `## Decisions`, `## Contracts`, and
+      `## Invariants` as they apply. Do not add a displayed Derived implications heading.
+
+      Closed implication scan (behavioral changes): for each dimension
+      record a derived rule or a short N/A that states why it does not apply.
+      Local helpers MAY use one short N/A for the whole scan. Dimensions:
+      Actor, permission, and ownership;
+      Empty, deny, error, and fail-closed behavior;
+      Lifecycle: create, update, cancel, retry, and idempotency;
+      Compatibility and migration;
+      Data shape and contracts;
+      Important product-direction forks implied by the confirmed goal.
+      Label items as agent-owned / derived from the confirmed direction.
+      Do not present them as a user Choice. When a derived implication
+      changes observable user behavior or acceptance, record it in the
+      change's delta spec. Change-review treats a missing scan dimension
+      as WARNING and never BLOCKER solely for a derived-implication gap.
+      CLI validate MUST NOT parse scan rows.
 
       Write enough that a stranger can implement from design + specs without
       guessing control flow or field mapping. Principle-only prose is not

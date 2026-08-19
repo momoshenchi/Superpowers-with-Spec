@@ -56,6 +56,49 @@ function expectUserRealChoiceRules(content: string) {
   expect(content).toContain('Do not present a model-inferred result as a user Choice');
 }
 
+const DERIVED_SCAN_DIMENSIONS = [
+  'Actor, permission, and ownership',
+  'Empty, deny, error, and fail-closed behavior',
+  'Lifecycle: create, update, cancel, retry, and idempotency',
+  'Compatibility and migration',
+  'Data shape and contracts',
+  'Important product-direction forks implied by the confirmed goal',
+] as const;
+
+function expectDerivedImplicationScan(content: string) {
+  expect(content).not.toMatch(/^#{2,3} Derived implications/m);
+  expect(content).toContain('## Decisions');
+  expect(content).toContain('## Contracts');
+  expect(content).toContain('## Invariants');
+  for (const dimension of DERIVED_SCAN_DIMENSIONS) {
+    expect(content).toContain(dimension);
+  }
+}
+
+function expectProposeDerivedImplicationRules(content: string) {
+  expectDerivedImplicationScan(content);
+  expect(content).toContain('agent-owned derived assumptions');
+  expect(content).toContain('non-boundary derived implications');
+  expect(content).toContain('security, persisted-data, billing, or public-contract');
+  expect(content).toContain('observable user behavior');
+  expect(content).toContain('delta spec');
+  expect(content).toContain('Implementation-only mappings may stay in design.md');
+  expect(content).toContain('re-scan only dependent dimensions');
+  expect(content).not.toContain('### Derived implications');
+  expect(content.indexOf('Ask the user only when a derived implication')).toBeLessThan(
+    content.indexOf('1. Confirm and create')
+  );
+}
+
+function expectReviewDerivedImplicationRules(content: string) {
+  expectDerivedImplicationScan(content);
+  expect(content).toContain('Closed implication scan');
+  expect(content).toContain('derived-implication gap');
+  expect(content).toContain('never BLOCKER solely for a derived-implication gap');
+  expect(content).toContain('delta-spec trace');
+  expect(content).not.toMatch(/optional `### Derived implications`/i);
+}
+
 describe('change design conventions sources', () => {
   it('package design template includes Current system, Relationship, Contracts, Invariants, user-real choice, and ordered sections', () => {
     const template = fs.readFileSync(
@@ -89,6 +132,7 @@ describe('change design conventions sources', () => {
     expect(template).toContain('### 2. <!-- Agent-owned implementation decision -->');
     expect(template).not.toMatch(/Major decisions[\s\S]{0,200}at least three/i);
     expect(template).not.toContain('do not invent three fake alternatives');
+    expectDerivedImplicationScan(template);
   });
 
   it('schema design instruction requires Current system onboarding, Contracts, pointers, user-real choices, and visual DESIGN.md handling', () => {
@@ -126,6 +170,9 @@ describe('change design conventions sources', () => {
     expect(instruction).toContain('@google/design.md');
     expect(instruction).not.toContain('docs/detailed_doc');
     expect(instruction).toContain('which choices the user actually made');
+    expectDerivedImplicationScan(instruction);
+    expect(instruction).toContain('never BLOCKER solely for a derived-implication gap');
+    expect(instruction).toContain('delta spec');
   });
 
   it('schema-init design fallback stays aligned with package skeleton shape', () => {
@@ -161,6 +208,7 @@ describe('change design conventions sources', () => {
     expect(fallback).toContain('Agent-owned');
     expect(fallback).toContain('### API / CLI');
     expect(fallback).not.toMatch(/compare >=3 options/i);
+    expectDerivedImplicationScan(fallback);
   });
 
   it('explore skill and command diverge in conversation and record comparison only after user choice', () => {
@@ -203,6 +251,7 @@ describe('change design conventions sources', () => {
       expect(content).toMatch(/missing.*Invariants.*BLOCKER|Invariants.*BLOCKER/i);
       expect(content).not.toMatch(/major decisions need \*\*≥3 options\*\* recorded/i);
       expect(content).not.toContain('Do not invent A/B/C');
+      expectReviewDerivedImplicationRules(content);
     }
   });
 
@@ -227,6 +276,10 @@ describe('change design conventions sources', () => {
     expect(skill).toMatch(/可实施|工作实例|映射/);
     expect(skill).toContain('Pointer');
     expect(skill).toContain('视觉 DESIGN.md');
+    expect(skill).toMatch(/闭集.*扫描|Closed implication scan/);
+    expect(skill).toMatch(/## Decisions[\s\S]*## Contracts[\s\S]*## Invariants|写入.*Decisions/);
+    expect(skill).toMatch(/不得.*仅因.*推导.*BLOCKER|derived-implication gap/);
+    expectReviewDerivedImplicationRules(generated);
   });
 
   it('Propose records user-confirmed tables and allows agent-owned A/B/C with strict analysis', () => {
@@ -243,6 +296,7 @@ describe('change design conventions sources', () => {
       expect(content).toContain('Do not add required extra headings');
       expect(content).not.toContain('major decisions must compare at least three options');
       expect(content).not.toContain('Do not invent A/B/C');
+      expectProposeDerivedImplicationRules(content);
     }
   });
 });

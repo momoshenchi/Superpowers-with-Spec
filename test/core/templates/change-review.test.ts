@@ -122,6 +122,15 @@ describe('change review workflow templates', () => {
       expect(content).toContain('user actually chose');
       expect(content).toContain('not a finding');
       expect(content).not.toMatch(/major decisions need \*\*≥3 options\*\* recorded/i);
+      expect(content).toContain('Closed implication scan');
+      expect(content).toContain('derived-implication gap');
+      expect(content).toContain('never BLOCKER solely for a derived-implication gap');
+      expect(content).toContain('## Decisions');
+      expect(content).toContain('## Contracts');
+      expect(content).toContain('## Invariants');
+      expect(content).not.toMatch(/^#{2,3} Derived implications/m);
+      expect(content).toContain('Actor, permission, and ownership');
+      expect(content).toContain('delta-spec trace');
     }
   });
 });

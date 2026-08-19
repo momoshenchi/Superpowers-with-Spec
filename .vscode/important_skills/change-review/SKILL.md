@@ -82,7 +82,7 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 | Artifact | 适用 schema | 必须包含 | 常见缺口 |
 |----------|-------------|----------|----------|
 | `proposal.md` | `spec-driven` | Why、What Changes、Capabilities（New/Modified）、Impact | 只写动机不写范围；Impact 缺关键模块 |
-| `design.md` | 全部 | Context、**Current system**（给新工程师的行为说明，不是文件路径表）、Relationship 指针、Goals/Non-Goals、Decisions（用户真实选择才写 User selection；agent-owned 可列 A/B/C 但选择理由必须严格、详细，并含可实施细节）、**Contracts**（无表面变更可写 N/A）、**Invariants**（可写 `N/A — no cross-path invariants`）、Risks | 缺 Current system/Contracts/Invariants；Current system 只有路径表；把模型推导写成用户 Choice；agent-owned 选择理由空泛；只有原则没有映射/工作实例；“复用现有”无指针；只有方案罗列、没有 Non-Goals |
+| `design.md` | 全部 | Context、**Current system**（给新工程师的行为说明，不是文件路径表）、Relationship 指针、Goals/Non-Goals、Decisions（用户真实选择才写 User selection；agent-owned 可列 A/B/C 但选择理由必须严格、详细，并含可实施细节）、**Contracts**（无表面变更可写 N/A）、**Invariants**（可写 `N/A — no cross-path invariants`）、Risks | 缺 Current system/Contracts/Invariants；Current system 只有路径表；把模型推导写成用户 Choice；agent-owned 选择理由空泛；只有原则没有映射/工作实例；“复用现有”无指针；只有方案罗列、没有 Non-Goals；行为变更缺扫描维度（既无规则也无 N/A） |
 | `specs/<capability>/spec.md` | `spec-driven` | ADDED/MODIFIED/REMOVED Requirements；每个 Requirement 至少一个 Scenario | Requirement 无 Scenario；delta 与主 spec 关系不清 |
 | `tasks.md` | `spec-driven` | 可勾选任务清单，带具体文件路径 | 任务过大、缺验证步骤 |
 | `execution-plan.md` | `spec-driven` | File Structure、分步 Task Plan（红测→实现→验证） | 与 tasks.md 脱节；缺命令与预期结果 |
@@ -142,6 +142,14 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 - 行为变更的 design 若只有原则、没有目标流程、映射或工作实例 → WARNING；足以阻塞开工时升 BLOCKER。
 - 允许在现有 `##` 下自由加 `###`、表格、mermaid、例子。
 - 缺少自创的 Target flow 一级标题 → **不成问题**。
+
+### 推导含义扫描（Derived implications scan）
+- 行为变更须对闭集维度写出推导规则或短 N/A：Actor, permission, and ownership；Empty, deny, error, and fail-closed behavior；Lifecycle: create, update, cancel, retry, and idempotency；Compatibility and migration；Data shape and contracts；Important product-direction forks implied by the confirmed goal。
+- 可选 `### Derived implications` 小节。缺少发明的 `## Derived implications` 一级标题 → **不成问题**。
+- 本地 helper 可用一条短 N/A 覆盖整表。缺某一维度（既无规则也无 N/A）→ **WARNING**。
+- **不得仅因推导缺口升为 BLOCKER**（never BLOCKER solely for a derived-implication gap）。
+- 可观测推导未进 delta spec（missing delta-spec trace）→ **WARNING**，同样不单独阻断就绪。
+- 把推导项标成用户 Choice → 仍按 misattributed user Choice 处理。
 
 ### 视觉 DESIGN.md（UI 身份文件；不是 change design.md）
 - 英文规范名：**visual DESIGN.md**；指 google-labs design.md 思路（YAML tokens + 散文身份），**不是** change-local `design.md`、不是工程 living doc、不是 ADR。
