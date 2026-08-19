@@ -143,8 +143,9 @@ validate 通过是完整性的**必要条件**，但不是充分条件——章�
 - 允许在现有 `##` 下自由加 `###`、表格、mermaid、例子。
 - 缺少自创的 Target flow 一级标题 → **不成问题**。
 
-### 推导含义扫描（Derived implications scan）
+### 闭集推导扫描（Closed implication scan / Derived implications scan）
 - 行为变更须对闭集维度写出推导规则或短 N/A：Actor, permission, and ownership；Empty, deny, error, and fail-closed behavior；Lifecycle: create, update, cancel, retry, and idempotency；Compatibility and migration；Data shape and contracts；Important product-direction forks implied by the confirmed goal。
+- 将推导规则写入现有 `## Decisions`、`## Contracts`、`## Invariants`；不得另设显示的 Derived implications 标题。
 - 可选 `### Derived implications` 小节。缺少发明的 `## Derived implications` 一级标题 → **不成问题**。
 - 本地 helper 可用一条短 N/A 覆盖整表。缺某一维度（既无规则也无 N/A）→ **WARNING**。
 - **不得仅因推导缺口升为 BLOCKER**（never BLOCKER solely for a derived-implication gap）。

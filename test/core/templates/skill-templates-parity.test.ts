@@ -66,11 +66,11 @@ const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
   getSpSimplifyCommandTemplate: 'ea0ca542aff154ff51bbf2d6169540dc4d8d51d1d3fd1676bd9c09e1313d592a',
   getDesignVerifySkillTemplate: '28eb60dd3aa2669928239082e7f97953ddc95431625cd4c0bf60896afa7b63c4',
   getSpDesignVerifyCommandTemplate: '0e4bf1e5c3b6dbcfd4ad40d98be22ebd26d504297bd15a64d06c42c87fd64a77',
-  getSpProposeSkillTemplate: '3a94e1acd8a20f280b6d1796eb061a6145d7a77c38c9c9a1cd2c847ccdaf1276',
-  getSpProposeCommandTemplate: '0d2b1b74ee5a21e0e0ff85035d9615aa1cc06bc1e07f1f7fb79279a811c1b766',
+  getSpProposeSkillTemplate: '4e95bf978e6f921834b2c1cd07d08fb2b1bd8bef52f8032cfe5df1e5894f82be',
+  getSpProposeCommandTemplate: 'c05844333a91f10c916f7869941cd9573b234c751636fa3416d89c3ea44d4853',
   getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
-  getChangeReviewSkillTemplate: 'e892c37fac6b7d6d3efd65b5f2797dd4af24c7dc450648ebf5c401aca162a80a',
-  getSpReviewCommandTemplate: '5b3d11c405602812e21fc575a760c766ca0030406e55ab5b36be57f7b78f8b6f',
+  getChangeReviewSkillTemplate: '98a0424b35bddf89591f70cd09b7bcea6ea8cd9682e34fbc3e95d77eaab0a5f9',
+  getSpReviewCommandTemplate: '31861dff54d1df47b8ddb61415f34c2c96a590e5ee5e14681cc88ead6a509942',
   getShapeReviewSkillTemplate: 'c1bf320fb394e0a3453b099e228edc6ec0eb68a2cb1e84ade7091eff461478ce',
   getSpShapeReviewCommandTemplate: '0e14c7edb312c1689eebb3e200d26a1873159e2edea976b9644dec612f770a44',
 };
@@ -88,8 +88,8 @@ const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
   'superpowers-simplify': '85d6860d6567fe2ad1738f9f4648e074f6793c670de1aa07b2466447e293505d',
   'superpowers-design-verify': 'e0a46b034a5cc952c89893adcd417f4df1b1cf9f4fcb0f0c8607676f2258b04e',
   'superpowers-onboard': '736257835836c326f0286e0da55232799a9809a29a2ed2b63d1f9beee9bf6a34',
-  'superpowers-propose': '2675caad3f9369abf11fd3e35d6fe83c4cd526ba6053144f72bbae0916d5e02d',
-  'superpowers-change-review': '4131881cf2d6a2385abaa4ef2803ed124b95098e225fa1ea90642e0a33cedb7d',
+  'superpowers-propose': 'fc723a9cbb0cdc5f69cb78ce53fdeb82ed0913ea7b45b555db037b1a3911c528',
+  'superpowers-change-review': '86125d0c6a728041f97770eba2adcdef34d0518ee808ab146535f51cd57de3ac',
   'superpowers-shape-review': '53a75b2dd486fb0ef75d4dfce319cef649dc99111d5cd91a9cc47c7ba658eb1a',
 };
 

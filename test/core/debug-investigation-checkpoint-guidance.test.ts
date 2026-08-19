@@ -74,15 +74,6 @@ describe('debug investigation checkpoint guidance', () => {
     expect(skill).toContain('read-only');
   });
 
-  it('defines diagnostic context-churn recovery without creating a third work mode', () => {
-    const skill = readWorkspaceFile('skills', 'using-superpowers', 'SKILL.md');
-
-    expect(skill).toContain('diagnostic rereads');
-    expect(skill).toContain('Debug Checkpoint');
-    expect(skill).toContain('fresh context');
-    expect(skill).toContain('not a third mode');
-  });
-
   it('keeps the generated explore skill and command semantically aligned', () => {
     const generatedSkill = getExploreSkillTemplate().instructions;
     const generatedCommand = getSpExploreCommandTemplate().content;

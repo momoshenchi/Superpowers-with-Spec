@@ -1027,11 +1027,10 @@ Description of the requirement.
      Closed implication scan (behavioral changes): for each dimension
      record a derived rule or a short N/A that states why it does not
      apply. Local helpers MAY use one short N/A for the whole scan.
-     Dimensions: Actor, permission, and ownership; Empty, deny, error,
-     and fail-closed behavior; Lifecycle: create, update, cancel, retry,
-     and idempotency; Compatibility and migration; Data shape and
-     contracts; Important product-direction forks implied by the
-     confirmed goal. Label items as agent-owned / derived from the
+     Dimensions: Actor, permission, and ownership; Empty, deny, error, and fail-closed behavior;
+     Lifecycle: create, update, cancel, retry, and idempotency; Compatibility and migration;
+     Data shape and contracts; Important product-direction forks implied by the confirmed goal.
+     Label items as agent-owned / derived from the
      confirmed direction. Do not use **User selection:** for them.
      Write derived rules into existing ## Decisions, ## Contracts, and
      ## Invariants as they apply. Do not add a displayed Derived
