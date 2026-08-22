@@ -1,5 +1,5 @@
 import type { CommandTemplate, SkillTemplate } from '../types.js';
-import { QUALITY_GATE_OUTCOMES } from './final-quality-gates.js';
+import { QUALITY_GATE_OUTCOMES, SEVERITY_MODEL } from './final-quality-gates.js';
 
 const instructions = `Verify an active Superpowers change's runtime UI with \`/sp:design-verify\` against the repository visual design source.
 
@@ -19,6 +19,8 @@ const instructions = `Verify an active Superpowers change's runtime UI with \`/s
 
 ## Apply final-quality retries
 
+${SEVERITY_MODEL}
+
 When Design verify is delegated by \`/sp:apply\`, number every attempt
 \`Design verify round 1\` through \`Design verify round 4\`; each attempt uses
 a fresh subagent and retains distinct route, rule, and runtime evidence. Before
@@ -26,8 +28,8 @@ round four, when the coordinator repairs an accepted visual nonconformance,
 retry **only** Design
 verify with a fresh worker. Do not restart code review, Simplify, or Verify
 solely because of a design-verification retry. A missing runtime, credential,
-browser capability, visual design source, or external decision is \`BLOCKER\`:
-report \`blocked\`, name the prerequisite, pause immediately, and do not consume
+browser capability, visual design source, or external decision is \`blocked\`:
+report it, name the prerequisite, pause immediately, and do not consume
 an attempt. If round four still reports a visual nonconformance, report
 \`failed\`; do not start a fifth attempt or recommend archive. A scope-backed
 non-UI \`not applicable\` result is not a retry and remains non-blocking.

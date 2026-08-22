@@ -82,13 +82,16 @@ describe('InitCommand', () => {
 
       await initCommand.execute(testDir);
 
-      // Core profile: propose, explore, review, apply, archive
+      // Core profile: propose, explore, review, apply, archive + the three apply quality gates
       const coreSkillNames = [
         'superpowers-propose',
         'superpowers-explore',
         'superpowers-change-review',
         'superpowers-apply-change',
         'superpowers-archive-change',
+        'superpowers-verify-change',
+        'superpowers-simplify',
+        'superpowers-design-verify',
       ];
 
       for (const skillName of coreSkillNames) {
@@ -108,7 +111,7 @@ describe('InitCommand', () => {
         'superpowers-ff-change',
         'superpowers-sync-specs',
         'superpowers-bulk-archive-change',
-        'superpowers-verify-change',
+        'superpowers-shape-review',
       ];
 
       for (const skillName of nonCoreSkillNames) {
@@ -122,13 +125,16 @@ describe('InitCommand', () => {
 
       await initCommand.execute(testDir);
 
-      // Core profile: propose, explore, review, apply, archive
+      // Core profile: propose, explore, review, apply, archive + the three apply quality gates
       const coreCommandNames = [
         'sp/propose.md',
         'sp/explore.md',
         'sp/review.md',
         'sp/apply.md',
         'sp/archive.md',
+        'sp/verify.md',
+        'sp/simplify.md',
+        'sp/design-verify.md',
       ];
 
       for (const cmdName of coreCommandNames) {
@@ -143,7 +149,7 @@ describe('InitCommand', () => {
         'sp/ff.md',
         'sp/sync.md',
         'sp/bulk-archive.md',
-        'sp/verify.md',
+        'sp/shape-review.md',
       ];
 
       for (const cmdName of nonCoreCommandNames) {

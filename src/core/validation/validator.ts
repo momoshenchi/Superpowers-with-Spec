@@ -11,6 +11,7 @@ import {
   VALIDATION_MESSAGES
 } from './constants.js';
 import { parseDeltaSpec, normalizeRequirementName } from '../parsers/requirement-blocks.js';
+import { checkDeltaOperationsAgainstMainSpec } from './delta-operations.js';
 import { FileSystemUtils } from '../../utils/file-system.js';
 
 export class Validator {
@@ -114,6 +115,7 @@ export class Validator {
   async validateChangeDeltaSpecs(changeDir: string): Promise<ValidationReport> {
     const issues: ValidationIssue[] = [];
     const specsDir = path.join(changeDir, 'specs');
+    const mainSpecsDir = path.resolve(changeDir, '..', '..', 'specs');
     let totalDeltas = 0;
     const missingHeaderSpecs: string[] = [];
     const emptySectionSpecs: Array<{ path: string; sections: string[] }> = [];
@@ -245,6 +247,15 @@ export class Validator {
             issues.push({ level: 'ERROR', path: entryPath, message: `RENAMED TO collides with ADDED for "${to}"` });
           }
         }
+
+        // Cross-file check: does each operation agree with the capability's main spec?
+        let mainSpecContent: string | null = null;
+        try {
+          mainSpecContent = await fs.readFile(path.join(mainSpecsDir, specName, 'spec.md'), 'utf-8');
+        } catch {
+          mainSpecContent = null;
+        }
+        issues.push(...checkDeltaOperationsAgainstMainSpec(entryPath, specName, plan, mainSpecContent));
       }
     } catch {
       // If no specs dir, treat as no deltas

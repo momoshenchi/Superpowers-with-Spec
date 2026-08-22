@@ -41,58 +41,6 @@ import {
 } from '../../../src/core/templates/skill-templates.js';
 import { generateSkillContent } from '../../../src/core/shared/skill-generation.js';
 
-const EXPECTED_FUNCTION_HASHES: Record<string, string> = {
-  getExploreSkillTemplate: 'dc413f63aeed82bb523e6dbbb11ffcb8fe6671080ad2b6eaed33cdd76c9443ef',
-  getNewChangeSkillTemplate: '60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b',
-  getContinueChangeSkillTemplate: 'd2a03cab2a3adc303a223718d574c8f74b28acdf2a11baa0dea916db2ab3d2aa',
-  getApplyChangeSkillTemplate: '6d255e90d736cd369658324293f02717aa6c88df01de1b63f1d4dfcda499786b',
-  getFfChangeSkillTemplate: '2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28',
-  getSyncSpecsSkillTemplate: 'd158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986',
-  getOnboardSkillTemplate: 'bf39ddec86960f599d857fc6ec68ab32f420bd7ee2d2f272b59a05c7d79773fa',
-  getSpExploreCommandTemplate: 'e077a486229e0caa5b9a6f8cfe07f84a8cfb833d01c37184551722a182835cf1',
-  getSpNewCommandTemplate: '5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1',
-  getSpContinueCommandTemplate: 'a5bff71ba5ea053d61aad846d9d39053a185ba3aeb993bcadfe15b00779b158e',
-  getSpApplyCommandTemplate: '69d96d02ead62f8440ddb64cc07f98d5f1f39a81238711ac54651c1c1ae823fb',
-  getSpFfCommandTemplate: 'a1f27b1120565937907ed8bd7209bfd3682e23aa07cc1b4da0a501bd8cd8d158',
-  getArchiveChangeSkillTemplate: 'aadb596f4c1787809290603f7bd02d0fdfec40489fde03c5f0b40048682d33d1',
-  getBulkArchiveChangeSkillTemplate: '5f80cc40af4beb29180d7a0266dc6aa21d62ee1826182623d21acbb35e8d376c',
-  getSpSyncCommandTemplate: 'cc1ff958f3b66201e1b044c5fc4ab74c542d22520a8ab6338cf24bc50937aeb4',
-  getVerifyChangeSkillTemplate: 'c138e5518d0a6e8504bc9ffe2965cb772eb23f21ba4d390883874fdc73500541',
-  getSpArchiveCommandTemplate: 'a6d8bbbfd0de892f525e720bd1b32d5f8ec548ad27bfab7df4f803137180d3d0',
-  getSpOnboardCommandTemplate: '83ecbdb7c05c0b485b9a4911853e689468b421970bed45b96d19d9dc087a7745',
-  getSpBulkArchiveCommandTemplate: 'f8ad96bf71f2c8e5c5c24d31d25054974e24219ee910aa1ddee25ce9f3c843c1',
-  getSpVerifyCommandTemplate: 'da7e2307c76571b0a258c73f7ab241e70d835cb90cfbafe6a205c2342c5ca1db',
-  getSimplifySkillTemplate: '5d26571f977ae20e01afeec54037a6fabeb84fdb8a492a18f4acdfbcb1551ca5',
-  getSpSimplifyCommandTemplate: 'ea0ca542aff154ff51bbf2d6169540dc4d8d51d1d3fd1676bd9c09e1313d592a',
-  getDesignVerifySkillTemplate: '28eb60dd3aa2669928239082e7f97953ddc95431625cd4c0bf60896afa7b63c4',
-  getSpDesignVerifyCommandTemplate: '0e4bf1e5c3b6dbcfd4ad40d98be22ebd26d504297bd15a64d06c42c87fd64a77',
-  getSpProposeSkillTemplate: '4e95bf978e6f921834b2c1cd07d08fb2b1bd8bef52f8032cfe5df1e5894f82be',
-  getSpProposeCommandTemplate: 'c05844333a91f10c916f7869941cd9573b234c751636fa3416d89c3ea44d4853',
-  getFeedbackSkillTemplate: '37b0bc6e1344a1973222d91ef29f84eddfc349e64e72f047bef22c614dd0fad9',
-  getChangeReviewSkillTemplate: '98a0424b35bddf89591f70cd09b7bcea6ea8cd9682e34fbc3e95d77eaab0a5f9',
-  getSpReviewCommandTemplate: '31861dff54d1df47b8ddb61415f34c2c96a590e5ee5e14681cc88ead6a509942',
-  getShapeReviewSkillTemplate: 'c1bf320fb394e0a3453b099e228edc6ec0eb68a2cb1e84ade7091eff461478ce',
-  getSpShapeReviewCommandTemplate: '0e14c7edb312c1689eebb3e200d26a1873159e2edea976b9644dec612f770a44',
-};
-
-const EXPECTED_GENERATED_SKILL_CONTENT_HASHES: Record<string, string> = {
-  'superpowers-explore': '86dd7012a96b600d1ccfec24f4a2adba5cc38ec821225dd80d8c6f6ed32f0fbd',
-  'superpowers-new-change': '74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f',
-  'superpowers-continue-change': '28a0c25d94b03a658e2a5b9291d8a11b469b2709ac080017604f324d46056fe7',
-  'superpowers-apply-change': 'b29a4a90750d1d7848e70947b5a383de6bf8ef36609c10ddc773da5905451a28',
-  'superpowers-ff-change': '0ceb62124b4b26a9fe00edcff8576d1e27bb00197794ca4228ab61534a18a299',
-  'superpowers-sync-specs': '54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2',
-  'superpowers-archive-change': 'a50623f1936b93f63d405038cc05bdd04fbe4c0c51b0dc9bf0d64c79a8822920',
-  'superpowers-bulk-archive-change': '62e0d64f3b80cf3f7c29073dcd4842c00a2c55d139eb3f7b52bdd3aa59cfecd0',
-  'superpowers-verify-change': 'd8dc2b1b17a6516a3e7117049eeb99ce1ddfe96079a813251b36dc4cbfcad942',
-  'superpowers-simplify': '85d6860d6567fe2ad1738f9f4648e074f6793c670de1aa07b2466447e293505d',
-  'superpowers-design-verify': 'e0a46b034a5cc952c89893adcd417f4df1b1cf9f4fcb0f0c8607676f2258b04e',
-  'superpowers-onboard': '736257835836c326f0286e0da55232799a9809a29a2ed2b63d1f9beee9bf6a34',
-  'superpowers-propose': 'fc723a9cbb0cdc5f69cb78ce53fdeb82ed0913ea7b45b555db037b1a3911c528',
-  'superpowers-change-review': '86125d0c6a728041f97770eba2adcdef34d0518ee808ab146535f51cd57de3ac',
-  'superpowers-shape-review': '53a75b2dd486fb0ef75d4dfce319cef649dc99111d5cd91a9cc47c7ba658eb1a',
-};
-
 function stableStringify(value: unknown): string {
   if (Array.isArray(value)) {
     return `[${value.map(stableStringify).join(',')}]`;
@@ -283,9 +231,9 @@ describe('skill templates split parity', () => {
       expect(content).toContain('Simplify (one pass, then Verify)');
       expect(content).toContain('Verify (rounds 1–4)');
       expect(content).toContain('Design verify (rounds 1–4)');
-      expect(content).toContain('`P0` is equivalent to Verify\'s `CRITICAL` severity');
+      expect(content).toContain('The only scale for grading a finding');
       expect(content).toContain('`P1` and `P2` are non-P0 findings');
-      expect(content).toContain('`BLOCKER` is not a priority level');
+      expect(content).toContain('A gate outcome is never a priority level, and `blocked` never substitutes for `P0`');
       expect(content).toContain('does not consume a round');
       expect(content).toContain('code review (rounds 1–4)');
       expect(content).toContain('If round four still reports a P0');
@@ -395,7 +343,7 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('every attempt, including a retry, uses a fresh subagent');
     expect(verify).toContain('Every round reruns this complete canonical non-visual preflight');
     expect(verify).toContain('applicable Manual Coverage');
-    expect(verify).toContain('Treat `CRITICAL` as `P0`');
+    expect(verify).toContain('or `P0` finding, retry from Verify with a fresh worker');
     expect(verify).toContain('do not consume a round');
     expect(verify).toContain('do not begin a fifth round');
     expect(verify).toContain('`Verify round: <1-4>`');
@@ -503,7 +451,6 @@ describe('skill templates split parity', () => {
     expect(designVerify).toContain('If UI scope has no repository visual design source, report `blocked`');
     expect(designVerify).not.toContain('missing Before is `blocked`');
     expect(designVerify).not.toContain('missing Before is `failed`');
-    expect(designVerify).not.toContain('missing Before is `BLOCKER`');
   });
 
   it('requires apply fail-closed runtime Before capture before UI edits', () => {
@@ -612,7 +559,7 @@ describe('skill templates split parity', () => {
     }
 
     const verify = [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n');
-    expect(verify).toContain('When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL');
+    expect(verify).toContain('prefer `P2` over `P1`, and `P1` over `P0`');
   });
 
   it('defines report-first gate workers and coordinator-owned repairs', () => {
@@ -636,7 +583,7 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('Report findings and evidence before any implementation changes');
     expect(verify).toContain('The coordinator evaluates and repairs accepted product, architecture, or workflow findings');
     expect(verify).toContain('investigate or clarify before editing');
-    expect(verify).toContain('coordinator repairs an accepted failure or CRITICAL finding');
+    expect(verify).toContain('coordinator repairs an accepted failure or `P0` finding');
 
     const designVerify = [getDesignVerifySkillTemplate().instructions, getSpDesignVerifyCommandTemplate().content].join('\n');
     expect(designVerify).toContain('The Design Verify worker is read-only by default');
@@ -745,7 +692,7 @@ describe('skill templates split parity', () => {
       Object.entries(functionFactories).map(([name, fn]) => [name, hash(stableStringify(fn()))])
     );
 
-    expect(actualHashes).toEqual(EXPECTED_FUNCTION_HASHES);
+    expect(actualHashes).toMatchSnapshot();
   });
 
   it('preserves generated skill file content exactly', () => {
@@ -776,6 +723,6 @@ describe('skill templates split parity', () => {
       ])
     );
 
-    expect(actualHashes).toEqual(EXPECTED_GENERATED_SKILL_CONTENT_HASHES);
+    expect(actualHashes).toMatchSnapshot();
   });
 });

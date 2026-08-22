@@ -23,9 +23,9 @@ describe('change review workflow templates', () => {
     for (const content of [skill.instructions, command.content]) {
       expect(content).toContain('superpowers status --change "<name>" --json');
       expect(content).toContain('superpowers validate <name>');
-      expect(content).toContain('BLOCKER');
-      expect(content).toContain('WARNING');
-      expect(content).toContain('SUGGESTION');
+      expect(content).toContain('`P0`');
+      expect(content).toContain('`P1`');
+      expect(content).toContain('`P2`');
       expect(content).toContain('Step 1–5');
       expect(content).toContain('final integration review');
       expect(content).toContain('dispatch unit');
@@ -36,7 +36,7 @@ describe('change review workflow templates', () => {
     const content = getChangeReviewSkillTemplate().instructions;
 
     expect(content.indexOf('present the complete review report')).toBeGreaterThan(-1);
-    expect(content.indexOf('repair every resolvable BLOCKER')).toBeGreaterThan(
+    expect(content.indexOf('repair every resolvable P0')).toBeGreaterThan(
       content.indexOf('present the complete review report')
     );
     expect(content).toContain('fresh subagent');
@@ -46,20 +46,21 @@ describe('change review workflow templates', () => {
     expect(content).toContain('three rounds');
     expect(content).not.toContain('change-reviewer-prompt');
     expect(content).toContain('Change reviewer');
-    expect(content).toContain('re-run review only after repairing one or more BLOCKERs');
+    expect(content).toContain('re-run review only after repairing one or more P0 findings');
     expect(content).toContain(
-      'Do not re-run full proposal review solely because WARNING or SUGGESTION findings were present or repaired'
+      'Do not re-run full proposal review solely because `P1` or `P2` findings were present or repaired'
     );
-    expect(content).toContain('SUGGESTION findings are non-blocking');
-    expect(content).toContain('no unresolved BLOCKER remains');
-    expect(content).not.toContain('repair every resolvable BLOCKER and WARNING');
-    expect(content).not.toContain('no unresolved BLOCKER or WARNING remains');
+    expect(content).toContain('`P2` findings are non-blocking');
+    expect(content).toContain('no unresolved P0 remains');
+    expect(content).not.toContain('repair every resolvable P0 and P1');
+    expect(content).not.toContain('no unresolved P0 or P1 remains');
     expect(content).toContain('Do not create `review.md`');
     expect(content).toContain('does not automatically repeat proposal review');
     expect(content).toContain('# <number>. <scope>');
     expect(content).toContain('legacy');
     expect(content).toContain('Dispatch Coordination');
     expect(content).toContain('assignee policy');
+    expect(content).not.toContain('2–20 minutes');
   });
 
   it('runs the automatic loop from propose, but never repeats it from apply', () => {
@@ -67,14 +68,14 @@ describe('change review workflow templates', () => {
       const content = 'instructions' in template ? template.instructions : template.content;
       expect(content).toContain('Dispatch a fresh change reviewer subagent');
       expect(content).toContain('present the complete review report');
-      expect(content).toContain('Repair every resolvable BLOCKER.');
-      expect(content).toContain('re-run review only after repairing one or more BLOCKERs');
+      expect(content).toContain('Repair every resolvable P0.');
+      expect(content).toContain('re-run review only after repairing one or more P0 findings');
       expect(content).toContain('at most two rounds');
       expect(content).toContain('three rounds absolute maximum');
       expect(content).toContain('Do not create `review.md`');
       expect(content).toContain('Dispatch Units in tasks.md');
       expect(content).toContain('# <number>. <scope>');
-      expect(content).not.toContain('Repair every resolvable BLOCKER and WARNING');
+      expect(content).not.toContain('Repair every resolvable P0 and P1');
 
       expect(content.indexOf('1. Confirm and create —')).toBeLessThan(
         content.indexOf('superpowers new change "<name>"')
@@ -124,7 +125,7 @@ describe('change review workflow templates', () => {
       expect(content).not.toMatch(/major decisions need \*\*≥3 options\*\* recorded/i);
       expect(content).toContain('Closed implication scan');
       expect(content).toContain('derived-implication gap');
-      expect(content).toContain('never BLOCKER solely for a derived-implication gap');
+      expect(content).toContain('never `P0` solely for a derived-implication gap');
       expect(content).toContain('## Decisions');
       expect(content).toContain('## Contracts');
       expect(content).toContain('## Invariants');

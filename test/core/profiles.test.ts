@@ -8,8 +8,17 @@ import {
 
 describe('profiles', () => {
   describe('CORE_WORKFLOWS', () => {
-    it('should contain the five core workflows', () => {
-      expect(CORE_WORKFLOWS).toEqual(['propose', 'explore', 'review', 'apply', 'archive']);
+    it('should contain the core workflows, including the three apply quality gates', () => {
+      expect(CORE_WORKFLOWS).toEqual([
+        'propose',
+        'explore',
+        'review',
+        'apply',
+        'archive',
+        'verify',
+        'simplify',
+        'design-verify',
+      ]);
     });
 
     it('should be a subset of ALL_WORKFLOWS', () => {

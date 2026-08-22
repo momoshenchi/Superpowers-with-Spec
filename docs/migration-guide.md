@@ -84,7 +84,7 @@ Don't worry about getting it perfect. We're still learning what works best here,
 
 Both `superpowers init` and `superpowers update` detect legacy files and guide you through the same cleanup process. Use whichever fits your situation:
 
-- New installs default to profile `core` (`propose`, `explore`, `apply`, `archive`).
+- New installs default to profile `core` (`propose`, `explore`, `review`, `apply`, `archive`, `verify`, `simplify`, `design-verify`).
 - Migrated installs preserve your previously installed workflows by writing a `custom` profile when needed.
 
 ### Using `superpowers init`

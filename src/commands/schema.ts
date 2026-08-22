@@ -1174,11 +1174,68 @@ Workers record and run task-level verification in \`tasks.md\`. Test Hardening i
 
 Test Hardening is complete when every concrete test/status row in the tables below is complete. Use statuses such as \`covered\`, \`passed\`, or \`not applicable\` for completed rows. Leave rows as \`planned\`, \`failing\`, or blank until the coverage is actually complete.
 
+## Test Scope Register
+
+| Object | Requirement | Existing Scenarios | Entry Point | Diff Anchor | Risk Hypothesis |
+| --- | --- | --- | --- | --- | --- |
+| R1 | <!-- \`### Requirement:\` name from specs/<capability>/spec.md --> | <!-- count and titles of \`#### Scenario:\` already written --> | <!-- CLI subcommand, HTTP route, exported function, or UI route --> | <!-- files or symbols this requirement changes --> | <!-- the single most likely thing to be missed --> |
+
 ## Requirement And Scenario Coverage Matrix
 
-| Requirement / Scenario | Planned Coverage | Status | Notes |
+| Object | Requirement / Spec Scenario | Form | Status | Notes |
+| --- | --- | --- | --- | --- |
+| <!-- R1 --> | <!-- Requirement: Scenario title from spec.md --> | <!-- unit / integration / E2E / manual / not applicable --> | <!-- planned / covered / passed / failing / not applicable --> | <!-- test file, command, or rationale --> |
+
+## Six-Dimension Case Matrix
+
+One table per \`full-qa-test\` dimension, each keeping that dimension's own columns. Case IDs are \`TC-R<object>-D<dimension>-<seq>\`. Run 10→10→10 once per Requirement per dimension. Status values are \`planned\`, \`covered\`, \`passed\`, \`failing\`, or \`not applicable\`.
+
+### D1 — Requirements and business scenarios
+
+| ID | Object | Requirement | Scenario Type | Steps | Expected | Form | Status | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| <!-- TC-R1-D1-001 --> | <!-- R1 --> | <!-- Requirement plus imported Scenario title --> | <!-- happy path / branch / exception / implicit --> | <!-- ordered actions through the entry point, with the starting state --> | <!-- checkable outcome: status code, resulting state, returned field --> | <!-- unit / integration / E2E / manual --> | | <!-- test file, command, or rationale --> |
+
+### D2 — Code and branch coverage
+
+| ID | Object | Code Anchor | Coverage Type | Trigger Input | Expected | Form | Status | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| <!-- TC-R1-D2-001 --> | <!-- R1 --> | <!-- file:symbol — the specific decision --> | <!-- branch true / branch false / condition combo / diff line --> | <!-- input that actually reaches this branch --> | <!-- which path runs, and which collaborator must not be called --> | <!-- unit unless the branch needs a real collaborator --> | | <!-- test file, command, or rationale --> |
+
+### D3 — Data and input space
+
+| ID | Object | Parameter | Class | Sample Input | Expected | Form | Status | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| <!-- TC-R1-D3-001 --> | <!-- R1 --> | <!-- parameter under test --> | <!-- equivalence / boundary N-1,N,N+1 / empty / null / dirty data --> | <!-- the literal value, not a description of it --> | <!-- rejection code or accepted normalization --> | <!-- unit unless validation lives in a gateway --> | | <!-- test file, command, or rationale --> |
+
+### D4 — State transitions and timing
+
+| ID | Object | State / Timing Scenario | Legal? | Operation Sequence | Expected | Form | Status | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| <!-- TC-R1-D4-001 --> | <!-- R1 --> | <!-- from-state -> to-state, race, replay, retry, or timeout --> | <!-- yes / no --> | <!-- ordered operations including concurrency or timing --> | <!-- resulting state, and that no partial write remains --> | <!-- integration when real storage is required --> | | <!-- test file, command, or rationale --> |
+
+### D5 — Non-functional and fault tolerance
+
+| ID | Object | Quality Attribute | Scenario | Pass Criteria | Form | Status | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| <!-- TC-R1-D5-001 --> | <!-- R1 --> | <!-- performance / security / resilience / compatibility --> | <!-- concrete scenario --> | <!-- measurable threshold or required behavior --> | <!-- integration by default --> | | <!-- test file, command, or rationale --> |
+
+### D6 — Environment and dependencies
+
+| ID | Object | Dependency | Fault Injection | Expected Isolation / Compensation | Form | Status | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| <!-- TC-R1-D6-001 --> | <!-- R1 --> | <!-- named upstream/downstream service --> | <!-- latency, 5xx, outage, pool exhaustion, empty result --> | <!-- circuit break, fallback, retry, compensation, and what must still succeed --> | <!-- integration with fault injection --> | | <!-- test file, command, or rationale --> |
+
+## Dimension Coverage Summary
+
+| Dimension | Must-check items | Status | Case IDs / Rationale |
 | --- | --- | --- | --- |
-| <!-- Requirement: Scenario --> | <!-- unit / integration / E2E / manual / not applicable --> | <!-- planned / covered / passed / failing / not applicable --> | <!-- test file, command, or rationale --> |
+| D1 Requirements and business scenarios | Imported spec Scenarios plus happy path, every branch, and recovery after an aborted run | <!-- covered / not applicable --> | |
+| D2 Code and branch coverage | Diff and critical-path branch coverage; mutation testing or a stated deferral | <!-- covered / not applicable --> | |
+| D3 Data and input space | Boundaries (max/min/zero/negative/empty/null); special characters, over-length, Emoji, SQL/XSS | <!-- covered / not applicable --> | |
+| D4 State transitions and timing | Illegal state transitions; concurrent requests, replay, and idempotency | <!-- covered / not applicable --> | |
+| D5 Non-functional and fault tolerance | Permissions and privilege escalation; third-party timeout and 5xx fallback; performance and compatibility where applicable | <!-- covered / not applicable --> | |
+| D6 Environment and dependencies | Empty or failing database/cache; weak or absent network; multi-device, resolution, and role compatibility | <!-- covered / not applicable --> | |
 
 ## Manual Coverage
 

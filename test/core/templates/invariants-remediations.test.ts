@@ -61,14 +61,14 @@ describe('invariants and remediations conventions', () => {
     }
   });
 
-  it('Verify probes change-dir remediations and treats invariant owner-check failure as CRITICAL', () => {
+  it('Verify probes change-dir remediations and treats invariant owner-check failure as P0', () => {
     const verify = getVerifyChangeSkillTemplate().instructions;
     const verifyCmd = getSpVerifyCommandTemplate().content;
 
     for (const content of [verify, verifyCmd]) {
       expect(content).toContain('## Invariants');
       expect(content).toContain('N/A — no cross-path invariants');
-      expect(content).toMatch(/CRITICAL/);
+      expect(content).toMatch(/`P0`/);
       expect(content).toContain('remediations.md');
       expect(content).toMatch(/change directory|changes\/<name>\/remediations|probe/i);
       expect(content).toMatch(/contextFiles/);
@@ -78,10 +78,10 @@ describe('invariants and remediations conventions', () => {
     }
   });
 
-  it('change-review still exposes Invariants BLOCKER wording via generated templates', () => {
+  it('change-review still exposes Invariants P0 wording via generated templates', () => {
     const review = getChangeReviewSkillTemplate().instructions;
     expect(review).toContain('## Invariants');
-    expect(review).toMatch(/missing.*Invariants.*BLOCKER|Invariants.*BLOCKER/i);
+    expect(review).toMatch(/missing.*Invariants.*`P0`|Invariants.*`P0`/i);
   });
 
   it('applyRequires in package schema still excludes remediations', () => {

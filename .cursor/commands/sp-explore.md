@@ -39,6 +39,8 @@ before handoff. The checkpoint is the recovery source of truth;
 - **Adaptive** - Follow interesting threads, pivot when new information emerges
 - **Patient** - Don't rush to conclusions, let the shape of the problem emerge
 - **Grounded** - Explore the actual codebase when relevant, don't just theorize
+- **One question at a time** - When exploring for creative work (features, components, functionality), prefer asking **one question at a time** and using **multiple choice questions when possible**
+- **YAGNI ruthlessly** - Apply YAGNI ruthlessly — remove unnecessary features from all designs
 
 ---
 
@@ -163,7 +165,7 @@ If the user mentions a change or you detect one is relevant:
 
 There's no required ending. Discovery might:
 
-- **Flow into a proposal**: "Ready to start? I can create a change proposal."
+- **Flow into a proposal**: "Ready to start? I can create a change proposal." For **major** features, present **≥3 approaches** with trade-offs first; design records that comparison **only if the user chose**.
 - **Result in artifact updates**: "Updated design.md with these decisions"
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"
@@ -174,7 +176,25 @@ For **minor** local work (rename, single-helper fix, narrow bugfix), light ratio
 
 If the work is UI-facing, optionally discover a repository visual `DESIGN.md` / `design.md` (google-labs identity file: tokens + prose)—distinct from change-local `design.md`—and carry any citation into design Current system / Relationship.
 
-When things crystallize, you might offer a summary - but it's optional. Sometimes the thinking IS the value.
+Minor local fixes do not need three fake options.
+
+When it feels like things are crystallizing, you might summarize:
+
+```
+## What We Figured Out
+
+**The problem**: [crystallized understanding]
+
+**The approach**: [if one emerged]
+
+**Open questions**: [if any remain]
+
+**Next steps** (if ready):
+- Create a change proposal
+- Keep exploring: just keep talking
+```
+
+But this summary is optional. Sometimes the thinking IS the value.
 
 ---
 

@@ -432,16 +432,16 @@ Before implementation starts, we create \`test-plan.md\`: a compact pre-implemen
 **EXPLAIN:**
 
 \`\`\`
-Before implementation, /sp:propose reviews the complete proposal bundle: requirements, design, task dispatch units, execution plan, and test plan. Only unresolved BLOCKERs require repair + re-review before readiness; WARNING/SUGGESTION findings do not force a second full proposal review.
+Before implementation, /sp:propose reviews the complete proposal bundle: requirements, design, task dispatch units, execution plan, and test plan. Only unresolved P0 findings require repair + re-review before readiness; P1/P2 findings do not force a second full proposal review.
 
-This is a plan-quality review. It reports findings first, repairs every resolvable BLOCKER, and re-reviews only after blocker repairs. WARNING findings are recommended repairs and do not block readiness or force a second full proposal review. Suggestions stay visible but do not block readiness.
+This is a plan-quality review. It reports findings first, repairs every resolvable P0, and re-reviews only after those P0 repairs. P1 findings are recommended repairs and do not block readiness or force a second full proposal review. P2 findings stay visible but do not block readiness.
 
 This is different from the final integration review after implementation, which checks the integrated diff and dispatch-unit interactions.
 \`\`\`
 
 **DO:**
 
-Show the proposal review report. If it identifies a user decision that cannot be safely inferred, pause for that decision. Repair resolvable BLOCKERs and re-review only after those blocker repairs; WARNING/SUGGESTION handling does not require a second full proposal review before continuing.
+Show the proposal review report. If it identifies a user decision that cannot be safely inferred, pause for that decision. Repair resolvable P0 findings and re-review only after those P0 repairs; P1/P2 handling does not require a second full proposal review before continuing.
 
 **SHOW:**
 
@@ -527,7 +527,7 @@ You just completed a full Superpowers cycle:
 6. **Tasks** - Created the progress checklist
 7. **Execution Plan** - Wrote the detailed implementation plan
 8. **Test Plan** - Drafted coverage and hardening expectations
-9. **Proposal Review** - Reviewed the complete plan, reported findings, repaired BLOCKERs with re-review only when needed, and treated WARNING/SUGGESTION as non-blocking before implementation
+9. **Proposal Review** - Reviewed the complete plan, reported findings, repaired P0 findings with re-review only when needed, and treated P1/P2 as non-blocking before implementation
 10. **Apply** - Implemented the work and completed Test Hardening
 11. **Final Integration Review** - Reviewed the integrated dispatch units, diff, and full validation
 12. **Archive** - Preserved the record

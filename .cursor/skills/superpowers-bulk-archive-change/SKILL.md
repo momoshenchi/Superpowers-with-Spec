@@ -48,6 +48,12 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
       - List which capability specs exist
       - For each, extract requirement names (lines matching `### Requirement: <name>`)
 
+   d. **Final quality gates** - Read `superpowers/changes/<name>/test-plan.md` and locate its `## Final Quality Gates` section
+      - A gate is resolved when it is `passed`, or `not applicable` with concrete scope evidence
+      - A gate is unresolved when it is `failed`, applicable-`blocked`, still `planned`, or absent
+      - A missing section, or one with no rows, means the quality chain was never recorded — never read that as passing
+      - If no `test-plan.md` exists, note as "No gate contract"
+
 4. **Detect spec conflicts**
 
    Build a map of `capability -> [changes that touch it]`:
@@ -84,12 +90,12 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
    Display a table summarizing all changes:
 
    ```
-   | Change               | Artifacts | Tasks | Specs   | Conflicts | Status |
-   |---------------------|-----------|-------|---------|-----------|--------|
-   | schema-management   | Done      | 5/5   | 2 delta | None      | Ready  |
-   | project-config      | Done      | 3/3   | 1 delta | None      | Ready  |
-   | add-oauth           | Done      | 4/4   | 1 delta | auth (!)  | Ready* |
-   | add-verify-skill    | 1 left    | 2/5   | None    | None      | Warn   |
+   | Change               | Artifacts | Tasks | Specs   | Gates   | Conflicts | Status |
+   |---------------------|-----------|-------|---------|---------|-----------|--------|
+   | schema-management   | Done      | 5/5   | 2 delta | 4/4     | None      | Ready  |
+   | project-config      | Done      | 3/3   | 1 delta | 4/4     | None      | Ready  |
+   | add-oauth           | Done      | 4/4   | 1 delta | 4/4     | auth (!)  | Ready* |
+   | add-verify-skill    | 1 left    | 2/5   | None    | none    | None      | Warn   |
    ```
 
    For conflicts, show the resolution:
@@ -101,7 +107,7 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
    For incomplete changes, show warnings:
    ```
    Warnings:
-   - add-verify-skill: 1 incomplete artifact, 3 incomplete tasks
+   - add-verify-skill: 1 incomplete artifact, 3 incomplete tasks, no final quality gate record
    ```
 
 7. **Confirm batch operation**

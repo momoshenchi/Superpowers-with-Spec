@@ -30,7 +30,7 @@ Unlike traditional static analysis tools that match patterns, this skill:
 1. **Reads code like a security researcher** — understanding context, intent, and data flow
 2. **Traces across files** — following how user input moves through your application
 3. **Self-verifies findings** — re-examines each result to filter false positives
-4. **Assigns severity ratings** — CRITICAL / HIGH / MEDIUM / LOW / INFO
+4. **Assigns severity ratings** — `P0` / `P1` / `P2`, the shared Superpowers severity scale
 5. **Proposes targeted patches** — every finding includes a concrete fix
 6. **Requires human approval** — nothing is auto-applied; you always review first
 
@@ -117,13 +117,13 @@ For EACH finding:
 2. Ask: "Is this actually exploitable, or is there sanitization I missed?"
 3. Check if a framework or middleware already handles this upstream
 4. Downgrade or discard findings that aren't genuine vulnerabilities
-5. Assign final severity: CRITICAL / HIGH / MEDIUM / LOW / INFO
+5. Assign final severity: `P0` / `P1` / `P2`
 
 ### Step 7 — Generate Security Report
 Output the full report in the format defined in `references/report-format.md`.
 
 ### Step 8 — Propose Patches
-For every CRITICAL and HIGH finding, generate a concrete patch:
+For every `P0` finding, generate a concrete patch:
 - Show the vulnerable code (before)
 - Show the fixed code (after)
 - Explain what changed and why
@@ -134,13 +134,15 @@ Explicitly state: **"Review each patch before applying. Nothing has been changed
 
 ## Severity Guide
 
+Use the same `P0`/`P1`/`P2` scale as every other Superpowers review, so security findings can be triaged in one queue.
+
 | Severity | Meaning | Example |
 |----------|---------|---------|
-| 🔴 CRITICAL | Immediate exploitation risk, data breach likely | SQLi, RCE, auth bypass |
-| 🟠 HIGH | Serious vulnerability, exploit path exists | XSS, IDOR, hardcoded secrets |
-| 🟡 MEDIUM | Exploitable with conditions or chaining | CSRF, open redirect, weak crypto |
-| 🔵 LOW | Best practice violation, low direct risk | Verbose errors, missing headers |
-| ⚪ INFO | Observation worth noting, not a vulnerability | Outdated dependency (no CVE) |
+| 🔴 `P0` | Immediate exploitation risk or a clear exploit path; must be fixed before shipping | SQLi, RCE, auth bypass, XSS, IDOR, hardcoded secrets |
+| 🟡 `P1` | Exploitable with conditions or chaining; fix in the current round | CSRF, open redirect, weak crypto |
+| 🔵 `P2` | Best practice violation or observation with low direct risk | Verbose errors, missing headers, outdated dependency with no CVE |
+
+Confidence is a separate axis from severity: keep rating it High / Medium / Low and never fold it into the `P` level.
 
 ## Output Rules
 

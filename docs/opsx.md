@@ -65,7 +65,7 @@ superpowers init
 
 This creates skills in `.claude/skills/` (or equivalent) that AI coding assistants auto-detect.
 
-By default, Superpowers uses the `core` workflow profile (`propose`, `explore`, `apply`, `archive`). If you want the expanded workflow commands (`new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard`), configure them with `superpowers config profile` and apply with `superpowers update`.
+By default, Superpowers uses the `core` workflow profile (`propose`, `explore`, `review`, `apply`, `archive`, `verify`, `simplify`, `design-verify`). If you want the remaining workflow commands (`new`, `continue`, `ff`, `sync`, `bulk-archive`, `shape-review`, `onboard`), configure them with `superpowers config profile` and apply with `superpowers update`.
 
 During setup, you'll be prompted to create a **project config** (`superpowers/config.yaml`). This is optional but recommended.
 

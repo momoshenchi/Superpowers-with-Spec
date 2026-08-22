@@ -15,8 +15,13 @@ By default, Superpowers uses the `core` profile, which includes:
 - `review`
 - `apply`
 - `archive`
+- `verify`
+- `simplify`
+- `design-verify`
 
-You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `simplify`, `design-verify`, `shape-review`, `sync`, `bulk-archive`, `onboard`) via `superpowers config profile`, then run `superpowers update`.
+`verify`, `simplify`, and `design-verify` are the three final quality gates that `/sp:apply` runs after Test Hardening, so the default profile installs them rather than leaving `/sp:apply` pointing at commands the user does not have.
+
+You can enable expanded workflows (`new`, `continue`, `ff`, `shape-review`, `sync`, `bulk-archive`, `onboard`) via `superpowers config profile`, then run `superpowers update`.
 
 `/sp:shape-review` is custom-only and does not block archive. Core still includes `/sp:review` (proposal-artifact review). `/sp:review` is not an abbreviation of `/sp:shape-review`.
 
@@ -77,7 +82,7 @@ superpowers init --profile core
 
 Superpowers installs workflow artifacts based on selected workflows:
 
-- **Core profile (default):** `propose`, `explore`, `review`, `apply`, `archive`
+- **Core profile (default):** `propose`, `explore`, `review`, `apply`, `archive`, `verify`, `simplify`, `design-verify`
 - **Custom selection:** any subset of all workflow IDs:
   `propose`, `explore`, `review`, `new`, `continue`, `apply`, `ff`, `sync`, `archive`, `bulk-archive`, `verify`, `simplify`, `design-verify`, `shape-review`, `onboard`
 

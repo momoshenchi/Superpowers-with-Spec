@@ -30,11 +30,9 @@ Always show this first — at a glance overview:
 ┌────────────────────────────────────────────────┐
 │           FINDINGS SUMMARY                     │
 ├──────────────┬──────────────────────────────── ┤
-│ 🔴 CRITICAL  │  <n> findings                  │
-│ 🟠 HIGH      │  <n> findings                  │
-│ 🟡 MEDIUM    │  <n> findings                  │
-│ 🔵 LOW       │  <n> findings                  │
-│ ⚪ INFO      │  <n> findings                  │
+│ 🔴 P0        │  <n> findings                  │
+│ 🟡 P1        │  <n> findings                  │
+│ 🔵 P2        │  <n> findings                  │
 ├──────────────┼─────────────────────────────────┤
 │ TOTAL        │  <n> findings                  │
 └──────────────┴─────────────────────────────────┘
@@ -86,15 +84,15 @@ Confidence: HIGH / MEDIUM / LOW
 📦 DEPENDENCY AUDIT
 ══════════════════
 
-🟠 HIGH — lodash@4.17.20 (package.json)
+🔴 P0 — lodash@4.17.20 (package.json)
   CVE-2021-23337: Prototype pollution via zipObjectDeep()
   Fix: npm install lodash@4.17.21
 
-🟡 MEDIUM — axios@0.27.2 (package.json)
+🟡 P1 — axios@0.27.2 (package.json)
   CVE-2023-45857: CSRF via withCredentials
   Fix: npm install axios@1.6.0
 
-⚪ INFO — express@4.18.2
+🔵 P2 — express@4.18.2
   No known CVEs. Current version is 4.19.2 — consider updating.
 ```
 
@@ -106,7 +104,7 @@ Confidence: HIGH / MEDIUM / LOW
 🔑 SECRETS & EXPOSURE SCAN
 ═══════════════════════════
 
-🔴 CRITICAL — Hardcoded API Key
+🔴 P0 — Hardcoded API Key
   File: src/config/database.js, Line 12
   
   Found: STRIPE_SECRET_KEY = "sk_live_FAKE_KEY_..."
@@ -125,7 +123,7 @@ Confidence: HIGH / MEDIUM / LOW
 
 ### Patch Proposals Section
 
-Only include for CRITICAL and HIGH findings:
+Only include for `P0` findings:
 
 ````
 🛠️  PATCH PROPOSALS
@@ -167,9 +165,9 @@ Apply this patch? (Review first — AI-generated patches may need adjustment)
   Scan duration:     <time>
 
 ⚡ NEXT STEPS
-  1. Address all CRITICAL findings immediately
-  2. Schedule HIGH findings for current sprint
-  3. Add MEDIUM/LOW to your security backlog
+  1. Address all P0 findings immediately
+  2. Schedule P1 findings for current sprint
+  3. Add P2 findings to your security backlog
   4. Set up automated re-scanning in CI/CD pipelines
 
 💡 NOTE: This is a static analysis scan. It does not execute your
@@ -183,7 +181,7 @@ Apply this patch? (Review first — AI-generated patches may need adjustment)
 
 ## Confidence Ratings Guide
 
-Apply to every finding:
+Confidence is a separate axis from the `P0`/`P1`/`P2` severity scale. Apply it to every finding and never fold it into the `P` level:
 
 | Confidence | When to Use |
 |------------|-------------|

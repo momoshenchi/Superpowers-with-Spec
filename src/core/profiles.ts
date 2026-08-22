@@ -10,8 +10,23 @@ import type { Profile } from './global-config.js';
 /**
  * Core workflows included in the 'core' profile.
  * These provide the streamlined experience for new users.
+ *
+ * `simplify`, `verify`, and `design-verify` are included because `/sp:apply`
+ * runs them as mandatory Final Quality Gates. Apply embeds a runnable contract
+ * for each gate, so a deselected workflow never disables a gate; shipping them
+ * by default just means the gate worker can follow the full standalone
+ * contract instead of the embedded minimum.
  */
-export const CORE_WORKFLOWS = ['propose', 'explore', 'review', 'apply', 'archive'] as const;
+export const CORE_WORKFLOWS = [
+  'propose',
+  'explore',
+  'review',
+  'apply',
+  'archive',
+  'verify',
+  'simplify',
+  'design-verify',
+] as const;
 
 /**
  * All available workflows in the system.

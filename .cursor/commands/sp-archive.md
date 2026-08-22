@@ -30,7 +30,7 @@ Archive a completed change in the workflow.
 
    **If any artifacts are not `done`:**
    - Display warning listing incomplete artifacts
-   - Prompt user for confirmation to continue
+   - Use **AskUserQuestion tool** to confirm user wants to proceed
    - Proceed if user confirms
 
 3. **Check task completion status**
@@ -41,12 +41,25 @@ Archive a completed change in the workflow.
 
    **If incomplete tasks found:**
    - Display warning showing count of incomplete tasks
-   - Prompt user for confirmation to continue
+   - Use **AskUserQuestion tool** to confirm user wants to proceed
    - Proceed if user confirms
 
    **If no tasks file exists:** Proceed without task-related warning.
 
-4. **Assess delta spec sync state**
+4. **Check the final quality gate record**
+
+   Read `test-plan.md` when it exists and locate its `## Final Quality Gates` section.
+
+   A gate is resolved when it is `passed`, or `not applicable` with concrete scope evidence. A gate is unresolved when it is `failed`, applicable-`blocked`, still `planned`, or absent.
+
+   **If the section is missing, records no rows, or has any unresolved gate:**
+   - Display a warning naming each unresolved gate and its outcome
+   - Use **AskUserQuestion tool** to confirm user wants to proceed
+   - Proceed if user confirms
+
+   **If no `test-plan.md` exists:** Proceed without gate-related warning; the change has no gate contract.
+
+5. **Assess delta spec sync state**
 
    Check for delta specs at `superpowers/changes/<name>/specs/`. If none exist, proceed without sync prompt.
 
@@ -61,7 +74,7 @@ Archive a completed change in the workflow.
 
    If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke superpowers-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
 
-5. **Perform the archive**
+6. **Perform the archive**
 
    Create the archive directory if it doesn't exist:
    ```bash
@@ -78,14 +91,14 @@ Archive a completed change in the workflow.
    mv superpowers/changes/<name> superpowers/changes/archive/YYYY-MM-DD-<name>
    ```
 
-6. **Display summary**
+7. **Display summary**
 
    Show archive completion summary including:
    - Change name
    - Schema that was used
    - Archive location
    - Spec sync status (synced / sync skipped / no delta specs)
-   - Note about any warnings (incomplete artifacts/tasks)
+   - Note about any warnings (incomplete artifacts/tasks, unresolved final quality gates)
 
 **Output On Success**
 
@@ -126,6 +139,7 @@ All artifacts complete. All tasks complete.
 **Warnings:**
 - Archived with 2 incomplete artifacts
 - Archived with 3 incomplete tasks
+- Archived with 1 unresolved final quality gate (`/sp:verify`: failed)
 - Delta spec sync was skipped (user chose to skip)
 
 Review the archive if this was not intentional.
@@ -150,8 +164,9 @@ Target archive directory already exists.
 **Guardrails**
 - Always prompt for change selection if not provided
 - Use artifact graph (superpowers status --json) for completion checking
+- Check the `## Final Quality Gates` record in `test-plan.md` before archiving; never treat a missing record as a passing quality chain
 - Don't block archive on warnings - just inform and confirm
 - Preserve .superpowers.yaml when moving to archive (it moves with the directory)
 - Show clear summary of what happened
-- If sync is requested, use the Skill tool to invoke `superpowers-sync-specs` (agent-driven)
+- If sync is requested, invoke the `superpowers-sync-specs` skill (agent-driven)
 - If delta specs exist, always run the sync assessment and show the combined summary before prompting

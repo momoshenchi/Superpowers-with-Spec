@@ -67,7 +67,7 @@ These options work with all commands:
 
 Initialize Superpowers in your project. Creates the folder structure and configures AI tool integrations.
 
-Default behavior uses global config defaults: profile `core`, delivery `both`, workflows `propose, explore, apply, archive`.
+Default behavior uses global config defaults: profile `core`, delivery `both`, workflows `propose, explore, review, apply, archive, verify, simplify, design-verify`.
 
 ```
 superpowers init [path] [options]
@@ -393,9 +393,12 @@ superpowers archive update-ci-config --skip-specs
 **What it does:**
 
 1. Validates the change (unless `--no-validate`)
-2. Prompts for confirmation (unless `--yes`)
-3. Merges delta specs into `superpowers/specs/`
-4. Moves change folder to `superpowers/changes/archive/YYYY-MM-DD-<name>/`
+2. Warns about incomplete artifacts and tasks, then prompts for confirmation (unless `--yes`)
+3. Reads the `## Final Quality Gates` table in `test-plan.md` and warns when a gate is missing, still planned, failed, or blocked, then prompts for confirmation (unless `--yes`)
+4. Merges delta specs into `superpowers/specs/`
+5. Moves change folder to `superpowers/changes/archive/YYYY-MM-DD-<name>/`
+
+Gate warnings never hard-block the archive, but a missing gate record is treated as unresolved rather than as a pass, so skipping the quality chain is always visible.
 
 ---
 

@@ -10,6 +10,7 @@ import {
   writeUpdatedSpec,
   type SpecUpdate,
 } from './specs-apply.js';
+import { parseFinalQualityGates, describeUnresolvedGates } from './parsers/test-plan-gates.js';
 
 /**
  * Recursively copy a directory. Used when fs.rename fails (e.g. EPERM on Windows).
@@ -174,6 +175,24 @@ export class ArchiveCommand {
       }
     }
 
+    // Check the final quality gate record so the quality chain cannot be bypassed silently
+    const gateWarning = await this.findUnresolvedGateWarning(changeDir);
+    if (gateWarning) {
+      if (!options.yes) {
+        const { confirm } = await import('@inquirer/prompts');
+        const proceed = await confirm({
+          message: `Warning: ${gateWarning}. Continue?`,
+          default: false
+        });
+        if (!proceed) {
+          console.log('Archive cancelled.');
+          return;
+        }
+      } else {
+        console.log(`Warning: ${gateWarning}. Continuing due to --yes flag.`);
+      }
+    }
+
     // Handle spec updates unless skipSpecs flag is set
     if (options.skipSpecs) {
       console.log('Skipping spec updates (--skip-specs flag provided).');
@@ -266,6 +285,22 @@ export class ArchiveCommand {
     await moveDirectory(changeDir, archivePath);
 
     console.log(`Change '${changeName}' archived as '${archiveName}'.`);
+  }
+
+  /**
+   * A change with no `test-plan.md` has no final quality gate contract to
+   * check, so it is not warned about. Once the artifact exists, its gate
+   * record must show every gate resolved.
+   */
+  private async findUnresolvedGateWarning(changeDir: string): Promise<string | null> {
+    let testPlan: string;
+    try {
+      testPlan = await fs.readFile(path.join(changeDir, 'test-plan.md'), 'utf-8');
+    } catch {
+      return null;
+    }
+
+    return describeUnresolvedGates(parseFinalQualityGates(testPlan));
   }
 
   private async selectChange(changesDir: string): Promise<string | null> {

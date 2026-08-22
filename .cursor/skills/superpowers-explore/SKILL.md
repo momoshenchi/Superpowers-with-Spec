@@ -104,6 +104,8 @@ This tells you:
 - Their names, schemas, and status
 - What the user might be working on
 
+If the user mentioned a specific change name, read its artifacts for context.
+
 ### When no change exists
 
 Think freely. When insights crystallize, you might offer:
@@ -142,14 +144,6 @@ If the user mentions a change or you detect one is relevant:
    - "This changes scope. Update the proposal?"
 
 4. **The user decides** - Offer and move on. Don't pressure. Don't auto-capture.
-
-### Ending Discovery
-
-When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, an agent-owned decision MAY include an A/B/C comparison, but the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Do not present a model-inferred result as a user Choice.
-
-For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
-
-If the work is UI-facing, optionally discover a repository visual `DESIGN.md` / `design.md` (google-labs identity file: tokens + prose)—distinct from change-local `design.md`—and carry any citation into design Current system / Relationship.
 
 ---
 
@@ -276,6 +270,12 @@ There's no required ending. Discovery might:
 - **Result in artifact updates**: "Updated design.md with these decisions"
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"
+
+When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, an agent-owned decision MAY include an A/B/C comparison, but the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Do not present a model-inferred result as a user Choice.
+
+For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
+
+If the work is UI-facing, optionally discover a repository visual `DESIGN.md` / `design.md` (google-labs identity file: tokens + prose)—distinct from change-local `design.md`—and carry any citation into design Current system / Relationship.
 
 Minor local fixes do not need three fake options.
 

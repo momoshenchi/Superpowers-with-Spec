@@ -78,7 +78,13 @@ superpowers status --change <name>
 
 After running `superpowers init`, the following slash commands are available in your AI tool:
 
+The default `core` profile installs:
+
 - `/sp:propose` — Create a new change with all artifacts
 - `/sp:explore` — Enter explore/brainstorming mode
+- `/sp:review` — Review a complete proposal before implementation
 - `/sp:apply` — Implement tasks from a change
 - `/sp:archive` — Archive a completed change
+- `/sp:simplify`, `/sp:verify`, `/sp:design-verify` — The three final quality gates that `/sp:apply` runs after Test Hardening, and that `/sp:archive` checks via the `## Final Quality Gates` table in `test-plan.md`
+
+Remaining workflows (`new`, `continue`, `ff`, `sync`, `bulk-archive`, `shape-review`, `onboard`) are available through `superpowers config profile`.

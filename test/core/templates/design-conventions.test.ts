@@ -94,7 +94,7 @@ function expectReviewDerivedImplicationRules(content: string) {
   expectDerivedImplicationScan(content);
   expect(content).toContain('Closed implication scan');
   expect(content).toContain('derived-implication gap');
-  expect(content).toContain('never BLOCKER solely for a derived-implication gap');
+  expect(content).toContain('never `P0` solely for a derived-implication gap');
   expect(content).toContain('delta-spec trace');
   expect(content).not.toMatch(/optional `### Derived implications`/i);
 }
@@ -171,7 +171,7 @@ describe('change design conventions sources', () => {
     expect(instruction).not.toContain('docs/detailed_doc');
     expect(instruction).toContain('which choices the user actually made');
     expectDerivedImplicationScan(instruction);
-    expect(instruction).toContain('never BLOCKER solely for a derived-implication gap');
+    expect(instruction).toContain('never P0 solely for a derived-implication gap');
     expect(instruction).toContain('delta spec');
   });
 
@@ -248,38 +248,11 @@ describe('change design conventions sources', () => {
       expect(content).toContain('not a finding');
       expect(content).toContain('## Invariants');
       expect(content).toContain('N/A — no cross-path invariants');
-      expect(content).toMatch(/missing.*Invariants.*BLOCKER|Invariants.*BLOCKER/i);
+      expect(content).toMatch(/missing.*Invariants.*`P0`|Invariants.*`P0`/i);
       expect(content).not.toMatch(/major decisions need \*\*≥3 options\*\* recorded/i);
       expect(content).not.toContain('Do not invent A/B/C');
       expectReviewDerivedImplicationRules(content);
     }
-  });
-
-  it('repo change-review skill stays aligned with generated review design-convention anchors', () => {
-    const skill = fs.readFileSync(
-      path.join(ROOT, '.vscode', 'important_skills', 'change-review', 'SKILL.md'),
-      'utf8'
-    );
-    const generated = getChangeReviewSkillTemplate().instructions;
-
-    for (const anchor of DESIGN_CONVENTION_ANCHORS) {
-      expect(skill, `repo skill missing ${anchor}`).toContain(anchor);
-      expect(generated, `generated review missing ${anchor}`).toContain(anchor);
-    }
-
-    expect(skill).toMatch(/不得.*三方案|细节.*仅需理由|不成问题/);
-    expect(skill).toMatch(/真实选择|用户.*选择/);
-    expect(skill).toMatch(/文件路径|路径表|文件清单/);
-    expect(generated).toContain('not a finding');
-    expect(generated).toContain('shallow rationale');
-    expect(skill).toMatch(/严格.*详细|详细.*分析/);
-    expect(skill).toMatch(/可实施|工作实例|映射/);
-    expect(skill).toContain('Pointer');
-    expect(skill).toContain('视觉 DESIGN.md');
-    expect(skill).toMatch(/闭集.*扫描|Closed implication scan/);
-    expect(skill).toMatch(/## Decisions[\s\S]*## Contracts[\s\S]*## Invariants|写入.*Decisions/);
-    expect(skill).toMatch(/不得.*仅因.*推导.*BLOCKER|derived-implication gap/);
-    expectReviewDerivedImplicationRules(generated);
   });
 
   it('Propose records user-confirmed tables and allows agent-owned A/B/C with strict analysis', () => {

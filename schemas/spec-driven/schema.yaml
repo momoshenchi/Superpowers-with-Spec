@@ -49,7 +49,7 @@ artifacts:
       - Each requirement: `### Requirement: <name>` followed by description
       - Use SHALL/MUST for normative requirements (avoid should/may)
       - Each scenario: `#### Scenario: <name>` with WHEN/THEN format
-      - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
+      - **IMPORTANT**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
       - Every requirement MUST have at least one scenario.
 
       MODIFIED requirements workflow:
@@ -170,7 +170,7 @@ artifacts:
       Do not present them as a user Choice. When a derived implication
       changes observable user behavior or acceptance, record it in the
       change's delta spec. Change-review treats a missing scan dimension
-      as WARNING and never BLOCKER solely for a derived-implication gap.
+      as P1 and never P0 solely for a derived-implication gap.
       CLI validate MUST NOT parse scan rows.
 
       Write enough that a stranger can implement from design + specs without
@@ -270,6 +270,7 @@ artifacts:
       - List each logical dispatch unit, its ownership boundary, dependencies, assignee policy, safe parallel eligibility, integration order, and handoff evidence in a Dispatch Coordination table.
       - State that a dispatch unit is an allocation boundary, not a required one-to-one subagent assignment; put assignee policy in the coordination table rather than in `tasks.md` headings. Accept legacy `agent<logical-id>` headings as dispatch units.
       - For every detailed task, provide concrete files, focused tests, commands, expected results, implementation detail, verification, and self-review/handoff guidance across its Step 1–5 sequence.
+      - Fill every Step 3 slot for every detailed task: change anchor (exact symbols and the call path reaching them), design carried (the `design.md` Decisions, Contracts, and Invariants implemented, cited by name), implementation approach (algorithm, data shape, or state transition at a level someone can code from), edges and failures (empty/missing/invalid/failure behavior traced to spec Scenarios), and out of scope. A Step 3 that only restates the task title is incomplete.
       - Treat those five steps as task-level execution detail, not as separate subagent assignments or required 2–5 minute units.
       - Reserve optional `Implementation Notes` directly after any Step 1–5 when execution produces useful knowledge. Notes SHALL capture concise Findings, Reasoning, Viewpoints / Trade-offs, and Summary / Takeaway content for later workers and the main agent. They are non-normative narrative context and must not become an execution status tracker.
       - Keep `tasks.md` as the only checkbox progress source. Implementation Notes SHALL NOT add task checkboxes, status fields, or a second completion model. Preserve the planned steps and append notes rather than rewriting them.
@@ -301,9 +302,14 @@ artifacts:
 
       The plan must:
       - Distinguish worker-level verification in detailed `tasks.md` from post-integration Test Hardening in `test-plan.md`.
-      - Include a requirement/scenario coverage matrix with unit, integration, E2E, manual, or not-applicable coverage decisions.
+      - Include a requirement/scenario coverage matrix with unit, integration, E2E, or not-applicable coverage decisions.
       - Start by analyzing which earlier tests were insufficient or not broad enough, then describe which tests this stage added or strengthened.
-      - Include boundary, abnormal, failure, non-critical-path, integration, and cross-platform path risks where relevant.
+      - Open with a `## Test Scope Register` that takes objects from the change's delta spec: one row per `### Requirement:` coded R1, R2, …, plus existing `#### Scenario:` titles, the real entry point (CLI subcommand, HTTP route, exported function, or UI route rather than an internal helper), its diff anchor, and a one-line risk hypothesis. Do not invent a parallel feature list. A single-requirement change still registers one row.
+      - Map each imported spec Scenario to a chosen form (`unit` / `integration` / `E2E`) in the `## Requirement And Scenario Coverage Matrix`. Prefer the lowest layer that can observe the behavior.
+      - Carry cases in a `## Six-Dimension Case Matrix` split into one `### D<n> — <dimension>` table per `full-qa-test` dimension (D1 requirements and business scenarios, D2 code and branch coverage, D3 data and input space, D4 state transitions and timing, D5 non-functional and fault tolerance, D6 environment and dependencies). Each table keeps that dimension's own columns from the skill's Step 1–6 output formats plus Object, Form, Status, and Evidence; do not merge the dimensions into one wide table. Non-critical paths such as fallback, warning, empty result, cleanup, and logging belong to the dimension that owns them.
+      - Identify every case as `TC-R<object>-D<dimension>-<seq>` and carry its object code and form. Run the skill's 10→10→10 batch rule once per registered Requirement per dimension; do not share one batch of ten across several requirements. Import existing spec Scenarios into D1 as the baseline, then expand. Write cases against real routes, symbols, and literal values, with expected results stated as checkable assertions; a case whose expectation is only "invalid input is rejected" is incomplete.
+      - Summarize per-dimension coverage in a `## Dimension Coverage Summary` table mirroring the `full-qa-test` Step 7 self-check, listing case IDs per Requirement. Every dimension is `covered` for every registered Requirement, or `not applicable` with a concrete scope reason; a blank dimension keeps Test Hardening incomplete. When two or more Requirements are registered, also fill a `### Requirement × Dimension Coverage` grid so a requirement missing from a dimension is visible.
+      - Record the optional D2 mutation-testing gate in a `## Mutation Testing` table with scope, mutation score, surviving mutants, and follow-up cases, or a stated deferral reason.
       - Put executable manual checks in a `## Manual Coverage` table with Check / Scenario, Execution Method and Environment, Status, and Evidence columns.
       - Treat browser and other runnable end-to-end journeys as Manual Coverage methods. Declare `programmatic-browser` (Playwright/Cypress/repo E2E runner) or `agent-browser` (agent-controlled human-like UI) in Execution Method and Environment; honor declared methods, apply risk-layering defaults when undeclared, allow Critical Path rows to require both modes with overlapping coverage, and require any `agent-browser` execution to cover the change's Critical Path. Execute `agent-browser` rows during Verify, not Test Hardening; Hardening may leave them `planned` with evidence noting deferral to Verify.
       - Put intentionally postponed work in a separate `## Deferred Coverage` table with a specific reason and safer alternative or follow-up; deferred rows are not execution evidence.

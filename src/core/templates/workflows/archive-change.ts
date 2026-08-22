@@ -5,221 +5,9 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
+import { pick, type Projection } from './projection.js';
 
-export function getArchiveChangeSkillTemplate(): SkillTemplate {
-  return {
-    name: 'superpowers-archive-change',
-    description: 'Archive a completed change in the workflow. Use when the user wants to finalize and archive a change after implementation is complete.',
-    instructions: `Archive a completed change in the workflow.
-
-**Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
-
-**Steps**
-
-1. **If no change name provided, prompt for selection**
-
-   Run \`superpowers list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
-
-   Show only active changes (not already archived).
-   Include the schema used for each change if available.
-
-   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
-
-2. **Check artifact completion status**
-
-   Run \`superpowers status --change "<name>" --json\` to check artifact completion.
-
-   Parse the JSON to understand:
-   - \`schemaName\`: The workflow being used
-   - \`artifacts\`: List of artifacts with their status (\`done\` or other)
-
-   **If any artifacts are not \`done\`:**
-   - Display warning listing incomplete artifacts
-   - Use **AskUserQuestion tool** to confirm user wants to proceed
-   - Proceed if user confirms
-
-3. **Check task completion status**
-
-   Read the tasks file (typically \`tasks.md\`) to check for incomplete tasks.
-
-   Count tasks marked with \`- [ ]\` (incomplete) vs \`- [x]\` (complete).
-
-   **If incomplete tasks found:**
-   - Display warning showing count of incomplete tasks
-   - Use **AskUserQuestion tool** to confirm user wants to proceed
-   - Proceed if user confirms
-
-   **If no tasks file exists:** Proceed without task-related warning.
-
-4. **Assess delta spec sync state**
-
-   Check for delta specs at \`superpowers/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
-
-   **If delta specs exist:**
-   - Compare each delta spec with its corresponding main spec at \`superpowers/specs/<capability>/spec.md\`
-   - Determine what changes would be applied (adds, modifications, removals, renames)
-   - Show a combined summary before prompting
-
-   **Prompt options:**
-   - If changes needed: "Sync now (recommended)", "Archive without syncing"
-   - If already synced: "Archive now", "Sync anyway", "Cancel"
-
-   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke superpowers-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
-
-5. **Perform the archive**
-
-   Create the archive directory if it doesn't exist:
-   \`\`\`bash
-   mkdir -p superpowers/changes/archive
-   \`\`\`
-
-   Generate target name using current date: \`YYYY-MM-DD-<change-name>\`
-
-   **Check if target already exists:**
-   - If yes: Fail with error, suggest renaming existing archive or using different date
-   - If no: Move the change directory to archive
-
-   \`\`\`bash
-   mv superpowers/changes/<name> superpowers/changes/archive/YYYY-MM-DD-<name>
-   \`\`\`
-
-6. **Display summary**
-
-   Show archive completion summary including:
-   - Change name
-   - Schema that was used
-   - Archive location
-   - Whether specs were synced (if applicable)
-   - Note about any warnings (incomplete artifacts/tasks)
-
-**Output On Success**
-
-\`\`\`
-## Archive Complete
-
-**Change:** <change-name>
-**Schema:** <schema-name>
-**Archived to:** superpowers/changes/archive/YYYY-MM-DD-<name>/
-**Specs:** ✓ Synced to main specs (or "No delta specs" or "Sync skipped")
-
-All artifacts complete. All tasks complete.
-\`\`\`
-
-**Guardrails**
-- Always prompt for change selection if not provided
-- Use artifact graph (superpowers status --json) for completion checking
-- Don't block archive on warnings - just inform and confirm
-- Preserve .superpowers.yaml when moving to archive (it moves with the directory)
-- Show clear summary of what happened
-- If sync is requested, use superpowers-sync-specs approach (agent-driven)
-- If delta specs exist, always run the sync assessment and show the combined summary before prompting`,
-    license: 'MIT',
-    compatibility: 'Requires superpowers CLI.',
-    metadata: { author: 'superpowers', version: '1.0' },
-  };
-}
-
-export function getSpArchiveCommandTemplate(): CommandTemplate {
-  return {
-    name: 'SP: Archive',
-    description: 'Archive a completed change in the workflow',
-    category: 'Workflow',
-    tags: ['workflow', 'archive'],
-    content: `Archive a completed change in the workflow.
-
-**Input**: Optionally specify a change name after \`/sp:archive\` (e.g., \`/sp:archive add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
-
-**Steps**
-
-1. **If no change name provided, prompt for selection**
-
-   Run \`superpowers list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
-
-   Show only active changes (not already archived).
-   Include the schema used for each change if available.
-
-   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
-
-2. **Check artifact completion status**
-
-   Run \`superpowers status --change "<name>" --json\` to check artifact completion.
-
-   Parse the JSON to understand:
-   - \`schemaName\`: The workflow being used
-   - \`artifacts\`: List of artifacts with their status (\`done\` or other)
-
-   **If any artifacts are not \`done\`:**
-   - Display warning listing incomplete artifacts
-   - Prompt user for confirmation to continue
-   - Proceed if user confirms
-
-3. **Check task completion status**
-
-   Read the tasks file (typically \`tasks.md\`) to check for incomplete tasks.
-
-   Count tasks marked with \`- [ ]\` (incomplete) vs \`- [x]\` (complete).
-
-   **If incomplete tasks found:**
-   - Display warning showing count of incomplete tasks
-   - Prompt user for confirmation to continue
-   - Proceed if user confirms
-
-   **If no tasks file exists:** Proceed without task-related warning.
-
-4. **Assess delta spec sync state**
-
-   Check for delta specs at \`superpowers/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
-
-   **If delta specs exist:**
-   - Compare each delta spec with its corresponding main spec at \`superpowers/specs/<capability>/spec.md\`
-   - Determine what changes would be applied (adds, modifications, removals, renames)
-   - Show a combined summary before prompting
-
-   **Prompt options:**
-   - If changes needed: "Sync now (recommended)", "Archive without syncing"
-   - If already synced: "Archive now", "Sync anyway", "Cancel"
-
-   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke superpowers-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
-
-5. **Perform the archive**
-
-   Create the archive directory if it doesn't exist:
-   \`\`\`bash
-   mkdir -p superpowers/changes/archive
-   \`\`\`
-
-   Generate target name using current date: \`YYYY-MM-DD-<change-name>\`
-
-   **Check if target already exists:**
-   - If yes: Fail with error, suggest renaming existing archive or using different date
-   - If no: Move the change directory to archive
-
-   \`\`\`bash
-   mv superpowers/changes/<name> superpowers/changes/archive/YYYY-MM-DD-<name>
-   \`\`\`
-
-6. **Display summary**
-
-   Show archive completion summary including:
-   - Change name
-   - Schema that was used
-   - Archive location
-   - Spec sync status (synced / sync skipped / no delta specs)
-   - Note about any warnings (incomplete artifacts/tasks)
-
-**Output On Success**
-
-\`\`\`
-## Archive Complete
-
-**Change:** <change-name>
-**Schema:** <schema-name>
-**Archived to:** superpowers/changes/archive/YYYY-MM-DD-<name>/
-**Specs:** ✓ Synced to main specs
-
-All artifacts complete. All tasks complete.
-\`\`\`
-
+const ARCHIVE_EXTRA_OUTPUTS = `
 **Output On Success (No Delta Specs)**
 
 \`\`\`
@@ -246,6 +34,7 @@ All artifacts complete. All tasks complete.
 **Warnings:**
 - Archived with 2 incomplete artifacts
 - Archived with 3 incomplete tasks
+- Archived with 1 unresolved final quality gate (\`/sp:verify\`: failed)
 - Delta spec sync was skipped (user chose to skip)
 
 Review the archive if this was not intentional.
@@ -266,14 +55,147 @@ Target archive directory already exists.
 2. Delete the existing archive if it's a duplicate
 3. Wait until a different date to archive
 \`\`\`
+`;
 
+function buildArchiveInstructions(p: Projection): string {
+  const confirmPrompt = 'Use **AskUserQuestion tool** to confirm user wants to proceed';
+
+  return `Archive a completed change in the workflow.
+
+**Input**: Optionally specify a change name${pick(p, '', ' after \`/sp:archive\` (e.g., \`/sp:archive add-auth\`)')}. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+
+**Steps**
+
+1. **If no change name provided, prompt for selection**
+
+   Run \`superpowers list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+
+   Show only active changes (not already archived).
+   Include the schema used for each change if available.
+
+   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
+
+2. **Check artifact completion status**
+
+   Run \`superpowers status --change "<name>" --json\` to check artifact completion.
+
+   Parse the JSON to understand:
+   - \`schemaName\`: The workflow being used
+   - \`artifacts\`: List of artifacts with their status (\`done\` or other)
+
+   **If any artifacts are not \`done\`:**
+   - Display warning listing incomplete artifacts
+   - ${confirmPrompt}
+   - Proceed if user confirms
+
+3. **Check task completion status**
+
+   Read the tasks file (typically \`tasks.md\`) to check for incomplete tasks.
+
+   Count tasks marked with \`- [ ]\` (incomplete) vs \`- [x]\` (complete).
+
+   **If incomplete tasks found:**
+   - Display warning showing count of incomplete tasks
+   - ${confirmPrompt}
+   - Proceed if user confirms
+
+   **If no tasks file exists:** Proceed without task-related warning.
+
+4. **Check the final quality gate record**
+
+   Read \`test-plan.md\` when it exists and locate its \`## Final Quality Gates\` section.
+
+   A gate is resolved when it is \`passed\`, or \`not applicable\` with concrete scope evidence. A gate is unresolved when it is \`failed\`, applicable-\`blocked\`, still \`planned\`, or absent.
+
+   **If the section is missing, records no rows, or has any unresolved gate:**
+   - Display a warning naming each unresolved gate and its outcome
+   - ${confirmPrompt}
+   - Proceed if user confirms
+
+   **If no \`test-plan.md\` exists:** Proceed without gate-related warning; the change has no gate contract.
+
+5. **Assess delta spec sync state**
+
+   Check for delta specs at \`superpowers/changes/<name>/specs/\`. If none exist, proceed without sync prompt.
+
+   **If delta specs exist:**
+   - Compare each delta spec with its corresponding main spec at \`superpowers/specs/<capability>/spec.md\`
+   - Determine what changes would be applied (adds, modifications, removals, renames)
+   - Show a combined summary before prompting
+
+   **Prompt options:**
+   - If changes needed: "Sync now (recommended)", "Archive without syncing"
+   - If already synced: "Archive now", "Sync anyway", "Cancel"
+
+   If user chooses sync, use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke superpowers-sync-specs for change '<name>'. Delta spec analysis: <include the analyzed delta spec summary>"). Proceed to archive regardless of choice.
+
+6. **Perform the archive**
+
+   Create the archive directory if it doesn't exist:
+   \`\`\`bash
+   mkdir -p superpowers/changes/archive
+   \`\`\`
+
+   Generate target name using current date: \`YYYY-MM-DD-<change-name>\`
+
+   **Check if target already exists:**
+   - If yes: Fail with error, suggest renaming existing archive or using different date
+   - If no: Move the change directory to archive
+
+   \`\`\`bash
+   mv superpowers/changes/<name> superpowers/changes/archive/YYYY-MM-DD-<name>
+   \`\`\`
+
+7. **Display summary**
+
+   Show archive completion summary including:
+   - Change name
+   - Schema that was used
+   - Archive location
+   - Spec sync status (synced / sync skipped / no delta specs)
+   - Note about any warnings (incomplete artifacts/tasks, unresolved final quality gates)
+
+**Output On Success**
+
+\`\`\`
+## Archive Complete
+
+**Change:** <change-name>
+**Schema:** <schema-name>
+**Archived to:** superpowers/changes/archive/YYYY-MM-DD-<name>/
+**Specs:** ✓ Synced to main specs
+
+All artifacts complete. All tasks complete.
+\`\`\`
+${ARCHIVE_EXTRA_OUTPUTS}
 **Guardrails**
 - Always prompt for change selection if not provided
 - Use artifact graph (superpowers status --json) for completion checking
+- Check the \`## Final Quality Gates\` record in \`test-plan.md\` before archiving; never treat a missing record as a passing quality chain
 - Don't block archive on warnings - just inform and confirm
 - Preserve .superpowers.yaml when moving to archive (it moves with the directory)
 - Show clear summary of what happened
-- If sync is requested, use the Skill tool to invoke \`superpowers-sync-specs\` (agent-driven)
-- If delta specs exist, always run the sync assessment and show the combined summary before prompting`
+- If sync is requested, invoke the \`superpowers-sync-specs\` skill (agent-driven)
+- If delta specs exist, always run the sync assessment and show the combined summary before prompting`;
+}
+
+export function getArchiveChangeSkillTemplate(): SkillTemplate {
+  return {
+    name: 'superpowers-archive-change',
+    description: 'Archive a completed change in the workflow. Use when the user wants to finalize and archive a change after implementation is complete.',
+    instructions: buildArchiveInstructions('skill'),
+    license: 'MIT',
+    compatibility: 'Requires superpowers CLI.',
+    metadata: { author: 'superpowers', version: '1.0' },
+  };
+}
+
+export function getSpArchiveCommandTemplate(): CommandTemplate {
+  return {
+    name: 'SP: Archive',
+    description: 'Archive a completed change in the workflow',
+    category: 'Workflow',
+    tags: ['workflow', 'archive'],
+    content: buildArchiveInstructions('command'),
   };
 }

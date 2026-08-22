@@ -90,16 +90,24 @@ describe('profile sync drift detection', () => {
     expect(hasDrift).toBe(true);
   });
 
-  it('detects deselected simplify, design-verify, and shape-review artifacts', () => {
+  it('detects deselected shape-review and onboard artifacts', () => {
     setupCoreSkills(tempDir);
     setupCoreCommands(tempDir);
-    writeSkill(tempDir, 'simplify');
-    writeSkill(tempDir, 'design-verify');
     writeSkill(tempDir, 'shape-review');
-    writeCommand(tempDir, 'simplify');
-    writeCommand(tempDir, 'design-verify');
+    writeSkill(tempDir, 'onboard');
     writeCommand(tempDir, 'shape-review');
+    writeCommand(tempDir, 'onboard');
 
     expect(hasProjectConfigDrift(tempDir, CORE_WORKFLOWS, 'both')).toBe(true);
+  });
+
+  it('does not treat the core profile quality gates as drift', () => {
+    setupCoreSkills(tempDir);
+    setupCoreCommands(tempDir);
+
+    for (const gate of ['verify', 'simplify', 'design-verify']) {
+      expect(CORE_WORKFLOWS).toContain(gate);
+    }
+    expect(hasProjectConfigDrift(tempDir, CORE_WORKFLOWS, 'both')).toBe(false);
   });
 });

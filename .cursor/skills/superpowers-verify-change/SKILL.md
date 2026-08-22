@@ -50,7 +50,7 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
    - **Correctness**: Track test-suite preflight and Manual Coverage (including browser methods)
    - **Coherence**: Track design adherence and pattern consistency
 
-   Each dimension can have CRITICAL, WARNING, or SUGGESTION issues.
+   Each dimension can have `P0`, `P1`, or `P2` findings.
 
 4. **Verify Completeness**
 
@@ -58,7 +58,7 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
    - If tasks.md exists in contextFiles, read it
    - Review each task individually for actual completion; do not rely on checkbox state alone — `- [x]` does not prove the work is done. Judge completion from evidence in the actual code implementation.
    - If incomplete tasks exist:
-     - Add CRITICAL issue for each incomplete task
+     - Add a `P0` finding for each incomplete task
      - Recommendation: "Complete task: <description>" or "Mark as done if already implemented"
 
    **Spec Coverage**:
@@ -69,16 +69,16 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
        - Assess if implementation likely exists
        - Assess if implementation matches requirement intent
      - If divergence detected:
-       - Add WARNING: "Implementation may diverge from spec: <details>"
+       - Add `P1`: "Implementation may diverge from spec: <details>"
        - Recommendation: "Review <file>:<lines> against requirement X"
      - If requirements appear unimplemented:
-       - Add CRITICAL issue: "Requirement not found: <requirement name>"
+       - Add `P0`: "Requirement not found: <requirement name>"
        - Recommendation: "Implement requirement X: <description>"
      - For each scenario in delta specs (marked with "#### Scenario:"):
        - Check if conditions are handled in code
        - Check if tests exist covering the scenario
        - If scenario appears uncovered:
-         - Add WARNING: "Scenario not covered: <scenario name>"
+         - Add `P1`: "Scenario not covered: <scenario name>"
          - Recommendation: "Add test or implementation for scenario: <description>"
 
    **Test Coverage**:
@@ -88,9 +88,9 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
      - Find missing coverage: spec or implementation scope with no corresponding automated, manual, or justified deferred row.
      - Find stale coverage: rows that no longer match the implementation, were superseded by code changes, or describe tests that should be updated or removed.
      - Find shallow coverage: happy-path-only rows where delta specs or design call for boundaries, errors, permissions, state transitions, or integration paths.
-   - When using `full-qa-test`, use its dimensions as a gap-analysis lens. During Verify, assess the plan and existing tests; do not claim full six-dimensional execution unless the active skill phase requires it.
+   - When using `full-qa-test`, use its dimensions as a gap-analysis lens and read them off the `test-plan.md` `## Six-Dimension Case Matrix` (one table per dimension) and `## Dimension Coverage Summary`, which carry the same D1–D6 codes. Use `## Test Scope Register` to check coverage per `### Requirement:`, not a homemade feature list: a registered Requirement with no case in an applicable dimension is a coverage gap, as is a dimension left blank in that summary. Check that each case names a form (`unit` / `integration` / `E2E` ) and that the form is the lowest layer that can observe the behavior. During Verify, assess the plan and existing tests; do not claim full six-dimensional execution unless the active skill phase requires it.
    - When gaps, stale rows, or unjustified deferrals are found:
-     - Add WARNING: "Test plan gap: <details>"
+     - Add `P1`: "Test plan gap: <details>"
      - Recommendation: "Add or update test-plan.md for <requirement/scenario/risk>; cite the missing case or dimension"
    - The Verify worker reports findings by default; do not edit `test-plan.md` unless the host workflow explicitly authorizes repair.
 
@@ -110,7 +110,7 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
     - Read the active `test-plan.md` `## Manual Coverage` table separately from `## Deferred Coverage`. A Manual Coverage row is an executable check. Deferred Coverage is not execution evidence and must not be reported as passed or run.
     - After the canonical non-visual preflight, execute every applicable Manual Coverage row, including `agent-browser` rows deferred from Test Hardening, through its stated normal entry point, method, and safe environment. Record the performed steps, method/environment, actions, observed outcome, and inspectable evidence in the row or report.
 - Treat every concrete Manual Coverage status row as required coverage. Classify each concrete Manual Coverage row as `passed`, `failed`, `blocked`, or scope-backed `not applicable`. An unexecuted, blank, `planned`, or placeholder row is incomplete. Any unexecuted, failed, or blocked applicable manual row prevents verify from passing; name remediation or the missing prerequisite rather than guessing.
-- When this is final-quality Verify, a Manual Coverage `BLOCKER` is an immediate `blocked` outcome and does not consume the Verify retry round; a repairable manual failure retries from Verify under the existing four-round limit.
+- When this is final-quality Verify, a `blocked` Manual Coverage row makes the gate outcome `blocked` immediately and does not consume the Verify retry round; a repairable manual failure retries from Verify under the existing four-round limit.
     - Do not move a required manual row into Deferred Coverage merely to avoid execution. Use `not applicable` only with concrete scope evidence and use Deferred Coverage only for intentionally postponed work with a specific reason and safer follow-up.
     - Treat browser and other runnable end-to-end journeys as Manual Coverage methods, not as a separate Verify gate. Declare the method in the row's Execution Method and Environment field.
     - Distinguish two browser-control modes and record which one each row uses:
@@ -127,15 +127,15 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
      - Extract key decisions (look for sections like "Decision:", "Approach:", "Architecture:")
      - Verify implementation follows those decisions
      - If contradiction detected:
-       - Add WARNING: "Design decision not followed: <decision>"
+       - Add `P1`: "Design decision not followed: <decision>"
        - Recommendation: "Update implementation or revise design.md to match reality"
    - If no design.md: Skip design adherence check, note "No design.md to verify against"
 
    **Invariants**:
    - If `design.md` contains `## Invariants` that is not `N/A — no cross-path invariants`:
      - For each invariant ID, check the owner test/check when available
-     - Owner check failure or implementation that breaks the stated invariant → add **CRITICAL** citing the invariant ID (Final Quality Gates P0-equivalent); recommend restore invariant or update design with explicit rationale
-     - Soft documentary drift while the owner check still passes → WARNING only (do not escalate to CRITICAL solely on soft drift)
+     - Owner check failure or implementation that breaks the stated invariant → add **`P0`** citing the invariant ID; recommend restore invariant or update design with explicit rationale
+     - Soft documentary drift while the owner check still passes → `P1` only (do not escalate to `P0` solely on soft drift)
    - If Invariants is an explicit N/A line: do not fail coherence solely for lack of invariant rows
 
 
@@ -143,7 +143,7 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
    - Review new code for consistency with project patterns
    - Check file naming, directory structure, coding style
    - If significant deviations found:
-     - Add SUGGESTION: "Code pattern deviation: <details>"
+     - Add `P2`: "Code pattern deviation: <details>"
      - Recommendation: "Consider following project pattern: <example>"
 
 7. **Generate Verification Report**
@@ -161,46 +161,54 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
    | Coherence    | Followed/Issues  |
    ```
 
-   **Issues by Priority**:
+   **Issues by Severity** (use the shared `P0`/`P1`/`P2` scale; do not introduce other severity words):
 
-   1. **CRITICAL** (Must fix before archive):
+   1. **`P0`** (Must fix before archive):
       - Incomplete tasks
       - Missing requirement implementations
+      - Broken stated invariants
       - Each with specific, actionable recommendation
 
-   2. **WARNING** (Should fix):
+   2. **`P1`** (Should fix):
       - Spec/design divergences
       - Missing scenario coverage
       - Test plan gaps or stale test rows
       - Each with specific recommendation
 
-   3. **SUGGESTION** (Nice to fix):
+   3. **`P2`** (Nice to fix):
       - Pattern inconsistencies
       - Minor improvements
       - Each with specific recommendation
 
    **Final Assessment**:
    - If any applicable Manual Coverage row is `blocked` or `failed`: "Verify blocked/failed: resolve the Manual Coverage outcome before archiving." Do not report Correctness as passed.
-   - If CRITICAL issues: "X critical issue(s) found. Fix before archiving."
-   - If only warnings: "No critical issues. Y warning(s) to consider. Ready for archive (with noted improvements)."
+   - If `P0` findings: "X P0 finding(s). Fix before archiving."
+   - If only `P1`/`P2`: "No P0 findings. Y lower-severity finding(s) to consider. Ready for archive (with noted improvements)."
    - If all clear: "All checks passed. Ready for archive."
 
 ## Other Rules
 
+**Severity model (single source).** Superpowers has exactly two grading vocabularies. They answer different questions, so never map one onto the other and never mix their words.
+
+- **Defect severity — `P0`, `P1`, `P2`.** The only scale for grading a finding. Every activity that reports findings uses it: code review, proposal review, Verify, Design verify, and any security review feeding them. `P0` must be repaired before the activity can pass or announce readiness. `P1` is a real defect: repair it in the active round, but it does not by itself demand another round. `P2` is an optional improvement. Do not label findings `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `INFO`, `WARNING`, or `SUGGESTION`; report the equivalent `P` level instead.
+- **Gate outcome — `passed`, `failed`, `blocked`, or `not applicable`.** These say what happened to a Final Quality Gate, not how bad a finding is. `blocked` means a missing prerequisite or an external decision the worker cannot make: it names the prerequisite, pauses the affected gate immediately, and does not consume a round. A gate outcome is never a priority level, and `blocked` never substitutes for `P0`.
+
+When a finding's severity is uncertain, prefer `P2` over `P1`, and `P1` over `P0`.
+
 ### Final-quality Verify retries:
    - When Verify is delegated by `/sp:apply`, label the report `Verify round 1` through `Verify round 4`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
    - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable Manual Coverage. Preserve separate command and Manual Coverage evidence for every numbered round.
-   - Treat `CRITICAL` as `P0` for final-quality retry decisions. Before round four, the worker reports each resolvable failed check, applicable Manual Coverage failure, or P0/CRITICAL finding. When the coordinator repairs an accepted failure or CRITICAL finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
-   - A missing runtime, credential, browser capability, dependency, or other prerequisite is `BLOCKER`: report `blocked`, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable Manual Coverage failure, or P0/CRITICAL finding, report `failed`; do not begin a fifth round or recommend archive.
+   - Before round four, the worker reports each resolvable failed check, applicable Manual Coverage failure, or `P0` finding. When the coordinator repairs an accepted failure or `P0` finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
+   - A missing runtime, credential, browser capability, dependency, or other prerequisite is `blocked`: report it, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable Manual Coverage failure, or `P0` finding, report `failed`; do not begin a fifth round or recommend archive.
 
 ### Verification Heuristics
 
 - **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
 - **Correctness**: Run the canonical test suite and Manual Coverage (including `programmatic-browser` / `agent-browser` methods); use inspectable evidence rather than inference alone
 - **Coherence**: Look for glaring inconsistencies, don't nitpick style
-- **False Positives**: When uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL
+- **False Positives**: Calibrate down when uncertain, per the severity model above
 - **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
-**Adversarial hunt intent:** Hunt for as many real issues as possible. Assume remaining gaps, spec or design divergences, missing coverage, and failed journeys exist until evidence proves otherwise. Continue after the first finding. Report every reproducible, actionable issue with file/line or runtime evidence. Do not invent findings. Severity calibration is unchanged: when uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL.
+**Adversarial hunt intent:** Hunt for as many real issues as possible. Assume remaining gaps, spec or design divergences, missing coverage, and failed journeys exist until evidence proves otherwise. Continue after the first finding. Report every reproducible, actionable issue with file/line or runtime evidence. Do not invent findings. Severity calibration is unchanged and follows the shared severity model.
 
 ### Remediations
    - Probe `superpowers/changes/<name>/remediations.md` on the change directory even when it is absent from schema `contextFiles`
@@ -227,7 +235,7 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
 
 Use clear markdown with:
 - Table for summary scorecard
-- Grouped lists for issues (CRITICAL/WARNING/SUGGESTION)
+- Grouped lists for issues (`P0`/`P1`/`P2`)
 - When running as an apply final-quality gate: `Verify round: <1-4>`, `Fresh worker: <identity>`, retry disposition, canonical preflight/Manual Coverage evidence for that round, and the terminal `failed` or `blocked` reason where applicable
 - Repair ownership: findings reported without edits by default; coordinator remediation and targeted-validation evidence when applicable
 - Code references in format: `file.ts:123`

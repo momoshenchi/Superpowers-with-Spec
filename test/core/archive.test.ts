@@ -51,6 +51,25 @@ describe('ArchiveCommand', () => {
     }
   });
 
+  /** A change that actually completed its final quality gates, i.e. is archivable. */
+  function testPlanWithPassedGates(): string {
+    return [
+      '## Testing Gap Analysis',
+      '',
+      'Covered.',
+      '',
+      '## Final Quality Gates',
+      '',
+      '| Gate | Outcome | Fresh worker evidence |',
+      '| --- | --- | --- |',
+      '| code review | passed | round 1, no P0 |',
+      '| `/sp:simplify` | passed | single pass |',
+      '| `/sp:verify` | passed | round 1, suite green |',
+      '| `/sp:design-verify` | not applicable | non-UI change |',
+      '',
+    ].join('\n');
+  }
+
   async function writeRequiredArtifacts(
     changeDir: string,
     options: { overwriteTasks?: boolean } = {}
@@ -60,7 +79,7 @@ describe('ArchiveCommand', () => {
       await fs.writeFile(path.join(changeDir, 'tasks.md'), '- [x] Task 1\n', 'utf-8');
     }
     await fs.writeFile(path.join(changeDir, 'execution-plan.md'), '## Task Plan\n\n- [x] Step 1\n', 'utf-8');
-    await fs.writeFile(path.join(changeDir, 'test-plan.md'), '## Testing Gap Analysis\n\nCovered.\n', 'utf-8');
+    await fs.writeFile(path.join(changeDir, 'test-plan.md'), testPlanWithPassedGates(), 'utf-8');
 
     const specDir = path.join(changeDir, 'specs', 'alpha');
     await fs.mkdir(specDir, { recursive: true });
@@ -870,6 +889,72 @@ E1 updated`);
         message: 'Warning: 1 incomplete task(s) found. Continue?',
         default: false
       });
+    });
+
+    it('should warn when the final quality gate record is missing', async () => {
+      const changeName = 'no-gate-record';
+      const changeDir = await createSchemaCompleteChange(changeName);
+      await fs.writeFile(
+        path.join(changeDir, 'test-plan.md'),
+        '## Testing Gap Analysis\n\nCovered.\n',
+        'utf-8'
+      );
+
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
+
+      expect(console.log).toHaveBeenCalledWith(
+        expect.stringContaining('no "## Final Quality Gates" record')
+      );
+    });
+
+    it('should warn when a recorded final quality gate failed', async () => {
+      const changeName = 'failed-gate';
+      const changeDir = await createSchemaCompleteChange(changeName);
+      await fs.writeFile(
+        path.join(changeDir, 'test-plan.md'),
+        testPlanWithPassedGates().replace(
+          '| `/sp:verify` | passed | round 1, suite green |',
+          '| `/sp:verify` | failed | round 4 still failing |'
+        ),
+        'utf-8'
+      );
+
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
+
+      expect(console.log).toHaveBeenCalledWith(
+        expect.stringContaining('/sp:verify: failed')
+      );
+    });
+
+    it('should not warn about gates when every gate is resolved', async () => {
+      const changeName = 'gates-resolved';
+      await createSchemaCompleteChange(changeName);
+
+      await archiveCommand.execute(changeName, { yes: true, noValidate: true });
+
+      const logs = (console.log as unknown as ReturnType<typeof vi.fn>).mock.calls
+        .map((args: unknown[]) => args.map(String).join(' '));
+      expect(logs.some((line: string) => line.includes('final quality gate'))).toBe(false);
+    });
+
+    it('should cancel when the user declines the final quality gate warning', async () => {
+      const { confirm } = await import('@inquirer/prompts');
+      const mockConfirm = confirm as unknown as ReturnType<typeof vi.fn>;
+
+      const changeName = 'decline-gate-warning';
+      const changeDir = await createSchemaCompleteChange(changeName);
+      await fs.writeFile(
+        path.join(changeDir, 'test-plan.md'),
+        '## Testing Gap Analysis\n\nCovered.\n',
+        'utf-8'
+      );
+
+      mockConfirm.mockResolvedValueOnce(false);
+
+      await archiveCommand.execute(changeName, { noValidate: true });
+
+      expect(console.log).toHaveBeenCalledWith('Archive cancelled.');
+      await expect(fs.access(changeDir)).resolves.not.toThrow();
     });
 
     it('should cancel when user declines task warning', async () => {

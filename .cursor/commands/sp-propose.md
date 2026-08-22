@@ -41,7 +41,7 @@ Ask one decision question at a time and wait for the answer before asking anothe
 
 Use AskUserQuestion or the host's equivalent when available. If no structured question tool is available, use ordinary natural-language conversation while preserving the same one-question-at-a-time format. If the user delegates a decision, adopt the stated recommendation, record it as a decision in the running summary, and re-evaluate dependent decisions before continuing.
 
-Continue until decisions are closed: the problem and urgency, scope and non-goals, capabilities, impact, acceptance expectations, and every user-owned high-impact decision must be concrete enough for artifact generation. Then present one complete final understanding summary that separates confirmed decisions from agent-owned implementation assumptions.
+Continue until decisions are closed: the problem and urgency, scope and non-goals, capabilities, impact, acceptance expectations, and every user-owned high-impact decision must be concrete enough for artifact generation. Do not add an interview question for non-boundary derived implications; write them as agent-owned derived assumptions. Ask the user only when a derived implication would reverse a confirmed goal, scope, or acceptance expectation, or would cross a security, persisted-data, billing, or public-contract boundary that is not already determined. Complete that interview before presenting the final understanding summary. Then present one complete final understanding summary that separates confirmed decisions from agent-owned implementation assumptions. The summary MUST include a compact list of agent-owned derived assumptions from the closed implication scan (one derived rule or short N/A per dimension), separate from confirmed decisions and never labeled as user Choices. Dimensions: Actor, permission, and ownership; Empty, deny, error, and fail-closed behavior; Lifecycle: create, update, cancel, retry, and idempotency; Compatibility and migration; Data shape and contracts; Important product-direction forks implied by the confirmed goal. If the user corrects a derived assumption, update it, re-scan only dependent dimensions, and present a new complete summary before requesting confirmation again.
 
 Offer exactly three semantic final outcomes:
 1. Confirm and create — after explicit confirmation, run the existing change and artifact workflow.
@@ -50,7 +50,7 @@ Offer exactly three semantic final outcomes:
 
 The confirm-and-create outcome is required even when there were zero interview questions. Do not create the change or write any explicit artifact until that outcome is selected.
 
-After confirmation, route confirmed product decisions into proposal.md. Route each high-impact technical decision into design.md. Include a user-confirmed option comparison table only when the user actually chose among those options (including delegated recommendations after seeing alternatives); record the exact options the user saw, the selected choice, rationale, and trade-offs. Agent-owned implementation assumptions MAY include an A/B/C comparison in design.md; the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Fill existing design headings with implementable detail (mapping rules, fail-closed paths, a worked example). Authors MAY add extra subsections. Do not add required extra headings. Do not present a model-inferred result as a user Choice. Do not create interview.md or any separate interview transcript. Preserve the schema-defined artifact list, dependency-ordered generation, automatic proposal review, and final status flow below.
+After confirmation, route confirmed product decisions into proposal.md. Route each high-impact technical decision into design.md. Include a user-confirmed option comparison table only when the user actually chose among those options (including delegated recommendations after seeing alternatives); record the exact options the user saw, the selected choice, rationale, and trade-offs. Agent-owned implementation assumptions MAY include an A/B/C comparison in design.md; the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Fill existing design headings with implementable detail (mapping rules, fail-closed paths, a worked example). Write derived rules into existing `## Decisions`, `## Contracts`, and `## Invariants` as they apply. Authors MAY add extra subsections. Do not add a displayed Derived implications heading. Do not add required extra headings. Do not present a model-inferred result as a user Choice. When a derived implication changes observable user behavior or acceptance, record it in the change's delta spec as an ADDED or MODIFIED requirement with a WHEN/THEN scenario. Implementation-only mappings may stay in design.md. Do not create interview.md or any separate interview transcript. Preserve the schema-defined artifact list, dependency-ordered generation, automatic proposal review, and final status flow below.
 
 
 
@@ -117,10 +117,10 @@ After confirmation, route confirmed product decisions into proposal.md. Route ea
 
    After every `applyRequires` artifact is done, automatically follow the `superpowers-change-review` workflow:
    - Dispatch a fresh change reviewer subagent; **present the complete review report** from the worker before editing any artifact in response to findings.
-   - Repair every resolvable BLOCKER. WARNING findings are recommended repairs and do not block readiness by themselves.
-   - Re-dispatch a fresh reviewer only after repairing one or more BLOCKERs (re-run review only after repairing one or more BLOCKERs). Normally allow at most two rounds; if a round fails due to network error, subagent timeout, or an incomplete review report, one additional round is allowed (three rounds absolute maximum). If round two still has unresolved BLOCKERs after a completed review, pause and report them without claiming readiness.
-   - Keep SUGGESTION findings visible but non-blocking. Residual WARNING notes may remain visible when announcing readiness.
-   - If repair needs a user, product, security, schema, or external-dependency decision, report the blocker and pause. Do not claim the change is ready.
+   - Repair every resolvable P0. `P1` findings are recommended repairs and do not block readiness by themselves.
+   - Re-dispatch a fresh reviewer only after repairing one or more P0 findings (re-run review only after repairing one or more P0 findings). Normally allow at most two rounds; if a round fails due to network error, subagent timeout, or an incomplete review report, one additional round is allowed (three rounds absolute maximum). If round two still has unresolved P0 findings after a completed review, pause and report them without claiming readiness.
+   - Keep `P2` findings visible but non-blocking. Residual `P1` notes may remain visible when announcing readiness.
+   - If repair needs a user, product, security, schema, or external-dependency decision, report that finding and pause. Do not claim the change is ready.
    - Do not create `review.md`, approval metadata, or a review artifact.
 
 6. **Show final status**
@@ -133,7 +133,7 @@ After confirmation, route confirmed product decisions into proposal.md. Route ea
 After completing all artifacts, summarize:
 - Change name and location
 - List of artifacts created with brief descriptions
-- What's ready: "Proposal review passed with no unresolved BLOCKERs after any required blocker repairs. Ready for implementation. Residual WARNING/SUGGESTION notes may remain visible."
+- What's ready: "Proposal review passed with no unresolved P0 findings after any required P0 repairs. Ready for implementation. Residual `P1`/`P2` notes may remain visible."
 - Prompt: "Run `/sp:apply` to start implementing."
 
 **Artifact Creation Guidelines**
@@ -159,5 +159,6 @@ After completing all artifacts, summarize:
 - A dispatch unit is a logical allocation boundary, not a live subagent identity. Record assignee policy in `execution-plan.md` Dispatch Coordination. A coordinator may dispatch units separately, combine compatible units, or execute all units sequentially. Legacy `# <number>. agent<logical-id> — <scope>` headings remain acceptable.
 - Keep detailed tasks verifiable and ordered by dependency. In `execution-plan.md`, expand every detailed task into concrete Step 1–5 execution guidance under clean `### <number>. <scope>` headings while recording file ownership, dependencies, assignee policy, safe parallelism, and final validation.
 - Keep each dispatch unit coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
+- Fill every Step 3 slot for every detailed task: change anchor, design carried (cited `design.md` Decisions/Contracts/Invariants), implementation approach, edges and failures traced to spec Scenarios, and out of scope. "Implement the task" is not an implementation approach.
 - After any Step 1–5, allow an optional `Implementation Notes` subsection for non-normative findings, reasoning, viewpoints / trade-offs, and summary / takeaway content. Notes explain implementation context; they do not add status fields or task checkboxes, and `tasks.md` remains the progress source.
 - Follow DRY, YAGNI, TDD principles. Ensure frequent commits.

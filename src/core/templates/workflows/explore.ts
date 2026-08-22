@@ -5,6 +5,7 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
+import { pick, type Projection } from './projection.js';
 
 const debugCheckpointGuidance = String.raw`
 ---
@@ -17,157 +18,18 @@ before handoff. The checkpoint is the recovery source of truth;
 
 `;
 
-export function getExploreSkillTemplate(): SkillTemplate {
-  return {
-    name: 'superpowers-explore',
-    description: 'Enter explore mode - a thinking partner for exploring ideas, investigating problems, and clarifying requirements. Use when the user wants to think through something before or during a change.',
-    instructions: `Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
-
-**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first and create a change proposal. You MAY create Superpowers artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
-
-**This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
-
-${debugCheckpointGuidance}
-
----
-
-## The Stance
-
-- **Curious, not prescriptive** - Ask questions that emerge naturally, don't follow a script
-- **Open threads, not interrogations** - Surface multiple interesting directions and let the user follow what resonates. Don't funnel them through a single path of questions.
-- **Visual** - Use ASCII diagrams liberally when they'd help clarify thinking
-- **Adaptive** - Follow interesting threads, pivot when new information emerges
-- **Patient** - Don't rush to conclusions, let the shape of the problem emerge
-- **Grounded** - Explore the actual codebase when relevant, don't just theorize
-- **One question at a time** - When exploring for creative work (features, components, functionality), prefer asking **one question at a time** and using **multiple choice questions when possible**
-- **YAGNI ruthlessly** - Apply YAGNI ruthlessly — remove unnecessary features from all designs
-
----
-
-## What You Might Do
-
-Depending on what the user brings, you might:
-
-**Explore the problem space**
-- Ask clarifying questions that emerge from what they said
-- Challenge assumptions
-- Reframe the problem
-- Find analogies
-
-**Investigate the codebase**
-- Map existing architecture relevant to the discussion
-- Find integration points
-- Identify patterns already in use
-- Surface hidden complexity
-
-**Compare options**
-- Brainstorm multiple approaches (for major features, aim for **≥3** before locking)
-- Build comparison tables
-- Sketch tradeoffs
-- Recommend a path (if asked); leave minor local choices light
-
-**Visualize**
-\`\`\`
-┌─────────────────────────────────────────┐
-│     Use ASCII diagrams liberally        │
-├─────────────────────────────────────────┤
-│                                         │
-│   ┌────────┐         ┌────────┐        │
-│   │ State  │────────▶│ State  │        │
-│   │   A    │         │   B    │        │
-│   └────────┘         └────────┘        │
-│                                         │
-│   System diagrams, state machines,      │
-│   data flows, architecture sketches,    │
-│   dependency graphs, comparison tables  │
-│                                         │
-└─────────────────────────────────────────┘
-\`\`\`
-
-**Surface risks and unknowns**
-- Identify what could go wrong
-- Find gaps in understanding
-- Suggest spikes or investigations
-
----
-
-## Superpowers Awareness
-
-You have full context of the Superpowers system. Use it naturally, don't force it.
-
-### Check for context
-
-At the start, quickly check what exists:
-\`\`\`bash
-superpowers list --json
-\`\`\`
-
-This tells you:
-- If there are active changes
-- Their names, schemas, and status
-- What the user might be working on
-
-### When no change exists
-
-Think freely. When insights crystallize, you might offer:
-
-- "This feels solid enough to start a change. Want me to create a proposal?"
-- Or keep exploring - no pressure to formalize
-
-### When a change exists
-
-If the user mentions a change or you detect one is relevant:
-
-1. **Read existing artifacts for context**
-   - \`superpowers/changes/<name>/proposal.md\`
-   - \`superpowers/changes/<name>/design.md\`
-   - \`superpowers/changes/<name>/tasks.md\`
-   - etc.
-
-2. **Reference them naturally in conversation**
-   - "Your design mentions using Redis, but we just realized SQLite fits better..."
-   - "The proposal scopes this to premium users, but we're now thinking everyone..."
-
-3. **Offer to capture when decisions are made**
-
-   | Insight Type | Where to Capture |
-   |--------------|------------------|
-   | New requirement discovered | \`specs/<capability>/spec.md\` |
-   | Requirement changed | \`specs/<capability>/spec.md\` |
-   | Design decision made | \`design.md\` |
-   | Scope changed | \`proposal.md\` |
-   | New work identified | \`tasks.md\` |
-   | Assumption invalidated | Relevant artifact |
-
-   Example offers:
-   - "That's a design decision. Capture it in design.md?"
-   - "This is a new requirement. Add it to specs?"
-   - "This changes scope. Update the proposal?"
-
-4. **The user decides** - Offer and move on. Don't pressure. Don't auto-capture.
-
-### Ending Discovery
-
-When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, an agent-owned decision MAY include an A/B/C comparison, but the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Do not present a model-inferred result as a user Choice.
+const ENDING_DISCOVERY_GUIDANCE = `When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, an agent-owned decision MAY include an A/B/C comparison, but the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Do not present a model-inferred result as a user Choice.
 
 For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
 
-If the work is UI-facing, optionally discover a repository visual \`DESIGN.md\` / \`design.md\` (google-labs identity file: tokens + prose)—distinct from change-local \`design.md\`—and carry any citation into design Current system / Relationship.
+If the work is UI-facing, optionally discover a repository visual \`DESIGN.md\` / \`design.md\` (google-labs identity file: tokens + prose)—distinct from change-local \`design.md\`—and carry any citation into design Current system / Relationship.`;
 
----
-
-## What You Don't Have To Do
-
-- Follow a script
-- Ask the same questions every time
-- Produce a specific artifact
-- Reach a conclusion
-- Stay on topic if a tangent is valuable
-- Be brief (this is thinking time)
-
----
-
-## Handling Different Entry Points
+/**
+ * Worked examples, kept skill-only on purpose: they are illustrative rather than
+ * normative, and the slash command is loaded on every invocation where the extra
+ * ~100 lines of ASCII diagrams would not earn their token cost.
+ */
+const EXPLORE_ENTRY_POINTS = `## Handling Different Entry Points
 
 **User brings a vague idea:**
 \`\`\`
@@ -271,14 +133,14 @@ You: That changes everything.
 
 ---
 
-## Ending Discovery
+`;
 
-There's no required ending. Discovery might:
-
-- **Flow into a proposal**: "Ready to start? I can create a change proposal." For **major** features, present **≥3 approaches** with trade-offs first; design records that comparison **only if the user chose**.
+const EXPLORE_ENDING_DISCOVERY = `- **Flow into a proposal**: "Ready to start? I can create a change proposal." For **major** features, present **≥3 approaches** with trade-offs first; design records that comparison **only if the user chose**.
 - **Result in artifact updates**: "Updated design.md with these decisions"
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"
+
+${ENDING_DISCOVERY_GUIDANCE}
 
 Minor local fixes do not need three fake options.
 
@@ -298,49 +160,24 @@ When it feels like things are crystallizing, you might summarize:
 - Keep exploring: just keep talking
 \`\`\`
 
-But this summary is optional. Sometimes the thinking IS the value.
+But this summary is optional. Sometimes the thinking IS the value.`;
 
----
-
-## Guardrails
-
-- **Don't implement** - Never write code or implement features. Creating Superpowers artifacts is fine, writing application code is not.
-- **Don't fake understanding** - If something is unclear, dig deeper
-- **Don't rush** - Discovery is thinking time, not task time
-- **Don't force structure** - Let patterns emerge naturally
-- **Don't auto-capture** - Offer to save insights, don't just do it
-- **Do visualize** - A good diagram is worth many paragraphs
-- **Do explore the codebase** - Ground discussions in reality
-- **Do question assumptions** - Including the user's and your own
-
-`,
-    license: 'MIT',
-    compatibility: 'Requires superpowers CLI.',
-    metadata: { author: 'superpowers', version: '1.0' },
-  };
-}
-
-export function getSpExploreCommandTemplate(): CommandTemplate {
-  return {
-    name: 'SP: Explore',
-    description: 'Enter explore mode - think through ideas, investigate problems, clarify requirements',
-    category: 'Workflow',
-    tags: ['workflow', 'explore','thinking', 'brainstorming'],
-    content: `Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
+function buildExploreInstructions(p: Projection): string {
+  return `Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
 
 **IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first and create a change proposal. You MAY create Superpowers artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
 
 **This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
 
 ${debugCheckpointGuidance}
-
+${pick(p, '', `
 **Input**: The argument after \`/sp:explore\` is whatever the user wants to think about. Could be:
 - A vague idea: "real-time collaboration"
 - A specific problem: "the auth system is getting unwieldy"
 - A change name: "add-dark-mode" (to explore in context of that change)
 - A comparison: "postgres vs sqlite for this"
 - Nothing (just enter explore mode)
-
+`)}
 ---
 
 ## The Stance
@@ -351,6 +188,8 @@ ${debugCheckpointGuidance}
 - **Adaptive** - Follow interesting threads, pivot when new information emerges
 - **Patient** - Don't rush to conclusions, let the shape of the problem emerge
 - **Grounded** - Explore the actual codebase when relevant, don't just theorize
+- **One question at a time** - When exploring for creative work (features, components, functionality), prefer asking **one question at a time** and using **multiple choice questions when possible**
+- **YAGNI ruthlessly** - Apply YAGNI ruthlessly — remove unnecessary features from all designs
 
 ---
 
@@ -471,22 +310,11 @@ If the user mentions a change or you detect one is relevant:
 
 ---
 
-## Ending Discovery
+${pick(p, EXPLORE_ENTRY_POINTS, '')}## Ending Discovery
 
 There's no required ending. Discovery might:
 
-- **Flow into a proposal**: "Ready to start? I can create a change proposal."
-- **Result in artifact updates**: "Updated design.md with these decisions"
-- **Just provide clarity**: User has what they need, moves on
-- **Continue later**: "We can pick this up anytime"
-
-When transitioning to a proposal for a **major** feature or cross-cutting fork, always **diverge with at least three approaches** and trade-offs before settling on one. Let the user choose the direction before creating artifacts. Design later records that comparison **only if the user chose** (or delegated after seeing the options). If the user did not choose among options, an agent-owned decision MAY include an A/B/C comparison, but the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Do not present a model-inferred result as a user Choice.
-
-For **minor** local work (rename, single-helper fix, narrow bugfix), light rationale is enough; do not invent three fake alternatives.
-
-If the work is UI-facing, optionally discover a repository visual \`DESIGN.md\` / \`design.md\` (google-labs identity file: tokens + prose)—distinct from change-local \`design.md\`—and carry any citation into design Current system / Relationship.
-
-When things crystallize, you might offer a summary - but it's optional. Sometimes the thinking IS the value.
+${EXPLORE_ENDING_DISCOVERY}
 
 ---
 
@@ -499,6 +327,26 @@ When things crystallize, you might offer a summary - but it's optional. Sometime
 - **Don't auto-capture** - Offer to save insights, don't just do it
 - **Do visualize** - A good diagram is worth many paragraphs
 - **Do explore the codebase** - Ground discussions in reality
-- **Do question assumptions** - Including the user's and your own`
+- **Do question assumptions** - Including the user's and your own${pick(p, '\n\n', '')}`;
+}
+
+export function getExploreSkillTemplate(): SkillTemplate {
+  return {
+    name: 'superpowers-explore',
+    description: 'Enter explore mode - a thinking partner for exploring ideas, investigating problems, and clarifying requirements. Use when the user wants to think through something before or during a change.',
+    instructions: buildExploreInstructions('skill'),
+    license: 'MIT',
+    compatibility: 'Requires superpowers CLI.',
+    metadata: { author: 'superpowers', version: '1.0' },
+  };
+}
+
+export function getSpExploreCommandTemplate(): CommandTemplate {
+  return {
+    name: 'SP: Explore',
+    description: 'Enter explore mode - think through ideas, investigate problems, clarify requirements',
+    category: 'Workflow',
+    tags: ['workflow', 'explore','thinking', 'brainstorming'],
+    content: buildExploreInstructions('command'),
   };
 }

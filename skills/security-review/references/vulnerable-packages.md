@@ -57,7 +57,7 @@ Load this during Step 2 (Dependency Audit). Check versions in the project's lock
 
 | Package | Vulnerable Versions | Issue |
 |---------|-------------------|-------|
-| log4j-core | 2.0-2.14.1 | Log4Shell RCE (CVE-2021-44228) — CRITICAL |
+| log4j-core | 2.0-2.14.1 | Log4Shell RCE (CVE-2021-44228) — P0 |
 | log4j-core | 2.15.0 | Incomplete fix — still vulnerable |
 | Spring Framework | < 5.3.28, < 6.0.13 | Various CVEs |
 | Spring Boot | < 3.1.4 | Various |

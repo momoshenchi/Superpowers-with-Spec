@@ -243,6 +243,10 @@ describe('instruction-loader', () => {
       expect(instructions.template).toContain('Status');
       expect(instructions.template).toContain('Evidence');
       expect(instructions.template).toContain('## Deferred Coverage');
+      expect(instructions.template).toContain('## Final Quality Gates');
+      expect(instructions.template).toContain('| code review |');
+      expect(instructions.template).toContain('`/sp:design-verify`');
+      expect(instructions.template).toContain('Rows in this section are not Test Hardening coverage');
       expect(instructions.template).not.toContain('## Deferred Or Manual Coverage');
       expect(instructions.template).not.toContain('Verification Commands');
       expect(instructions.template).not.toContain('Actual Diff Audit');

@@ -56,7 +56,12 @@ Keep planned Step 1–5 instructions intact. Append notes rather than rewriting 
 
 1. **Step 1: Write or extend focused tests** — Cover the behavior, error paths, and acceptance criteria for Task 1.1.
 2. **Step 2: Run the focused tests** — Record the expected failing behavior or the verified baseline when no new failing test is applicable.
-3. **Step 3: Implement Task 1.1** — Make the complete change described by the detailed task.
+3. **Step 3: Implement Task 1.1** — Fill every slot below. A Step 3 that only restates the task title is not a plan.
+   - **Change anchor:** the exact symbol(s) to add or edit, and the call path from the entry point that reaches them.
+   - **Design carried:** which `design.md` Decisions, Contracts, and Invariants this task implements, cited by name.
+   - **Implementation approach:** the algorithm, data shape, or state transition in enough detail to write the code from — not a restatement of the task title.
+   - **Edges and failures:** behavior for empty, missing, invalid, and failure inputs, each traced to the spec Scenario that requires it.
+   - **Out of scope:** what this task deliberately does not change, so the worker does not widen the diff.
 4. **Step 4: Run focused verification** — Run the exact focused command and state the expected passing result.
 5. **Step 5: Self-review and handoff** — Check the task against its requirements, report files and verification, then continue with the next detailed task in this dispatch unit.
 
@@ -65,4 +70,6 @@ Keep planned Step 1–5 instructions intact. Append notes rather than rewriting 
 #### Task 1.2: [Detailed task description]
 
 Repeat Steps 1–5 with concrete files, tests, commands, expected results, and implementation detail for Task 1.2.
+
+
 

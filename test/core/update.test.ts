@@ -155,13 +155,16 @@ Old instructions content
 
       await updateCommand.execute(testDir);
 
-      // Verify core profile skill files were created/updated (propose, explore, review, apply, archive)
+      // Verify core profile skill files were created/updated
       const coreSkillNames = [
         'superpowers-explore',
         'superpowers-change-review',
         'superpowers-apply-change',
         'superpowers-archive-change',
         'superpowers-propose',
+        'superpowers-verify-change',
+        'superpowers-simplify',
+        'superpowers-design-verify',
       ];
 
       for (const skillName of coreSkillNames) {
@@ -188,7 +191,7 @@ Old instructions content
         'superpowers-ff-change',
         'superpowers-sync-specs',
         'superpowers-bulk-archive-change',
-        'superpowers-verify-change',
+        'superpowers-shape-review',
       ];
 
       for (const skillName of nonCoreSkillNames) {
@@ -259,8 +262,8 @@ Old instructions content
 
       await updateCommand.execute(testDir);
 
-      // Verify core profile commands were created (propose, explore, apply, archive)
-      const coreCommandIds = ['explore', 'apply', 'archive', 'propose'];
+      // Verify core profile commands were created
+      const coreCommandIds = ['explore', 'apply', 'archive', 'propose', 'verify', 'simplify', 'design-verify'];
       const commandsDir = path.join(testDir, '.claude', 'commands', 'sp');
       for (const cmdId of coreCommandIds) {
         const cmdFile = path.join(commandsDir, `${cmdId}.md`);
@@ -269,7 +272,7 @@ Old instructions content
       }
 
       // Verify non-core commands are NOT created
-      const nonCoreCommandIds = ['new', 'continue', 'ff', 'sync', 'bulk-archive', 'verify'];
+      const nonCoreCommandIds = ['new', 'continue', 'ff', 'sync', 'bulk-archive', 'shape-review'];
       for (const cmdId of nonCoreCommandIds) {
         const cmdFile = path.join(commandsDir, `${cmdId}.md`);
         const exists = await FileSystemUtils.fileExists(cmdFile);

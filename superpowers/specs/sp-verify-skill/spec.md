@@ -47,7 +47,7 @@ The agent SHALL verify that all required work has been completed.
 - **WHEN** some tasks are incomplete
 - **THEN** report "Tasks: X/N complete"
 - **AND** list each incomplete task
-- **AND** mark as CRITICAL issue
+- **AND** mark as `P0` finding
 - **AND** suggest: "Complete remaining tasks or mark as done if already implemented"
 
 ### Requirement: Correctness Verification
@@ -74,13 +74,13 @@ The agent SHALL verify that implementation matches the specifications.
 
 #### Scenario: Implementation diverges from spec
 - **WHEN** implementation exists but doesn't match spec intent
-- **THEN** report the divergence as WARNING
+- **THEN** report the divergence as `P1`
 - **AND** explain what differs
 - **AND** suggest: either update implementation or update spec to match reality
 
 #### Scenario: Missing implementation
 - **WHEN** no implementation found for a requirement
-- **THEN** report as CRITICAL issue
+- **THEN** report as `P0` finding
 - **AND** suggest: "Implement requirement X" with guidance on what's needed
 
 ### Requirement: Coherence Verification
@@ -106,7 +106,7 @@ The agent SHALL verify that implementation is sensible and follows design decisi
 
 #### Scenario: Design decision violated
 - **WHEN** implementation contradicts a design decision
-- **THEN** report as WARNING
+- **THEN** report as `P1`
 - **AND** explain the contradiction
 - **AND** suggest: either update implementation or update design.md
 
@@ -135,9 +135,9 @@ The agent SHALL produce a structured, prioritized report.
 #### Scenario: Issue prioritization
 - **WHEN** issues are found
 - **THEN** group and display in priority order:
-  1. CRITICAL - Must fix before archive (missing implementation, incomplete tasks)
-  2. WARNING - Should fix (divergence from spec/design, missing tests)
-  3. SUGGESTION - Nice to fix (pattern inconsistencies, minor improvements)
+  1. `P0` - Must fix before archive (missing implementation, incomplete tasks)
+  2. `P1` - Should fix (divergence from spec/design, missing tests)
+  3. `P2` - Nice to fix (pattern inconsistencies, minor improvements)
 
 #### Scenario: Actionable recommendations
 - **WHEN** reporting an issue
@@ -152,19 +152,19 @@ The agent SHALL produce a structured, prioritized report.
   All checks passed. Ready for archive.
   ```
 
-#### Scenario: Critical issues found
-- **WHEN** CRITICAL issues exist
+#### Scenario: P0 findings exist
+- **WHEN** `P0` findings exist
 - **THEN** display:
   ```text
-  X critical issue(s) found. Fix before archiving.
+  X P0 finding(s). Fix before archiving.
   ```
 - **AND** do NOT suggest running archive
 
-#### Scenario: Only warnings/suggestions
-- **WHEN** no CRITICAL issues but warnings exist
+#### Scenario: Only lower-severity findings
+- **WHEN** no `P0` findings but `P1`/`P2` findings exist
 - **THEN** display:
   ```text
-  No critical issues. Y warning(s) to consider.
+  No P0 findings. Y lower-severity finding(s) to consider.
   Ready for archive (with noted improvements).
   ```
 
@@ -189,7 +189,7 @@ The agent SHALL gracefully handle changes with varying artifact completeness.
 - **AND** cross-reference artifacts for consistency
 
 ### Requirement: Adversarial Hunt Intent
-The `/sp:verify` worker SHALL hunt for as many evidence-backed issues as possible rather than clearing a checklist. Severity calibration SHALL remain unchanged: when uncertain, prefer SUGGESTION over WARNING, WARNING over CRITICAL.
+The `/sp:verify` worker SHALL hunt for as many evidence-backed issues as possible rather than clearing a checklist. Severity calibration SHALL follow the shared severity model: when uncertain, prefer `P2` over `P1`, and `P1` over `P0`.
 
 #### Scenario: Evidence-driven hunting
 - **WHEN** verifying a change
@@ -200,7 +200,7 @@ The `/sp:verify` worker SHALL hunt for as many evidence-backed issues as possibl
 
 #### Scenario: Uncertain severity stays downgraded
 - **WHEN** the worker is uncertain about an issue's severity
-- **THEN** it prefers SUGGESTION over WARNING, WARNING over CRITICAL
+- **THEN** it prefers `P2` over `P1`, and `P1` over `P0`
 
 #### Scenario: Apply-delegated verify receives the same intent
 - **WHEN** `/sp:apply` delegates Verify to a fresh subagent
