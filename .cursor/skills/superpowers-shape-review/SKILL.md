@@ -6,7 +6,7 @@ compatibility: Requires superpowers CLI.
 metadata:
   author: superpowers
   version: "1.0"
-  generatedBy: "1.0.9"
+  generatedBy: "1.0.11"
 ---
 
 `/sp:shape-review → 4 shape agents in parallel → report suggestions`

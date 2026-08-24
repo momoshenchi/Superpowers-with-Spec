@@ -6,7 +6,7 @@ compatibility: Requires superpowers CLI.
 metadata:
   author: superpowers
   version: "1.0"
-  generatedBy: "1.0.9"
+  generatedBy: "1.0.11"
 ---
 
 Verify an active Superpowers change's runtime UI with `/sp:design-verify` against the repository visual design source.

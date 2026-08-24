@@ -142,6 +142,7 @@ After completing all artifacts, summarize:
 - The schema defines what each artifact should contain - follow it
 - Read dependency artifacts for context before creating new ones
 - Use `template` as the structure for your output file - fill in its sections
+- When creating `test-plan.md`, follow the test-plan `instruction`/`template` ID and Status rules: case IDs `TC-R<object>-D<dimension>-<seq>`, Manual IDs `MC-R<object>-<seq>` (or `MC-<seq>`), Status values `planned` / `passed` / `failed` / `blocked` / `not applicable` (dimension summary: `planned` / `passed` / `not applicable`). Do not write legacy aliases such as `covered` or `failing`.
 - Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning `attachments/`; preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
 - **IMPORTANT**: `context` and `rules` are constraints for YOU, not content for the file
   - Do NOT copy `<context>`, `<rules>`, `<project_context>` blocks into the artifact
@@ -159,7 +160,7 @@ After completing all artifacts, summarize:
 - A dispatch unit is a logical allocation boundary, not a live subagent identity. Record assignee policy in `execution-plan.md` Dispatch Coordination. A coordinator may dispatch units separately, combine compatible units, or execute all units sequentially. Legacy `# <number>. agent<logical-id> — <scope>` headings remain acceptable.
 - Keep detailed tasks verifiable and ordered by dependency. In `execution-plan.md`, expand every detailed task into concrete Step 1–5 execution guidance under clean `### <number>. <scope>` headings while recording file ownership, dependencies, assignee policy, safe parallelism, and final validation.
 - Keep each dispatch unit coherent and each detailed task verifiable. Step 1–5 execution guidance explains implementation work; it is not a micro-timebox or a separate delegation/review gate.
-- Fill every Step 1 slot for every detailed task: spec bound (WHEN/THEN mapped to Arrange/Act/Assert), form, existing coverage, test location, case table when needed, a paste-ready test skeleton, expected red, and not-this-step. "Cover the behavior" is not a red test.
+- Fill every Step 1 slot for every detailed task: spec bound (WHEN/THEN mapped to Arrange/Act/Assert), test location, case table when needed, a paste-ready test skeleton. "Cover the behavior" is not a red test.
 - Fill every Step 3 slot for every detailed task: change anchor, design carried (cited `design.md` Decisions/Contracts/Invariants), implementation approach, edges and failures traced to spec Scenarios, and out of scope. "Implement the task" is not an implementation approach.
 - After any Step 1–5, allow an optional `Implementation Notes` subsection for non-normative findings, reasoning, viewpoints / trade-offs, and summary / takeaway content. Notes explain implementation context; they do not add status fields or task checkboxes, and `tasks.md` remains the progress source.
 - Follow DRY, YAGNI, TDD principles. Ensure frequent commits.
