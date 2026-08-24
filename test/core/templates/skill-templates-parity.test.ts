@@ -212,8 +212,9 @@ describe('skill templates split parity', () => {
       expect(content).toContain('passing worker-level tests is necessary but not sufficient');
       expect(content).toContain('every concrete testing/hardening status row outside `## Final Quality Gates`');
       expect(content).toContain('Final-gate rows are evaluated separately only after Test Hardening');
-      expect(content).toContain('planned');
-      expect(content).toContain('failing');
+      expect(content).toContain('Write statuses as `planned`, `passed`, `failed`, `blocked`, or `not applicable`');
+      expect(content).toContain('TC-R<object>-D<dimension>-<seq>');
+      expect(content).toContain('MC-R<object>-<seq>');
       expect(content).toContain('placeholder rows keep hardening incomplete');
       expect(content).toContain('earlier tests were insufficient');
       expect(content).toContain('Tests added/strengthened');
@@ -621,6 +622,14 @@ describe('skill templates split parity', () => {
       expect(content).toContain('test-plan.md');
       expect(content).toContain('pre-implementation coverage draft');
       expect(content).toContain('post-implementation Test Hardening');
+    }
+
+    for (const template of [getSpProposeSkillTemplate(), getSpProposeCommandTemplate()]) {
+      const content = 'instructions' in template ? template.instructions : template.content;
+      expect(content).toContain('When creating `test-plan.md`');
+      expect(content).toContain('TC-R<object>-D<dimension>-<seq>');
+      expect(content).toContain('MC-R<object>-<seq>');
+      expect(content).toContain('planned` / `passed` / `failed` / `blocked` / `not applicable');
     }
   });
 

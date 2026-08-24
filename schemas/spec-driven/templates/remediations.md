@@ -12,7 +12,7 @@
      substance still includes: Finding, Root cause, ≥2 Solutions, Choice,
      Rationale, Fix, Guard, Evidence, Status. Emphasize Choice/Rationale. -->
 
-## R1 — <!-- short title -->
+## RM-1 — <!-- short title -->
 
 **Meta:** <!-- gate/round --> · <!-- P0 / P1 --> · <!-- open / resolved -->
 

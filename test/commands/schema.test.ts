@@ -443,7 +443,9 @@ artifacts:
       const testPlanTemplate = fs.readFileSync(testPlanTemplatePath, 'utf-8');
       expect(testPlanTemplate).toContain('Testing Gap Analysis');
       expect(testPlanTemplate).toContain('every concrete test/status row');
-      expect(testPlanTemplate).toContain('planned / covered / passed / failing / not applicable');
+      expect(testPlanTemplate).toContain('planned / passed / failed / blocked / not applicable');
+      expect(testPlanTemplate).toContain('MC-R');
+      expect(testPlanTemplate).not.toContain('planned / covered / passed / failing / not applicable');
       expect(testPlanTemplate).not.toContain('Test Hardening complete');
     });
 

@@ -149,6 +149,7 @@ After completing all artifacts, summarize:
 - The schema defines what each artifact should contain - follow it
 - Read dependency artifacts for context before creating new ones
 - Use \`template\` as the structure for your output file - fill in its sections
+- When creating \`test-plan.md\`, follow the test-plan \`instruction\`/\`template\` ID and Status rules: case IDs \`TC-R<object>-D<dimension>-<seq>\`, Manual IDs \`MC-R<object>-<seq>\` (or \`MC-<seq>\`), Status values \`planned\` / \`passed\` / \`failed\` / \`blocked\` / \`not applicable\` (dimension summary: \`planned\` / \`passed\` / \`not applicable\`). Do not write legacy aliases such as \`covered\` or \`failing\`.
 - Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning \`attachments/\`; preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
 - **IMPORTANT**: \`context\` and \`rules\` are constraints for YOU, not content for the file
   - Do NOT copy \`<context>\`, \`<rules>\`, \`<project_context>\` blocks into the artifact
@@ -289,6 +290,7 @@ After completing all artifacts, summarize:
 - The schema defines what each artifact should contain - follow it
 - Read dependency artifacts for context before creating new ones
 - Use \`template\` as the structure for your output file - fill in its sections
+- When creating \`test-plan.md\`, follow the test-plan \`instruction\`/\`template\` ID and Status rules: case IDs \`TC-R<object>-D<dimension>-<seq>\`, Manual IDs \`MC-R<object>-<seq>\` (or \`MC-<seq>\`), Status values \`planned\` / \`passed\` / \`failed\` / \`blocked\` / \`not applicable\` (dimension summary: \`planned\` / \`passed\` / \`not applicable\`). Do not write legacy aliases such as \`covered\` or \`failing\`.
 - Proposal, design, specs, and execution-plan artifacts may reference change-local files with Markdown targets beginning \`attachments/\`; preserve useful references and explain what each file is, why it matters, and whether it is normative, illustrative, or background context.
 - **IMPORTANT**: \`context\` and \`rules\` are constraints for YOU, not content for the file
   - Do NOT copy \`<context>\`, \`<rules>\`, \`<project_context>\` blocks into the artifact

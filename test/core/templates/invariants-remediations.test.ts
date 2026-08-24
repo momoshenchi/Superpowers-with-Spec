@@ -17,6 +17,14 @@ const OPEN_STATUS_INCOMPLETE =
   /Status `open`|Status \`open\`|open` →|open\` →/i;
 
 describe('invariants and remediations conventions', () => {
+  it('keeps legacy covered alias in Test Hardening completeness set', () => {
+    const src = fs.readFileSync(
+      path.join(ROOT, 'src', 'commands', 'workflow', 'instructions.ts'),
+      'utf8'
+    );
+    expect(src).toMatch(/COMPLETE_TEST_PLAN_STATUSES[\s\S]*?'covered'/);
+  });
+
   it('ships a remediations.md template with required repair fields', () => {
     const template = fs.readFileSync(
       path.join(ROOT, 'schemas', 'spec-driven', 'templates', 'remediations.md'),
@@ -36,7 +44,8 @@ describe('invariants and remediations conventions', () => {
     ]) {
       expect(template).toContain(field);
     }
-    expect(template).toMatch(/R1|## R1/);
+    expect(template).toMatch(/RM-1|## RM-1/);
+    expect(template).not.toMatch(/^## R1\b/m);
     expect(template).toMatch(/≥2|at least two|two meaningfully/i);
   });
 
@@ -54,7 +63,7 @@ describe('invariants and remediations conventions', () => {
       expect(content).toMatch(/Design Verify|P2/);
       expect(content).toMatch(/Guard/);
       expect(content).toMatch(/change directory|change-dir|changes\/<name>\/remediations/i);
-      expect(content).toMatch(/R#|Remediation:/);
+      expect(content).toMatch(/RM#|Remediation:/);
       expect(content).toMatch(/Finding/);
       expect(content).toMatch(OPEN_STATUS_INCOMPLETE);
       expect(content).toMatch(/code review.*Verify workers MUST probe|code review\*\* and \*\*Verify\*\* workers MUST probe/i);

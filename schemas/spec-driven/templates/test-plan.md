@@ -4,7 +4,7 @@ Analyze which earlier tests were still insufficient or not broad enough, walking
 
 Workers record and run the tests needed by their detailed dispatch-unit task blocks in `tasks.md`. Test Hardening in this `test-plan.md` supplements that local verification after all dispatch units are integrated. Passing worker-level tests is necessary but not sufficient for final apply completion.
 
-Test Hardening is complete when every concrete test/status row in the tables below is complete. Use statuses such as `covered`, `passed`, or `not applicable` for completed rows. Leave rows as `planned`, `failing`, or blank until the coverage is actually complete.
+Test Hardening is complete when every concrete test/status row in the tables below is complete. **Write** statuses as `planned`, `passed`, `failed`, `blocked`, or `not applicable`. A row is complete when it is `passed` or scope-backed `not applicable`. Leave rows as `planned`, `failed`, `blocked`, or blank until the coverage is actually complete. Readers may still treat legacy aliases such as `covered` as complete for older plans; do not write those aliases in new rows.
 
 ## Test Scope Register
 
@@ -22,7 +22,7 @@ RTM of the spec's own Scenarios plus the form chosen to prove each one. This tab
 
 | Object | Requirement / Spec Scenario | Form | Status | Notes |
 | --- | --- | --- | --- | --- |
-| <!-- R1 --> | <!-- Requirement: Scenario title from spec.md --> | <!-- unit / integration / E2E / manual / not applicable --> | <!-- planned / covered / passed / failing / not applicable --> | <!-- test file, command, or rationale --> |
+| <!-- R1 --> | <!-- Requirement: Scenario title from spec.md --> | <!-- unit / integration / E2E / manual / not applicable --> | <!-- planned / passed / failed / blocked / not applicable --> | <!-- test file, command, or rationale --> |
 
 Choose form by the `full-qa-test` rule: observe the behavior at the lowest layer that can see it. `unit` for a function or branch, `integration` for collaborating modules or a real store, `E2E` only when the behavior is invisible below the full journey, `manual` only when automation cannot run and a `## Manual Coverage` row exists.
 
@@ -30,7 +30,7 @@ Choose form by the `full-qa-test` rule: observe the behavior at the lowest layer
 
 Cases carried over from the `full-qa-test` skill, one table per dimension. Each table uses that dimension's own columns from the skill's Step 1–6 output formats, plus Object, Form, Status, and Evidence. Run the skill's 10→10→10 batch rule once per registered Requirement per dimension — do not share one batch of ten across several requirements. Non-critical paths — fallback, warning, empty result, cleanup, logging — belong to whichever dimension owns them rather than to a separate table.
 
-Case IDs are `TC-R<object>-D<dimension>-<seq>`, for example `TC-R2-D6-001`. Group rows by object within each table. Status values are `planned`, `covered`, `passed`, `failing`, or `not applicable`. Every registered Requirement needs coverage in every applicable dimension, or an explicit `not applicable` row stating why.
+Case IDs are `TC-R<object>-D<dimension>-<seq>`, for example `TC-R2-D6-001`. Group rows by object within each table. Status values are `planned`, `passed`, `failed`, `blocked`, or `not applicable`. Every registered Requirement needs coverage in every applicable dimension, or an explicit `not applicable` row stating why.
 
 Write concrete cases: name real routes, symbols, and values, and give expected results as checkable assertions such as a status code, a resulting state, or a specific error. "Invalid input is rejected" is not a case. Every case must name its form.
 
@@ -72,16 +72,16 @@ Write concrete cases: name real routes, symbols, and values, and give expected r
 
 ## Dimension Coverage Summary
 
-One row per dimension, mirroring the `full-qa-test` Step 7 self-check. `covered` requires the 10→10→10 rule to have been run for every registered Requirement in that dimension; `not applicable` requires a concrete scope reason, not a blank. List case IDs per object, for example `R1: TC-R1-D3-001/002; R2: TC-R2-D3-001`.
+One row per dimension, mirroring the `full-qa-test` Step 7 self-check. Mark Status `passed` when the 10→10→10 rule has been run for every registered Requirement in that dimension and required child cases are `passed` or scope-backed `not applicable`; use `not applicable` with a concrete scope reason when the whole dimension does not apply; leave unfinished dimensions `planned`. List case IDs per object, for example `R1: TC-R1-D3-001/002; R2: TC-R2-D3-001`.
 
 | Dimension | Must-check items | Status | Case IDs / Rationale |
 | --- | --- | --- | --- |
-| D1 Requirements and business scenarios | Imported spec Scenarios plus happy path, every branch, and recovery after an aborted run | <!-- covered / not applicable --> | |
-| D2 Code and branch coverage | Diff and critical-path branch coverage; mutation testing or a stated deferral | <!-- covered / not applicable --> | |
-| D3 Data and input space | Boundaries (max/min/zero/negative/empty/null); special characters, over-length, Emoji, SQL/XSS | <!-- covered / not applicable --> | |
-| D4 State transitions and timing | Illegal state transitions; concurrent requests, replay, and idempotency | <!-- covered / not applicable --> | |
-| D5 Non-functional and fault tolerance | Permissions and privilege escalation; third-party timeout and 5xx fallback; performance and compatibility where applicable | <!-- covered / not applicable --> | |
-| D6 Environment and dependencies | Empty or failing database/cache; weak or absent network; multi-device, resolution, and role compatibility | <!-- covered / not applicable --> | |
+| D1 Requirements and business scenarios | Imported spec Scenarios plus happy path, every branch, and recovery after an aborted run | <!-- planned / passed / not applicable --> | |
+| D2 Code and branch coverage | Diff and critical-path branch coverage; mutation testing or a stated deferral | <!-- planned / passed / not applicable --> | |
+| D3 Data and input space | Boundaries (max/min/zero/negative/empty/null); special characters, over-length, Emoji, SQL/XSS | <!-- planned / passed / not applicable --> | |
+| D4 State transitions and timing | Illegal state transitions; concurrent requests, replay, and idempotency | <!-- planned / passed / not applicable --> | |
+| D5 Non-functional and fault tolerance | Permissions and privilege escalation; third-party timeout and 5xx fallback; performance and compatibility where applicable | <!-- planned / passed / not applicable --> | |
+| D6 Environment and dependencies | Empty or failing database/cache; weak or absent network; multi-device, resolution, and role compatibility | <!-- planned / passed / not applicable --> | |
 
 ### Requirement × Dimension Coverage
 
@@ -101,9 +101,11 @@ Optional D2 coverage-quality gate from `full-qa-test` Step 2b. Run it only once 
 
 ## Manual Coverage
 
-| Check / Scenario | Execution Method and Environment | Status | Evidence |
-| --- | --- | --- | --- |
-| <!-- concrete manual check --> | <!-- programmatic-browser (Playwright/Cypress) | agent-browser | cli | other; entry point; safe environment. Critical Path may list both browser modes. --> | <!-- planned / passed / failed / blocked / not applicable --> | <!-- command, steps, observed outcome, and inspectable evidence --> |
+Manual check IDs are `MC-R<object>-<seq>` (for example `MC-R1-001`), or `MC-<seq>` when no requirement object applies.
+
+| ID | Check / Scenario | Execution Method and Environment | Status | Evidence |
+| --- | --- | --- | --- | --- |
+| <!-- MC-R1-001 --> | <!-- concrete manual check --> | <!-- programmatic-browser (Playwright/Cypress) | agent-browser | cli | other; entry point; safe environment. Critical Path may list both browser modes. --> | <!-- planned / passed / failed / blocked / not applicable --> | <!-- command, steps, observed outcome, and inspectable evidence --> |
 
 ## Deferred Coverage
 

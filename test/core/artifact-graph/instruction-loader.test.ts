@@ -233,7 +233,9 @@ describe('instruction-loader', () => {
       expect(instructions.template).toContain('Workers record and run the tests needed by their detailed dispatch-unit task blocks');
       expect(instructions.template).toContain('Test Hardening in this `test-plan.md` supplements that local verification');
       expect(instructions.template).toContain('every concrete test/status row');
-      expect(instructions.template).toContain('planned / covered / passed / failing / not applicable');
+      expect(instructions.template).toContain('planned / passed / failed / blocked / not applicable');
+      expect(instructions.template).toContain('MC-R');
+      expect(instructions.template).not.toContain('planned / covered / passed / failing / not applicable');
       expect(instructions.template).not.toContain('Test Hardening complete');
       expect(instructions.template).toContain('Requirement And Scenario Coverage Matrix');
       expect(instructions.template).toContain('## Manual Coverage');

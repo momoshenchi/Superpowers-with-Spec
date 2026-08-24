@@ -401,7 +401,7 @@ export async function generateApplyInstructions(
       instruction = [
         'All implementation tasks are complete. Continue into Test Hardening before claiming apply completion.',
         `Read \`${testPlanArtifact.generates}\` and treat Test Hardening as complete only when every concrete testing/hardening status row outside \`## Final Quality Gates\` is complete, including required \`## Manual Coverage\` rows except \`agent-browser\` rows deferred to Verify; \`## Deferred Coverage\` is not execution evidence.`,
-        'Use completed statuses such as `covered`, `passed`, or `not applicable`; `planned`, `failing`, blank, or placeholder rows keep hardening incomplete, except `agent-browser` Manual Coverage rows may remain `planned` until Verify.',
+        'Write statuses as `planned`, `passed`, `failed`, `blocked`, or `not applicable`. Complete rows are `passed` or scope-backed `not applicable`; `planned`, `failed`, `blocked`, blank, or placeholder rows keep hardening incomplete, except `agent-browser` Manual Coverage rows may remain `planned` until Verify. Do not write legacy aliases such as `covered` or `failing` in new rows (readers may still accept them on older plans).',
         'Analyze which earlier tests were insufficient or not broad enough, add feasible missing tests, document what this stage strengthened, and pause if unrelated changes make the hardening scope ambiguous.',
         'Failing hardening tests or unresolved product defects block apply completion; fix them or pause as blocked before marking the related table rows complete.',
       ].join('\n');

@@ -100,7 +100,8 @@ ${APPLY_RUNTIME_BEFORE_CAPTURE}
    For spec-driven changes with \`test-plan.md\`:
    - Task completion transitions into Test Hardening; it is not apply completion by itself.
    - Read \`test-plan.md\` and treat Test Hardening as complete only when every concrete testing/hardening status row outside \`## Final Quality Gates\` is complete. Final-gate rows are evaluated separately only after Test Hardening.
-   - Use complete statuses such as \`covered\`, \`passed\`, or \`not applicable\`; \`planned\`, \`failing\`, blank, or placeholder rows keep hardening incomplete.
+   - Write statuses as \`planned\`, \`passed\`, \`failed\`, \`blocked\`, or \`not applicable\`. Complete rows are \`passed\` or scope-backed \`not applicable\`; \`planned\`, \`failed\`, \`blocked\`, blank, or placeholder rows keep hardening incomplete. Do not write legacy aliases such as \`covered\` or \`failing\` in new rows (readers may still accept them on older plans).
+   - When adding or expanding rows, keep case IDs as \`TC-R<object>-D<dimension>-<seq>\` and Manual IDs as \`MC-R<object>-<seq>\` (or \`MC-<seq>\`); dimension summary Status uses \`planned\` / \`passed\` / \`not applicable\`. Details stay in the test-plan template and \`full-qa-test\` skill.
    - Distinguish worker-level verification in detailed \`tasks.md\` from post-integration Test Hardening in \`test-plan.md\`; passing worker-level tests is necessary but not sufficient for final apply completion.
    - Analyze which earlier tests were insufficient or not broad enough, then decide which supplemental tests are needed. If the full-qa-test skill exists, invoke it and add comprehensive tests according to its rules.
    - If the full-qa-test skill is unavailable, add comprehensive tests for all requirements. Coverage must include: requirements and business scenarios; code and branch coverage; data and input-space coverage; state transitions and timing; non-functional and error-prevention coverage; and environment and context dependencies. For each of these 6 dimensions, first write **10** test cases; if after deduplication this batch still contains logically non-duplicate valid cases, write another **10**; continue this way up to a maximum of **30 cases per object per dimension**.
@@ -206,7 +207,7 @@ What would you like to do?
 - Treat \`Implementation Notes\` in execution-plan.md as non-normative narrative context. Read them when resuming or reviewing a task, but never infer task status from them or use them instead of verification.
 - Keep writes to shared execution-plan.md serialized when dispatch units run in parallel; workers may return notes to the coordinator for append after handoff.
 - Treat completion independently: \`tasks.md\` completion means implementation tasks are done; \`test-plan.md\` testing/hardening table statuses outside \`## Final Quality Gates\` mean hardening is done.
-- Treat Test Hardening as incomplete while any concrete testing/hardening status row outside \`## Final Quality Gates\` is \`planned\`, \`failing\`, blank, or still a placeholder.
+- Treat Test Hardening as incomplete while any concrete testing/hardening status row outside \`## Final Quality Gates\` is \`planned\`, \`failed\`, \`blocked\`, blank, or still a placeholder.
 - Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.
 - Do not complete apply while hardening tests fail or product defects remain unresolved.
 - Do not recommend archive while a final quality gate is failed or an applicable gate is blocked.
