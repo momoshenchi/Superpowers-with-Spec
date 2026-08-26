@@ -200,6 +200,20 @@ describe('schema-aware change validation', () => {
     expect(report.issues).toEqual([]);
   });
 
+  it('allows remediations.md as an Apply-time runtime file outside the artifact graph', async () => {
+    const changeDir = await createSpecDrivenChange('with-remediations');
+    await fs.writeFile(
+      path.join(changeDir, 'remediations.md'),
+      '## RM-1 — Fix boundary validation\n\n**Meta:** Verify round 1 · P0 · resolved\n',
+      'utf-8'
+    );
+
+    const report = await validateChange('with-remediations', { projectRoot });
+
+    expect(report.valid).toBe(true);
+    expect(report.issues).toEqual([]);
+  });
+
   async function createSpecDrivenChange(
     name: string,
     options: { omit?: string[] } = {}

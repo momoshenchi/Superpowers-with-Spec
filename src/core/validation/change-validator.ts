@@ -93,9 +93,13 @@ function getAllowedArtifactFiles(changeDir: string, generatesPatterns: string[])
   return allowed;
 }
 
+/** Runtime files created during Apply/FQG but intentionally outside the artifact graph. */
+const RUNTIME_CHANGE_FILES = new Set(['remediations.md']);
+
 function isAllowedChangeFile(file: string, allowedArtifactFiles: Set<string>): boolean {
   return (
     file === '.superpowers.yaml' ||
+    RUNTIME_CHANGE_FILES.has(file) ||
     file.startsWith('specs/') ||
     file.startsWith('attachments/') ||
     allowedArtifactFiles.has(file)
