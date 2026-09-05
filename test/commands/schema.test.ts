@@ -445,6 +445,16 @@ artifacts:
       expect(testPlanTemplate).toContain('every concrete test/status row');
       expect(testPlanTemplate).toContain('planned / passed / failed / blocked / not applicable');
       expect(testPlanTemplate).toContain('MC-R');
+      expect(testPlanTemplate).toContain('A **test object** is one coverage unit');
+      expect(testPlanTemplate).toContain('A thin spec does not cap coverage');
+      expect(testPlanTemplate).toContain('| Object | Requirement | Spec Scenario | D1 Case ID | Related Case IDs | Notes |');
+      expect(testPlanTemplate).toContain('| ID | Object | Source | Scenario Type | Steps | Expected | Form | Status | Evidence |');
+      expect(testPlanTemplate).toContain('## Mutation Testing');
+      expect(testPlanTemplate).toContain('every planned `unit` case across D1–D6');
+      expect(testPlanTemplate).toContain('not after D2 alone');
+      expect(testPlanTemplate).toContain('from `full-qa-test` Step 7');
+      expect(testPlanTemplate).not.toContain('Step 2b');
+      expect(testPlanTemplate).not.toContain('| Object | Requirement / Spec Scenario | Form | Status | Notes |');
       expect(testPlanTemplate).not.toContain('planned / covered / passed / failing / not applicable');
       expect(testPlanTemplate).not.toContain('Test Hardening complete');
     });

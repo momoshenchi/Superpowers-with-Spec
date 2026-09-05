@@ -92,6 +92,29 @@ describe('change review workflow templates', () => {
     }
   });
 
+  it('treats the test-plan coverage matrix as a Scenario-to-D1 index, not a second case list', () => {
+    for (const content of [
+      getChangeReviewSkillTemplate().instructions,
+      getSpReviewCommandTemplate().content,
+    ]) {
+      expect(content).toContain('maps each imported Scenario to a D1 Case ID');
+      expect(content).toContain('Entry Point as the system under test');
+      expect(content).toContain('Design Contract And Invariant Coverage');
+      expect(content).not.toContain('assigns each imported Scenario a form');
+      expect(content).toContain('copies RTM rows into D1');
+      expect(content).toContain('treats a thin spec as the coverage ceiling');
+    }
+
+    const schema = fs.readFileSync(
+      path.join(process.cwd(), 'schemas', 'spec-driven', 'schema.yaml'),
+      'utf8'
+    );
+    expect(schema).toContain('traceability index');
+    expect(schema).toContain('D1 Case ID');
+    expect(schema).toContain('Do not copy Steps, Expected, Form, or Status');
+    expect(schema).toContain('baseline, not a ceiling');
+  });
+
   it('keeps review out of the spec-driven schema artifact graph', () => {
     const schema = fs.readFileSync(
       path.join(process.cwd(), 'schemas', 'spec-driven', 'schema.yaml'),

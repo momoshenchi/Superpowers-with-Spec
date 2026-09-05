@@ -216,10 +216,15 @@ Earlier tests covered the main toggle path but did not fully cover persistence
 fallbacks or invalid saved values. This hardening pass adds focused tests for
 those gaps.
 
+## Test Scope Register
+| Object | Requirement | Spec Scenarios to import | Entry Point | Diff Anchor | Risk Hypothesis |
+| --- | --- | --- | --- | --- | --- |
+| R1 | Theme selection persists | Manual toggle | ThemeContext.setTheme | `theme-context.ts` | Invalid stored value crashes on load |
+
 ## Requirement And Scenario Coverage Matrix
-| Requirement / Scenario | Planned Coverage | Status | Notes |
-| --- | --- | --- | --- |
-| Theme Selection / Manual toggle | unit + integration | planned | ThemeContext and toggle flow |
+| Object | Requirement | Spec Scenario | D1 Case ID | Related Case IDs | Notes |
+| --- | --- | --- | --- | --- | --- |
+| R1 | Theme selection persists | Manual toggle | TC-R1-D1-001 | TC-R1-D3-001 | Form/Status live on the D1 row |
 ```
 
 ### 3. Implement

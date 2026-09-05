@@ -1176,25 +1176,35 @@ Test Hardening is complete when every concrete test/status row in the tables bel
 
 ## Test Scope Register
 
-| Object | Requirement | Existing Scenarios | Entry Point | Diff Anchor | Risk Hypothesis |
+A **test object** is one coverage unit. It is not a folder, not a file list, and not a Scenario. Object is the \`R1\` ID for one \`### Requirement:\`; Entry Point is the system under test; Spec Scenarios to import are titles only. A thin spec does not cap coverage: import written Scenarios, then expand with \`gap:\` rows; register another object when design or code exposes a capability the spec omitted.
+
+| Object | Requirement | Spec Scenarios to import | Entry Point | Diff Anchor | Risk Hypothesis |
 | --- | --- | --- | --- | --- | --- |
-| R1 | <!-- \`### Requirement:\` name from specs/<capability>/spec.md --> | <!-- count and titles of \`#### Scenario:\` already written --> | <!-- CLI subcommand, HTTP route, exported function, or UI route --> | <!-- files or symbols this requirement changes --> | <!-- the single most likely thing to be missed --> |
+| R1 | <!-- \`### Requirement:\` name from specs/<capability>/spec.md --> | <!-- titles of \`#### Scenario:\` already written --> | <!-- CLI subcommand, HTTP route, exported function, or UI route --> | <!-- files or symbols this requirement changes --> | <!-- the single most likely thing to be missed --> |
+
+## Design Contract And Invariant Coverage
+
+| Object | Contract / Invariant | Case IDs | Notes |
+| --- | --- | --- | --- |
+| <!-- R1 --> | <!-- I1 or contract name --> | <!-- TC-R1-D1-001 --> | <!-- or N/A with reason --> |
 
 ## Requirement And Scenario Coverage Matrix
 
-| Object | Requirement / Spec Scenario | Form | Status | Notes |
-| --- | --- | --- | --- | --- |
-| <!-- R1 --> | <!-- Requirement: Scenario title from spec.md --> | <!-- unit / integration / E2E / manual / not applicable --> | <!-- planned / passed / failed / blocked / not applicable --> | <!-- test file, command, or rationale --> |
+This table is not a second case list. One row per imported spec Scenario; Steps, Expected, Form, and Status live on the D1 row named by D1 Case ID.
+
+| Object | Requirement | Spec Scenario | D1 Case ID | Related Case IDs | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <!-- R1 --> | <!-- \`### Requirement:\` name --> | <!-- \`#### Scenario:\` title --> | <!-- TC-R1-D1-001 --> | <!-- TC-R1-D2-001 — or none --> | <!-- optional --> |
 
 ## Six-Dimension Case Matrix
 
-One table per \`full-qa-test\` dimension, each keeping that dimension's own columns. Case IDs are \`TC-R<object>-D<dimension>-<seq>\`. Run 10→10→10 once per Requirement per dimension. Status values are \`planned\`, \`passed\`, \`failed\`, \`blocked\`, or \`not applicable\`.
+One table per \`full-qa-test\` dimension, each keeping that dimension's own columns. Case IDs are \`TC-R<object>-D<dimension>-<seq>\`. Run 10→10→10 once per Requirement per dimension. Status values are \`planned\`, \`passed\`, \`failed\`, \`blocked\`, or \`not applicable\`. A case is incomplete if a wrong implementation could still pass it.
 
 ### D1 — Requirements and business scenarios
 
-| ID | Object | Requirement | Scenario Type | Steps | Expected | Form | Status | Evidence |
+| ID | Object | Source | Scenario Type | Steps | Expected | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <!-- TC-R1-D1-001 --> | <!-- R1 --> | <!-- Requirement plus imported Scenario title --> | <!-- happy path / branch / exception / implicit --> | <!-- ordered actions through the entry point, with the starting state --> | <!-- checkable outcome: status code, resulting state, returned field --> | <!-- unit / integration / E2E / manual --> | | <!-- test file, command, or rationale --> |
+| <!-- TC-R1-D1-001 --> | <!-- R1 --> | <!-- imported: Scenario title  OR  gap: short name --> | <!-- happy path / branch / exception / implicit --> | <!-- ordered actions through the entry point, with the starting state --> | <!-- checkable outcome: status code, resulting state, returned field --> | <!-- unit / integration / E2E / manual --> | | <!-- test file, command, or rationale --> |
 
 ### D2 — Code and branch coverage
 
@@ -1236,6 +1246,14 @@ One table per \`full-qa-test\` dimension, each keeping that dimension's own colu
 | D4 State transitions and timing | Illegal state transitions; concurrent requests, replay, and idempotency | <!-- planned / passed / not applicable --> | |
 | D5 Non-functional and fault tolerance | Permissions and privilege escalation; third-party timeout and 5xx fallback; performance and compatibility where applicable | <!-- planned / passed / not applicable --> | |
 | D6 Environment and dependencies | Empty or failing database/cache; weak or absent network; multi-device, resolution, and role compatibility | <!-- planned / passed / not applicable --> | |
+
+## Mutation Testing
+
+Optional coverage-quality gate from \`full-qa-test\` Step 7. Run it only after every planned \`unit\` case across D1–D6 is executable and green — not after D2 alone. Record a deferral reason instead of leaving this blank.
+
+| Scope | Mutation Score | Surviving Mutants | Follow-Up Case IDs / Equivalence Rationale |
+| --- | --- | --- | --- |
+| <!-- files or symbols mutated, or "deferred / not applicable" with reason --> | <!-- killed / valid mutants --> | <!-- surviving mutant list --> | <!-- added cases, or why the mutant is equivalent --> |
 
 ## Manual Coverage
 

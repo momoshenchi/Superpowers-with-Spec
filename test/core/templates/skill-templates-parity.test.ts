@@ -175,6 +175,10 @@ describe('skill templates split parity', () => {
       expect(content).toContain('source of normative meaning');
       expect(content).toContain('tasks.md');
       expect(content).toContain('progress-tracking');
+      expect(content).toContain(
+        'Run mutation testing only after every planned `unit` case is executable and green'
+      );
+      expect(content).toContain('## Mutation Testing');
       expect(content).not.toContain('Default to executing in batches of 3 tasks');
     }
 

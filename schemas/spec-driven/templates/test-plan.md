@@ -4,27 +4,57 @@ Analyze which earlier tests were still insufficient or not broad enough, walking
 
 Workers record and run the tests needed by their detailed dispatch-unit task blocks in `tasks.md`. Test Hardening in this `test-plan.md` supplements that local verification after all dispatch units are integrated. Passing worker-level tests is necessary but not sufficient for final apply completion.
 
+Name each gap as `R<object> / D<dimension>: <what existing worker tests do not see>`. Start from `execution-plan.md` Step 1 tests and from `design.md` Contracts and Invariants; cite those tests in Evidence rather than rewriting them.
+
 Test Hardening is complete when every concrete test/status row in the tables below is complete. **Write** statuses as `planned`, `passed`, `failed`, `blocked`, or `not applicable`. A row is complete when it is `passed` or scope-backed `not applicable`. Leave rows as `planned`, `failed`, `blocked`, or blank until the coverage is actually complete. Readers may still treat legacy aliases such as `covered` as complete for older plans; do not write those aliases in new rows.
 
 ## Test Scope Register
 
-Take test objects from the change's delta spec: one row per `### Requirement:`, coded R1, R2, … A Requirement that contains independently testable sub-capabilities may split into R1a / R1b. Do not invent a parallel feature list. Existing `#### Scenario:` blocks are the D1 baseline — import them, then expand; do not rewrite them under new names.
+A **test object** is one coverage unit. It is not a folder, not a file list, and not a Scenario.
 
-| Object | Requirement | Existing Scenarios | Entry Point | Diff Anchor | Risk Hypothesis |
+| Layer | What it is | Where it is recorded |
+| --- | --- | --- |
+| Object (`R1`, `R2`, `R1a`) | Stable ID for one `### Requirement:` | Object column; prefix of every `TC-R…` / `MC-R…` ID |
+| Requirement | The SHALL statement being proven | Requirement column — copy the spec heading, do not paraphrase |
+| System under test | The callable surface you actually invoke | Entry Point — CLI subcommand, HTTP route, exported function, or UI route, never an internal helper |
+| Spec Scenario | A `#### Scenario:` already written under that Requirement | Spec Scenarios to import — titles only; this is the import list, not a second object list |
+| Case | One executable row | `TC-R<object>-D<dimension>-<seq>` in D1–D6 |
+
+Take objects from the change's delta spec first: one row per `### Requirement:`, coded R1, R2, …. A Requirement that contains independently testable sub-capabilities may split into R1a / R1b. Do not invent a parallel feature list that renames those Requirements. Existing `#### Scenario:` blocks are the D1 baseline — import them, then expand; do not rewrite them under new names.
+
+**A thin spec does not cap coverage.** Import every written `#### Scenario:` as `imported:`. Then add `gap:` rows for happy path, branches, exceptions, and implicit rules the spec omitted. If design, proposal, or code exposes a testable capability with no `### Requirement:`, register another object (continue R numbering) and say `spec omitted` in its Risk Hypothesis. Do not rewrite `spec.md` here; do not skip the tests because the spec is thin.
+
+If you cannot name an Entry Point, the row is not yet a test object: split the Requirement, or mark Entry Point `not applicable` with a Risk Hypothesis that says why no runtime surface exists. When one requirement triggers another, say so in its Risk Hypothesis.
+
+Example (replace; do not leave this sample in the live table):
+
+| Object | Requirement | Spec Scenarios to import | Entry Point | Diff Anchor | Risk Hypothesis |
 | --- | --- | --- | --- | --- | --- |
-| R1 | <!-- `### Requirement:` name from `specs/<capability>/spec.md` --> | <!-- count and titles of `#### Scenario:` already written --> | <!-- CLI subcommand, HTTP route, exported function, or UI route — not an internal helper --> | <!-- files or symbols this requirement changes --> | <!-- the single most likely thing to be missed --> |
+| R1 | `Requirement: Cancel pending orders` | Pending can cancel; shipped rejected | `POST /api/orders/{id}/cancel` | `orderService.ts:cancel` | Refund failure leaves a half-cancelled order |
 
-When one requirement triggers another, say so in its Risk Hypothesis.
+| Object | Requirement | Spec Scenarios to import | Entry Point | Diff Anchor | Risk Hypothesis |
+| --- | --- | --- | --- | --- | --- |
+| R1 | <!-- `### Requirement:` name from `specs/<capability>/spec.md` --> | <!-- titles of `#### Scenario:` already written --> | <!-- CLI subcommand, HTTP route, exported function, or UI route — not an internal helper --> | <!-- files or symbols this requirement changes --> | <!-- the single most likely thing to be missed --> |
+
+## Design Contract And Invariant Coverage
+
+Map each non-N/A `## Contracts` item and `## Invariants` row from `design.md` to case IDs after those cases exist. An unmapped invariant is a coverage hole. Write exactly `N/A — no contracts or invariants` when design says N/A.
+
+| Object | Contract / Invariant | Case IDs | Notes |
+| --- | --- | --- | --- |
+| <!-- R1 --> | <!-- I1 or contract name, quoted --> | <!-- TC-R1-D1-001, TC-R1-D4-002 --> | <!-- or N/A with reason --> |
 
 ## Requirement And Scenario Coverage Matrix
 
-RTM of the spec's own Scenarios plus the form chosen to prove each one. This table tracks the imported baseline; the six-dimension tables below expand the gaps.
+Traceability index from each imported spec `#### Scenario:` to the D1 case that owns it. This table is not a second case list: Steps, Expected, Form, and Status live only on the D1 row named here. D1 then adds gap rows (branch / exception / implicit) that do not appear in this table.
 
-| Object | Requirement / Spec Scenario | Form | Status | Notes |
-| --- | --- | --- | --- | --- |
-| <!-- R1 --> | <!-- Requirement: Scenario title from spec.md --> | <!-- unit / integration / E2E / manual / not applicable --> | <!-- planned / passed / failed / blocked / not applicable --> | <!-- test file, command, or rationale --> |
+One row per imported Scenario. A blank D1 Case ID is a coverage hole. Related Case IDs list D2–D6 cases that prove the same Scenario from another dimension.
 
-Choose form by the `full-qa-test` rule: observe the behavior at the lowest layer that can see it. `unit` for a function or branch, `integration` for collaborating modules or a real store, `E2E` only when the behavior is invisible below the full journey, `manual` only when automation cannot run and a `## Manual Coverage` row exists.
+| Object | Requirement | Spec Scenario | D1 Case ID | Related Case IDs | Notes |
+| --- | --- | --- | --- | --- | --- |
+| <!-- R1 --> | <!-- `### Requirement:` name --> | <!-- `#### Scenario:` title, copied not paraphrased --> | <!-- TC-R1-D1-001 --> | <!-- TC-R1-D2-001, TC-R1-D4-002 — or none --> | <!-- optional --> |
+
+Choose form on the D1 row by the `full-qa-test` rule: observe the behavior at the lowest layer that can see it. `unit` for a function or branch, `integration` for collaborating modules or a real store, `E2E` only when the behavior is invisible below the full journey, `manual` only when automation cannot run and a `## Manual Coverage` row exists.
 
 ## Six-Dimension Case Matrix
 
@@ -32,21 +62,29 @@ Cases carried over from the `full-qa-test` skill, one table per dimension. Each 
 
 Case IDs are `TC-R<object>-D<dimension>-<seq>`, for example `TC-R2-D6-001`. Group rows by object within each table. Status values are `planned`, `passed`, `failed`, `blocked`, or `not applicable`. Every registered Requirement needs coverage in every applicable dimension, or an explicit `not applicable` row stating why.
 
-Write concrete cases: name real routes, symbols, and values, and give expected results as checkable assertions such as a status code, a resulting state, or a specific error. "Invalid input is rejected" is not a case. Every case must name its form.
+Write concrete cases: name real routes, symbols, and values, and give expected results as checkable assertions such as a status code, a resulting state, or a specific error. "Invalid input is rejected" is not a case. Every case must name its form. A case is incomplete if a wrong implementation could still pass it. Expected must name a value, state, collaborator, or error that would change if the code were wrong. Cite an existing worker test in Evidence when `execution-plan.md` Step 1 already covers the case; do not duplicate that test.
+
+D5 owns quality attributes of this object (authz, latency SLO, compatibility). D6 owns isolation when a named collaborator fails. Do not copy the same fault into both tables.
 
 ### D1 — Requirements and business scenarios
 
-| ID | Object | Requirement | Scenario Type | Steps | Expected | Form | Status | Evidence |
+Imported spec Scenarios use `Source` `imported: <Scenario title>`. Gaps this dimension adds use `gap: <short name>` and do not belong in the coverage-matrix index above.
+
+| ID | Object | Source | Scenario Type | Steps | Expected | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <!-- TC-R1-D1-001 --> | <!-- R1 --> | <!-- `### Requirement:` plus imported `#### Scenario:` title, or the implicit gap being added --> | <!-- happy path / branch / exception / implicit; mark imported spec scenarios --> | <!-- ordered actions through the registered entry point, with the starting state --> | <!-- checkable outcome: status code, resulting state, returned field --> | <!-- unit / integration / E2E / manual --> | | <!-- test file, command, or rationale --> |
+| <!-- TC-R1-D1-001 --> | <!-- R1 --> | <!-- imported: Pending can cancel  OR  gap: double-submit --> | <!-- happy path / branch / exception / implicit; mark imported spec scenarios --> | <!-- ordered actions through the registered entry point, with the starting state --> | <!-- checkable outcome: status code, resulting state, returned field --> | <!-- unit / integration / E2E / manual --> | | <!-- test file, command, or rationale --> |
 
 ### D2 — Code and branch coverage
+
+Every path or symbol in the object's Diff Anchor must appear in at least one D2 Code Anchor, or that object needs a D2 `not applicable` row stating why the diff is untestable.
 
 | ID | Object | Code Anchor | Coverage Type | Trigger Input | Expected | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | <!-- TC-R1-D2-001 --> | <!-- R1 --> | <!-- file:symbol — the specific decision, e.g. `cancel` / `status==='shipped'` --> | <!-- branch true / branch false / condition combo / diff line --> | <!-- input that actually reaches this branch --> | <!-- which path runs, and which collaborator must not be called --> | <!-- unit unless the branch is unreachable without a real collaborator --> | | <!-- test file, command, or rationale --> |
 
 ### D3 — Data and input space
+
+Use pairwise / orthogonal combinations for multi-parameter interaction; do not explode the cartesian product.
 
 | ID | Object | Parameter | Class | Sample Input | Expected | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -72,7 +110,7 @@ Write concrete cases: name real routes, symbols, and values, and give expected r
 
 ## Dimension Coverage Summary
 
-One row per dimension, mirroring the `full-qa-test` Step 7 self-check. Mark Status `passed` when the 10→10→10 rule has been run for every registered Requirement in that dimension and required child cases are `passed` or scope-backed `not applicable`; use `not applicable` with a concrete scope reason when the whole dimension does not apply; leave unfinished dimensions `planned`. List case IDs per object, for example `R1: TC-R1-D3-001/002; R2: TC-R2-D3-001`.
+One row per dimension, mirroring the `full-qa-test` Step 8 self-check. Mark Status `passed` when the 10→10→10 rule has been run for every registered Requirement in that dimension and required child cases are `passed` or scope-backed `not applicable`; use `not applicable` with a concrete scope reason when the whole dimension does not apply; leave unfinished dimensions `planned`. List case IDs per object, for example `R1: TC-R1-D3-001/002; R2: TC-R2-D3-001`.
 
 | Dimension | Must-check items | Status | Case IDs / Rationale |
 | --- | --- | --- | --- |
@@ -93,7 +131,7 @@ Required once two or more Requirements are registered. It makes a requirement th
 
 ## Mutation Testing
 
-Optional D2 coverage-quality gate from `full-qa-test` Step 2b. Run it only once the D2 cases are executable and green; record a deferral reason instead of leaving this blank.
+Optional coverage-quality gate from `full-qa-test` Step 7. Run it only after every planned `unit` case across D1–D6 is executable and green — not after D2 alone. Record a deferral reason instead of leaving this blank. Surviving mutants that change observable behavior MUST get a follow-up case ID; equivalent mutants need a one-line reason.
 
 | Scope | Mutation Score | Surviving Mutants | Follow-Up Case IDs / Equivalence Rationale |
 | --- | --- | --- | --- |
