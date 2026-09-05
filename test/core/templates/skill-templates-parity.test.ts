@@ -246,7 +246,7 @@ describe('skill templates split parity', () => {
       expect(content).toContain('Simplify (one pass, then Verify)');
       expect(content).toContain('transitions directly to Verify round one');
       expect(content).toContain('Verify (rounds 1–4)');
-      expect(content).toContain('including the full canonical preflight and applicable Manual Coverage again');
+      expect(content).toContain('including the canonical preflight and applicable Manual Coverage again');
       expect(content).toContain('Design verify (rounds 1–4)');
       expect(content).toContain('Retry only Design verify');
       expect(content).toContain('do not impose a global restart from code review');
@@ -346,7 +346,7 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('full-qa-test');
     expect(verify).toContain('Verify round 1');
     expect(verify).toContain('every attempt, including a retry, uses a fresh subagent');
-    expect(verify).toContain('Every round reruns this complete canonical non-visual preflight');
+    expect(verify).toContain('Every round reruns this canonical non-visual preflight');
     expect(verify).toContain('applicable Manual Coverage');
     expect(verify).toContain('or `P0` finding, retry from Verify with a fresh worker');
     expect(verify).toContain('do not consume a round');

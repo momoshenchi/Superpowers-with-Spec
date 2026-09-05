@@ -66,7 +66,7 @@ Keep planned Step 1–5 instructions intact. Append notes rather than rewriting 
    - **Implementation approach:** the algorithm, data shape, or state transition in enough detail to write the code from — not a restatement of the task title.
    - **Edges and failures:** behavior for empty, missing, invalid, and failure inputs, each traced to the spec Scenario that requires it.
    - **Out of scope:** what this task deliberately does not change, so the worker does not widen the diff.
-4. **Step 4: Run focused verification** — Re-run the exact command from Step 2. Record the passing result. If a new failure appears outside this task's test, name it — do not silently expand the diff to chase it.
+4. **Step 4: Run focused verification** — Re-run the exact command from Step 2. Then run Git-related tests when the runner supports Git-aware selection; do not require the full suite in that case. Record the passing result. If a new failure appears outside this task's test, name it — do not silently expand the diff to chase it.
 5. **Step 5: Self-review and handoff** — Confirm the Step 1 assertions now pass for the right reason, the Step 3 slots were followed, no extra files leaked in, and the `tasks.md` checkbox can be marked. Report files changed, the verification command, and then continue with the next detailed task in this dispatch unit.
 
    Append `#### Implementation Notes` after any of the five steps when there is a meaningful finding, reasoning note, viewpoint/trade-off, or summary/takeaway. Notes are optional and explanatory; they are not a second task checklist.

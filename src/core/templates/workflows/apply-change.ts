@@ -80,6 +80,7 @@ ${APPLY_RUNTIME_BEFORE_CAPTURE}
 7. **Implement tasks (loop until done or blocked)**
 
    In most cases, test-driven development should be used. Please refer to the \`test-driven-development\` skill.
+   After the focused RED/GREEN test for the current task, run Git-related tests rather than the full suite when the test runner supports Git-aware selection. Do not require the complete canonical suite at task level.
 
    For each pending task:
    - Show which task is being worked on

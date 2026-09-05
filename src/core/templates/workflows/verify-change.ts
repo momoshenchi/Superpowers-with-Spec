@@ -9,7 +9,7 @@ import { getCanonicalNonVisualSuiteInstructions, getManualCoverageInstructions, 
 
 const finalQualityRetryInstructions = `### Final-quality Verify retries:
    - When Verify is delegated by \`/sp:apply\`, label the report \`Verify round 1\` through \`Verify round 4\`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
-   - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable Manual Coverage. Preserve separate command and Manual Coverage evidence for every numbered round.
+   - Every round reruns this canonical non-visual preflight before requirement/scenario assessment and applicable Manual Coverage. Preserve separate command and Manual Coverage evidence for every numbered round.
    - Before round four, the worker reports each resolvable failed check, applicable Manual Coverage failure, or \`P0\` finding. When the coordinator repairs an accepted failure or \`P0\` finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
    - A missing runtime, credential, browser capability, dependency, or other prerequisite is \`blocked\`: report it, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable Manual Coverage failure, or \`P0\` finding, report \`failed\`; do not begin a fifth round or recommend archive.`;
 
@@ -143,7 +143,7 @@ ${finalQualityRetryInstructions}
 ### Verification Heuristics
 
 - **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
-- **Correctness**: Run the canonical test suite and Manual Coverage (including \`programmatic-browser\` / \`agent-browser\` methods); use inspectable evidence rather than inference alone
+- **Correctness**: Run the canonical test-suite preflight (Git-related tests when the runner supports Git-aware selection, otherwise the complete suite) and Manual Coverage (including \`programmatic-browser\` / \`agent-browser\` methods); use inspectable evidence rather than inference alone
 - **Coherence**: Look for glaring inconsistencies, don't nitpick style
 - **False Positives**: Calibrate down when uncertain, per the severity model above
 - **Actionability**: Every issue must have a specific recommendation with file/line references where applicable

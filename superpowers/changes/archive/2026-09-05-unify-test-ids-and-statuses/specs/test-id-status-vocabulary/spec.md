@@ -37,8 +37,6 @@ Apply readiness parsers that inspect test-plan Status columns SHALL continue to 
 - **THEN** the apply Test Hardening completeness check SHALL treat that row as complete
 - **AND** normative templates MAY still discourage writing `covered` going forward
 
-## MODIFIED Requirements
-
 ### Requirement: Test Hardening SHALL Include Manual Coverage Statuses
 Test Hardening SHALL treat every concrete Manual Coverage status row as complete only when it is `passed` or scope-backed `not applicable`. An applicable `blocked` or `failed` manual row SHALL prevent Test Hardening and apply completion. Incomplete writer values include `planned`, `failed`, `blocked`, blank, or placeholder; legacy `failing` MAY still appear in older plans and remains incomplete.
 

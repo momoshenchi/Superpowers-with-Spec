@@ -26,7 +26,7 @@ Prompt length and file count are not selection rules. A short request can be hig
 - It does not alter authentication, authorization, billing, persisted data integrity, recovery behavior, or another security/data boundary.
 - Its workload remains below the Proposal boundary and has a clear verification path.
 
-Direct work still requires applicable unit, integration, E2E, and visual checks. For a direct UI change, exercise the runnable user journey and inspect applicable visual-design rules without pretending that an Apply artifact lifecycle was completed.
+Direct work still requires applicable unit, integration, E2E, and visual checks. For automated tests, prefer Git-related tests when the runner supports Git-aware selection; fall closed to the complete suite when it does not. For a direct UI change, exercise the runnable user journey and inspect applicable visual-design rules without pretending that an Apply artifact lifecycle was completed.
 
 ### Require Proposal → Review → Apply for any override
 

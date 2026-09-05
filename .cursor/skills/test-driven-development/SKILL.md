@@ -171,7 +171,7 @@ npm test path/to/test.test.ts
 
 Confirm:
 - Test passes
-- Other tests still pass
+- Other tests still pass — run Git-related tests when the runner supports Git-aware selection; do not require the full suite in that case. Fall closed to the complete suite when Git-aware selection is unavailable, empty, or ambiguous.
 - Output pristine (no errors, warnings)
 
 **Test fails?** Fix code, not test.
@@ -318,7 +318,7 @@ Before claiming development complete, check:
 2. Watched each test fail before implementing
 3. Each test failed for expected reason (feature missing, not typo)
 4. Wrote minimal code to pass each test
-5. All tests pass
+5. Selected tests pass (Git-related when supported, otherwise the complete suite)
 6. Output pristine (no errors, warnings)
 7. Edge cases and errors covered
 

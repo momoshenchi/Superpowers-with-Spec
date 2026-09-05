@@ -2,7 +2,7 @@
 
 exports[`skill templates split parity > preserves all template function payloads exactly 1`] = `
 {
-  "getApplyChangeSkillTemplate": "cd36d8e786bf23cc990d75c0fb7a98f8daccf3d9ef2c5a50644fd57756e6339a",
+  "getApplyChangeSkillTemplate": "805d22ef26c8965dee01f716576407fc7370116b7ab74267b4e34687d6d9aaa8",
   "getArchiveChangeSkillTemplate": "6b8fc5fc72bf012c2c13cb59ec706bc28a2086026a6514bcd10a1731863b8728",
   "getBulkArchiveChangeSkillTemplate": "aced7d6542d49b8f0ccf5aee9b9ccc670c30f959c2ec96365e21560b478727fc",
   "getChangeReviewSkillTemplate": "d8b251af81b13628af901f6c099a13d4f4f706fee439b4cb35f5bfeb764904ff",
@@ -15,7 +15,7 @@ exports[`skill templates split parity > preserves all template function payloads
   "getOnboardSkillTemplate": "9fa216bc1c979352eeab3c5afb782e901e406bfe68a4db0e2f6908e5644acd25",
   "getShapeReviewSkillTemplate": "c1bf320fb394e0a3453b099e228edc6ec0eb68a2cb1e84ade7091eff461478ce",
   "getSimplifySkillTemplate": "5d26571f977ae20e01afeec54037a6fabeb84fdb8a492a18f4acdfbcb1551ca5",
-  "getSpApplyCommandTemplate": "66a08521b22dff601de362dbf1c37e49e381e0075520ccda3e47b299bec1a119",
+  "getSpApplyCommandTemplate": "ef6209953c941161a5220c91878ab88b74d2e7e5dbb8a80834f9bbdf5995d2f5",
   "getSpArchiveCommandTemplate": "e4b9a943fb449870881cc979514af929e6479106842d8c4fa11e2d2f8a3af59b",
   "getSpBulkArchiveCommandTemplate": "b2af9c3a94c9be75dfff249fcf747abaef308bc64d2f292594a796f0bf0b125a",
   "getSpContinueCommandTemplate": "a5bff71ba5ea053d61aad846d9d39053a185ba3aeb993bcadfe15b00779b158e",
@@ -30,15 +30,15 @@ exports[`skill templates split parity > preserves all template function payloads
   "getSpShapeReviewCommandTemplate": "0e14c7edb312c1689eebb3e200d26a1873159e2edea976b9644dec612f770a44",
   "getSpSimplifyCommandTemplate": "ea0ca542aff154ff51bbf2d6169540dc4d8d51d1d3fd1676bd9c09e1313d592a",
   "getSpSyncCommandTemplate": "cc1ff958f3b66201e1b044c5fc4ab74c542d22520a8ab6338cf24bc50937aeb4",
-  "getSpVerifyCommandTemplate": "3df87f178c0a8c7373e832bcedd3baa08ff4f3e969484d3476db61a89b0cfa72",
+  "getSpVerifyCommandTemplate": "4f9eebf38ba2b306ebdc4fc54e98413f29e75dafeaa19d711baf3cdd7cf01ee5",
   "getSyncSpecsSkillTemplate": "d158b5176b331162fb744ea399ffb86e4fc34295f615cc66ea1fd8a43e3cd986",
-  "getVerifyChangeSkillTemplate": "917800de7a3fbc030ec5ec04cf7f213e9bfa9c0ff453439eff47a83725acaa0d",
+  "getVerifyChangeSkillTemplate": "1b0776997b12089997949c6b53a7c47ab21f103bfc48786074c869a0e757daa9",
 }
 `;
 
 exports[`skill templates split parity > preserves generated skill file content exactly 1`] = `
 {
-  "superpowers-apply-change": "16770bb70f678c1c9020719826a5a51322beed08550dc877069f4e27500114eb",
+  "superpowers-apply-change": "1797c024c07094d754ed4507b81ad45758ffda93c6451a0b941f2a8616de38ff",
   "superpowers-archive-change": "c6bca9925cb130c15c0544c33016b7e662430709a5f8439d063aeb8a091663d6",
   "superpowers-bulk-archive-change": "d8ac6194c481963430dff928843533a0e99817b8677e4b8afdacccacf7bf40bd",
   "superpowers-change-review": "8835107349d68687abb1a1763bc1eff2c08042fcd0bc1c7d3ae27dd8f60136ba",
@@ -52,6 +52,6 @@ exports[`skill templates split parity > preserves generated skill file content e
   "superpowers-shape-review": "53a75b2dd486fb0ef75d4dfce319cef649dc99111d5cd91a9cc47c7ba658eb1a",
   "superpowers-simplify": "85d6860d6567fe2ad1738f9f4648e074f6793c670de1aa07b2466447e293505d",
   "superpowers-sync-specs": "54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2",
-  "superpowers-verify-change": "725c32bb13b8e4015bb7fdf63eb7d73f60019f8d3d72ee02931c45b8329d4c05",
+  "superpowers-verify-change": "7f638a4c3ab6364a9960f7c71bdcb97f26ceb697e5234d3ebf513457849033d5",
 }
 `;

@@ -348,7 +348,7 @@ AI:  Implementing add-dark-mode...
 - Use for parallel changes by specifying the change name
 - Implementation progress is tracked in `tasks.md` checkboxes
 - Final apply completion also requires Test Hardening in `test-plan.md`; task completion alone is not the archive signal
-- Test Hardening runs the repository's complete canonical non-visual suite. Apply then delegates final code review, `/sp:simplify`, `/sp:verify`, and `/sp:design-verify` in that order to fresh, distinct subagents, integrating each result before the next; standalone workflow selection never disables those gates.
+- Test Hardening prefers Git-related tests when the runner supports Git-aware selection (for example Vitest `--changed` against merge-base) and fail-closed runs the complete canonical non-visual suite otherwise. Apply then delegates final code review, `/sp:simplify`, `/sp:verify`, and `/sp:design-verify` in that order to fresh, distinct subagents, integrating each result before the next; standalone workflow selection never disables those gates.
 - Final-gate retries are bounded and local: only a `P0` forces another round, while `P1`/`P2` are repaired in the current review round without forcing one. The gate outcome `blocked` is a missing prerequisite or external decision, not a severity; it pauses without consuming an attempt. Code review, Verify, and Design verify each stop with `failed` if round four still fails. Simplify has no retry loop and hands off to Verify round one.
 - After every applicable final quality gate passes, apply invites `/sp:archive` and optionally `/sp:shape-review`. Shape-review is not a fifth gate and does not block archive. If that command is not installed, say you want a shape review in this conversation.
 
@@ -373,12 +373,12 @@ Validate that implementation matches your change artifacts. Checks completeness,
 **What it does:**
 - Checks three dimensions of implementation quality
 - Hunts for as many real, evidence-backed issues as possible; continues after the first finding and does not invent problems. When uncertain about severity, prefer `P2` over `P1`, and `P1` over `P0`
-- Discovers and runs the complete canonical non-visual suite before Manual Coverage
+- Discovers the canonical non-visual runner and prefers Git-related tests when the runner supports Git-aware selection, otherwise runs the complete canonical non-visual suite, before Manual Coverage
 - After canonical preflight, executes every applicable `## Manual Coverage` row through its normal entry point and records method/environment, actions, observed outcome, and inspectable evidence. Browser and other runnable end-to-end journeys are Manual Coverage methods (`programmatic-browser` or `agent-browser`); Verify is where `agent-browser` rows deferred from Test Hardening are executed. A required row that is unexecuted, failed, or blocked prevents Verify from passing; `## Deferred Coverage` is not execution evidence
 - Searches codebase for implementation evidence
 - Reports findings categorized as `P0`, `P1`, or `P2`
 - Surfaces ordinary warnings without blocking archive; however, an applicable Manual Coverage failure or blocked prerequisite blocks Verify and must be resolved before archive
-- When delegated by apply, labels fresh Verify rounds 1–4; each round reruns the complete canonical non-visual suite and applicable Manual Coverage. Repairable failures retry from Verify, while a `blocked` prerequisite pauses without consuming a round and a fourth failed round is terminal
+- When delegated by apply, labels fresh Verify rounds 1–4; each round reruns the canonical non-visual preflight (Git-related tests when supported, otherwise the complete suite) and applicable Manual Coverage. Repairable failures retry from Verify, while a `blocked` prerequisite pauses without consuming a round and a fourth failed round is terminal
 
 **Verification dimensions:**
 

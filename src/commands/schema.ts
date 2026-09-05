@@ -1160,7 +1160,7 @@ Expand every detailed task in the dispatch unit below under clean \`### <number>
 1. **Step 1: Write or extend focused tests** — Fill spec bound (WHEN/THEN → Arrange/Act/Assert), test location, case table if needed, paste-ready test skeleton.
 2. **Step 2: Run focused tests** — Run the focused tests command. Wrong failure or already-green means fix Step 1, do not start Step 3.
 3. **Step 3: Implement Task 1.1** — Fill change anchor, design carried, implementation approach, edges and failures, out of scope.
-4. **Step 4: Run focused verification** — Re-run the Step 2 command. Record the passing result.
+4. **Step 4: Run focused verification** — Re-run the Step 2 command. Then run Git-related tests when the runner supports Git-aware selection; do not require the full suite in that case. Record the passing result.
 5. **Step 5: Self-review and handoff** — Confirm the Step 1 assertions pass for the right reason, then continue.
 
 `;

@@ -2,7 +2,6 @@
 
 ## Purpose
 Define `superpowers schema init` behavior for creating project-local schema skeletons in interactive and non-interactive modes.
-
 ## Requirements
 ### Requirement: Schema init command creates project-local schema
 The CLI SHALL provide an `superpowers schema init <name>` command that creates a new schema directory under `superpowers/schemas/<name>/` with a valid `schema.yaml` file and default template files.
@@ -73,4 +72,13 @@ The CLI SHALL support `--json` flag for machine-readable output.
 - **WHEN** user runs `superpowers schema init "invalid name" --json`
 - **THEN** system outputs JSON with `error` field describing the issue
 - **AND** exits with non-zero code
+
+### Requirement: Schema init work-package templates
+When `superpowers schema init` scaffolds the common `tasks` and `execution-plan` artifacts, it SHALL generate templates consistent with the default work-package convention.
+
+#### Scenario: Scaffold selected work-package artifacts
+
+- **WHEN** a user initializes a schema selecting both `tasks` and `execution-plan`
+- **THEN** the generated task template SHALL show a numbered logical work-package block containing detailed checkbox tasks
+- **AND** the generated execution-plan template SHALL show coordination and final-validation guidance rather than a mandatory 2–5 minute micro-step sequence
 

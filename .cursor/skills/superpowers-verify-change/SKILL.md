@@ -99,9 +99,11 @@ Verify that an implementation matches the change artifacts (specs, tasks, design
 
     **Canonical non-visual test-suite preflight (verify)**
 
-    - Discover the complete canonical non-visual suite from repository test scripts, CI configuration, testing documentation, and the active `test-plan.md`.
-    - Record every selected command, its source of authority, and explicitly visual-only checks excluded. A convenient or partial test script is not full validation without repository evidence.
-    - Run every selected command and record fresh results. If the suite is ambiguous, unavailable, cannot run, or fails, report `blocked` or `failed`; do not complete verify or continue to Manual Coverage.
+    - Discover the project's canonical non-visual test runner from repository test scripts, CI configuration, testing documentation, and the active `test-plan.md`. Record explicitly visual-only checks excluded. A convenient or guessed command is not validation without repository evidence.
+    - Prefer Git-related tests when the runner itself supports Git-aware selection. Detect that capability from the lockfile, runner config, or runner help — for example Vitest `--changed`, Jest `--changedSince` / `--onlyChanged`, or pytest-picked. The project's package script does not need to already mention those flags.
+    - Git baseline: prefer files changed since the current branch's merge-base with the default branch (for example `vitest run --changed origin/main`). If merge-base cannot be determined, use the runner's default working-tree-versus-HEAD mode. If the runner does not support Git-aware selection, the Git baseline remains unclear, related selection is empty or ambiguous, or the related command cannot be confirmed, fail-closed and run the complete canonical non-visual suite.
+    - Record the exact selected command, runner-capability evidence, Git baseline used, and whether fallback to the complete suite occurred.
+    - Run the selected command and record fresh results. Empty related selection is not a pass. If the selected command fails, cannot run, or the suite cannot be determined, report `blocked` or `failed`; do not complete verify or continue to Manual Coverage.
 
 
 
@@ -197,14 +199,14 @@ When a finding's severity is uncertain, prefer `P2` over `P1`, and `P1` over `P0
 
 ### Final-quality Verify retries:
    - When Verify is delegated by `/sp:apply`, label the report `Verify round 1` through `Verify round 4`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
-   - Every round reruns this complete canonical non-visual preflight before requirement/scenario assessment and applicable Manual Coverage. Preserve separate command and Manual Coverage evidence for every numbered round.
+   - Every round reruns this canonical non-visual preflight before requirement/scenario assessment and applicable Manual Coverage. Preserve separate command and Manual Coverage evidence for every numbered round.
    - Before round four, the worker reports each resolvable failed check, applicable Manual Coverage failure, or `P0` finding. When the coordinator repairs an accepted failure or `P0` finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
    - A missing runtime, credential, browser capability, dependency, or other prerequisite is `blocked`: report it, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable Manual Coverage failure, or `P0` finding, report `failed`; do not begin a fifth round or recommend archive.
 
 ### Verification Heuristics
 
 - **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
-- **Correctness**: Run the canonical test suite and Manual Coverage (including `programmatic-browser` / `agent-browser` methods); use inspectable evidence rather than inference alone
+- **Correctness**: Run the canonical test-suite preflight (Git-related tests when the runner supports Git-aware selection, otherwise the complete suite) and Manual Coverage (including `programmatic-browser` / `agent-browser` methods); use inspectable evidence rather than inference alone
 - **Coherence**: Look for glaring inconsistencies, don't nitpick style
 - **False Positives**: Calibrate down when uncertain, per the severity model above
 - **Actionability**: Every issue must have a specific recommendation with file/line references where applicable

@@ -74,6 +74,7 @@ Skip any step = lying, not verifying
 ## Key Patterns
 
 **Tests:**
+The verification command for automated tests is the Git-related selection when the runner supports Git-aware selection; otherwise the complete canonical suite. Execute that selected command fully. Empty related selection is not a pass.
 ```
 ✅ [Run test command] [See: 34/34 pass] "All tests pass"
 ❌ "Should pass now" / "Looks correct"
