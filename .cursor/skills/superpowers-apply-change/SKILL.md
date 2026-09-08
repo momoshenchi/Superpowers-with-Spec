@@ -309,8 +309,11 @@ standalone `shape-review` skill or command is absent. Do not point at
 2. Always run all four angles by name: Surface, Boundaries, Model,
    Composition. Missing layer evidence is per-angle `not applicable` plus
    evidence. Do not omit an angle.
-3. Remain read-only during the review pass. Classify findings
-   `simplify`, `structural`, or `skip`.
+3. Remain read-only during the review pass. Grade each `simplify` and
+   `structural` finding `P0` / `P1` / `P2`. Classify findings
+   `simplify`, `structural`, or `skip`. Each angle result is the
+   highest-severity finding on that angle, `passed` if none, or
+   `not applicable` with evidence. A `P0` does not fail Outcome or block archive.
 4. The summarizing pass, not fan-out workers, assigns `structural`
    destination from **this conversation** using the session rule:
    same-session wins; slash-after-apply remaining same-session; fail-closed
@@ -323,8 +326,8 @@ Outcome: passed | failed | blocked
 Scope: <change name and owned paths, or explicit target>
 Review mode: four-agent fan-out | single-pass fallback
 Session routing: same-session apply-after | new-session | not accepting
-Angles: Surface=<passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>
-Suggestions: <angle, file:line or symbol, summary, cost, classification, destination>
+Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>
+Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>
 Skipped: <finding and reason, or none>
 Evidence: <diff/review inputs>
 ```

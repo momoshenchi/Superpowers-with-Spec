@@ -387,6 +387,21 @@ describe('skill templates split parity', () => {
     expect(shapeReview).toContain('Outcome: passed | failed | blocked');
     expect(shapeReview).toContain('file:line or symbol');
     expect(shapeReview).toContain('cost');
+    expect(shapeReview).toContain('P0');
+    expect(shapeReview).toContain('P1');
+    expect(shapeReview).toContain('P2');
+    expect(shapeReview).toContain(
+      'Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>'
+    );
+    expect(shapeReview).toContain(
+      'Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>'
+    );
+    expect(shapeReview).toContain('highest-severity');
+    expect(shapeReview).not.toContain(
+      'Angles: Surface=<passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>'
+    );
+    expect(shapeReview).toContain('does not fail Outcome');
+    expect(shapeReview).toContain('does not block archive');
     expect(shapeReview).not.toContain('apply each remaining behavior-preserving cleanup directly');
     expect(shapeReview).toContain('/sp:shape-review');
     expect(shapeReview).toContain('/sp:review');
@@ -402,6 +417,12 @@ describe('skill templates split parity', () => {
     expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('not applicable');
     expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('read-only');
     expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('## Shape Review Result');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain(
+      'Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>'
+    );
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain(
+      'Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>'
+    );
     expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('same-session wins');
     expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('say you want a shape review in this conversation');
     expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('does not block archive');

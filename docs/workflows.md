@@ -255,7 +255,7 @@ The recommended completion flow:
 
 When a change has predicted UI scope and the capture window is open (UI-baseline evidence: `git diff --name-only` vs merge-base, unstaged, and `--cached` contain no paths at all, and `git status --porcelain` is empty), apply captures runtime Before screenshots into `attachments/visual-diff/before/` before the first implementation edit. Any dirty or committed implementation change closes the window, including template/non-suffix UI. Human status-quo images count as illustrative Before only when the referencing artifact names source, route or state, and that the file is illustrative. Design Verify later captures After into `attachments/visual-diff/after/` and presents the pair. If Before is missing, Design Verify captures After only and records `Before: missing`; that does not fail the gate or block archive. This visual pack is part of Design Verify, not a fifth gate.
 
-After every applicable gate passes, apply invites `/sp:archive` and optionally `/sp:shape-review`. Shape-review is not a fifth gate and does not block archive. If `/sp:shape-review` is not installed, say you want a shape review in this conversation. `/sp:review` is not an abbreviation of `/sp:shape-review`: `/sp:review` is proposal-artifact review; `/sp:shape-review` is a read-only Surface / Boundaries / Model / Composition review of the implemented (or design-time) shape.
+After every applicable gate passes, apply invites `/sp:archive` and optionally `/sp:shape-review`. Shape-review is not a fifth gate and does not block archive. If `/sp:shape-review` is not installed, say you want a shape review in this conversation. `/sp:review` is not an abbreviation of `/sp:shape-review`: `/sp:review` is proposal-artifact review; `/sp:shape-review` is a read-only Surface / Boundaries / Model / Composition review of the implemented (or design-time) shape. Each of Surface, Boundaries, Model, and Composition reports `P0`, `P1`, or `P2` (highest finding on that angle), `passed` when assessed with no findings, or `not applicable` with evidence.
 
 Same-session acceptance of structural suggestions expands the current change in place and withdraws archive until tasks, Test Hardening, and applicable gates complete again. If specs or design change, run `/sp:review` before implementing that expansion. A new session creates a new change with the prior change as prerequisite. Ignoring the invitation and archiving is allowed.
 
@@ -485,7 +485,7 @@ For full command details and options, see [Commands](commands.md).
 | `/sp:verify` | Validate implementation | Expanded mode, before archiving |
 | `/sp:simplify` | Behavior-preserving cleanup | Expanded mode or apply final gate |
 | `/sp:design-verify` | Runtime visual conformance | Expanded mode or apply final gate |
-| `/sp:shape-review` | Surface, Boundaries, Model, Composition | Optional after apply; does not block archive |
+| `/sp:shape-review` | Surface, Boundaries, Model, Composition (`P0`/`P1`/`P2`) | Optional after apply; does not block archive |
 | `/sp:sync` | Merge delta specs | Expanded mode, optional |
 | `/sp:archive` | Complete the change | All work finished |
 | `/sp:bulk-archive` | Archive multiple changes | Expanded mode, parallel work |

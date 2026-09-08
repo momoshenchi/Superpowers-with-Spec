@@ -43,4 +43,13 @@ describe('shape-review docs', () => {
     expect(workflows).toContain('- `/sp:review`');
     expect(workflows).toContain('`/sp:shape-review`');
   });
+
+  it('documents P0/P1/P2 severity on each shape-review angle', () => {
+    expect(commands).toContain(
+      'Each of Surface, Boundaries, Model, and Composition reports `P0`, `P1`, or `P2`'
+    );
+    expect(workflows).toContain(
+      'Each of Surface, Boundaries, Model, and Composition reports `P0`, `P1`, or `P2`'
+    );
+  });
 });

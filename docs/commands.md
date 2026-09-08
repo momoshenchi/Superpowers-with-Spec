@@ -462,7 +462,7 @@ Optional read-only review of Surface, Boundaries, Model, and Composition. Produc
 
 This command is part of the expanded workflow set (not included in the default `core` profile). After successful apply, `/sp:apply` still invites it. Saying you want a shape review in that conversation is enough if the slash command is not installed. Shape-review does not block archive and is not a fifth final quality gate.
 
-It always runs all four angles. A missing layer is per-angle `not applicable` with evidence. The worker stays read-only during the review pass. Behavior-preserving cleanup is classified `simplify` and routed to `/sp:simplify`. Structural suggestions accepted in the same post-apply conversation expand the current change in place and withdraw archive until gates re-run; if specs or design change, run `/sp:review` before implementing the expansion. A new session creates a new change with the prior change as prerequisite.
+It always runs all four angles. Each of Surface, Boundaries, Model, and Composition reports `P0`, `P1`, or `P2` (highest finding on that angle), `passed` when assessed with no findings, or `not applicable` with evidence. The worker stays read-only during the review pass. Behavior-preserving cleanup is classified `simplify` and routed to `/sp:simplify`. Structural suggestions accepted in the same post-apply conversation expand the current change in place and withdraw archive until gates re-run; if specs or design change, run `/sp:review` before implementing the expansion. A new session creates a new change with the prior change as prerequisite.
 
 ---
 

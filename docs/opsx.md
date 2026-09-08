@@ -1,7 +1,5 @@
 # SP Workflow
 
-> Feedback welcome on [Discord](https://discord.gg/YctCnvvshC).
-
 ## What Is It?
 
 SP is now the standard workflow for Superpowers.

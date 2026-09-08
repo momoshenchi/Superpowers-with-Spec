@@ -2,7 +2,7 @@
 
 exports[`skill templates split parity > preserves all template function payloads exactly 1`] = `
 {
-  "getApplyChangeSkillTemplate": "805d22ef26c8965dee01f716576407fc7370116b7ab74267b4e34687d6d9aaa8",
+  "getApplyChangeSkillTemplate": "20377d3c350bd4dc8c9074a17bf40ce311b7c6b97a237f7b39c4b6b9d5442612",
   "getArchiveChangeSkillTemplate": "6b8fc5fc72bf012c2c13cb59ec706bc28a2086026a6514bcd10a1731863b8728",
   "getBulkArchiveChangeSkillTemplate": "aced7d6542d49b8f0ccf5aee9b9ccc670c30f959c2ec96365e21560b478727fc",
   "getChangeReviewSkillTemplate": "d8b251af81b13628af901f6c099a13d4f4f706fee439b4cb35f5bfeb764904ff",
@@ -13,9 +13,9 @@ exports[`skill templates split parity > preserves all template function payloads
   "getFfChangeSkillTemplate": "2444090df905be139ca257cf9bbb6c6ec9156a1f76e893dc1ef07b9a87418c28",
   "getNewChangeSkillTemplate": "60f5546609a2d20970d31d9d454dc60bf6c536a4cb1fc9bcebca16e3a6b6024b",
   "getOnboardSkillTemplate": "9fa216bc1c979352eeab3c5afb782e901e406bfe68a4db0e2f6908e5644acd25",
-  "getShapeReviewSkillTemplate": "c1bf320fb394e0a3453b099e228edc6ec0eb68a2cb1e84ade7091eff461478ce",
+  "getShapeReviewSkillTemplate": "f5be1234df72ef2d4524c9b215ab89eec4ab27723f00c7f3d406cc7b5aeab97b",
   "getSimplifySkillTemplate": "5d26571f977ae20e01afeec54037a6fabeb84fdb8a492a18f4acdfbcb1551ca5",
-  "getSpApplyCommandTemplate": "ef6209953c941161a5220c91878ab88b74d2e7e5dbb8a80834f9bbdf5995d2f5",
+  "getSpApplyCommandTemplate": "7cda0e00fe7e664b6158f9b0b599ded95a65f779eae77b704940310c1c8d6ef6",
   "getSpArchiveCommandTemplate": "e4b9a943fb449870881cc979514af929e6479106842d8c4fa11e2d2f8a3af59b",
   "getSpBulkArchiveCommandTemplate": "b2af9c3a94c9be75dfff249fcf747abaef308bc64d2f292594a796f0bf0b125a",
   "getSpContinueCommandTemplate": "a5bff71ba5ea053d61aad846d9d39053a185ba3aeb993bcadfe15b00779b158e",
@@ -27,7 +27,7 @@ exports[`skill templates split parity > preserves all template function payloads
   "getSpProposeCommandTemplate": "7888a42087a46acecfce977fc4f7324826030f20ceeb5b1df076fb2c335e83b6",
   "getSpProposeSkillTemplate": "c218ab4a632689db5719b85f79ba8e61d5217325d0c2c1f4d3d1fc672f713756",
   "getSpReviewCommandTemplate": "701d360b2f43771d16723b9ed2304277500d2e917369afcc6cdaace238905049",
-  "getSpShapeReviewCommandTemplate": "0e14c7edb312c1689eebb3e200d26a1873159e2edea976b9644dec612f770a44",
+  "getSpShapeReviewCommandTemplate": "3282f1862a2675564a43344fbfa449df097385a95d617deb2166200565954ecd",
   "getSpSimplifyCommandTemplate": "ea0ca542aff154ff51bbf2d6169540dc4d8d51d1d3fd1676bd9c09e1313d592a",
   "getSpSyncCommandTemplate": "cc1ff958f3b66201e1b044c5fc4ab74c542d22520a8ab6338cf24bc50937aeb4",
   "getSpVerifyCommandTemplate": "4f9eebf38ba2b306ebdc4fc54e98413f29e75dafeaa19d711baf3cdd7cf01ee5",
@@ -38,7 +38,7 @@ exports[`skill templates split parity > preserves all template function payloads
 
 exports[`skill templates split parity > preserves generated skill file content exactly 1`] = `
 {
-  "superpowers-apply-change": "1797c024c07094d754ed4507b81ad45758ffda93c6451a0b941f2a8616de38ff",
+  "superpowers-apply-change": "ea468189ddd0418998b88094e3f7bf090dc71a55906333bccccee8bf4f3dd95d",
   "superpowers-archive-change": "c6bca9925cb130c15c0544c33016b7e662430709a5f8439d063aeb8a091663d6",
   "superpowers-bulk-archive-change": "d8ac6194c481963430dff928843533a0e99817b8677e4b8afdacccacf7bf40bd",
   "superpowers-change-review": "8835107349d68687abb1a1763bc1eff2c08042fcd0bc1c7d3ae27dd8f60136ba",
@@ -49,7 +49,7 @@ exports[`skill templates split parity > preserves generated skill file content e
   "superpowers-new-change": "74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f",
   "superpowers-onboard": "1766f149df0768b86a1d8e7607befaacb8945a00662c40c42858c1e5c25d7072",
   "superpowers-propose": "bc6fa32798cf5a4688d0442af09d0c07152b0957cf3c62c4403d6e056c45bc91",
-  "superpowers-shape-review": "53a75b2dd486fb0ef75d4dfce319cef649dc99111d5cd91a9cc47c7ba658eb1a",
+  "superpowers-shape-review": "055ca23ad597dcfce6e2d3aea0d2d27ae01b85f8967449ba9dce34e15d8c632b",
   "superpowers-simplify": "85d6860d6567fe2ad1738f9f4648e074f6793c670de1aa07b2466447e293505d",
   "superpowers-sync-specs": "54907c51ef35a7ad02a07d2c5efb9619d1932828fa06f69a484d509addfa6ea2",
   "superpowers-verify-change": "7f638a4c3ab6364a9960f7c71bdcb97f26ceb697e5234d3ebf513457849033d5",

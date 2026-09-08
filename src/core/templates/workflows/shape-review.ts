@@ -1,4 +1,5 @@
 import type { CommandTemplate, SkillTemplate } from '../types.js';
+import { SEVERITY_MODEL } from './final-quality-gates.js';
 
 export const SHAPE_REVIEW_CONTRACT = `\`/sp:shape-review → 4 shape agents in parallel → report suggestions\`
 You are reviewing the shape of the changed code: Surface, Boundaries, Model, and
@@ -41,9 +42,9 @@ diff as the review scope.
 When the host provides an agent-spawning tool, launch **4 independent review
 agents** in a single message so they run concurrently. Pass each agent the
 diff and one of the four angles below. Each returns findings with \`file\`,
-\`line\` or symbol, a one-line \`summary\`, and the concrete \`cost\`. Do not let
-fan-out workers assign \`expand-current-change\` vs \`new-proposal\`; that is
-the summarizing pass.
+\`line\` or symbol, a one-line \`summary\`, the concrete \`cost\`, and severity
+\`P0\` / \`P1\` / \`P2\`. Do not let fan-out workers assign
+\`expand-current-change\` vs \`new-proposal\`; that is the summarizing pass.
 
 When an agent-spawning tool is unavailable, work through all four angles in
 this same context in one pass — do not skip an angle for lack of fan-out.
@@ -69,6 +70,22 @@ Inspect where rules live, missing versus premature extension points,
 wiring/lifecycle, testability ports, and sync/async protocol between parts.
 
 ## Phase 2 — Classify, route, and report
+
+${SEVERITY_MODEL}
+
+Grade every \`simplify\` and \`structural\` finding, and each of Surface,
+Boundaries, Model, and Composition, on that shared scale:
+
+| Severity | Meaning here |
+| --- | --- |
+| **\`P0\`** | Public surface, trust/module boundary, or invalid-state model defect that should not remain the shipped shape |
+| **\`P1\`** | Real shape defect that will cause rework or inconsistent ownership if left |
+| **\`P2\`** | Optional composition or altitude improvement |
+
+An angle's result is the highest-severity finding on that angle, \`passed\`
+when the angle was assessed with no findings, or \`not applicable\` with
+evidence. Shape-review is not a Final Quality Gate: a \`P0\` does not fail Outcome
+or block archive.
 
 Wait for all four agents to complete, dedup findings that point at the same
 line or mechanism, and classify each remaining finding as \`simplify\`,
@@ -116,8 +133,8 @@ Outcome: passed | failed | blocked
 Scope: <change name and owned paths, or explicit target>
 Review mode: four-agent fan-out | single-pass fallback
 Session routing: same-session apply-after | new-session | not accepting
-Angles: Surface=<passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>
-Suggestions: <angle, file:line or symbol, summary, cost, classification, destination>
+Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>
+Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>
 Skipped: <finding and reason, or none>
 Evidence: <diff/review inputs>
 \`\`\`
@@ -125,10 +142,10 @@ Evidence: <diff/review inputs>
 Use \`blocked\` only when the requested scope cannot safely be resolved or an
 explicit target is missing. Use \`failed\` only when the review process itself
 cannot complete after the scope is resolved. Do not use \`failed\` because
-structural suggestions exist. \`passed\` means the review completed and
-reported, including when it produced structural suggestions; it does not
-block archive by itself. \`not applicable\` is a per-angle result with scope
-evidence, not the default whole-review outcome.
+\`P0\` findings or structural suggestions exist. \`passed\` means the review
+completed and reported, including when it produced \`P0\` or structural
+suggestions; it does not block archive by itself. \`not applicable\` is a
+per-angle result with scope evidence, not the default whole-review outcome.
 `;
 
 export const SHAPE_REVIEW_APPLY_HANDOFF = `
@@ -166,8 +183,11 @@ standalone \`shape-review\` skill or command is absent. Do not point at
 2. Always run all four angles by name: Surface, Boundaries, Model,
    Composition. Missing layer evidence is per-angle \`not applicable\` plus
    evidence. Do not omit an angle.
-3. Remain read-only during the review pass. Classify findings
-   \`simplify\`, \`structural\`, or \`skip\`.
+3. Remain read-only during the review pass. Grade each \`simplify\` and
+   \`structural\` finding \`P0\` / \`P1\` / \`P2\`. Classify findings
+   \`simplify\`, \`structural\`, or \`skip\`. Each angle result is the
+   highest-severity finding on that angle, \`passed\` if none, or
+   \`not applicable\` with evidence. A \`P0\` does not fail Outcome or block archive.
 4. The summarizing pass, not fan-out workers, assigns \`structural\`
    destination from **this conversation** using the session rule:
    same-session wins; slash-after-apply remaining same-session; fail-closed
@@ -180,8 +200,8 @@ Outcome: passed | failed | blocked
 Scope: <change name and owned paths, or explicit target>
 Review mode: four-agent fan-out | single-pass fallback
 Session routing: same-session apply-after | new-session | not accepting
-Angles: Surface=<passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>
-Suggestions: <angle, file:line or symbol, summary, cost, classification, destination>
+Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>
+Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>
 Skipped: <finding and reason, or none>
 Evidence: <diff/review inputs>
 \`\`\`

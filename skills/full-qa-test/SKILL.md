@@ -9,11 +9,10 @@ description: Use when designing comprehensive test coverage, writing comprehensi
 
 ## When to Use
 
-独立调用与 Superpowers 变更共用同一套 Step，缺少 spec 或变更提案不是拒绝执行的理由。
-
 - 用户直接要求无死角 / 全覆盖 / 六维 / 测试方案或用例（PRD、代码、API、口述均可开工）
 - 发布前、PR 合并前担心漏测、要做覆盖自查
 - Superpowers 变更的 `test-plan` / Test Hardening / Verify
+- 独立调用与 Superpowers 变更共用同一套 Step，缺少 spec 或变更提案不是拒绝执行的理由。
 - 用户提到：无死角、全覆盖、六维、边界/状态机/并发/降级/变异测试
 
 违反即视为未完成：跳过某一维、只写 Happy Path、用「应该差不多」代替 Checklist、只把书面需求原文转换成用例就停。
@@ -296,7 +295,7 @@ Step 1–6 的每条用例 ID 一律为 `TC-R<对象号>-D<维度号>-<序号>`�
 
 **目标：** 检验单元测试是否真能抓住缺陷，揭穿「行覆盖高但断言弱」的假覆盖。这是覆盖质量门禁，不是新需求发现手段，也不只验证 D2。
 
-**执行时机：** Step 1–6 全部跑完，且其中所有 `form=unit`（含组件单测）用例已落地、全部通过之后。不要在只写完 D2 时就跑。
+**执行时机：** Step 1–6 全部跑完，且其中所有 `form=unit`（含组件单测）用例已落地、全部通过之后。不是只写完 D2 时就跑。
 
 **分批覆盖：** 不适用 10→10→10；按变异测试流程执行，对已落地的 **全部 unit 用例** 做质量验证（D2 分支、D3 边界、以及其他维里标了 `unit` 的用例）。integration / E2E 不纳入本步变异范围。
 
@@ -329,7 +328,7 @@ Step 1–6 的每条用例 ID 一律为 `TC-R<对象号>-D<维度号>-<序号>`�
 |------|--------|-------|-------------------|
 | 功能 | 1. 正向主流程及所有分支逻辑 | [ ] | |
 | 功能 | 2. 异常中断后恢复机制 | [ ] | |
-| 代码 | 3. Diff/关键路径分支覆盖 + 变异测试（或「延后/不适用」理由） | [ ] | |
+| 代码 | 3. Diff/关键路径分支覆盖 | [ ] | |
 | 数据 | 4. 边界值（最大/最小/0/负/空串/Null） | [ ] | |
 | 数据 | 5. 特殊字符、超长、Emoji、SQL/XSS | [ ] | |
 | 状态 | 6. 状态机非法路径（越权/逆向切换） | [ ] | |
@@ -338,6 +337,7 @@ Step 1–6 的每条用例 ID 一律为 `TC-R<对象号>-D<维度号>-<序号>`�
 | 依赖 | 9. DB/缓存为空或异常时的逻辑 | [ ] | |
 | 环境 | 10. 弱网（高延迟/高丢包/无网） | [ ] | |
 | 环境 | 11. 多终端/分辨率/权限角色兼容 | [ ] | |
+| 变异 | 12. 变异测试 | [ ] | |
 
 任一项未勾且无「不适用」理由 → 回到对应 Step 补齐。
 
@@ -372,12 +372,10 @@ Step 1–6 的每条用例 ID 一律为 `TC-R<对象号>-D<维度号>-<序号>`�
 
 | ID | 对象 | 来源 | 场景类型 | 步骤 | 预期 | 形式 |
 |----|------|------|----------|------|------|------|
-| TC-R1-D1-001 | R1 | imported: 待支付可取消 | 正向（导入 spec） | 1. 登录 2. POST cancel（status=pending，归属当前用户） | 200；status→cancelled；返回取消时间 | integration |
-| TC-R1-D1-002 | R1 | imported: 已发货拒绝 | 分支（导入 spec） | POST cancel（status=shipped） | 409；code=ORDER_NOT_CANCELLABLE；status 不变 | integration |
-| TC-R1-D1-003 | R1 | imported: 中断后可重试 | 异常（导入 spec） | 1. 首次 cancel 网络中断 2. 查 status 仍为 pending 3. 再次 POST cancel | 第二次 200；最终 cancelled；无重复退款 | E2E |
-| TC-R1-D1-004 | R1 | gap: 防重复提交 | 隐性 | 同一 pending 订单，200ms 内连续 POST cancel 两次 | 仅一次生效；第二次幂等或 409 | integration |
-| TC-R2-D1-001 | R2 | imported: 取消成功写审计 | 正向（导入 spec） | 取消一个 pending 订单后查审计表 | 新增 1 条记录，含 orderId、操作人、reason、时间戳 | integration |
-| TC-R2-D1-002 | R2 | gap: 拒绝取消不写审计 | 分支 | 对 shipped 订单调 cancel 后查审计表 | 无新增记录 | integration |
+| TC-R1-D1-001 | R1 | imported: 待支付可取消 | 正向（导入 spec） | 1. 登录 2. POST cancel（status=pending，归属当前用户） | 200；status→cancelled；返回取消时间 | unit |
+| TC-R1-D1-002 | R1 | imported: 已发货拒绝 | 分支（导入 spec） | POST cancel（status=shipped） | 409；code=ORDER_NOT_CANCELLABLE；status 不变 | unit |
+| TC-R2-D1-001 | R2 | imported: 取消成功写审计 | 正向（导入 spec） | 取消一个 pending 订单后查审计表 | 新增 1 条记录，含 orderId、操作人、reason、时间戳 | unit |
+| TC-R2-D1-002 | R2 | gap: 拒绝取消不写审计 | 分支 | 对 shipped 订单调 cancel 后查审计表 | 无新增记录 | unit |
 
 #### D2 — 代码与分支
 
@@ -393,7 +391,7 @@ Step 1–6 的每条用例 ID 一律为 `TC-R<对象号>-D<维度号>-<序号>`�
 |----|------|------|--------------------|----------|------|------|
 | TC-R1-D3-001 | R1 | orderId | 边界：空串 | `""` | 404 或 400；不访问 DB | unit |
 | TC-R1-D3-002 | R1 | reason | 边界 BVA（max=200, N+1） | 201 字符 | 400 字段校验失败 | unit |
-| TC-R2-D3-001 | R2 | reason（落审计） | 脏数据：XSS | `<script>alert(1)</script>` | 原样转义入库；读取接口不返回可执行脚本 | integration |
+| TC-R2-D3-001 | R2 | reason（落审计） | 脏数据：XSS | `<script>alert(1)</script>` | 原样转义入库；读取接口不返回可执行脚本 | unit |
 
 #### D4 — 状态变迁与时序
 
@@ -401,14 +399,14 @@ Step 1–6 的每条用例 ID 一律为 `TC-R<对象号>-D<维度号>-<序号>`�
 |----|------|---------------|-------|----------|------|------|
 | TC-R1-D4-001 | R1 | pending→cancelled | 是 | status=pending → cancel | status=cancelled | unit |
 | TC-R1-D4-002 | R1 | shipped→cancelled | 否（非法跳跃） | status=shipped → cancel | 拒绝；status 仍为 shipped | unit |
-| TC-R2-D4-001 | R2 | 并发取消下的审计幂等 | — | 同一订单并发 cancel 两次 | 审计恰好 1 条；不出现重复记录 | integration |
+| TC-R2-D4-001 | R2 | 并发取消下的审计幂等 | — | 同一订单并发 cancel 两次 | 审计恰好 1 条；不出现重复记录 | unit |
 
 #### D5 — 非功能与防错
 
 | ID | 对象 | 质量属性 | 场景 | 判定标准 | 形式 |
 |----|------|----------|------|----------|------|
-| TC-R1-D5-001 | R1 | 安全 | 垂直越权：用户 B 的 token 取消用户 A 的订单 | 403 FORBIDDEN；不产生任何状态变更 | integration |
-| TC-R1-D5-002 | R1 | 容灾 | payment 延迟 30s | 504/超时；无半取消状态 | integration |
+| TC-R1-D5-001 | R1 | 安全 | 垂直越权：用户 B 的 token 取消用户 A 的订单 | 403 FORBIDDEN；不产生任何状态变更 | unit |
+| TC-R1-D5-002 | R1 | 容灾 | payment 延迟 30s | 504/超时；无半取消状态 | unit |
 | TC-R2-D5-001 | R2 | 安全 | 审计记录中的支付账号等敏感字段 | 落库即脱敏；日志不出现明文 | unit |
 
 #### D6 — 环境与上下文依赖
@@ -443,13 +441,10 @@ Step 1–6 的每条用例 ID 一律为 `TC-R<对象号>-D<维度号>-<序号>`�
 | 只有 Happy Path | 强制补异常流 + 非法状态 + 脏数据 |
 | 跳过 D2 因为「黑盒」 | 至少标关键分支；有 diff 时钉住 Diff 改动点 |
 | 无测试/无断言就跑变异 | 先完成 Step 1–6 中全部 `unit` 用例与覆盖门槛且全绿，再进 Step 7 |
-| 只写完 D2 就跑变异 | 停下：D3 等维的 unit 用例也要先绿；Step 7 在 Step 6 之后 |
-| 在 E2E/混沌阶段做全仓变异 | 仅对 Diff/核心单元测试层做；场景维靠 D3–D6 设计 |
 | Checklist 全勾但无用例 ID | 每项必须挂用例 ID 或「不适用+理由」 |
 | 六维压成一张宽表交付 | 按维分成六张表，各用该维 Step 的产出表列 |
 | 有书面 `### Requirement:` 却另造一套功能划分 | Step 0 直接取那些 Requirement 为 R1…Rn；已有 Scenario 导入 D1 |
 | 没有 spec 就认为本技能不能用 | 从 PRD / 代码 / 入口拆对象后照常跑六维 |
-| 把本技能写成只服务 Superpowers 变更 | 独立调用与变更提案共用同一套 Step |
 | 只把 spec/PRD 原文转成用例就停 | 导入是基线；必须按 10→10→10 补 `gap:`；漏写的整块能力续编对象 |
 | 把入口/文件/Scenario 当成测试对象 | Object 只是需求/能力的 ID；测的是 Entry Point；Scenario 是导入清单 |
 | 在 RTM 里再写一遍 D1 的步骤/预期/形式/状态 | RTM 只做书面 Scenario → D1 Case ID 索引；缺口用例用 `gap:` 只出现在 D1 |
@@ -458,5 +453,4 @@ Step 1–6 的每条用例 ID 一律为 `TC-R<对象号>-D<维度号>-<序号>`�
 | 只导入现成 Scenario 就宣称 D1 完成 | 导入只是批次 1 的起点；每个对象仍须按 10→10→10 扩到本维穷尽 |
 | 六维混成一轮 10 条，多个对象共用配额 | 每个对象 × 每个 Step 各自独立跑 10→10→10 |
 | 用例不标形式，或把本可单测的分支写成 E2E | 每条标 `unit` / `integration` / `E2E` ；能在低层观察到的行为就在低层测 |
-| 忽略依赖故障 | D5/D6 至少各有一条故障注入 |
 
