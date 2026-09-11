@@ -386,16 +386,20 @@ describe('skill templates split parity', () => {
     expect(shapeReview).toContain('## Shape Review Result');
     expect(shapeReview).toContain('Outcome: passed | failed | blocked');
     expect(shapeReview).toContain('file:line or symbol');
-    expect(shapeReview).toContain('cost');
     expect(shapeReview).toContain('P0');
     expect(shapeReview).toContain('P1');
     expect(shapeReview).toContain('P2');
     expect(shapeReview).toContain(
       'Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>'
     );
-    expect(shapeReview).toContain(
+    expect(shapeReview).toContain('| Sev | Angle | Location | Problem | Suggestion |');
+    expect(shapeReview).toContain('one-line shape change');
+    expect(shapeReview).toContain('why the current shape is wrong');
+    expect(shapeReview).not.toContain('| Sev | Angle | Location | Suggestion | Destination |');
+    expect(shapeReview).not.toContain(
       'Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>'
     );
+    expect(shapeReview).not.toContain('the concrete `cost`');
     expect(shapeReview).toContain('highest-severity');
     expect(shapeReview).not.toContain(
       'Angles: Surface=<passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>'
@@ -420,7 +424,9 @@ describe('skill templates split parity', () => {
     expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain(
       'Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>'
     );
-    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain(
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('| Sev | Angle | Location | Problem | Suggestion |');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).not.toContain('| Sev | Angle | Location | Suggestion | Destination |');
+    expect(SHAPE_REVIEW_APPLY_HANDOFF).not.toContain(
       'Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>'
     );
     expect(SHAPE_REVIEW_APPLY_HANDOFF).toContain('same-session wins');

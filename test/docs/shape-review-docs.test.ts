@@ -48,6 +48,7 @@ describe('shape-review docs', () => {
     expect(commands).toContain(
       'Each of Surface, Boundaries, Model, and Composition reports `P0`, `P1`, or `P2`'
     );
+    expect(commands).toContain('| Sev | Angle | Location | Problem | Suggestion |');
     expect(workflows).toContain(
       'Each of Surface, Boundaries, Model, and Composition reports `P0`, `P1`, or `P2`'
     );

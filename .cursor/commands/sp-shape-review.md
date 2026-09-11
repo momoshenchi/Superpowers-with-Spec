@@ -46,8 +46,9 @@ diff as the review scope.
 When the host provides an agent-spawning tool, launch **4 independent review
 agents** in a single message so they run concurrently. Pass each agent the
 diff and one of the four angles below. Each returns findings with `file`,
-`line` or symbol, a one-line `summary`, the concrete `cost`, and severity
-`P0` / `P1` / `P2`. Do not let fan-out workers assign
+`line` or symbol, severity `P0` / `P1` / `P2`, a one-line `problem`
+(why the current shape is wrong), and a one-line `suggestion` (the shape
+change to make). Do not let fan-out workers assign
 `expand-current-change` vs `new-proposal`; that is the summarizing pass.
 
 When an agent-spawning tool is unavailable, work through all four angles in
@@ -143,10 +144,21 @@ Scope: <change name and owned paths, or explicit target>
 Review mode: four-agent fan-out | single-pass fallback
 Session routing: same-session apply-after | new-session | not accepting
 Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>
-Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>
+Suggestions: none, or one table row per remaining simplify/structural finding:
+
+| Sev | Angle | Location | Problem | Suggestion |
+| --- | --- | --- | --- | --- |
+| P0 / P1 / P2 | Surface / Boundaries / Model / Composition | file:line or symbol | one-line problem (why the current shape is wrong) | one-line shape change to make |
+
 Skipped: <finding and reason, or none>
 Evidence: <diff/review inputs>
 ```
+
+List only remaining `simplify` and `structural` findings in that table. Do not
+use an unlabeled comma list. `Sev` is `P0` / `P1` / `P2`. `Problem`
+explains why the current shape is wrong. `Suggestion` is the shape change to
+make. Skip findings stay under `Skipped`. Destination is not a report column;
+`Session routing` plus classification already decide where accepted work goes.
 
 Use `blocked` only when the requested scope cannot safely be resolved or an
 explicit target is missing. Use `failed` only when the review process itself

@@ -327,7 +327,12 @@ Scope: <change name and owned paths, or explicit target>
 Review mode: four-agent fan-out | single-pass fallback
 Session routing: same-session apply-after | new-session | not accepting
 Angles: Surface=<P0|P1|P2|passed|n/a+evidence> | Boundaries=<...> | Model=<...> | Composition=<...>
-Suggestions: <angle, P0|P1|P2, file:line or symbol, summary, cost, classification, destination>
+Suggestions: none, or one table row per remaining simplify/structural finding:
+
+| Sev | Angle | Location | Problem | Suggestion |
+| --- | --- | --- | --- | --- |
+| P0 / P1 / P2 | Surface / Boundaries / Model / Composition | file:line or symbol | one-line problem (why the current shape is wrong) | one-line shape change to make |
+
 Skipped: <finding and reason, or none>
 Evidence: <diff/review inputs>
 ```
