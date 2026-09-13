@@ -2,6 +2,17 @@
 
 This guide covers common workflow patterns for Superpowers and when to use each one. For basic setup, see [Getting Started](getting-started.md). For command reference, see [Commands](commands.md).
 
+## Artifact templates
+
+Proposal → Review → Apply artifacts copy their headings from schema templates. Do not paste full templates into this guide.
+
+- [proposal.md](../schemas/spec-driven/templates/proposal.md)
+- [tasks.md](../schemas/spec-driven/templates/tasks.md)
+- spec deltas (`### Requirement:`, `#### Scenario:`): [spec.md](../schemas/spec-driven/templates/spec.md)
+- [design.md](../schemas/spec-driven/templates/design.md)
+- [execution-plan.md](../schemas/spec-driven/templates/execution-plan.md)
+- [test-plan.md](../schemas/spec-driven/templates/test-plan.md)
+
 ## Philosophy: Actions, Not Phases
 
 Traditional workflows force you through phases: planning, then implementation, then done. But real work doesn't fit neatly into boxes.
@@ -51,7 +62,7 @@ New installs default to `core`, which provides:
 - `/sp:review`
 - `/sp:apply`
 - `/sp:archive`
-- `/sp:simplify`, `/sp:verify`, `/sp:design-verify` — the three final quality gates that `/sp:apply` runs after Test Hardening
+- `/sp:simplify`, `/sp:verify`, `/sp:design-verify` — final quality gate workflows that `/sp:apply` runs after Test Hardening (code review ∥ Simplify ∥ Design verify, then Verify)
 
 Typical flow:
 
@@ -59,7 +70,7 @@ Typical flow:
 /sp:propose ──► /sp:apply ──► /sp:archive
 ```
 
-`/sp:propose` has a proportional understanding gate before this flow starts. It performs read-only discovery first, then asks only unresolved product or high-impact technical decisions, one question at a time. A clear, low-risk request may need zero interview questions, but it still receives a final understanding summary and explicit confirmation. The final gate can confirm and create, request changes while keeping the write boundary closed, or stop without creating a change. Change creation and artifact writes begin only after confirm-and-create; confirmed product decisions go to `proposal.md` and high-impact technical decisions go to `design.md`.
+`/sp:propose` has a proportional understanding gate before this flow starts. It performs read-only discovery first, then asks only unresolved product or high-impact technical decisions (batching is allowed). A clear request may need zero interview questions. An explicit create request authorizes artifact writes after a short understanding summary unless a product-decision pause applies. Confirmed product decisions go to `proposal.md` and high-impact technical decisions go to `design.md`.
 
 ### Expanded/Full Workflow (custom selection)
 
@@ -251,7 +262,7 @@ The recommended completion flow:
  final quality gates               if needed
 ```
 
-`/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass discovers the canonical non-visual runner and prefers Git-related tests when the runner supports Git-aware selection, otherwise fail-closed runs the complete canonical non-visual suite; it records authority, commands, Git baseline, results, and excluded visual-only checks. After hardening, apply delegates final code review (or a labelled equivalent fallback), `/sp:simplify`, `/sp:verify`, and `/sp:design-verify`—in that order—to fresh, distinct subagents, awaiting and integrating each report before starting the next. These gates are mandatory inside apply even if their standalone workflows are not selected; a host unable to launch a gate worker blocks completion.
+`/sp:apply` completes in two parts: implementation tasks in `tasks.md`, then Test Hardening in `test-plan.md`. The hardening pass expands and lands `full-qa-test` / 10→10→10 cases before Git-aware selection so `--changed` sees the new tests. It keeps two evidence layers without dedup: Git-aware related tests for the non-`test-plan` suite stage **and** registered `test-plan.md` rows. If Git-aware is unsupported, baseline-unclear, or selection empty/ambiguous, it records `git-aware-unavailable-recorded` (or `git-aware-empty-expected` on instruction-only diffs) and does not run the complete canonical suite. A complete suite is exceptional only when the user asks, CI already requires that complete command, or related selection is empty, emptiness is not expected, and no focused command can be constructed — record `ran-complete-suite-optional`, never `ran-git-aware`. It records authority, commands, Git baseline, results, and excluded visual-only checks. After hardening, when spawn exists, apply dispatches code review, `/sp:simplify`, and `/sp:design-verify` as one parallel pre-Verify wave, then `/sp:verify` after that wave is clear of P0. Missing spawn uses labeled `same-context fallback` and runs those three gates sequentially before Verify. These gates are mandatory inside apply even if their standalone workflows are not selected.
 
 When a change has predicted UI scope and the capture window is open (UI-baseline evidence: `git diff --name-only` vs merge-base, unstaged, and `--cached` contain no paths at all, and `git status --porcelain` is empty), apply captures runtime Before screenshots into `attachments/visual-diff/before/` before the first implementation edit. Any dirty or committed implementation change closes the window, including template/non-suffix UI. Human status-quo images count as illustrative Before only when the referencing artifact names source, route or state, and that the file is illustrative. Design Verify later captures After into `attachments/visual-diff/after/` and presents the pair. If Before is missing, Design Verify captures After only and records `Before: missing`; that does not fail the gate or block archive. This visual pack is part of Design Verify, not a fifth gate.
 
@@ -266,11 +277,11 @@ The `test-plan.md` coverage tables distinguish checks that must be executed from
 - `## Manual Coverage` lists every applicable manual or runtime check with its normal entry point, method and safe environment, status, and inspectable evidence. Browser and other runnable end-to-end journeys are methods on this table: declare `programmatic-browser` (Playwright/Cypress/repo E2E) or `agent-browser` (agent-controlled human-like UI). Honor declared methods; when undeclared, apply risk layering. A Critical Path may require both modes with overlapping coverage, and any `agent-browser` run must cover that Critical Path. Test Hardening executes applicable non-`agent-browser` rows after the canonical preflight; `agent-browser` rows remain `planned` with evidence noting deferral to Verify and do not block Hardening. Blank, placeholder, `planned`, failed, or blocked non-`agent-browser` rows keep hardening incomplete; `not applicable` needs concrete scope evidence.
 - `## Deferred Coverage` records a gap, why it is deferred, and a safer alternative or follow-up. A deferred row is planning information only and never counts as execution evidence or a passing check.
 
-Final gates use bounded, local retries. Every review in Superpowers grades findings on one scale — `P0`, `P1`, `P2` — and review repairs every resolvable finding but only repeats with a fresh reviewer when the round contains a `P0`. `P1` and `P2` are repaired and recorded in the current round but do not themselves trigger another review. The gate outcome `blocked` is not a severity at all: it is a missing prerequisite or external decision that pauses the gate immediately without consuming a round. Code review, Verify, and Design verify each allow at most four numbered fresh-worker rounds; a remaining P0 or failed check in round four is terminal. Simplify has no retry loop: a safe cleanup proceeds to Verify round one. Verify retries from Verify and Design verify retries from Design verify, rather than restarting all gates from review.
+Final gates use bounded, local retries. Every review in Superpowers grades findings on one scale — `P0`, `P1`, `P2` — and review repairs every resolvable finding but only repeats with a fresh reviewer when the round contains a `P0`. `P1` and `P2` are repaired and recorded in the current round but do not themselves trigger another review. The gate outcome `blocked` is not a severity at all: it is a missing prerequisite or external decision that pauses the gate immediately without consuming a round. Code review, Verify, and Design verify each allow at most four numbered fresh-worker rounds; a remaining P0 or failed check in round four is terminal. Simplify has no retry loop: a safe cleanup stays in the pre-Verify wave until CR and Design verify are clear, then Verify starts. Verify retries from Verify and Design verify retries inside the pre-Verify wave, rather than restarting all gates from review. Apply-FQG Verify reuses Hardening Git-aware evidence when implementation and Git baseline are unchanged since that record, and still executes Verify-owned `test-plan` rows and deferred `agent-browser` coverage.
 
 #### Verify: Check Your Work
 
-`/sp:verify` validates implementation against your artifacts across three dimensions. It reruns the canonical non-visual preflight (Git-related tests when the runner supports Git-aware selection, otherwise the complete suite) before applicable Manual Coverage. Browser and other runnable end-to-end journeys are Manual Coverage methods (`programmatic-browser` or `agent-browser`), not a separate acceptance gate; Verify executes `agent-browser` rows deferred from Test Hardening and retains inspectable method, route, DOM/response, console/network, and useful screenshot evidence. Source inspection, screenshots, and manual confidence alone do not substitute for executing an applicable Manual Coverage row.
+`/sp:verify` validates implementation against your artifacts across three dimensions. Standalone `/sp:verify` always runs the canonical non-visual preflight using Git-aware related tests when supported; if Git-aware selection is unavailable, it records `git-aware-unavailable-recorded` and still runs registered `test-plan.md` rows before applicable Manual Coverage. When Verify is delegated by Apply, it reuses Hardening suite-stage evidence if implementation and Git baseline are unchanged, and still executes deferred `agent-browser` rows. Browser and other runnable end-to-end journeys are Manual Coverage methods (`programmatic-browser` or `agent-browser`), not a separate acceptance gate; Verify executes `agent-browser` rows deferred from Test Hardening and retains inspectable method, route, DOM/response, console/network, and useful screenshot evidence. Source inspection, screenshots, and manual confidence alone do not substitute for executing an applicable Manual Coverage row.
 
 After that canonical preflight, Verify executes every applicable row in `## Manual Coverage` through the stated normal entry point, method, and safe environment. Each row receives a status (`passed`, `failed`, `blocked`, or scope-backed `not applicable`) plus method/environment, actions, observed outcome, and inspectable evidence. An unexecuted, failed, or blocked applicable row blocks Verify; entries under `## Deferred Coverage` are not substitutes. In apply's final-quality loop, a repairable manual failure retries from Verify within the four-round limit, while a `blocked` prerequisite pauses without consuming a round.
 
@@ -343,7 +354,7 @@ AI:  ✓ Synced specs to superpowers/specs/auth/spec.md
 
 Archive will prompt if specs aren't synced. It won't block on incomplete tasks or unresolved final quality gates, but it will warn you about both and ask for confirmation.
 
-Archive reads the `## Final Quality Gates` table in `test-plan.md` to decide whether the quality chain actually ran. A gate that is missing, still `planned`, `failed`, or `blocked` counts as unresolved; a change with no gate record at all is reported as unresolved rather than silently passing. This keeps `/sp:archive` from becoming a way around code review, Simplify, Verify, and Design Verify.
+Archive reads the `## Final Quality Gates` table in `test-plan.md` to decide whether the quality chain actually ran. A gate that is missing, still `planned`, `failed`, or `blocked` counts as unresolved; a change with no gate record at all is reported as unresolved rather than silently passing. This keeps `/sp:archive` from becoming a way around code review, Simplify, Design Verify, and Verify.
 
 ## When to Use What
 
@@ -475,8 +486,8 @@ For full command details and options, see [Commands](commands.md).
 
 | Command | Purpose | When to Use |
 |---------|---------|-------------|
-| `/sp:propose` | Run the adaptive understanding gate, then create change and planning artifacts after confirmation | Fast default path (`core` profile) |
-| `/sp:explore` | Think through ideas | Unclear requirements, investigation |
+| `/sp:propose` | Run the adaptive understanding gate, then create change and planning artifacts after an explicit create request | Fast default path (`core` profile) |
+| `/sp:explore` | Think through ideas | Unclear requirements or product direction |
 | `/sp:review` | Review proposal artifacts | After `/sp:propose`, or voluntarily before apply |
 | `/sp:new` | Start a change scaffold | Expanded mode, explicit artifact control |
 | `/sp:continue` | Create next artifact | Expanded mode, step-by-step artifact creation |

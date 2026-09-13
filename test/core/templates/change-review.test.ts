@@ -115,6 +115,24 @@ describe('change review workflow templates', () => {
     expect(schema).toContain('baseline, not a ceiling');
   });
 
+  it('falls back to labeled same-context review when spawn is missing', () => {
+    const content = getChangeReviewSkillTemplate().instructions;
+
+    expect(content).toMatch(/same-context fallback/);
+    expect(content).not.toContain('do not silently substitute an inline coordinator review');
+    expect(content).not.toContain('mark proposal review `blocked`');
+  });
+
+  it('does not require 10→10→10 as proposal completeness', () => {
+    expect(getChangeReviewSkillTemplate().instructions).not.toMatch(
+      /10→10→10 run once per Requirement per dimension/
+    );
+    expect(getSpReviewCommandTemplate().content).not.toMatch(
+      /10→10→10 run once per Requirement per dimension/
+    );
+    expect(getApplyChangeSkillTemplate().instructions).toContain('full-qa-test');
+  });
+
   it('keeps review out of the spec-driven schema artifact graph', () => {
     const schema = fs.readFileSync(
       path.join(process.cwd(), 'schemas', 'spec-driven', 'schema.yaml'),

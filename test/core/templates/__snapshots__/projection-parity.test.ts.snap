@@ -14,10 +14,10 @@ exports[`skill and command projection parity > records every line that differs b
   },
   "archive": {
     "commandOnly": [
-      "**Input**: Optionally specify a change name after \`/sp:archive\` (e.g., \`/sp:archive add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.",
+      "**Input**: Optionally specify a change name after \`/sp:archive\` (e.g., \`/sp:archive add-auth\`). Use an explicit name when given; otherwise resolve with the targeting rule in Step 1.",
     ],
     "skillOnly": [
-      "**Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.",
+      "**Input**: Optionally specify a change name. Use an explicit name when given; otherwise resolve with the targeting rule in Step 1.",
     ],
   },
   "bulk-archive": {
@@ -197,18 +197,18 @@ exports[`skill and command projection parity > records every line that differs b
   },
   "sync": {
     "commandOnly": [
-      "**Input**: Optionally specify a change name after \`/sp:sync\` (e.g., \`/sp:sync add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.",
+      "**Input**: Optionally specify a change name after \`/sp:sync\` (e.g., \`/sp:sync add-auth\`). Use an explicit name when given; otherwise resolve with the targeting rule in Step 1.",
     ],
     "skillOnly": [
-      "**Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.",
+      "**Input**: Optionally specify a change name. Use an explicit name when given; otherwise resolve with the targeting rule in Step 1.",
     ],
   },
   "verify": {
     "commandOnly": [
-      "**Input**: Optionally specify a change name after \`/sp:verify\` (e.g., \`/sp:verify add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.",
+      "**Input**: Optionally specify a change name after \`/sp:verify\` (e.g., \`/sp:verify add-auth\`). Use an explicit name when given; otherwise resolve with the targeting rule in Step 1.",
     ],
     "skillOnly": [
-      "**Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.",
+      "**Input**: Optionally specify a change name. Use an explicit name when given; otherwise resolve with the targeting rule in Step 1.",
     ],
   },
 }

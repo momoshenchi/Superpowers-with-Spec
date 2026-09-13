@@ -577,7 +577,7 @@ superpowers/
 │   ┌────────────────┐                                                         │
 │   │  3. IMPLEMENT  │  /sp:apply                                            │
 │   │  + QUALITY     │  Tasks + Test Hardening + final gates                  │
-│   │                │  code review → Simplify → Verify → Design Verify      │
+│   │                │  CR ∥ Simplify ∥ DV, then Verify (`/sp:apply`)      │
 │   │                │◄──── Update artifacts as you learn                      │
 │   └───────┬────────┘                                                         │
 │           │                                                                  │

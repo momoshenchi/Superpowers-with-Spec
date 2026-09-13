@@ -14,7 +14,7 @@ const debugCheckpointGuidance = String.raw`
 
 Use a Debug Checkpoint when exploration spans multiple turns, context compaction,
 a fresh-worker handoff, or a reread loop. Once active, update it after a decisive experiment, a phase close, and
-before handoff. The checkpoint is the recovery source of truth; 
+before handoff. The checkpoint is the recovery source of truth; do not reconstruct the investigation from chat. Unknown-cause failures still belong to systematic-debugging, not Explore.
 
 `;
 
@@ -333,7 +333,7 @@ ${EXPLORE_ENDING_DISCOVERY}
 export function getExploreSkillTemplate(): SkillTemplate {
   return {
     name: 'superpowers-explore',
-    description: 'Enter explore mode - a thinking partner for exploring ideas, investigating problems, and clarifying requirements. Use when the user wants to think through something before or during a change.',
+    description: 'Enter explore mode - a thinking partner for thinking through ideas, scope, or requirements without implementing. Use when the user wants to think through something before or during a change. Do not use for failing tests or unknown-cause debugging.',
     instructions: buildExploreInstructions('skill'),
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
@@ -344,7 +344,7 @@ export function getExploreSkillTemplate(): SkillTemplate {
 export function getSpExploreCommandTemplate(): CommandTemplate {
   return {
     name: 'SP: Explore',
-    description: 'Enter explore mode - think through ideas, investigate problems, clarify requirements',
+    description: 'Enter explore mode - think through ideas, scope, or requirements without implementing',
     category: 'Workflow',
     tags: ['workflow', 'explore','thinking', 'brainstorming'],
     content: buildExploreInstructions('command'),

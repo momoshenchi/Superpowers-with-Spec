@@ -46,17 +46,19 @@ npm run lint
 
 The `skills/` directory contains static skill files that are copied into AI tool directories when running `superpowers init`. These skills teach the AI assistant how to perform structured workflows:
 
-- `using-superpowers` — Core entry skill (check skills before any response)
-- `systematic-debugging` — Four-phase root cause debugging
-- `test-driven-development` — TDD red-green-refactor cycle
-- `subagent-driven-development` — Parallel subagent task execution
+- `using-superpowers` — Work-mode router: Direct Modification vs Proposal → Review → Apply
+- `systematic-debugging` — Unknown-cause four-phase debugging
+- `test-driven-development` — TDD red-green for observable automated behavior
+- `subagent-driven-development` — Apply dispatch-unit execution
 - `using-git-worktrees` — Isolated workspace setup
 - `finishing-a-development-branch` — Branch completion workflows
 - `when-to-dispatch-code-review` — Mode-aware code review dispatch timing
 - `receiving-code-review` — Code review response process
 - `writing-skills` — How to write new skills
-- `dispatching-parallel-agents` — Multi-agent coordination
-- `verification-before-completion` — Pre-completion verification
+- `verification-before-completion` — Pre-completion matching-stage verification
+- `security-review` — Explicit security or vulnerability review
+- `full-qa-test` — Six-dimension / 10→10→10 test design at Test Hardening
+- `write-technical-learning-notes` — Single-topic technical learning notes
 
 ## CLI Usage
 
@@ -85,6 +87,6 @@ The default `core` profile installs:
 - `/sp:review` — Review a complete proposal before implementation
 - `/sp:apply` — Implement tasks from a change
 - `/sp:archive` — Archive a completed change
-- `/sp:simplify`, `/sp:verify`, `/sp:design-verify` — The three final quality gates that `/sp:apply` runs after Test Hardening, and that `/sp:archive` checks via the `## Final Quality Gates` table in `test-plan.md`
+- `/sp:simplify`, `/sp:verify`, `/sp:design-verify` — Final quality gate workflows that `/sp:apply` runs after Test Hardening (code review ∥ Simplify ∥ Design verify, then Verify), and that `/sp:archive` checks via the `## Final Quality Gates` table in `test-plan.md`
 
 Remaining workflows (`new`, `continue`, `ff`, `sync`, `bulk-archive`, `shape-review`, `onboard`) are available through `superpowers config profile`.

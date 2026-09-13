@@ -182,7 +182,7 @@ Old instructions content
       expect(await FileSystemUtils.fileExists(proposeCommand)).toBe(true);
       const proposeContent = await fs.readFile(proposeCommand, 'utf-8');
       expect(proposeContent).toContain('Before any change creation or artifact write');
-      expect(proposeContent).toContain('Offer exactly three semantic final outcomes');
+      expect(proposeContent).toContain('A host MAY still offer three semantic outcomes as optional UX');
 
       // Verify non-core skills are NOT created
       const nonCoreSkillNames = [

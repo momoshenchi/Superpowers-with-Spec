@@ -18,9 +18,9 @@ Superpowers helps you and your AI coding assistant agree on what to build before
 /sp:new ──► /sp:ff or /sp:continue ──► /sp:apply ──► /sp:archive
 ```
 
-`/sp:apply` performs Test Hardening and its final code review, Simplify, Verify, and Design Verify gates. Use standalone `/sp:verify` only for an explicit independent diagnostic or work completed outside Apply.
+`/sp:apply` performs Test Hardening and its final quality gates: code review ∥ Simplify ∥ Design verify, then Verify. Use standalone `/sp:verify` only for an explicit independent diagnostic or work completed outside Apply.
 
-The default global profile is `core`, which includes `propose`, `explore`, `review`, `apply`, `archive`, and the three final quality gates `verify`, `simplify`, and `design-verify`. The gates ship by default because `/sp:apply` runs them. You can enable the remaining workflow commands with `superpowers config profile` and then `superpowers update`.
+The default global profile is `core`, which includes `propose`, `explore`, `review`, `apply`, `archive`, and the final quality gate workflows `verify`, `simplify`, and `design-verify`. Apply runs code review ∥ Simplify ∥ Design verify, then Verify. The gates ship by default because `/sp:apply` runs them. You can enable the remaining workflow commands with `superpowers config profile` and then `superpowers update`.
 
 ## What Superpowers Creates
 

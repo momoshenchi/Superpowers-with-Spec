@@ -99,6 +99,8 @@
 4. **Step 4: Run focused verification** — Re-run Step 2. Then Git-aware related tests if supported.
 5. **Step 5: Self-review and handoff** — Confirm I4; no `GPT6-guide` required read.
 
+Implementation Notes: Root skill is a Direct vs Proposal router. Scoring, schema YAML, and directory tree moved to `reference/schema-and-workload.md`. Direct Modification uses Git-aware / matching-stage; `fall closed to the complete suite` is gone.
+
 #### Task 1.2: Narrow TDD skill
 
 **Files:**
@@ -376,6 +378,8 @@
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
 
+Implementation Notes: Explore skill/command descriptions now say think-through without implementing and no longer mention investigating problems. Debug still owns unknown-cause work. Skills were not merged.
+
 #### Task 1.12: Default worktree directory without a prompt
 
 **Files:**
@@ -403,6 +407,8 @@
    - **Out of scope:** Do not change git worktree CLI flags.
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
+
+Implementation Notes: Missing directory defaults to `.worktrees/` after gitignore check. Existing-directory and CLAUDE.md preference still win. Two-option location prompt removed.
 
 ### 2. Propose, Apply, and quality-gate templates
 
@@ -434,6 +440,8 @@
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
 
+Implementation Notes: High-impact questions may be batched. Explicit create authorizes writes after the summary; three-state Confirm remains optional UX, not a write lock. TodoWrite is optional bookkeeping. User-invented Choices stay forbidden.
+
 #### Task 2.2: Update Apply template
 
 **Files:**
@@ -461,6 +469,8 @@
    - **Out of scope:** Do not remove 10→10→10 fallback.
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
+
+Implementation Notes: `contextFiles` is a catalog. Each task reads the current dispatch unit plus cited spec/design slices. Reversible in-scope failures are repaired without waiting. Hardening still invokes `full-qa-test` and the six-dimension 10→10→10 fallback.
 
 #### Task 2.3: Update final-quality-gates helper
 
@@ -496,6 +506,8 @@
    - **Out of scope:** Do not change remediations MUST.
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
+
+Implementation Notes: Non-`test-plan` suite stage records `ran-git-aware` or `git-aware-unavailable-recorded`; empty related selection is not a pass and does not authorize a complete-suite pass. Missing spawn uses labeled `same-context fallback` and is not `blocked`. Verify Correctness no longer says "otherwise the complete suite"; targeting sentences were left for Task 3.1.
 
 ### 3. Verify, archive, sync, and docs
 
@@ -534,6 +546,8 @@
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
 
+Implementation Notes: Shared targeting helper: explicit name > conversation-bound > sole eligible change > prompt. Archive still warns on incomplete gates. Sync with zero delta-spec changes reports ineligible and stops.
+
 #### Task 3.2: Change-review spawn fallback
 
 **Files:**
@@ -560,6 +574,8 @@
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
 
+Implementation Notes: Missing spawn uses labeled `same-context fallback`. P0 still withholds readiness.
+
 #### Task 3.3: Align human docs
 
 **Files:**
@@ -585,6 +601,8 @@
    - **Out of scope:** `GPT6-guide.md`.
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
+
+Implementation Notes: Docs use Git-aware / `git-aware-unavailable-recorded` and labeled spawn fallback. Manual Coverage terminology kept. Propose table now says explicit create request.
 
 #### Task 3.4: Stop counting 10→10→10 as proposal completeness
 
@@ -613,6 +631,8 @@
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
 
+Implementation Notes: Must include no longer lists 10→10→10 as completeness. Common gaps still warn about sharing one batch of ten. Apply `full-qa-test` bind unchanged.
+
 ### 4. Tests and projection refresh
 
 #### Task 4.1: Update pins for I1–I9
@@ -636,6 +656,8 @@
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
 
+Implementation Notes: I1–I9 pins live in `skill-templates-parity.test.ts` (`full-qa-test` + `**10** test cases`, no complete-suite fail-closed, `same-context fallback`, no `before any response`, no GPT6-guide, no invented Choices, no complete `npm test` suite, no Direct `fall closed`, no review 10→10→10 Must include, Explore description without `investigating problems`, no debug `read every line`, no worktree location prompt). Related autonomy/guidance tests updated to the same contracts.
+
 #### Task 4.2: Refresh projections via existing path
 
 **Files:**
@@ -656,6 +678,8 @@
    - **Out of scope:** New single-source markdown architecture.
 4. **Step 4: Run focused verification**.
 5. **Step 5: Self-review and handoff**.
+
+Implementation Notes: Regenerated existing `.cursor/commands/sp-*.md` and `.cursor/skills/superpowers-*/SKILL.md` from TS via `generateSkillContent` / `generateCommand` + `cursorAdapter`. Synced existing `.cursor/skills/*` copies from `skills/` except `full-qa-test`. Did not create new/continue/ff/onboard projections. Snapshot hashes updated.
 
 ## Final validation
 

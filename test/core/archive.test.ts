@@ -64,8 +64,8 @@ describe('ArchiveCommand', () => {
       '| --- | --- | --- |',
       '| code review | passed | round 1, no P0 |',
       '| `/sp:simplify` | passed | single pass |',
-      '| `/sp:verify` | passed | round 1, suite green |',
       '| `/sp:design-verify` | not applicable | non-UI change |',
+      '| `/sp:verify` | passed | round 1, suite green |',
       '',
     ].join('\n');
   }

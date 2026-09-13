@@ -7,6 +7,8 @@ const readGuidance = (...parts: string[]) =>
 
 describe('using-superpowers work-mode guidance', () => {
   const skill = () => readGuidance('skills', 'using-superpowers', 'SKILL.md');
+  const workload = () =>
+    readGuidance('skills', 'using-superpowers', 'reference', 'schema-and-workload.md');
 
   it('defines exactly two work modes and treats a requested plan as an execution aid', () => {
     const content = skill();
@@ -49,8 +51,26 @@ describe('using-superpowers work-mode guidance', () => {
     expect(content).toContain('exceeds the Proposal budget');
   });
 
-  it('defines six scored workload dimensions, anchors, and calibrated bands', () => {
+  it('does not require checking skills before every response', () => {
     const content = skill();
+
+    expect(content).not.toMatch(/before any response or action/i);
+    expect(content).not.toMatch(/starting any conversation/i);
+  });
+
+  it('still names Direct Modification and Proposal', () => {
+    const content = skill();
+
+    expect(content).toContain('Direct Modification');
+    expect(content).toContain('Proposal → Review → Apply');
+  });
+
+  it('does not fall closed to the complete suite', () => {
+    expect(skill()).not.toMatch(/fall closed to the complete suite/i);
+  });
+
+  it('defines six scored workload dimensions, anchors, and calibrated bands', () => {
+    const content = workload();
 
     for (const dimension of [
       'Implementation surface',
@@ -72,7 +92,7 @@ describe('using-superpowers work-mode guidance', () => {
   });
 
   it('uses a combined workload budget and counts shared foundations once', () => {
-    const content = skill();
+    const content = workload();
 
     expect(content).toContain('Count a shared foundation once');
     expect(content).toContain('combined score of 14 or less');
@@ -82,7 +102,7 @@ describe('using-superpowers work-mode guidance', () => {
   });
 
   it('combines bounded fixes while splitting large or stable milestone work', () => {
-    const content = skill();
+    const content = workload();
 
     expect(content).toContain('Combine small and medium work');
     expect(content).toContain('Split multiple large capabilities');
@@ -92,7 +112,7 @@ describe('using-superpowers work-mode guidance', () => {
   });
 
   it('keeps small cross-feature fixes together while protecting large-task context', () => {
-    const content = skill();
+    const content = workload();
 
     expect(content).toContain('correcting canvas generation');
     expect(content).toContain('unblocking a stuck notification');
@@ -127,7 +147,8 @@ describe('using-superpowers work-mode guidance', () => {
     const content = skill();
 
     expect(content).toContain('Test Hardening');
-    expect(content).toContain('code review → Simplify → Verify → Design Verify');
+    expect(content).not.toContain('code review → Simplify → Verify → Design Verify');
+    expect(content).toContain('/sp:apply');
     expect(content).toContain('Do not add a Plan Mode artifact or schema');
   });
 });

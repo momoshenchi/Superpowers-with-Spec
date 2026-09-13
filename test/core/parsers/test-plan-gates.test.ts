@@ -36,8 +36,8 @@ describe('parseFinalQualityGates', () => {
       sectionWith([
         '| code review | passed | round 1, fresh worker, no P0 |',
         '| `/sp:simplify` | passed | single pass, 2 cleanups |',
-        '| `/sp:verify` | passed | round 1, suite green |',
         '| `/sp:design-verify` | not applicable | non-UI change, diff has no UI paths |',
+        '| `/sp:verify` | passed | round 1, suite green |',
       ])
     );
 
@@ -51,8 +51,8 @@ describe('parseFinalQualityGates', () => {
       sectionWith([
         '| code review | passed | round 2 |',
         '| `/sp:simplify` | blocked | scope could not be resolved |',
-        '| `/sp:verify` | failed | round 4 still failing |',
         '| `/sp:design-verify` | passed | conforms |',
+        '| `/sp:verify` | failed | round 4 still failing |',
       ])
     );
 
@@ -76,8 +76,8 @@ describe('parseFinalQualityGates', () => {
     expect(report.rows.map((row) => row.gate)).toEqual([
       'code review',
       '/sp:simplify',
-      '/sp:verify',
       '/sp:design-verify',
+      '/sp:verify',
     ]);
     expect(report.rows.every((row) => row.outcome === 'planned')).toBe(true);
     expect(describeUnresolvedGates(report)).toContain('4 final quality gate(s) not passed');

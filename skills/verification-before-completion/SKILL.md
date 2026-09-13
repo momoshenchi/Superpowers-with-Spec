@@ -30,9 +30,9 @@ If you haven't run the verification command in this message, you cannot claim it
 ```
 BEFORE claiming any status or expressing satisfaction:
 
-1. IDENTIFY: What command proves this claim?
-2. RUN: Execute the FULL command (fresh, complete)
-3. READ: Full output, check exit code, count failures
+1. IDENTIFY: What matching-stage command proves this claim?
+2. RUN: Execute that current-stage command this turn (focused, Git-aware, or registered test-plan rows)
+3. READ: Output, check exit code, count failures
 4. VERIFY: Does output confirm the claim?
    - If NO: State actual status with evidence
    - If YES: State claim WITH evidence
@@ -74,9 +74,9 @@ Skip any step = lying, not verifying
 ## Key Patterns
 
 **Tests:**
-The verification command for automated tests is the Git-related selection when the runner supports Git-aware selection; otherwise the complete canonical suite. Execute that selected command fully. Empty related selection is not a pass.
+The verification command for automated tests is matching-stage evidence for the current stage: the focused command, Git-related selection when the runner supports Git-aware selection, or registered `test-plan.md` rows at Hardening and Verify. Do not treat a full-project test run as the definition of evidence. Empty related selection is not a task pass.
 ```
-✅ [Run test command] [See: 34/34 pass] "All tests pass"
+✅ [Run matching-stage test command] [See: 34/34 pass] "All tests pass"
 ❌ "Should pass now" / "Looks correct"
 ```
 

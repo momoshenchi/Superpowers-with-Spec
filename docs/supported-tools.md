@@ -19,7 +19,7 @@ By default, Superpowers uses the `core` profile, which includes:
 - `simplify`
 - `design-verify`
 
-`verify`, `simplify`, and `design-verify` are the three final quality gates that `/sp:apply` runs after Test Hardening, so the default profile installs them rather than leaving `/sp:apply` pointing at commands the user does not have.
+`verify`, `simplify`, and `design-verify` are the final quality gate workflows that `/sp:apply` runs after Test Hardening (code review ∥ Simplify ∥ Design verify, then Verify), so the default profile installs them rather than leaving `/sp:apply` pointing at commands the user does not have.
 
 You can enable expanded workflows (`new`, `continue`, `ff`, `shape-review`, `sync`, `bulk-archive`, `onboard`) via `superpowers config profile`, then run `superpowers update`.
 

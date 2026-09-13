@@ -106,7 +106,7 @@ describe('skill-generation', () => {
 
       expect(generated).toContain('Before any change creation or artifact write');
       expect(generated).toContain('A clear low-risk request may have zero interview questions');
-      expect(generated).toContain('Offer exactly three semantic final outcomes');
+      expect(generated).toContain('A host MAY still offer three semantic outcomes as optional UX');
       expect(generated).toContain('route confirmed product decisions into proposal.md');
     });
   });

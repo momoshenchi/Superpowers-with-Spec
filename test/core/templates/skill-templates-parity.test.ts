@@ -39,7 +39,11 @@ import {
   SHAPE_REVIEW_APPLY_HANDOFF,
   SHAPE_REVIEW_CONTRACT,
 } from '../../../src/core/templates/skill-templates.js';
-import { generateSkillContent } from '../../../src/core/shared/skill-generation.js';
+import { generateSkillContent, getSkillTemplates } from '../../../src/core/shared/skill-generation.js';
+import {
+  getCanonicalNonVisualSuiteInstructions,
+  getFinalQualityGateInstructions,
+} from '../../../src/core/templates/workflows/final-quality-gates.js';
 
 function stableStringify(value: unknown): string {
   if (Array.isArray(value)) {
@@ -83,7 +87,9 @@ describe('skill templates split parity', () => {
         expect(content).toContain(trigger);
       }
 
-      expect(content).toContain('Ask one decision question at a time and wait for the answer');
+      expect(content).toContain('present them together in one message');
+      expect(content).not.toContain('Ask one decision question at a time and wait for the answer');
+      expect(content).not.toMatch(/Use the \*\*TodoWrite tool\*\* to track progress/);
       expect(content).toContain('Known facts');
       expect(content).toContain('Decision to resolve and why it matters');
       expect(content).toContain('Recommended answer and its trade-off');
@@ -97,11 +103,12 @@ describe('skill templates split parity', () => {
 
       expect(content).toContain('one complete final understanding summary');
       expect(content).toContain('confirmed decisions from agent-owned implementation assumptions');
-      expect(content).toContain('Offer exactly three semantic final outcomes');
+      expect(content).toContain('three semantic outcomes as optional UX');
       expect(content).toContain('1. Confirm and create');
       expect(content).toContain('2. Request changes');
       expect(content).toContain('3. Stop without creating');
-      expect(content).toContain('The confirm-and-create outcome is required even when there were zero interview questions');
+      expect(content).toContain('An explicit create request');
+      expect(content).not.toContain('The confirm-and-create outcome is required even when there were zero interview questions');
 
       expect(content).toContain('route confirmed product decisions into proposal.md');
       expect(content).toContain('Route each high-impact technical decision into design.md');
@@ -139,7 +146,7 @@ describe('skill templates split parity', () => {
     const workflows = readFileSync(path.join(process.cwd(), 'docs', 'workflows.md'), 'utf8');
 
     expect(workflows).toContain(
-      '| `/sp:propose` | Run the adaptive understanding gate, then create change and planning artifacts after confirmation |'
+      '| `/sp:propose` | Run the adaptive understanding gate, then create change and planning artifacts after an explicit create request |'
     );
   });
 
@@ -231,9 +238,11 @@ describe('skill templates split parity', () => {
       expect(content).toContain('## Deferred Coverage');
       expect(content).toContain('Deferred Coverage is not execution evidence');
       expect(content).toContain('unexecuted, failed, or blocked applicable non-`agent-browser` manual row');
-      expect(content).toContain('complete canonical non-visual suite');
+      expect(content).toContain('git-aware-unavailable-recorded');
+      expect(content).not.toMatch(/fail-closed and run the complete canonical non-visual suite/);
+      expect(content).toContain('full-qa-test');
       expect(content).toContain('code review');
-      expect(content).toContain('Simplify (one pass, then Verify)');
+      expect(content).toContain('Simplify (one pass)');
       expect(content).toContain('Verify (rounds 1–4)');
       expect(content).toContain('Design verify (rounds 1–4)');
       expect(content).toContain('The only scale for grading a finding');
@@ -243,20 +252,20 @@ describe('skill templates split parity', () => {
       expect(content).toContain('code review (rounds 1–4)');
       expect(content).toContain('If round four still reports a P0');
       expect(content).toContain('do not start a fifth review');
-      expect(content).toContain('Simplify (one pass, then Verify)');
-      expect(content).toContain('transitions directly to Verify round one');
-      expect(content).toContain('Verify (rounds 1–4)');
-      expect(content).toContain('including the canonical preflight and applicable Manual Coverage again');
+      expect(content).toContain('pre-Verify wave');
+      expect(content).toContain('retry only the unresolved');
+      expect(content).toContain('cite that Hardening suite-stage evidence');
       expect(content).toContain('Design verify (rounds 1–4)');
-      expect(content).toContain('Retry only Design verify');
+      expect(content).toContain('Retry Design verify inside the pre-Verify wave');
       expect(content).toContain('do not impose a global restart from code review');
       expect(content).not.toContain('restart this sequence from code review');
       expect(content).toContain('never generate a Superpowers `code-review` workflow');
       expect(content).toContain('fresh, distinct subagent');
-      expect(content).toContain('Do not reuse a gate worker');
-      expect(content).toContain('before the current worker has completed and its result is integrated');
+      expect(content).not.toContain('Do not reuse a gate worker');
+      expect(content).not.toContain('run these gates in exactly this order');
       expect(content).toContain('If the host cannot launch a subagent');
-      expect(content).toContain('do not silently substitute a same-context review');
+      expect(content).toContain('same-context fallback');
+      expect(content).not.toContain('do not silently substitute a same-context review');
       expect(content).toContain('record each numbered report');
       expect(content).toContain('state: "all_done"');
       expect(content).toContain('fresh integrated outcomes for every gate');
@@ -316,7 +325,8 @@ describe('skill templates split parity', () => {
     expect(designVerify).toContain('**Design verify round:** <1-4 when delegated by apply, otherwise standalone>');
 
     const verify = [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n');
-    expect(verify).toContain('complete canonical non-visual suite');
+    expect(verify).toContain('git-aware-unavailable-recorded');
+    expect(verify).not.toMatch(/otherwise the complete suite/);
     expect(verify).toContain('failed-network signals');
     expect(verify).toContain('unaided human checks never substitute');
     expect(verify).toContain('API call or curl request is not a substitute');
@@ -346,7 +356,9 @@ describe('skill templates split parity', () => {
     expect(verify).toContain('full-qa-test');
     expect(verify).toContain('Verify round 1');
     expect(verify).toContain('every attempt, including a retry, uses a fresh subagent');
-    expect(verify).toContain('Every round reruns this canonical non-visual preflight');
+    expect(verify).toContain('Standalone `/sp:verify` always runs this canonical non-visual preflight');
+    expect(verify).toContain('does not require a Hardening record');
+    expect(verify).toContain('cite unchanged Hardening evidence');
     expect(verify).toContain('applicable Manual Coverage');
     expect(verify).toContain('or `P0` finding, retry from Verify with a fresh worker');
     expect(verify).toContain('do not consume a round');
@@ -451,6 +463,8 @@ describe('skill templates split parity', () => {
       expect(gates).toContain('| `/sp:simplify` |');
       expect(gates).toContain('| `/sp:verify` |');
       expect(gates).toContain('| `/sp:design-verify` |');
+      expect(gates.indexOf('| `/sp:simplify` |')).toBeLessThan(gates.indexOf('| `/sp:design-verify` |'));
+      expect(gates.indexOf('| `/sp:design-verify` |')).toBeLessThan(gates.indexOf('| `/sp:verify` |'));
       expect(gates).not.toContain('shape-review');
 
       const pause = content.split('**Output On Pause')[1].split('**Guardrails**')[0];
@@ -533,7 +547,7 @@ describe('skill templates split parity', () => {
 
   it('embeds visual-diff rules in the apply-delegated Design verify gate', () => {
     const apply = [getApplyChangeSkillTemplate().instructions, getSpApplyCommandTemplate().content].join('\n');
-    const dvGate = apply.split('4. **Design verify (rounds 1–4).**')[1].split('Await and integrate')[0];
+    const dvGate = apply.split('3. **Design verify (rounds 1–4).**')[1].split('4. **Verify (rounds 1–4).**')[0];
     expect(dvGate).toContain('attachments/visual-diff/after/');
     expect(dvGate).toContain('attachments/visual-diff/before/');
     expect(dvGate).toContain('source, route or state');
@@ -691,6 +705,53 @@ describe('skill templates split parity', () => {
       expect(content).toContain('attachmentFiles');
       expect(content).toContain('source of normative meaning');
     }
+  });
+
+  it('pins I1–I9 autonomy contracts on generated templates', () => {
+    const apply = getApplyChangeSkillTemplate().instructions;
+    const usingSuperpowers = readFileSync(
+      path.join(process.cwd(), 'skills', 'using-superpowers', 'SKILL.md'),
+      'utf8'
+    );
+    const finishing = readFileSync(
+      path.join(process.cwd(), 'skills', 'finishing-a-development-branch', 'SKILL.md'),
+      'utf8'
+    );
+    const debug = readFileSync(
+      path.join(process.cwd(), 'skills', 'systematic-debugging', 'SKILL.md'),
+      'utf8'
+    );
+    const worktrees = readFileSync(
+      path.join(process.cwd(), 'skills', 'using-git-worktrees', 'SKILL.md'),
+      'utf8'
+    );
+    const agents = readFileSync(path.join(process.cwd(), 'AGENTS.md'), 'utf8');
+
+    expect(apply).toContain('full-qa-test');
+    expect(apply).toContain('**10** test cases');
+    expect(getCanonicalNonVisualSuiteInstructions('Test Hardening')).not.toMatch(
+      /fail-closed and run the complete canonical non-visual suite/
+    );
+    expect(getFinalQualityGateInstructions()).toMatch(/same-context fallback/);
+    expect(usingSuperpowers).not.toMatch(/before any response or action/i);
+    expect(usingSuperpowers).not.toMatch(/GPT6-guide/);
+    expect(agents).not.toMatch(/GPT6-guide/);
+    expect(getSpProposeSkillTemplate().instructions).toContain('never labeled as user Choices');
+    expect(finishing).not.toMatch(/npm test \/ cargo test \/ pytest \/ go test \.\/\.\.\./);
+    expect(usingSuperpowers).not.toMatch(/fall closed to the complete suite/i);
+    expect(getChangeReviewSkillTemplate().instructions).not.toMatch(
+      /10→10→10 run once per Requirement per dimension/
+    );
+    expect(getExploreSkillTemplate().description).not.toMatch(/investigating problems/i);
+    expect(debug).not.toMatch(/read every line/i);
+    expect(worktrees).not.toMatch(/Where should I create worktrees/);
+  });
+
+  it('does not treat cursor full-qa-test as a projection of workflows/*.ts', () => {
+    expect(getSkillTemplates().map((entry) => entry.dirName)).not.toContain('full-qa-test');
+    expect(getSkillTemplates().map((entry) => entry.dirName)).not.toContain(
+      'superpowers-full-qa-test'
+    );
   });
 
   it('preserves all template function payloads exactly', () => {

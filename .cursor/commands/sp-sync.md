@@ -9,17 +9,18 @@ Sync delta specs from a change to main specs.
 
 This is an **agent-driven** operation - you will read delta specs and directly edit main specs to apply the changes. This allows intelligent merging (e.g., adding a scenario without copying the entire requirement).
 
-**Input**: Optionally specify a change name after `/sp:sync` (e.g., `/sp:sync add-auth`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+**Input**: Optionally specify a change name after `/sp:sync` (e.g., `/sp:sync add-auth`). Use an explicit name when given; otherwise resolve with the targeting rule in Step 1.
 
 **Steps**
 
-1. **If no change name provided, prompt for selection**
+1. **Resolve the change name**
 
-   Run `superpowers list --json` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Use an explicit change name when provided. Otherwise use the conversation-bound change if conversation already names one. Otherwise, if there is exactly one eligible change, select that sole eligible change. Prompt only when two or more eligible changes could match; do not guess.
 
-   Show changes that have delta specs (under `specs/` directory).
+   Run `superpowers list --json` to list active changes when you need to determine eligibility or prompt. Announce the selected name before continuing.
 
-   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
+   Eligible changes are active changes that have delta specs (under `specs/` directory). When a prompt is required, show only those eligible changes.
+   If no active change has delta specs, report that nothing is eligible to sync and stop. Do not guess a change that has no delta specs.
 
 2. **Find delta specs**
 

@@ -88,7 +88,7 @@ export function parseFinalQualityGates(testPlanContent: string): FinalQualityGat
  */
 export function describeUnresolvedGates(report: FinalQualityGateReport): string | null {
   if (!report.sectionPresent) {
-    return 'test-plan.md has no "## Final Quality Gates" record, so the final code review, Simplify, Verify, and Design Verify gates cannot be confirmed';
+    return 'test-plan.md has no "## Final Quality Gates" record, so the final code review, Simplify, Design Verify, and Verify gates cannot be confirmed';
   }
 
   if (report.rows.length === 0) {

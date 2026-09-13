@@ -1,44 +1,30 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+description: Use when changing observable automated behavior that should have a test — write a failing test first, then the minimal code to pass. Not for copy-only, generated, config, or type-narrowing edits.
 ---
 
 # Test-Driven Development (TDD)
 
 ## Overview
 
-Write the test first. Watch it fail. Write minimal code to pass.
+Apply red-green-refactor to observable behavior that should have an automated test. Write the test first. Watch it fail. Write minimal code to pass.
 
 **Core principle:** If you didn't watch the test fail, you don't know if it tests the right thing.
 
-**Violating the letter of the rules is violating the spirit of the rules.**
-
 ## When to Use
 
-**Always:**
-- New features
-- Bug fixes
-- Refactoring
-- Behavior changes
+**Use TDD when:**
+- The change introduces or alters observable behavior that should have an automated test
+- A new CLI flag, API response, or user-visible path needs a regression test
+- A bug fix should lock in the expected behavior
 
-**Exceptions (ask your human partner):**
-- Throwaway prototypes
-- Generated code
-- Configuration files
+**Skip TDD without asking the user for:**
+- Copy-only documentation or comment edits with no behavior change
+- Generated files
+- Configuration-only edits
+- Type-narrowing that does not change runtime behavior
 
-## The Iron Law
-
-```
-NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
-```
-
-Write code before the test? Delete it. Start over.
-
-**No exceptions:**
-- Don't keep it as "reference"
-- Don't "adapt" it while writing tests
-- Don't look at it
-- Delete means delete
+Throwaway prototypes may also skip TDD. Do not delete already-written production code as a precondition for starting tests.
 
 ## Red-Green-Refactor
 
@@ -171,7 +157,7 @@ npm test path/to/test.test.ts
 
 Confirm:
 - Test passes
-- Other tests still pass — run Git-related tests when the runner supports Git-aware selection; do not require the full suite in that case. Fall closed to the complete suite when Git-aware selection is unavailable, empty, or ambiguous.
+- Other tests still pass — run Git-related tests when the runner supports Git-aware selection; do not require the full suite. If Git-aware selection is unavailable, run the task's focused command and record that limitation.
 - Output pristine (no errors, warnings)
 
 **Test fails?** Fix code, not test.
@@ -271,7 +257,7 @@ Tests-first force edge case discovery before implementing. Tests-after verify yo
 - "Keep as reference" or "adapt existing code"
 - "TDD is dogmatic, I'm being pragmatic"
 
-**All of these mean: Delete code. Start over with TDD.**
+**For a behavior change, these mean: write or fix the failing test, then the minimal code. Do not treat copy-only, generated, config, or type-narrowing edits as TDD failures.**
 
 ## Example: Bug Fix
 
@@ -318,7 +304,7 @@ Before claiming development complete, check:
 2. Watched each test fail before implementing
 3. Each test failed for expected reason (feature missing, not typo)
 4. Wrote minimal code to pass each test
-5. Selected tests pass (Git-related when supported, otherwise the complete suite)
+5. Selected tests pass (Git-related tests when supported; do not require the full suite)
 6. Output pristine (no errors, warnings)
 7. Edge cases and errors covered
 
@@ -337,7 +323,7 @@ Can't check all boxes? You skipped TDD. Start over.
 
 Bug found? Write failing test reproducing it. Follow TDD cycle. Test proves fix and prevents regression.
 
-Never fix bugs without a test.
+For a behavior bug, write a failing test that reproduces it, then follow the TDD cycle. Copy-only, generated, config, and type-narrowing edits do not need a failing test first.
 
 ## Testing Anti-Patterns
 
@@ -348,9 +334,6 @@ When adding mocks or test utilities, read @testing-anti-patterns.md to avoid com
 
 ## Final Rule
 
-```
-Production code → test exists and failed first
-Otherwise → not TDD
-```
+For observable automated behavior: a failing test first, then minimal production code.
 
-No exceptions without your human partner's permission.
+Copy-only, generated, config, and type-narrowing edits skip TDD without asking.

@@ -5,11 +5,14 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
+import { getChangeTargetingInput, getChangeTargetingStep } from './change-targeting.js';
 import { getCanonicalNonVisualSuiteInstructions, getManualCoverageInstructions, SEVERITY_MODEL, VERIFY_ADVERSARIAL_HUNT_INTENT } from './final-quality-gates.js';
+import type { Projection } from './projection.js';
 
 const finalQualityRetryInstructions = `### Final-quality Verify retries:
-   - When Verify is delegated by \`/sp:apply\`, label the report \`Verify round 1\` through \`Verify round 4\`. The first attempt after Simplify is round 1; every attempt, including a retry, uses a fresh subagent.
-   - Every round reruns this canonical non-visual preflight before requirement/scenario assessment and applicable Manual Coverage. Preserve separate command and Manual Coverage evidence for every numbered round.
+   - When Verify is delegated by \`/sp:apply\`, label the report \`Verify round 1\` through \`Verify round 4\`. The first attempt after the pre-Verify wave is round 1; every attempt, including a retry, uses a fresh subagent.
+   - Standalone \`/sp:verify\` always runs this canonical non-visual preflight before requirement/scenario assessment and applicable Manual Coverage and does not require a Hardening record. When delegated by Apply, follow the Apply Final Quality Gate contract: cite unchanged Hardening evidence when implementation and Git baseline are unchanged; otherwise re-run preflight. Preserve separate command and Manual Coverage evidence for every numbered round.
+   - After a Verify repair that changed implementation, the next Verify round re-runs preflight.
    - Before round four, the worker reports each resolvable failed check, applicable Manual Coverage failure, or \`P0\` finding. When the coordinator repairs an accepted failure or \`P0\` finding, retry from Verify with a fresh worker. Do not restart code review or Simplify solely for this retry.
    - A missing runtime, credential, browser capability, dependency, or other prerequisite is \`blocked\`: report it, name it, pause immediately, and do not consume a round. If round four still has a failed check, applicable Manual Coverage failure, or \`P0\` finding, report \`failed\`; do not begin a fifth round or recommend archive.`;
 
@@ -63,6 +66,8 @@ const repairOwnershipInstructions = `**Repair ownership**
 - In final-quality Verify, a repair ends the current worker's result. The coordinator starts the next required fresh Verify round; the reporting worker does not silently approve its own repair.`;
 
 const verifyCorrectnessAndReportTail = `5. **Verify Correctness**
+
+   When this invocation is an Apply Final Quality Gate: cite unchanged Hardening evidence when implementation and Git baseline are unchanged since the Hardening suite-stage record; do not re-run the Git-aware command solely to repeat preflight. Still execute registered \`test-plan.md\` rows that Verify still owns and deferred \`agent-browser\` rows. Standalone \`/sp:verify\` always runs the preflight below and does not require a Hardening record.
 
 ${getCanonicalNonVisualSuiteInstructions('verify')}
 
@@ -143,7 +148,7 @@ ${finalQualityRetryInstructions}
 ### Verification Heuristics
 
 - **Completeness**: Focus on objective checklist items (tasks, requirements, scenarios) and test-plan gap analysis against design, specs, and implementation
-- **Correctness**: Run the canonical test-suite preflight (Git-related tests when the runner supports Git-aware selection, otherwise the complete suite) and Manual Coverage (including \`programmatic-browser\` / \`agent-browser\` methods); use inspectable evidence rather than inference alone
+- **Correctness**: Run the canonical test-suite preflight (Git-aware related tests when supported, matching-stage checks, and registered test-plan rows — not the complete suite) and Manual Coverage (including \`programmatic-browser\` / \`agent-browser\` methods); use inspectable evidence rather than inference alone
 - **Coherence**: Look for glaring inconsistencies, don't nitpick style
 - **False Positives**: Calibrate down when uncertain, per the severity model above
 - **Actionability**: Every issue must have a specific recommendation with file/line references where applicable
@@ -191,25 +196,14 @@ ${verifyCompletenessSteps}
 
 ${verifyCorrectnessAndReportTail}`;
 
-export function getVerifyChangeSkillTemplate(): SkillTemplate {
-  return {
-    name: 'superpowers-verify-change',
-    description: 'Verify implementation matches change artifacts. Use when the user wants to validate that implementation is complete, correct, and coherent before archiving.',
-    instructions: `Verify that an implementation matches the change artifacts (specs, tasks, design).
+function buildVerifyInstructions(projection: Projection): string {
+  return `Verify that an implementation matches the change artifacts (specs, tasks, design).
 
-**Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+${getChangeTargetingInput('verify', projection)}
 
 ## Steps
 
-1. **If no change name provided, prompt for selection**
-
-   Run \`superpowers list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
-
-   Show changes that have implementation tasks (tasks artifact exists).
-   Include the schema used for each change if available.
-   Mark changes with incomplete tasks as "(In Progress)".
-
-   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
+${getChangeTargetingStep('verify')}
 
 2. **Check status and load artifacts**
 
@@ -221,13 +215,22 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
    - \`schemaName\`: The workflow being used (e.g., "spec-driven")
    - Which artifacts exist for this change
 
+   If the selected change has no tasks.md or tasks are empty, report "No tasks to verify" and suggest running \`/sp:continue\` to create tasks.
+
    \`\`\`bash
    superpowers instructions apply --change "<name>" --json
    \`\`\`
 
    This returns the change directory, context files, and attachment files. Read all available artifacts from \`contextFiles\`, and read or inspect files from \`attachmentFiles\` when present. Treat artifacts as the source of normative meaning for each attachment.
 
-${verifyReportStructure}`,
+${verifyReportStructure}`;
+}
+
+export function getVerifyChangeSkillTemplate(): SkillTemplate {
+  return {
+    name: 'superpowers-verify-change',
+    description: 'Verify implementation matches change artifacts. Use when the user wants to validate that implementation is complete, correct, and coherent before archiving.',
+    instructions: buildVerifyInstructions('skill'),
     license: 'MIT',
     compatibility: 'Requires superpowers CLI.',
     metadata: { author: 'superpowers', version: '1.0' },
@@ -240,38 +243,6 @@ export function getSpVerifyCommandTemplate(): CommandTemplate {
     description: 'Verify implementation matches change artifacts before archiving',
     category: 'Workflow',
     tags: ['workflow', 'verify'],
-    content: `Verify that an implementation matches the change artifacts (specs, tasks, design).
-
-**Input**: Optionally specify a change name after \`/sp:verify\` (e.g., \`/sp:verify add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
-
-## Steps
-
-1. **If no change name provided, prompt for selection**
-
-   Run \`superpowers list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
-
-   Show changes that have implementation tasks (tasks artifact exists).
-   Include the schema used for each change if available.
-   Mark changes with incomplete tasks as "(In Progress)".
-
-   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
-
-2. **Check status and load artifacts**
-
-   \`\`\`bash
-   superpowers status --change "<name>" --json
-   \`\`\`
-
-   Parse the JSON to understand:
-   - \`schemaName\`: The workflow being used (e.g., "spec-driven")
-   - Which artifacts exist for this change
-
-   \`\`\`bash
-   superpowers instructions apply --change "<name>" --json
-   \`\`\`
-
-   This returns the change directory, context files, and attachment files. Read all available artifacts from \`contextFiles\`, and read or inspect files from \`attachmentFiles\` when present. Treat artifacts as the source of normative meaning for each attachment.
-
-${verifyReportStructure}`
+    content: buildVerifyInstructions('command'),
   };
 }

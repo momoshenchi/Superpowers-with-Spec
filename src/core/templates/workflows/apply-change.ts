@@ -18,6 +18,8 @@ Explained current-product images under \`attachments/\` are Before kind \`illust
 function buildApplyInstructions(p: Projection): string {
   return `Implement tasks from an Superpowers change.
 
+Read later sections on demand: **Test Hardening** after implementation tasks complete; **Final Quality Gates** after Hardening. \`contextFiles\` is the catalog of normative artifacts. Each task reads the current dispatch unit plus the spec and design slices that unit cites.
+
 **Input**: Optionally specify a change name${pick(p, '', ' (e.g., \`/sp:apply add-auth\`)')}. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
 **Steps**
@@ -58,14 +60,15 @@ function buildApplyInstructions(p: Projection): string {
    - If \`state: "all_done"\`: read \`test-plan.md\` when present, confirm every concrete Test Hardening row outside \`## Final Quality Gates\` is complete **and** that the \`## Final Quality Gates\` record contains fresh integrated outcomes for every gate (each applicable gate passed; every \`not applicable\` result is justified). If the record is missing, failed, or applicable-blocked, run or resume final quality gates instead of suggesting archive.
    - Otherwise: proceed to implementation
 
-4. **Read context files**
+4. **Read current-unit context**
 
-   Read the files listed in \`contextFiles\` from the apply instructions output.
-   Read or inspect files listed in \`attachmentFiles\` when present. Treat the artifacts in \`contextFiles\` as the source of normative meaning for each attachment.
+   Treat \`contextFiles\` as the catalog of normative artifacts, not a mandatory read-all list. For the current dispatch unit, read that unit's section in \`execution-plan.md\` / \`tasks.md\` plus the spec and design slices the unit cites. Do not require reading every listed context file in full before the first edit.
+   Read or inspect files listed in \`attachmentFiles\` when the current unit needs them. Treat the artifacts in \`contextFiles\` as the source of normative meaning for each attachment.
    The files depend on the schema being used:
    - **spec-driven**: proposal, specs, design, tasks, execution-plan, test-plan
    - Other schemas: follow the contextFiles from CLI output
    - When \`execution-plan.md\` contains \`Implementation Notes\`, read them as non-normative context for the relevant task. They preserve findings and reasoning, but do not define progress or completion.
+   Hardening still reads \`test-plan.md\` and \`full-qa-test\` when that stage starts. Final Quality Gates still run after Hardening.
 
 5. **Show current progress**
 
@@ -91,10 +94,12 @@ ${APPLY_RUNTIME_BEFORE_CAPTURE}
    - Keep switching directly to the next pending task so the run stays continuous.
 
    **Pause if:**
-   - Task is unclear → ask for clarification
-   - Implementation reveals a design issue → suggest updating artifacts
-   - Error or blocker encountered → report and wait for guidance
+   - Task is product-ambiguous in a way that would change acceptance, security, billing, or a public contract → ask before implementing
+   - Implementation shows recorded design or artifacts cannot be satisfied → pause and propose an artifact update
+   - Irreversible Git history rewrite, force push, production, or unrecoverable publish → pause
    - User interrupts
+
+   Continue reversible in-scope repairs from this change. Compile or test errors caused by the current authorized diff are fixed and rechecked without waiting. Do not stop after a batch to ask whether to continue.
 
 8. **Run Test Hardening after implementation tasks are complete**
 
@@ -106,6 +111,7 @@ ${APPLY_RUNTIME_BEFORE_CAPTURE}
    - Distinguish worker-level verification in detailed \`tasks.md\` from post-integration Test Hardening in \`test-plan.md\`; passing worker-level tests is necessary but not sufficient for final apply completion.
    - Analyze which earlier tests were insufficient or not broad enough, then decide which supplemental tests are needed. If the full-qa-test skill exists, invoke it and add comprehensive tests according to its rules. Run mutation testing only after every planned \`unit\` case is executable and green; record results in \`## Mutation Testing\`.
    - If the full-qa-test skill is unavailable, add comprehensive tests for all requirements. Coverage must include: requirements and business scenarios; code and branch coverage; data and input-space coverage; state transitions and timing; non-functional and error-prevention coverage; and environment and context dependencies. For each of these 6 dimensions, first write **10** test cases; if after deduplication this batch still contains logically non-duplicate valid cases, write another **10**; continue this way up to a maximum of **30 cases per object per dimension**.
+   - Land new executable \`form=unit\` cases from that expansion to the repository before running Git-aware selection, so related selection uses the tree that contains those tests.
    - Record which tests this stage added or strengthened and any justified deferrals in \`test-plan.md\`.
    - Failing hardening tests or unresolved product defects block apply completion; fix them and rerun verification, or pause as blocked with the failing command, failure summary, affected files, and recommended next action.
    - Mark the relevant table rows complete only after evidence exists and no hardening failures or unresolved defects remain.
@@ -167,8 +173,8 @@ Working on task 4/7: <task description>
 | --- | --- | --- |
 | code review | passed / failed / blocked / not applicable | <worker report and findings resolution> |
 | \`/sp:simplify\` | passed / failed / blocked / not applicable | <worker report and cleanup/skip summary> |
-| \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, Manual Coverage disposition> |
 | \`/sp:design-verify\` | passed / failed / blocked / not applicable | <worker report, UI/DESIGN.md disposition> |
+| \`/sp:verify\` | passed / failed / blocked / not applicable | <worker report, canonical suite, Manual Coverage disposition> |
 
 Implementation, Test Hardening, and every applicable final quality gate are complete.
 You can archive this change with \`/sp:archive\`.
@@ -198,7 +204,7 @@ What would you like to do?
 
 **Guardrails**
 - Keep going through tasks until done or blocked
-- Always read context files before starting (from the apply instructions output)
+- Treat \`contextFiles\` as the catalog; read the current dispatch unit plus cited spec/design slices before editing that unit
 - If task is ambiguous, pause and ask before implementing
 - If implementation reveals issues, pause and suggest artifact updates
 - Keep code changes minimal and scoped to each task
@@ -212,7 +218,7 @@ What would you like to do?
 - Analyze earlier testing gaps before checking hardening complete; ignore clearly unrelated changes and pause on ambiguous unrelated changes.
 - Do not complete apply while hardening tests fail or product defects remain unresolved.
 - Do not recommend archive while a final quality gate is failed or an applicable gate is blocked.
-- Pause on errors, blockers, or unclear requirements - don't guess
+- Pause on product-ambiguous tasks, wrong artifacts, or irreversible Git/production operations - don't guess; continue reversible in-scope repairs without waiting
 - Use contextFiles and attachmentFiles from CLI output, don't assume specific file names
 - Never start implementation on main/master branch without explicit user consent
 - Do not automatically repeat proposal review before starting. The normal \`/sp:propose\` path performs it after creating all required artifacts; users may invoke \`/sp:review <change>\` voluntarily.

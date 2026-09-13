@@ -11,18 +11,18 @@ metadata:
 
 Archive a completed change in the workflow.
 
-**Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+**Input**: Optionally specify a change name. Use an explicit name when given; otherwise resolve with the targeting rule in Step 1.
 
 **Steps**
 
-1. **If no change name provided, prompt for selection**
+1. **Resolve the change name**
 
-   Run `superpowers list --json` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Use an explicit change name when provided. Otherwise use the conversation-bound change if conversation already names one. Otherwise, if there is exactly one eligible change, select that sole eligible change. Prompt only when two or more eligible changes could match; do not guess.
 
-   Show only active changes (not already archived).
-   Include the schema used for each change if available.
+   Run `superpowers list --json` to list active changes when you need to determine eligibility or prompt. Announce the selected name before continuing.
 
-   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
+   Eligible changes are active changes (not already archived). Include the schema used for each change if available. When a prompt is required, show only active changes.
+   Auto-select does not skip later warnings. Incomplete artifacts, incomplete tasks, and incomplete, failed, or blocked applicable Final Quality Gates still require a warning and confirmation.
 
 2. **Check artifact completion status**
 
@@ -166,7 +166,7 @@ Target archive directory already exists.
 ```
 
 **Guardrails**
-- Always prompt for change selection if not provided
+- Prompt for change selection only when two or more eligible changes could match
 - Use artifact graph (superpowers status --json) for completion checking
 - Check the `## Final Quality Gates` record in `test-plan.md` before archiving; never treat a missing record as a passing quality chain
 - Don't block archive on warnings - just inform and confirm

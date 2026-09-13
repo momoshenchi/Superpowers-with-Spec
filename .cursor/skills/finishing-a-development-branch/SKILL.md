@@ -17,25 +17,20 @@ Guide completion of development work by presenting clear options and handling ch
 
 ### Step 1: Verify Tests
 
-**Before presenting options, verify tests pass:**
+**Before presenting options, verify matching-stage tests pass.** Use Git-aware related tests when the runner supports them. If Git-aware selection is unavailable, use the same recorded non-`test-plan` suite stage as Hardening/Verify and record that limitation. Do not require a complete project-wide test command. See `verification-before-completion` for matching-stage evidence. Empty related selection is not a pass.
 
-```bash
-# Run project's test suite
-npm test / cargo test / pytest / go test ./...
+**If related tests fail:**
 ```
-
-**If tests fail:**
-```
-Tests failing (<N> failures). Must fix before completing:
+Related tests failing (<N> failures). Must fix before completing:
 
 [Show failures]
 
-Cannot proceed with merge/PR until tests pass.
+Cannot proceed with merge/PR until related tests pass.
 ```
 
 Stop. Don't proceed to Step 2.
 
-**If tests pass:** Continue to Step 2.
+**If related tests pass:** Continue to Step 2.
 
 ### Step 2: Determine Base Branch
 
@@ -77,8 +72,8 @@ git pull
 # Merge feature branch
 git merge <feature-branch>
 
-# Verify tests on merged result
-<test command>
+# Verify tests on merged result with the same Git-aware related tests (or recorded non-test-plan suite stage)
+<matching-stage test command>
 
 # If tests pass
 git branch -d <feature-branch>
@@ -162,7 +157,7 @@ git worktree remove <worktree-path>
 
 **Skipping test verification**
 - **Problem:** Merge broken code, create failing PR
-- **Fix:** Always verify tests before offering options
+- **Fix:** Always verify Git-aware related tests before offering options
 
 **Open-ended questions**
 - **Problem:** "What should I do next?" → ambiguous
@@ -179,13 +174,13 @@ git worktree remove <worktree-path>
 ## Red Flags
 
 **Never:**
-- Proceed with failing tests
+- Proceed with failing related tests
 - Merge without verifying tests on result
 - Delete work without confirmation
 - Force-push without explicit request
 
 **Always:**
-- Verify tests before offering options
+- Verify matching-stage / Git-aware related tests before offering options
 - Present exactly 4 options
 - Get typed confirmation for Option 4
 - Clean up worktree for Options 1 & 4 only

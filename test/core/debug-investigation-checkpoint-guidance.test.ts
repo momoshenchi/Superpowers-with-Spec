@@ -74,6 +74,17 @@ describe('debug investigation checkpoint guidance', () => {
     expect(skill).toContain('read-only');
   });
 
+  it('does not require four phases for a named assertion failure', () => {
+    const debug = readWorkspaceFile('skills', 'systematic-debugging', 'SKILL.md');
+
+    expect(debug).toMatch(/already identified/i);
+    expect(debug).not.toMatch(
+      /Use when encountering any bug, test failure, or unexpected behavior/
+    );
+    expect(debug).not.toMatch(/read every line/i);
+    expect(debug).not.toMatch(/read reference implementation COMPLETELY/i);
+  });
+
   it('keeps the generated explore skill and command semantically aligned', () => {
     const generatedSkill = getExploreSkillTemplate().instructions;
     const generatedCommand = getSpExploreCommandTemplate().content;

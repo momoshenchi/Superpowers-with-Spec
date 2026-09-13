@@ -1,6 +1,6 @@
 ---
 name: when-to-dispatch-code-review
-description: Decide when to dispatch code review across Direct Modification, standalone Subagent-Driven Development, and Proposal → Review → Apply. Use at meaningful delivery boundaries, for risky or merge-ready work, or when a user requests review, while avoiding duplicate per-task, per-batch, or Apply reviews.
+description: Decide when an integrated code review is warranted across Direct Modification, Subagent-Driven Development, and Proposal → Review → Apply. Use at meaningful delivery boundaries, for merge-ready high-risk work, or when a user requests review. Do not add another complete review around Apply's gate.
 ---
 
 # When to Dispatch Code Review
@@ -28,7 +28,7 @@ Workers verify and self-review their own complete Dispatch Units. SDD does not o
 
 ### Proposal → Review → Apply
 
-Proposal review checks the artifacts before implementation; it is not implementation code review. During `/sp:apply`, Apply owns the mandatory code review gate after Test Hardening and before Simplify, Verify, and Design Verify. Do not add a generic per-task, per-unit, or per-batch review on top of Apply's final gate, and do not duplicate Apply's severity or retry policy here.
+Proposal review checks the artifacts before implementation; it is not implementation code review. During `/sp:apply`, Apply owns the mandatory code review gate after Test Hardening; that gate is the single integrated code-review entry. Do not add another complete review before, during, or after that gate.
 
 ## Dispatch an Integrated Target
 
@@ -40,7 +40,7 @@ Provide the reviewer:
 - Reports from integrated Dispatch Units and relevant interaction boundaries.
 - Existing `Implementation Notes` from integrated Dispatch Units when available, treated as non-normative context about findings and reasoning rather than as completion evidence.
 - Fresh test, build, lint, E2E, or manual evidence already collected.
-- Known constraints, intentional deferrals, and the active workflow's severity scale.
+- Known constraints and intentional deferrals.
 
 Do not ask a final reviewer to assess an isolated checkbox when the readiness claim covers a broader integrated change.
 

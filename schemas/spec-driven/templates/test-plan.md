@@ -161,5 +161,5 @@ Leave a row `planned` until a fresh worker has actually run that gate. A gate is
 | --- | --- | --- |
 | code review | <!-- planned / passed / failed / blocked / not applicable --> | <!-- round, fresh worker, report and findings resolution --> |
 | `/sp:simplify` | <!-- planned / passed / failed / blocked / not applicable --> | <!-- fresh worker, report and cleanup/skip summary --> |
-| `/sp:verify` | <!-- planned / passed / failed / blocked / not applicable --> | <!-- round, fresh worker, canonical suite, Manual Coverage disposition --> |
 | `/sp:design-verify` | <!-- planned / passed / failed / blocked / not applicable --> | <!-- round, fresh worker, UI/DESIGN.md disposition --> |
+| `/sp:verify` | <!-- planned / passed / failed / blocked / not applicable --> | <!-- round, fresh worker, canonical suite, Manual Coverage disposition --> |

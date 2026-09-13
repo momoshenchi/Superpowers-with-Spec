@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+description: Use when the root cause is unknown, reproduction is unstable, or previous patches failed. Skip four-phase when the failing test or compiler already identified the cause; still re-run the failing test after the fix.
 ---
 
 # Systematic Debugging
@@ -9,43 +9,29 @@ description: Use when encountering any bug, test failure, or unexpected behavior
 
 Random fixes waste time and create new bugs. Quick patches mask underlying issues.
 
-**Core principle:** ALWAYS find root cause before attempting fixes. Symptom fixes are failure.
-
-**Violating the letter of this process is violating the spirit of debugging.**
-
-## The Iron Law
-
-```
-NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
-```
-
-If you haven't completed Phase 1, you cannot propose fixes.
+**Core principle:** When the cause is unknown, find root cause before stacking patches. Symptom-only guessing is failure.
 
 ## When to Use
 
-Use for ANY technical issue:
-- Test failures
-- Bugs in production
-- Unexpected behavior
-- Performance problems
-- Build failures
-- Integration issues
+Use the four-phase process when:
+- The root cause is unknown
+- Reproduction is unstable or intermittent
+- Previous patches already failed
 
-**Use this ESPECIALLY when:**
+**Skip four-phase when the cause is already identified** in the current test output or compiler diagnostic (for example a named assertion that points at the edited function and expected value). Fix that cause directly. Still re-run the failing test after the fix. Do not write a four-phase checkpoint for a one-turn localized failure.
+
+**Use four-phase ESPECIALLY when:**
 - Under time pressure (emergencies make guessing tempting)
-- "Just one quick fix" seems obvious
+- "Just one quick fix" seems obvious but you cannot name the cause
 - You've already tried multiple fixes
 - Previous fix didn't work
 - You don't fully understand the issue
 
-**Don't skip when:**
-- Issue seems simple (simple bugs have root causes too)
-- You're in a hurry (rushing guarantees rework)
-- Manager wants it fixed NOW (systematic is faster than thrashing)
+Keep the Debug Checkpoint for multi-turn unknown-cause work, context compaction, or a fresh-worker handoff. A short one-turn investigation of an already-identified failure may omit it.
 
 ## The Four Phases
 
-You MUST complete each phase before proceeding to the next.
+When four-phase investigation applies, complete each phase before proceeding to the next. See `root-cause-tracing.md` in this directory for the backward-tracing technique. Do not use four-phase as a gate on an already-identified, localized failure.
 
 ## Debug Checkpoint Protocol
 
@@ -300,9 +286,9 @@ Do not silently continue the same broad loop.
    - What works that's similar to what's broken?
 
 2. **Compare Against References**
-   - If implementing pattern, read reference implementation COMPLETELY
-   - Don't skim - read every line
-   - Understand the pattern fully before applying
+   - If a working example is useful, read the slices that explain the difference
+   - Do not require a line-by-line read of the whole reference before investigating
+   - Understand the differing pattern before applying it
 
 3. **Identify Differences**
    - What's different between working and broken?
@@ -423,7 +409,7 @@ If you catch yourself thinking:
 | "Just try this first, then investigate" | First fix sets the pattern. Do it right from the start. |
 | "I'll write test after confirming fix works" | Untested fixes don't stick. Test first proves it. |
 | "Multiple fixes at once saves time" | Can't isolate what worked. Causes new bugs. |
-| "Reference too long, I'll adapt the pattern" | Partial understanding guarantees bugs. Read it completely. |
+| "Reference too long, I'll adapt the pattern" | Compare the differing slices. Do not skip the comparison. |
 | "I see the problem, let me fix it" | Seeing symptoms ≠ understanding root cause. |
 | "One more fix attempt" (after 2+ failures) | 3+ failures = architectural problem. Question pattern, don't fix again. |
 

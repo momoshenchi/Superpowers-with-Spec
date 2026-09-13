@@ -30,27 +30,25 @@ Treat discovered environment facts as facts, not user decisions. Ask the user on
 - product decisions about the problem and urgency, goal, scope, non-goals, capabilities, impact, or acceptance expectations;
 - high-impact technical decisions about architecture, data or migration, public API or CLI contracts, security, reliability or recovery, performance, compatibility, deployment or operations, or an important dependency.
 
-Routine local implementation details remain agent-owned. A clear low-risk request may have zero interview questions when its goal, scope, capabilities, impact, acceptance expectation, and high-impact technical choices are sufficiently determined by the request or existing constraints. Zero questions still require the final understanding summary and explicit confirmation.
+Routine local implementation details remain agent-owned. A clear low-risk request may have zero interview questions when its goal, scope, capabilities, impact, acceptance expectation, and high-impact technical choices are sufficiently determined by the request or existing constraints. Zero questions still require a short understanding summary. If the user already asked to create and no product-decision pause applies, that summary authorizes writes.
 
-Ask one decision question at a time and wait for the answer before asking another. Each question must state:
+When several unresolved high-impact decisions are open, present them together in one message. Do not require waiting for the first answer before stating the second decision. Each decision must state:
 - Known facts;
 - Decision to resolve and why it matters;
 - Recommended answer and its trade-off;
 - Two or three meaningful alternatives when they exist;
 - A free-form response invitation.
 
-Use AskUserQuestion or the host's equivalent when available. If no structured question tool is available, use ordinary natural-language conversation while preserving the same one-question-at-a-time format. If the user delegates a decision, adopt the stated recommendation, record it as a decision in the running summary, and re-evaluate dependent decisions before continuing.
+Use AskUserQuestion or the host's equivalent when available. If no structured question tool is available, use ordinary natural-language conversation while preserving the same per-decision format. If the user delegates a decision, adopt the stated recommendation, record it as a decision in the running summary, and re-evaluate dependent decisions before continuing.
 
-Continue until decisions are closed: the problem and urgency, scope and non-goals, capabilities, impact, acceptance expectations, and every user-owned high-impact decision must be concrete enough for artifact generation. Do not add an interview question for non-boundary derived implications; write them as agent-owned derived assumptions. Ask the user only when a derived implication would reverse a confirmed goal, scope, or acceptance expectation, or would cross a security, persisted-data, billing, or public-contract boundary that is not already determined. Complete that interview before presenting the final understanding summary. Then present one complete final understanding summary that separates confirmed decisions from agent-owned implementation assumptions. The summary MUST include a compact list of agent-owned derived assumptions from the closed implication scan (one derived rule or short N/A per dimension), separate from confirmed decisions and never labeled as user Choices. Dimensions: Actor, permission, and ownership; Empty, deny, error, and fail-closed behavior; Lifecycle: create, update, cancel, retry, and idempotency; Compatibility and migration; Data shape and contracts; Important product-direction forks implied by the confirmed goal. If the user corrects a derived assumption, update it, re-scan only dependent dimensions, and present a new complete summary before requesting confirmation again.
+Continue until decisions are closed: the problem and urgency, scope and non-goals, capabilities, impact, acceptance expectations, and every user-owned high-impact decision must be concrete enough for artifact generation. Pause when two product scopes would change acceptance and the request does not choose; do not invent a user Choice for that fork. Do not add an interview question for non-boundary derived implications; write them as agent-owned derived assumptions. Ask the user only when a derived implication would reverse a confirmed goal, scope, or acceptance expectation, or would cross a security, persisted-data, billing, or public-contract boundary that is not already determined. Complete that interview before presenting the final understanding summary. Then present one complete final understanding summary that separates confirmed decisions from agent-owned implementation assumptions. The summary MUST include a compact list of agent-owned derived assumptions from the closed implication scan (one derived rule or short N/A per dimension), separate from confirmed decisions and never labeled as user Choices. Dimensions: Actor, permission, and ownership; Empty, deny, error, and fail-closed behavior; Lifecycle: create, update, cancel, retry, and idempotency; Compatibility and migration; Data shape and contracts; Important product-direction forks implied by the confirmed goal. If the user corrects a derived assumption, update it, re-scan only dependent dimensions, and present a new complete summary before requesting confirmation again.
 
-Offer exactly three semantic final outcomes:
+An explicit create request (the user already asked to create the proposal or change) authorizes `superpowers new change` and schema artifact writes after that short understanding summary. Do not refuse to write solely because the user did not pick a labeled Confirm and create option. A host MAY still offer three semantic outcomes as optional UX:
 1. Confirm and create — after explicit confirmation, run the existing change and artifact workflow.
 2. Request changes — keep the write boundary closed, accept or ask for one correction at a time, re-evaluate dependent decisions, and present a new complete summary.
 3. Stop without creating — end without creating a change directory or any change artifact and report that no change was created.
 
-The confirm-and-create outcome is required even when there were zero interview questions. Do not create the change or write any explicit artifact until that outcome is selected.
-
-After confirmation, route confirmed product decisions into proposal.md. Route each high-impact technical decision into design.md. Include a user-confirmed option comparison table only when the user actually chose among those options (including delegated recommendations after seeing alternatives); record the exact options the user saw, the selected choice, rationale, and trade-offs. Agent-owned implementation assumptions MAY include an A/B/C comparison in design.md; the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Fill existing design headings with implementable detail (mapping rules, fail-closed paths, a worked example). Write derived rules into existing `## Decisions`, `## Contracts`, and `## Invariants` as they apply. Authors MAY add extra subsections. Do not add a displayed Derived implications heading. Do not add required extra headings. Do not present a model-inferred result as a user Choice. When a derived implication changes observable user behavior or acceptance, record it in the change's delta spec as an ADDED or MODIFIED requirement with a WHEN/THEN scenario. Implementation-only mappings may stay in design.md. Do not create interview.md or any separate interview transcript. Preserve the schema-defined artifact list, dependency-ordered generation, automatic proposal review, and final status flow below.
+After authorized create (the user already asked to create, or selected Confirm and create), route confirmed product decisions into proposal.md. Route each high-impact technical decision into design.md. Include a user-confirmed option comparison table only when the user actually chose among those options (including delegated recommendations after seeing alternatives); record the exact options the user saw, the selected choice, rationale, and trade-offs. Agent-owned implementation assumptions MAY include an A/B/C comparison in design.md; the final Choice MUST be a strict, detailed analysis of why that option wins and why the others lose. Fill existing design headings with implementable detail (mapping rules, fail-closed paths, a worked example). Write derived rules into existing `## Decisions`, `## Contracts`, and `## Invariants` as they apply. Authors MAY add extra subsections. Do not add a displayed Derived implications heading. Do not add required extra headings. Do not present a model-inferred result as a user Choice. When a derived implication changes observable user behavior or acceptance, record it in the change's delta spec as an ADDED or MODIFIED requirement with a WHEN/THEN scenario. Implementation-only mappings may stay in design.md. Do not create interview.md or any separate interview transcript. Preserve the schema-defined artifact list, dependency-ordered generation, automatic proposal review, and final status flow below.
 
 
 
@@ -67,7 +65,7 @@ After confirmation, route confirmed product decisions into proposal.md. Route ea
 
    **IMPORTANT**: Do NOT proceed without understanding what the user wants to build.
 
-2. **After the user selects Confirm and create, create the change directory**
+2. **After authorized create (the user already asked to create, or selected Confirm and create), create the change directory**
    ```bash
    superpowers new change "<name>"
    ```
@@ -83,7 +81,7 @@ After confirmation, route confirmed product decisions into proposal.md. Route ea
 
 4. **Create artifacts in sequence until apply-ready**
 
-   Use the **TodoWrite tool** to track progress through the artifacts.
+   A host todo or progress tool is optional bookkeeping, not a required loop. Missing TodoWrite is not a reason to stop or wait.
 
    Loop through artifacts in dependency order (artifacts with no pending dependencies first):
 

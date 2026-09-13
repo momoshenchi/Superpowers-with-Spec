@@ -16,9 +16,8 @@ const GIT_RELATED_PHRASES = [
   'Prefer Git-related tests',
   'Git-aware selection',
   'merge-base',
-  'fail-closed',
+  'git-aware-unavailable-recorded',
   'Empty related selection is not a pass',
-  'complete canonical non-visual suite',
 ] as const;
 
 describe('git-related test selection guidance', () => {
@@ -33,6 +32,7 @@ describe('git-related test selection guidance', () => {
       for (const phrase of GIT_RELATED_PHRASES) {
         expect(content).toContain(phrase);
       }
+      expect(content).not.toMatch(/fail-closed and run the complete canonical non-visual suite/);
     }
   });
 

@@ -157,107 +157,107 @@ Gaps to close in Hardening:
 
 | ID | Object | Source | Scenario Type | Steps | Expected | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-R1-D1-001 | R1 | imported: A matching skill is needed | happy path | Read Apply skill for `/sp:apply`; do not open security-review | Apply skill read; security-review unread | unit | planned | Task 1.1 test |
-| TC-R1-D1-002 | R1 | imported: Entry skill does not preload the library | branch | Open using-superpowers | No "before any response" | unit | planned | Task 1.1 test |
-| TC-R2-D1-001 | R2 | imported: Apply root file stays an index | happy path | Open Apply root | Opening names completion definition and which later section to read; FQG/MC may stay later in the same file | unit | planned | Task 2.2 |
-| TC-R2-D1-002 | R2 | imported: using-superpowers keeps mode selection in root | happy path | Open using-superpowers | Direct + Proposal present; schema YAML absent from root | unit | planned | Task 1.1 |
-| TC-R3-D1-001 | R3 | imported: Authorized implementation continues | happy path | Two pending Apply tasks | No continue prompt between them | unit | planned | Task 2.2 |
-| TC-R4-D1-001 | R4 | imported: A test failure from this change is repaired | happy path | Task test fails from this edit | Repair + rerun, no wait | unit | planned | Task 2.2 |
-| TC-R4-D1-002 | R4 | imported: Force push remains paused | exception | Next step is force push | Pause | unit | planned | Task 2.2 |
-| TC-R5-D1-001 | R5 | imported: A behavior change uses red-green | happy path | New CLI flag | Failing test first | unit | planned | Task 1.2 |
-| TC-R5-D1-002 | R5 | imported: A copy-only edit skips TDD | branch | Comment-only edit | No failing test required | unit | planned | Task 1.2 |
-| TC-R6-D1-001 | R6 | imported: A typed assertion failure is fixed directly | happy path | Named assertion fail | Fix without four-phase MUST | unit | planned | Task 1.3 |
-| TC-R6-D1-002 | R6 | imported: An unknown flake still requires investigation | branch | Intermittent fail, no cause | Investigate before patch | unit | planned | Task 1.3 |
-| TC-R7-D1-001 | R7 | imported: Task completion cites the focused command | happy path | Claim task done | Same-turn focused test output | unit | planned | Task 1.4 |
-| TC-R8-D1-001 | R8 | imported: Dispatch uses Apply completion rules | happy path | Read SDD | No gate restatement; points at Apply | unit | planned | Task 1.5 |
-| TC-R9-D1-001 | R9 | imported: A new init does not copy writing-plans | happy path | Inspect default skill set | writing-plans absent | unit | planned | Task 1.6 |
-| TC-R10-D1-001 | R10 | imported: CLAUDE.md matches the skills directory | happy path | Read CLAUDE.md | No dispatching-parallel-agents | unit | planned | Task 1.7 |
-| TC-R11-D1-001 | R11 | imported: GPT6-guide stays optional | happy path | Read AGENTS.md and using-superpowers | No required GPT6-guide read | unit | planned | Task 1.7 |
-| TC-R12-D1-001 | R12 | imported: A clear create request has no interview | happy path | Propose with complete request | Zero interview questions | unit | planned | Task 2.1 |
-| TC-R12-D1-002 | R12 | imported: Open decisions may be batched | branch | Two high-impact forks | One message may contain both | unit | planned | Task 2.1 |
-| TC-R13-D1-001 | R13 | imported: User says create the proposal | happy path | User asked to create | Artifacts written without three-state lock | unit | planned | Task 2.1 |
-| TC-R13-D1-002 | R13 | imported: Missing product information still pauses | exception | Two acceptance scopes | Ask; no invented Choice | unit | planned | Task 2.1 |
-| TC-R14-D1-001 | R14 | imported: Preflight runs before questions | happy path | Propose starts | Read-only discovery first | unit | planned | Task 2.1 |
-| TC-R15-D1-001 | R15 | imported: First task reads its slice | happy path | Start unit 1 | execution-plan unit + cited spec; not full test-plan | unit | planned | Task 2.2 |
-| TC-R15-D1-002 | R15 | imported: Later stages still read their contracts | branch | Hardening begins | test-plan + full-qa-test read | unit | planned | Task 2.2 |
-| TC-R16-D1-001 | R16 | imported: Compile error from this task is fixed | happy path | tsc fails on edited file | Fix without wait | unit | planned | Task 2.2 |
-| TC-R16-D1-002 | R16 | imported: Design contradiction still pauses | exception | Design cannot be met | Pause for artifact update | unit | planned | Task 2.2 |
-| TC-R17-D1-001 | R17 | imported: Host can spawn gate workers | happy path | Spawn available | Four distinct workers in order | unit | planned | Task 2.3 |
-| TC-R17-D1-002 | R17 | imported: Host cannot spawn a worker | branch | No spawn | same-context fallback; not blocked | unit | planned | Task 2.3 |
-| TC-R18-D1-001 | R18 | imported: Sole active change is used | happy path | `/sp:verify` no name, one change | Verifies that change | unit | planned | Task 3.1 |
-| TC-R18-D1-002 | R18 | imported: Ambiguous names still prompt | branch | Two active changes | Prompt; no guess | unit | planned | Task 3.1 |
-| TC-R18-D1-003 | R18 | imported: Incomplete gates still block quiet archive | exception | Archive + failed gates | Warn + confirm | unit | planned | Task 3.1 |
-| TC-R19-D1-001 | R19 | imported: Hardening invokes full-qa-test | happy path | Apply Hardening text | Contains full-qa-test invoke | unit | planned | Task 2.2 I1 |
-| TC-R19-D1-002 | R19 | imported: Fallback still covers six dimensions | branch | Skill missing | 10→10→10 fallback remains | unit | planned | Task 2.2 |
-| TC-R20-D1-001 | R20 | imported: Hardening runs non-agent-browser manual rows | happy path | Manual Coverage programmatic-browser | Execute in Hardening | unit | planned | existing Manual Coverage instructions |
-| TC-R20-D1-002 | R20 | imported: Verify runs deferred agent-browser rows | happy path | Deferred agent-browser | Execute in Verify | unit | planned | verify template |
-| TC-R21-D1-001 | R21 | imported: Git-aware runner selects related tests | happy path | Runner supports --changed | Related-test command recorded | unit | planned | Task 2.3 |
-| TC-R21-D1-002 | R21 | imported: Git-aware unavailable does not require complete suite | exception | No Git-aware | Limitation recorded; complete suite not required | unit | planned | Task 2.3 I2 |
-| TC-R22-D1-001 | R22 | imported: A dispatch-unit task uses focused tests | happy path | Task Step 4 | Focused + Git-aware; no full matrix | unit | planned | Task 2.2 |
-| TC-R23-D1-001 | R23 | imported: Loading templates at the top | happy path | docs-agent-instructions delta | Links not full templates | unit | planned | spec file |
-| TC-R24-D1-001 | R24 | imported: Providing file templates | happy path | schema templates remain source | AGENTS.md not required to embed fences | unit | planned | spec file |
-| TC-R25-D1-001 | R25 | imported: Highlighting common validation failures | happy path | Checklist MAY exist | `#### Scenario:` reminder kept | unit | planned | spec file |
-| TC-R26-D1-001 | R26 | imported: Organizing beginner and advanced sections | happy path | docs/workflows.md | No full Apply recipe dump | unit | planned | Task 3.3 |
-| TC-R27-D1-001 | R27 | imported: Verify with change name provided | happy path | `/sp:verify foo` | Uses foo | unit | planned | Task 3.1 |
-| TC-R27-D1-002 | R27 | imported: Verify infers a sole active change | happy path | same as R18 sole | Same expected | unit | planned | Task 3.1 |
-| TC-R27-D1-003 | R27 | imported: Verify prompts when several changes match | branch | same as R18 ambiguous | Prompt | unit | planned | Task 3.1 |
-| TC-R28-D1-001 | R28 | imported: Verify executes registered test-plan rows | happy path | Verify correctness | test-plan rows run | unit | planned | Task 3.1 |
-| TC-R28-D1-002 | R28 | imported: Verify uses Git-aware tests outside test-plan | happy path | Verify suite stage | Git-aware, not complete suite | unit | planned | Task 2.3 |
-| TC-R29-D1-001 | R29 | imported: Change has no tasks | exception | Empty tasks.md | "No tasks to verify" | unit | planned | verify template |
-| TC-R30-D1-001 | R30 | imported: First unit starts with a slice | happy path | First dispatch | Unit package only | unit | planned | Task 1.5 |
-| TC-R30-D1-002 | R30 | imported: Integration still sees the combined diff | happy path | All units done | Integrated review + gates | unit | planned | Apply |
-| TC-R31-D1-001 | R31 | imported: Main agent executes all work packages | happy path | No subagents | Inline valid | unit | planned | Task 1.5 |
-| TC-R31-D1-002 | R31 | imported: One subagent receives multiple work packages | happy path | Two compatible units | Combined assignment allowed | unit | planned | existing SDD |
-| TC-R31-D1-003 | R31 | imported: Host cannot spawn subagents | branch | No spawn | Inline; not blocked | unit | planned | Task 2.3 |
-| TC-R32-D1-001 | R32 | imported: Apply owns the integrated review | happy path | `/sp:apply` Proposal path | Apply gate is the review; no extra complete review | unit | planned | Task 1.9 |
-| TC-R32-D1-002 | R32 | imported: Direct work may still request review | branch | Direct Modification + user asks review | Dispatch allowed | unit | planned | Task 1.9 |
-| TC-R33-D1-001 | R33 | imported: Tests are checked with Git-aware selection | happy path | finishing-a-development-branch Step 1 | Git-aware; no complete npm test | unit | planned | Task 1.10 I7 |
-| TC-R33-D1-002 | R33 | imported: Integration choices remain | happy path | verification passed | merge / PR / keep / discard still offered | unit | planned | Task 1.10 |
-| TC-R34-D1-001 | R34 | imported: A failing test uses debug not explore | happy path | unit test fails | debug or direct fix; Explore not entered | unit | planned | Task 1.11 |
-| TC-R34-D1-002 | R34 | imported: Thinking through a feature uses explore | happy path | user asks to think through approaches | Explore; no production implementation | unit | planned | Task 1.11 |
-| TC-R35-D1-001 | R35 | imported: Direct edit uses Git-aware tests | happy path | Direct Modification automated tests | Git-aware; no fall closed to complete suite | unit | planned | Task 1.1 I8 |
-| TC-R35-D1-002 | R35 | imported: Direct UI still exercises the journey | branch | Direct UI path change | Journey + visual rules; not Apply lifecycle | unit | planned | Task 1.1 |
-| TC-R36-D1-001 | R36 | imported: A named compiler error is fixed without a full read | happy path | compiler names file and type | Fix without complete reference read | unit | planned | Task 1.3 |
-| TC-R36-D1-002 | R36 | imported: Unknown-cause work may still compare examples | branch | unknown cause + similar path | Compare differing slices; no every-line MUST | unit | planned | Task 1.3 |
-| TC-R37-D1-001 | R37 | imported: Authorized writes proceed without TodoWrite | happy path | user asked to create | Artifacts written; TodoWrite not required | unit | planned | Task 2.1 |
-| TC-R37-D1-002 | R37 | imported: Optional tracking does not block writes | branch | host has todo tool | Optional; missing TodoWrite does not stop | unit | planned | Task 2.1 |
-| TC-R38-D1-001 | R38 | imported: Missing directory uses project-local default | happy path | no worktree dir, no docs path | `.worktrees/` + gitignore; no prompt | unit | planned | Task 1.12 |
-| TC-R38-D1-002 | R38 | imported: Existing directory or docs still win | branch | `.worktrees/` exists | Use it after gitignore check | unit | planned | Task 1.12 |
-| TC-R39-D1-001 | R39 | imported: A draft test-plan without a 10-batch still reviews | happy path | test-plan has register, no 10-batch | Completeness does not fail for missing batches | unit | planned | Task 3.4 I9 |
-| TC-R39-D1-002 | R39 | imported: Hardening still owns 10→10→10 | exception | Apply Hardening | full-qa-test / fallback remains | unit | planned | Task 2.2 I1 |
+| TC-R1-D1-001 | R1 | imported: A matching skill is needed | happy path | Read Apply skill for `/sp:apply`; do not open security-review | Apply skill read; security-review unread | unit | passed | Task 1.1 test |
+| TC-R1-D1-002 | R1 | imported: Entry skill does not preload the library | branch | Open using-superpowers | No "before any response" | unit | passed | Task 1.1 test |
+| TC-R2-D1-001 | R2 | imported: Apply root file stays an index | happy path | Open Apply root | Opening names completion definition and which later section to read; FQG/MC may stay later in the same file | unit | passed | Task 2.2 |
+| TC-R2-D1-002 | R2 | imported: using-superpowers keeps mode selection in root | happy path | Open using-superpowers | Direct + Proposal present; schema YAML absent from root | unit | passed | Task 1.1 |
+| TC-R3-D1-001 | R3 | imported: Authorized implementation continues | happy path | Two pending Apply tasks | No continue prompt between them | unit | passed | Task 2.2 |
+| TC-R4-D1-001 | R4 | imported: A test failure from this change is repaired | happy path | Task test fails from this edit | Repair + rerun, no wait | unit | passed | Task 2.2 |
+| TC-R4-D1-002 | R4 | imported: Force push remains paused | exception | Next step is force push | Pause | unit | passed | Task 2.2 |
+| TC-R5-D1-001 | R5 | imported: A behavior change uses red-green | happy path | New CLI flag | Failing test first | unit | passed | Task 1.2 |
+| TC-R5-D1-002 | R5 | imported: A copy-only edit skips TDD | branch | Comment-only edit | No failing test required | unit | passed | Task 1.2 |
+| TC-R6-D1-001 | R6 | imported: A typed assertion failure is fixed directly | happy path | Named assertion fail | Fix without four-phase MUST | unit | passed | Task 1.3 |
+| TC-R6-D1-002 | R6 | imported: An unknown flake still requires investigation | branch | Intermittent fail, no cause | Investigate before patch | unit | passed | Task 1.3 |
+| TC-R7-D1-001 | R7 | imported: Task completion cites the focused command | happy path | Claim task done | Same-turn focused test output | unit | passed | Task 1.4 |
+| TC-R8-D1-001 | R8 | imported: Dispatch uses Apply completion rules | happy path | Read SDD | No gate restatement; points at Apply | unit | passed | Task 1.5 |
+| TC-R9-D1-001 | R9 | imported: A new init does not copy writing-plans | happy path | Inspect default skill set | writing-plans absent | unit | passed | Task 1.6 |
+| TC-R10-D1-001 | R10 | imported: CLAUDE.md matches the skills directory | happy path | Read CLAUDE.md | No dispatching-parallel-agents | unit | passed | Task 1.7 |
+| TC-R11-D1-001 | R11 | imported: GPT6-guide stays optional | happy path | Read AGENTS.md and using-superpowers | No required GPT6-guide read | unit | passed | Task 1.7 |
+| TC-R12-D1-001 | R12 | imported: A clear create request has no interview | happy path | Propose with complete request | Zero interview questions | unit | passed | Task 2.1 |
+| TC-R12-D1-002 | R12 | imported: Open decisions may be batched | branch | Two high-impact forks | One message may contain both | unit | passed | Task 2.1 |
+| TC-R13-D1-001 | R13 | imported: User says create the proposal | happy path | User asked to create | Artifacts written without three-state lock | unit | passed | Task 2.1 |
+| TC-R13-D1-002 | R13 | imported: Missing product information still pauses | exception | Two acceptance scopes | Ask; no invented Choice | unit | passed | Task 2.1 |
+| TC-R14-D1-001 | R14 | imported: Preflight runs before questions | happy path | Propose starts | Read-only discovery first | unit | passed | Task 2.1 |
+| TC-R15-D1-001 | R15 | imported: First task reads its slice | happy path | Start unit 1 | execution-plan unit + cited spec; not full test-plan | unit | passed | Task 2.2 |
+| TC-R15-D1-002 | R15 | imported: Later stages still read their contracts | branch | Hardening begins | test-plan + full-qa-test read | unit | passed | Task 2.2 |
+| TC-R16-D1-001 | R16 | imported: Compile error from this task is fixed | happy path | tsc fails on edited file | Fix without wait | unit | passed | Task 2.2 |
+| TC-R16-D1-002 | R16 | imported: Design contradiction still pauses | exception | Design cannot be met | Pause for artifact update | unit | passed | Task 2.2 |
+| TC-R17-D1-001 | R17 | imported: Host can spawn gate workers | happy path | Spawn available | Four distinct workers in order | unit | passed | Task 2.3 |
+| TC-R17-D1-002 | R17 | imported: Host cannot spawn a worker | branch | No spawn | same-context fallback; not blocked | unit | passed | Task 2.3 |
+| TC-R18-D1-001 | R18 | imported: Sole active change is used | happy path | `/sp:verify` no name, one change | Verifies that change | unit | passed | Task 3.1 |
+| TC-R18-D1-002 | R18 | imported: Ambiguous names still prompt | branch | Two active changes | Prompt; no guess | unit | passed | Task 3.1 |
+| TC-R18-D1-003 | R18 | imported: Incomplete gates still block quiet archive | exception | Archive + failed gates | Warn + confirm | unit | passed | Task 3.1 |
+| TC-R19-D1-001 | R19 | imported: Hardening invokes full-qa-test | happy path | Apply Hardening text | Contains full-qa-test invoke | unit | passed | Task 2.2 I1 |
+| TC-R19-D1-002 | R19 | imported: Fallback still covers six dimensions | branch | Skill missing | 10→10→10 fallback remains | unit | passed | Task 2.2 |
+| TC-R20-D1-001 | R20 | imported: Hardening runs non-agent-browser manual rows | happy path | Manual Coverage programmatic-browser | Execute in Hardening | unit | passed | existing Manual Coverage instructions |
+| TC-R20-D1-002 | R20 | imported: Verify runs deferred agent-browser rows | happy path | Deferred agent-browser | Execute in Verify | unit | passed | verify template |
+| TC-R21-D1-001 | R21 | imported: Git-aware runner selects related tests | happy path | Runner supports --changed | Related-test command recorded | unit | passed | Task 2.3 |
+| TC-R21-D1-002 | R21 | imported: Git-aware unavailable does not require complete suite | exception | No Git-aware | Limitation recorded; complete suite not required | unit | passed | Task 2.3 I2 |
+| TC-R22-D1-001 | R22 | imported: A dispatch-unit task uses focused tests | happy path | Task Step 4 | Focused + Git-aware; no full matrix | unit | passed | Task 2.2 |
+| TC-R23-D1-001 | R23 | imported: Loading templates at the top | happy path | docs-agent-instructions delta | Links not full templates | unit | passed | spec file |
+| TC-R24-D1-001 | R24 | imported: Providing file templates | happy path | schema templates remain source | AGENTS.md not required to embed fences | unit | passed | spec file |
+| TC-R25-D1-001 | R25 | imported: Highlighting common validation failures | happy path | Checklist MAY exist | `#### Scenario:` reminder kept | unit | passed | spec file |
+| TC-R26-D1-001 | R26 | imported: Organizing beginner and advanced sections | happy path | docs/workflows.md | No full Apply recipe dump | unit | passed | Task 3.3 |
+| TC-R27-D1-001 | R27 | imported: Verify with change name provided | happy path | `/sp:verify foo` | Uses foo | unit | passed | Task 3.1 |
+| TC-R27-D1-002 | R27 | imported: Verify infers a sole active change | happy path | same as R18 sole | Same expected | unit | passed | Task 3.1 |
+| TC-R27-D1-003 | R27 | imported: Verify prompts when several changes match | branch | same as R18 ambiguous | Prompt | unit | passed | Task 3.1 |
+| TC-R28-D1-001 | R28 | imported: Verify executes registered test-plan rows | happy path | Verify correctness | test-plan rows run | unit | passed | Task 3.1 |
+| TC-R28-D1-002 | R28 | imported: Verify uses Git-aware tests outside test-plan | happy path | Verify suite stage | Git-aware, not complete suite | unit | passed | Task 2.3 |
+| TC-R29-D1-001 | R29 | imported: Change has no tasks | exception | Empty tasks.md | "No tasks to verify" | unit | passed | verify template |
+| TC-R30-D1-001 | R30 | imported: First unit starts with a slice | happy path | First dispatch | Unit package only | unit | passed | Task 1.5 |
+| TC-R30-D1-002 | R30 | imported: Integration still sees the combined diff | happy path | All units done | Integrated review + gates | unit | passed | Apply |
+| TC-R31-D1-001 | R31 | imported: Main agent executes all work packages | happy path | No subagents | Inline valid | unit | passed | Task 1.5 |
+| TC-R31-D1-002 | R31 | imported: One subagent receives multiple work packages | happy path | Two compatible units | Combined assignment allowed | unit | passed | existing SDD |
+| TC-R31-D1-003 | R31 | imported: Host cannot spawn subagents | branch | No spawn | Inline; not blocked | unit | passed | Task 2.3 |
+| TC-R32-D1-001 | R32 | imported: Apply owns the integrated review | happy path | `/sp:apply` Proposal path | Apply gate is the review; no extra complete review | unit | passed | Task 1.9 |
+| TC-R32-D1-002 | R32 | imported: Direct work may still request review | branch | Direct Modification + user asks review | Dispatch allowed | unit | passed | Task 1.9 |
+| TC-R33-D1-001 | R33 | imported: Tests are checked with Git-aware selection | happy path | finishing-a-development-branch Step 1 | Git-aware; no complete npm test | unit | passed | Task 1.10 I7 |
+| TC-R33-D1-002 | R33 | imported: Integration choices remain | happy path | verification passed | merge / PR / keep / discard still offered | unit | passed | Task 1.10 |
+| TC-R34-D1-001 | R34 | imported: A failing test uses debug not explore | happy path | unit test fails | debug or direct fix; Explore not entered | unit | passed | Task 1.11 |
+| TC-R34-D1-002 | R34 | imported: Thinking through a feature uses explore | happy path | user asks to think through approaches | Explore; no production implementation | unit | passed | Task 1.11 |
+| TC-R35-D1-001 | R35 | imported: Direct edit uses Git-aware tests | happy path | Direct Modification automated tests | Git-aware; no fall closed to complete suite | unit | passed | Task 1.1 I8 |
+| TC-R35-D1-002 | R35 | imported: Direct UI still exercises the journey | branch | Direct UI path change | Journey + visual rules; not Apply lifecycle | unit | passed | Task 1.1 |
+| TC-R36-D1-001 | R36 | imported: A named compiler error is fixed without a full read | happy path | compiler names file and type | Fix without complete reference read | unit | passed | Task 1.3 |
+| TC-R36-D1-002 | R36 | imported: Unknown-cause work may still compare examples | branch | unknown cause + similar path | Compare differing slices; no every-line MUST | unit | passed | Task 1.3 |
+| TC-R37-D1-001 | R37 | imported: Authorized writes proceed without TodoWrite | happy path | user asked to create | Artifacts written; TodoWrite not required | unit | passed | Task 2.1 |
+| TC-R37-D1-002 | R37 | imported: Optional tracking does not block writes | branch | host has todo tool | Optional; missing TodoWrite does not stop | unit | passed | Task 2.1 |
+| TC-R38-D1-001 | R38 | imported: Missing directory uses project-local default | happy path | no worktree dir, no docs path | `.worktrees/` + gitignore; no prompt | unit | passed | Task 1.12 |
+| TC-R38-D1-002 | R38 | imported: Existing directory or docs still win | branch | `.worktrees/` exists | Use it after gitignore check | unit | passed | Task 1.12 |
+| TC-R39-D1-001 | R39 | imported: A draft test-plan without a 10-batch still reviews | happy path | test-plan has register, no 10-batch | Completeness does not fail for missing batches | unit | passed | Task 3.4 I9 |
+| TC-R39-D1-002 | R39 | imported: Hardening still owns 10→10→10 | exception | Apply Hardening | full-qa-test / fallback remains | unit | passed | Task 2.2 I1 |
 
 ### D2 — Code and branch coverage
 
 | ID | Object | Code Anchor | Coverage Type | Trigger Input | Expected | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-R1-D2-001 | R1 | `using-superpowers/SKILL.md` description | diff line | description field | No `starting any conversation` | unit | planned | Task 1.1 |
-| TC-R2-D2-001 | R2 | `apply-change.ts` Apply opening vs later sections | branch | generated Apply skill | Opening is an index; FQG/MC may remain later in the same generated file | unit | planned | Task 2.2 |
-| TC-R3-D2-001 | R3 | `apply-change.ts` pause list | branch false | no blocker | Continuous task loop | unit | planned | Task 2.2 |
-| TC-R4-D2-001 | R4 | `apply-change.ts` "wait for guidance" | diff line | error path | Reversible in-scope not wait | unit | planned | Task 2.2 |
-| TC-R5-D2-001 | R5 | TDD `description:` | diff line | frontmatter | Not `any feature or bugfix` | unit | planned | Task 1.2 |
-| TC-R6-D2-001 | R6 | debug `You MUST complete each phase` | diff line | root skill | Not universal MUST | unit | planned | Task 1.3 |
-| TC-R7-D2-001 | R7 | verification `FULL command` | diff line | Tests pattern | Matching-stage wording | unit | planned | Task 1.4 |
-| TC-R8-D2-001 | R8 | SDD Setup read-once | diff line | Setup section | Line removed | unit | planned | Task 1.5 |
-| TC-R9-D2-001 | R9 | `writing-plan/SKILL.md` discovery | diff line | init copy list / file moved | Not installed | unit | planned | Task 1.6 |
-| TC-R10-D2-001 | R10 | `CLAUDE.md` Skills list | diff line | file text | Bullet gone | unit | planned | Task 1.7 |
-| TC-R11-D2-001 | R11 | `AGENTS.md` + using-superpowers | diff line | both files | No GPT6-guide MUST | unit | planned | Task 1.7 I5 |
-| TC-R12-D2-001 | R12 | `PROPOSE_INTERVIEW_GUIDANCE` | diff line | propose.ts | No one-at-a-time | unit | planned | Task 2.1 |
-| TC-R13-D2-001 | R13 | three-state gate paragraph | branch | user already asked to create | Writes allowed | unit | planned | Task 2.1 |
-| TC-R15-D2-001 | R15 | Apply "Always read context files" | diff line | apply-change.ts | Slice wording | unit | planned | Task 2.2 |
-| TC-R17-D2-001 | R17 | `If the host cannot launch a subagent` | branch true | no spawn | fallback not blocked | unit | planned | Task 2.3 I3 |
-| TC-R18-D2-001 | R18 | `Do NOT guess or auto-select` | diff line | verify/archive/sync | Phrase gone; sole-change rule present | unit | planned | Task 3.1 |
-| TC-R19-D2-001 | R19 | Apply Hardening `full-qa-test` invoke | diff line | apply-change.ts | String remains | unit | planned | Task 2.2 I1 |
-| TC-R21-D2-001 | R21 | `getCanonicalNonVisualSuiteInstructions` Git-aware present | branch true | runner supports --changed | Related tests | unit | planned | Task 2.3 |
-| TC-R21-D2-002 | R21 | same helper Git-aware absent | branch false | unsupported | No complete-suite fail-closed | unit | planned | Task 2.3 I2 |
-| TC-R31-D2-001 | R31 | N/A — prose-only allocation | N/A | SDD skill | Covered by TC-R8-D2-001 / TC-R17-D2-001 | unit | planned | not applicable as extra symbol |
-| TC-R32-D2-001 | R32 | `when-to-dispatch-code-review/SKILL.md` Proposal section | diff line | skill text | Single integrated gate; no Apply retry recipe | unit | planned | Task 1.9 |
-| TC-R33-D2-001 | R33 | finishing-a-development-branch Step 1 fence | diff line | `npm test / cargo test` | Phrase gone; Git-aware present | unit | planned | Task 1.10 I7 |
-| TC-R34-D2-001 | R34 | `getExploreSkillTemplate().description` | diff line | description | No `investigating problems` | unit | planned | Task 1.11 |
-| TC-R35-D2-001 | R35 | `using-superpowers/SKILL.md` Direct Modification | diff line | `fall closed to the complete suite` | Phrase gone | unit | planned | Task 1.1 I8 |
-| TC-R36-D2-001 | R36 | debug root + `reference/` | diff line | `read every line` | Phrase gone from skill tree | unit | planned | Task 1.3 |
-| TC-R37-D2-001 | R37 | `propose.ts` TodoWrite sentence | diff line | Use the TodoWrite tool | Required loop gone | unit | planned | Task 2.1 |
-| TC-R38-D2-001 | R38 | worktrees Ask User block | diff line | `Where should I create worktrees` | Prompt gone; `.worktrees/` default | unit | planned | Task 1.12 |
-| TC-R39-D2-001 | R39 | change-review test-plan Must include | diff line | `10→10→10 run once per Requirement` | Phrase gone; Apply still has full-qa-test | unit | planned | Task 3.4 I9 |
+| TC-R1-D2-001 | R1 | `using-superpowers/SKILL.md` description | diff line | description field | No `starting any conversation` | unit | passed | Task 1.1 |
+| TC-R2-D2-001 | R2 | `apply-change.ts` Apply opening vs later sections | branch | generated Apply skill | Opening is an index; FQG/MC may remain later in the same generated file | unit | passed | Task 2.2 |
+| TC-R3-D2-001 | R3 | `apply-change.ts` pause list | branch false | no blocker | Continuous task loop | unit | passed | Task 2.2 |
+| TC-R4-D2-001 | R4 | `apply-change.ts` "wait for guidance" | diff line | error path | Reversible in-scope not wait | unit | passed | Task 2.2 |
+| TC-R5-D2-001 | R5 | TDD `description:` | diff line | frontmatter | Not `any feature or bugfix` | unit | passed | Task 1.2 |
+| TC-R6-D2-001 | R6 | debug `You MUST complete each phase` | diff line | root skill | Not universal MUST | unit | passed | Task 1.3 |
+| TC-R7-D2-001 | R7 | verification `FULL command` | diff line | Tests pattern | Matching-stage wording | unit | passed | Task 1.4 |
+| TC-R8-D2-001 | R8 | SDD Setup read-once | diff line | Setup section | Line removed | unit | passed | Task 1.5 |
+| TC-R9-D2-001 | R9 | `writing-plan/SKILL.md` discovery | diff line | init copy list / file moved | Not installed | unit | passed | Task 1.6 |
+| TC-R10-D2-001 | R10 | `CLAUDE.md` Skills list | diff line | file text | Bullet gone | unit | passed | Task 1.7 |
+| TC-R11-D2-001 | R11 | `AGENTS.md` + using-superpowers | diff line | both files | No GPT6-guide MUST | unit | passed | Task 1.7 I5 |
+| TC-R12-D2-001 | R12 | `PROPOSE_INTERVIEW_GUIDANCE` | diff line | propose.ts | No one-at-a-time | unit | passed | Task 2.1 |
+| TC-R13-D2-001 | R13 | three-state gate paragraph | branch | user already asked to create | Writes allowed | unit | passed | Task 2.1 |
+| TC-R15-D2-001 | R15 | Apply "Always read context files" | diff line | apply-change.ts | Slice wording | unit | passed | Task 2.2 |
+| TC-R17-D2-001 | R17 | `If the host cannot launch a subagent` | branch true | no spawn | fallback not blocked | unit | passed | Task 2.3 I3 |
+| TC-R18-D2-001 | R18 | `Do NOT guess or auto-select` | diff line | verify/archive/sync | Phrase gone; sole-change rule present | unit | passed | Task 3.1 |
+| TC-R19-D2-001 | R19 | Apply Hardening `full-qa-test` invoke | diff line | apply-change.ts | String remains | unit | passed | Task 2.2 I1 |
+| TC-R21-D2-001 | R21 | `getCanonicalNonVisualSuiteInstructions` Git-aware present | branch true | runner supports --changed | Related tests | unit | passed | Task 2.3 |
+| TC-R21-D2-002 | R21 | same helper Git-aware absent | branch false | unsupported | No complete-suite fail-closed | unit | passed | Task 2.3 I2 |
+| TC-R31-D2-001 | R31 | N/A — prose-only allocation | N/A | SDD skill | Covered by TC-R8-D2-001 / TC-R17-D2-001 | unit | not applicable | no extra symbol; covered by TC-R8-D2-001 / TC-R17-D2-001 |
+| TC-R32-D2-001 | R32 | `when-to-dispatch-code-review/SKILL.md` Proposal section | diff line | skill text | Single integrated gate; no Apply retry recipe | unit | passed | Task 1.9 |
+| TC-R33-D2-001 | R33 | finishing-a-development-branch Step 1 fence | diff line | `npm test / cargo test` | Phrase gone; Git-aware present | unit | passed | Task 1.10 I7 |
+| TC-R34-D2-001 | R34 | `getExploreSkillTemplate().description` | diff line | description | No `investigating problems` | unit | passed | Task 1.11 |
+| TC-R35-D2-001 | R35 | `using-superpowers/SKILL.md` Direct Modification | diff line | `fall closed to the complete suite` | Phrase gone | unit | passed | Task 1.1 I8 |
+| TC-R36-D2-001 | R36 | debug root + `reference/` | diff line | `read every line` | Phrase gone from skill tree | unit | passed | Task 1.3 |
+| TC-R37-D2-001 | R37 | `propose.ts` TodoWrite sentence | diff line | Use the TodoWrite tool | Required loop gone | unit | passed | Task 2.1 |
+| TC-R38-D2-001 | R38 | worktrees Ask User block | diff line | `Where should I create worktrees` | Prompt gone; `.worktrees/` default | unit | passed | Task 1.12 |
+| TC-R39-D2-001 | R39 | change-review test-plan Must include | diff line | `10→10→10 run once per Requirement` | Phrase gone; Apply still has full-qa-test | unit | passed | Task 3.4 I9 |
 
 Objects R14, R16, R20, R22–R30 without unique symbols: D2 N/A — behavior is the D1 string/contract; no extra branch. Stop reason: unique anchors exhausted in batch 1.
 
@@ -267,10 +267,10 @@ Instruction files are not parameterized APIs. Unique inputs are change-name stri
 
 | ID | Object | Parameter | Class | Sample Input | Expected | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-R18-D3-001 | R18 | change name | empty | `` (omitted) + 1 active | Auto-select | unit | planned | Task 3.1 |
-| TC-R18-D3-002 | R18 | change name | empty | `` + 2 active | Prompt | unit | planned | Task 3.1 |
-| TC-R27-D3-001 | R27 | change name | valid | `slim-agent-instruction-ceremony` | Use that name | unit | planned | Task 3.1 |
-| TC-R29-D3-001 | R29 | tasks.md | empty | no checkboxes | No tasks to verify | unit | planned | verify template |
+| TC-R18-D3-001 | R18 | change name | empty | `` (omitted) + 1 active | Auto-select | unit | passed | Task 3.1 |
+| TC-R18-D3-002 | R18 | change name | empty | `` + 2 active | Prompt | unit | passed | Task 3.1 |
+| TC-R27-D3-001 | R27 | change name | valid | `slim-agent-instruction-ceremony` | Use that name | unit | passed | Task 3.1 |
+| TC-R29-D3-001 | R29 | tasks.md | empty | no checkboxes | No tasks to verify | unit | passed | verify template |
 
 All other objects: D3 `not applicable` — no extra input classes beyond imported scenarios. Stop: unique parameters exhausted.
 
@@ -278,11 +278,11 @@ All other objects: D3 `not applicable` — no extra input classes beyond importe
 
 | ID | Object | State / Timing Scenario | Legal? | Operation Sequence | Expected | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-R13-D4-001 | R13 | request-create -> write artifacts | yes | user asks to create → summary → write | No extra confirm state required | unit | planned | Task 2.1 |
-| TC-R15-D4-001 | R15 | implement -> hardening | yes | tasks done → read test-plan | Hardening not skipped | unit | planned | Task 2.2 |
-| TC-R17-D4-001 | R17 | code review -> simplify -> verify -> design-verify | yes | spawn available | Order unchanged | unit | planned | Task 2.3 |
-| TC-R18-D4-001 | R18 | verify auto-select -> archive failed gates | no silent archive | auto-select then archive with failed gates | Warn + confirm | unit | planned | Task 3.1 |
-| TC-R3-D4-001 | R3 | task N complete -> task N+1 | yes | mark checkbox → next task | No continue question | unit | planned | Task 2.2 |
+| TC-R13-D4-001 | R13 | request-create -> write artifacts | yes | user asks to create → summary → write | No extra confirm state required | unit | passed | Task 2.1 |
+| TC-R15-D4-001 | R15 | implement -> hardening | yes | tasks done → read test-plan | Hardening not skipped | unit | passed | Task 2.2 |
+| TC-R17-D4-001 | R17 | code review -> simplify -> verify -> design-verify | yes | spawn available | Order unchanged | unit | passed | Task 2.3 |
+| TC-R18-D4-001 | R18 | verify auto-select -> archive failed gates | no silent archive | auto-select then archive with failed gates | Warn + confirm | unit | passed | Task 3.1 |
+| TC-R3-D4-001 | R3 | task N complete -> task N+1 | yes | mark checkbox → next task | No continue question | unit | passed | Task 2.2 |
 
 Other objects: D4 `not applicable` — no runtime state machine. Stop: unique transitions exhausted.
 
@@ -290,10 +290,10 @@ Other objects: D4 `not applicable` — no runtime state machine. Stop: unique tr
 
 | ID | Object | Quality Attribute | Scenario | Pass Criteria | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-R4-D5-001 | R4 | safety | force push / history rewrite | Must pause | unit | planned | Task 2.2 |
-| TC-R11-D5-001 | R11 | compatibility | stronger instruction-following models | No extra Astra ruleset | unit | planned | Task 1.7 |
-| TC-R17-D5-001 | R17 | resilience | host spawn missing | Gate still runs via fallback | unit | planned | Task 2.3 |
-| TC-R21-D5-001 | R21 | performance | complete-suite temptation | Git-aware or recorded skip, not full suite | unit | planned | Task 2.3 |
+| TC-R4-D5-001 | R4 | safety | force push / history rewrite | Must pause | unit | passed | Task 2.2 |
+| TC-R11-D5-001 | R11 | compatibility | stronger instruction-following models | No extra Astra ruleset | unit | passed | Task 1.7 |
+| TC-R17-D5-001 | R17 | resilience | host spawn missing | Gate still runs via fallback | unit | passed | Task 2.3 |
+| TC-R21-D5-001 | R21 | performance | complete-suite temptation | Git-aware or recorded skip, not full suite | unit | passed | Task 2.3 |
 
 Other objects: D5 `not applicable` — no authz/SLO surface. Stop: unique attributes exhausted.
 
@@ -301,9 +301,9 @@ Other objects: D5 `not applicable` — no authz/SLO surface. Stop: unique attrib
 
 | ID | Object | Dependency | Fault Injection | Expected Isolation / Compensation | Form | Status | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-R17-D6-001 | R17 | host subagent spawn | spawn API absent | same-context fallback labeled | unit | planned | Task 2.3 |
-| TC-R21-D6-001 | R21 | test runner Git-aware flags | flags unsupported | record limitation; test-plan rows still run | unit | planned | Task 2.3 |
-| TC-R19-D6-001 | R19 | full-qa-test skill file | skill absent | six-dimension fallback still in Apply | unit | planned | Task 2.2 |
+| TC-R17-D6-001 | R17 | host subagent spawn | spawn API absent | same-context fallback labeled | unit | passed | Task 2.3 |
+| TC-R21-D6-001 | R21 | test runner Git-aware flags | flags unsupported | record limitation; test-plan rows still run | unit | passed | Task 2.3 |
+| TC-R19-D6-001 | R19 | full-qa-test skill file | skill absent | six-dimension fallback still in Apply | unit | passed | Task 2.2 |
 
 Other objects: D6 `not applicable` — no network/DB. Stop: unique dependencies exhausted.
 
@@ -311,12 +311,12 @@ Other objects: D6 `not applicable` — no network/DB. Stop: unique dependencies 
 
 | Dimension | Must-check items | Status | Case IDs / Rationale |
 | --- | --- | --- | --- |
-| D1 Requirements and business scenarios | Imported spec Scenarios | planned | All imported scenarios have TC-R*-D1-* IDs. 10→10→10 batch 1 exhausted unique cases. |
-| D2 Code and branch coverage | Diff anchors on skills/templates | planned | Unique file:symbol rows listed; remaining objects N/A as D1-only prose. Mutation deferred. |
-| D3 Data and input space | Change-name empty/valid | planned | R18/R27/R29 only; others N/A no parameters |
-| D4 State transitions and timing | Propose write auth, Apply stages, gate order, archive warning | planned | TC-R13-D4-001, TC-R15-D4-001, TC-R17-D4-001, TC-R18-D4-001, TC-R3-D4-001 |
-| D5 Non-functional and fault tolerance | Irreversible git, no Astra ruleset, spawn fallback, no complete suite | planned | TC-R4-D5-001, TC-R11-D5-001, TC-R17-D5-001, TC-R21-D5-001 |
-| D6 Environment and dependencies | Spawn missing, Git-aware missing, full-qa-test missing | planned | TC-R17-D6-001, TC-R21-D6-001, TC-R19-D6-001 |
+| D1 Requirements and business scenarios | Imported spec Scenarios | passed | All imported scenarios have TC-R*-D1-* IDs. 10→10→10 batch 1 exhausted unique cases. |
+| D2 Code and branch coverage | Diff anchors on skills/templates | passed | Unique file:symbol rows listed; remaining objects N/A as D1-only prose. Mutation 5/5 killed (see Mutation Testing). |
+| D3 Data and input space | Change-name empty/valid | passed | R18/R27/R29 only; others N/A no parameters |
+| D4 State transitions and timing | Propose write auth, Apply stages, gate order, archive warning | passed | TC-R13-D4-001, TC-R15-D4-001, TC-R17-D4-001, TC-R18-D4-001, TC-R3-D4-001 |
+| D5 Non-functional and fault tolerance | Irreversible git, no Astra ruleset, spawn fallback, no complete suite | passed | TC-R4-D5-001, TC-R11-D5-001, TC-R17-D5-001, TC-R21-D5-001 |
+| D6 Environment and dependencies | Spawn missing, Git-aware missing, full-qa-test missing | passed | TC-R17-D6-001, TC-R21-D6-001, TC-R19-D6-001 |
 
 ### Requirement × Dimension Coverage
 
@@ -366,15 +366,25 @@ Other objects: D6 `not applicable` — no network/DB. Stop: unique dependencies 
 
 | Scope | Mutation Score | Surviving Mutants | Follow-Up Case IDs / Equivalence Rationale |
 | --- | --- | --- | --- |
-| deferred — instruction-string change; no production runtime to mutate until unit pins exist and are green | n/A | n/A | Defer to Hardening after Task 4.1 pins are executable. Target `final-quality-gates.ts` helpers if a mutator is available. |
+| `getCanonicalNonVisualSuiteInstructions` / `getFinalQualityGateInstructions` / Apply `full-qa-test` bind | 5/5 (100%) | none | Manual operator: rewrite I1/I2/I3 contract sentences, then `pnpm exec vitest run` owner tests. M1 `git-aware-unavailable-recorded` → skip-ok killed by TC-R21-D2-002; M2 complete-suite-as-pass killed by TC-R21-D1-002; M3 `same-context fallback` killed by TC-R17-D2-001; M4 missing-spawn-is-blocked killed by TC-R17-D1-002; M5 `full-qa-test` → optional-qa-pass killed by TC-R19-D1-001. No Stryker in repo; targeted string mutants on instruction helpers. |
+
+## Git-aware suite preflight (Test Hardening)
+
+- Runner capability: Vitest `--changed` (`pnpm exec vitest --help`).
+- Git baseline: merge-base `HEAD` `origin/main` = `bd92646d1ecf5f35f7f87c0d17cb1a84e5ad2c33`.
+- Command: `pnpm exec vitest run --changed origin/main`
+- Result: 38 files / 481 tests passed. Suite-stage state: `ran-git-aware`.
+- Types: `pnpm exec tsc --noEmit` passed. `node bin/superpowers.js validate slim-agent-instruction-ceremony` passed.
+- Did not run the complete canonical suite as a pass. Registered test-plan rows ran as part of the related selection.
+- Supplemental pins this stage: Propose optional three-state UX (`A host MAY still offer three semantic outcomes as optional UX`) in `skill-generation.test.ts`, `adapters.test.ts`, `update.test.ts`; unique I2/I3 sentences in `final-quality-gates.test.ts`.
 
 ## Manual Coverage
 
 | ID | Check / Scenario | Execution Method and Environment | Status | Evidence |
 | --- | --- | --- | --- | --- |
-| MC-R12-001 | Author reads generated Propose skill after TS edit and confirms batched questions + create-authorizes-write | cli; open generated skill file | planned | file excerpt |
-| MC-R15-001 | Author reads generated Apply skill and confirms current-unit loading + full-qa-test Hardening bind | cli | planned | file excerpt |
-| MC-R17-001 | Author reads Final Quality Gates text for same-context fallback label | cli | planned | file excerpt |
+| MC-R12-001 | Author reads generated Propose skill after TS edit and confirms batched questions + create-authorizes-write | cli; open generated skill file | passed | `.cursor/skills/superpowers-propose/SKILL.md`: `present them together`; `An explicit create request`; `A host MAY still offer three semantic outcomes as optional UX`; `never labeled as user Choices` |
+| MC-R15-001 | Author reads generated Apply skill and confirms current-unit loading + full-qa-test Hardening bind | cli | passed | `.cursor/skills/superpowers-apply-change/SKILL.md`: `current dispatch unit`; `full-qa-test`; `**10** test cases` fallback; `git-aware-unavailable-recorded` |
+| MC-R17-001 | Author reads Final Quality Gates text for same-context fallback label | cli | passed | `.cursor/skills/superpowers-apply-change/SKILL.md` and `sp-apply.md`: label review mode `same-context fallback`; missing spawn is not by itself gate outcome `blocked` |
 
 No UI Critical Path. `agent-browser` not applicable.
 
@@ -383,14 +393,14 @@ No UI Critical Path. `agent-browser` not applicable.
 | Gap | Reason Deferred | Safer Alternative / Follow-Up |
 | --- | --- | --- |
 | Live multi-host spawn vs fallback E2E | Requires Cursor and a spawn-less host | Unit string pins + MC-R17-001 |
-| Mutation of `final-quality-gates.ts` | No green unit suite yet | Hardening after Task 4.1 |
+| Live mutation framework (Stryker) | No mutator package in repo | Targeted manual mutants recorded above; 5/5 killed |
 | Syncing `.cursor/skills/full-qa-test/SKILL.md` | User excluded this file | `skills/full-qa-test/SKILL.md` remains source |
 
 ## Final Quality Gates
 
 | Gate | Outcome | Fresh worker evidence |
 | --- | --- | --- |
-| code review | planned | |
-| `/sp:simplify` | planned | |
-| `/sp:verify` | planned | |
-| `/sp:design-verify` | planned | Non-UI instruction change; expect `not applicable` with scope evidence |
+| code review | passed | Round 1, review mode `fresh-worker`, worker `40119419-b693-406c-81a7-7050cdea5cb5`. Inspected `git diff HEAD` + untracked owned paths (not `origin/main..HEAD`). Findings: none. I1–I9 preserved. Cursor `full-qa-test` vs HEAD unchanged. Implementation unchanged. Ready for Simplify. |
+| `/sp:simplify` | passed | Round 1, review mode `fresh-worker` with internal four-agent fan-out, worker `09d8f6a2-e2fa-412e-9df6-01ea4b682db5`. Applied: flatten `change-targeting.ts` eligibility/extra lookups; emitted targeting strings unchanged. Skipped I1–I9 wording and dual projections. Focused vitest 7 files / 103 tests passed. Changed implementation: yes. Handoff: Verify round 1. |
+| `/sp:verify` | passed | Round 1, review mode `fresh-worker`, worker `287612ae-5411-4f09-abce-8012af4ee56e`. `pnpm exec vitest run --changed origin/main`: 38 files / 481 tests, `ran-git-aware`, merge-base `bd92646d1ecf5f35f7f87c0d17cb1a84e5ad2c33`. `tsc --noEmit` and `superpowers validate` passed. MC-R12/15/17 passed. P0 none. Accepted P1 RM-1: SDD description narrowed to `/sp:apply` dispatch (Work Mode block kept; owner tests still pin it). Accepted P2: `docs/workflows.md` artifact-template index; Explore checkpoint sentence completed (not deleted; debug-checkpoint alignment tests still require the summary). Rejected P2 worktrees complete-suite baseline: Task 1.12 / I7 do not own worktree bootstrap verification. Coordinator repairs validated: focused 7 files / 38 tests passed. No P0 → no Verify retry. |
+| `/sp:design-verify` | not applicable | Round 1, review mode `fresh-worker`, worker `36c60bb5-719d-45bc-b937-9789919edd3f`. Owned diff is `.md` / `.ts` / `.snap` only; UI suffix list empty; no app routes. test-plan: no UI Critical Path. Before summary: not applicable. No runtime, no screenshots. Findings: none. Implementation unchanged. |

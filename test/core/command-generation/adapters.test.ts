@@ -53,12 +53,12 @@ describe('command-generation/adapters', () => {
     const adapters = [claudeAdapter, cursorAdapter, windsurfAdapter];
 
     expect(propose.body).toContain('Before any change creation or artifact write');
-    expect(propose.body).toContain('Offer exactly three semantic final outcomes');
+    expect(propose.body).toContain('A host MAY still offer three semantic outcomes as optional UX');
 
     for (const adapter of adapters) {
       const formatted = adapter.formatFile(propose);
       expect(formatted).toContain('Before any change creation or artifact write');
-      expect(formatted).toContain('Offer exactly three semantic final outcomes');
+      expect(formatted).toContain('A host MAY still offer three semantic outcomes as optional UX');
       expect(adapter.getFilePath('propose')).toContain('propose');
     }
   });

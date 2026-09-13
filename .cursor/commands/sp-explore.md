@@ -2,7 +2,7 @@
 name: /sp-explore
 id: sp-explore
 category: Workflow
-description: "Enter explore mode - think through ideas, investigate problems, clarify requirements"
+description: "Enter explore mode - think through ideas, scope, or requirements without implementing"
 ---
 
 Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
@@ -18,7 +18,7 @@ Enter explore mode. Think deeply. Visualize freely. Follow the conversation wher
 
 Use a Debug Checkpoint when exploration spans multiple turns, context compaction,
 a fresh-worker handoff, or a reread loop. Once active, update it after a decisive experiment, a phase close, and
-before handoff. The checkpoint is the recovery source of truth; 
+before handoff. The checkpoint is the recovery source of truth; do not reconstruct the investigation from chat. Unknown-cause failures still belong to systematic-debugging, not Explore.
 
 
 

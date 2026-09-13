@@ -5,7 +5,8 @@
  * templates file into workflow-focused modules.
  */
 import type { SkillTemplate, CommandTemplate } from '../types.js';
-import { pick, type Projection } from './projection.js';
+import { getChangeTargetingInput, getChangeTargetingStep } from './change-targeting.js';
+import type { Projection } from './projection.js';
 
 const ARCHIVE_EXTRA_OUTPUTS = `
 **Output On Success (No Delta Specs)**
@@ -62,18 +63,11 @@ function buildArchiveInstructions(p: Projection): string {
 
   return `Archive a completed change in the workflow.
 
-**Input**: Optionally specify a change name${pick(p, '', ' after \`/sp:archive\` (e.g., \`/sp:archive add-auth\`)')}. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
+${getChangeTargetingInput('archive', p)}
 
 **Steps**
 
-1. **If no change name provided, prompt for selection**
-
-   Run \`superpowers list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
-
-   Show only active changes (not already archived).
-   Include the schema used for each change if available.
-
-   **IMPORTANT**: Do NOT guess or auto-select a change. Always let the user choose.
+${getChangeTargetingStep('archive')}
 
 2. **Check artifact completion status**
 
@@ -169,7 +163,7 @@ All artifacts complete. All tasks complete.
 \`\`\`
 ${ARCHIVE_EXTRA_OUTPUTS}
 **Guardrails**
-- Always prompt for change selection if not provided
+- Prompt for change selection only when two or more eligible changes could match
 - Use artifact graph (superpowers status --json) for completion checking
 - Check the \`## Final Quality Gates\` record in \`test-plan.md\` before archiving; never treat a missing record as a passing quality chain
 - Don't block archive on warnings - just inform and confirm
