@@ -1,6 +1,6 @@
 ---
 name: full-qa-test
-description: Use when designing comprehensive test coverage, writing comprehensive test plans or cases for features, hunting edge cases before release, or when the user asks for 无死角/全覆盖/六维测试/QA 拆解
+description: Use when Test Hardening starts, or when the user asks for 无死角/全覆盖/六维测试/QA 拆解. Do not use for ordinary focused unit tests or Apply task-level tests.
 ---
 
 # Full QA Test — 六维立体覆盖

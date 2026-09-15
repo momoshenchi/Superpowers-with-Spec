@@ -3,9 +3,10 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
-  getApplyChangeSkillTemplate,
+  getApplyChangeReferences,
   getChangeReviewSkillTemplate,
   getSpVerifyCommandTemplate,
+  getVerifyChangeReferences,
   getVerifyChangeSkillTemplate,
 } from '../../../src/core/templates/skill-templates.js';
 import { getFinalQualityGateInstructions } from '../../../src/core/templates/workflows/final-quality-gates.js';
@@ -51,9 +52,12 @@ describe('invariants and remediations conventions', () => {
 
   it('Final Quality Gates require remediations before accepted code-review/Verify P0/P1 repairs', () => {
     const fqg = getFinalQualityGateInstructions();
-    const apply = getApplyChangeSkillTemplate().instructions;
+    const applyFqg =
+      getApplyChangeReferences().find((file) =>
+        file.relativePath.endsWith('final-quality-gates.md')
+      )?.content ?? '';
 
-    for (const content of [fqg, apply]) {
+    for (const content of [fqg, applyFqg]) {
       expect(content).toContain('remediations.md');
       expect(content).toMatch(/create or append|create\/append|create-or-append/i);
       expect(content).toMatch(/before .*edit|before implementation/i);
@@ -71,8 +75,14 @@ describe('invariants and remediations conventions', () => {
   });
 
   it('Verify probes change-dir remediations and treats invariant owner-check failure as P0', () => {
-    const verify = getVerifyChangeSkillTemplate().instructions;
-    const verifyCmd = getSpVerifyCommandTemplate().content;
+    const verify = [
+      getVerifyChangeSkillTemplate().instructions,
+      ...getVerifyChangeReferences().map((file) => file.content),
+    ].join('\n');
+    const verifyCmd = [
+      getSpVerifyCommandTemplate().content,
+      ...getVerifyChangeReferences().map((file) => file.content),
+    ].join('\n');
 
     for (const content of [verify, verifyCmd]) {
       expect(content).toContain('## Invariants');

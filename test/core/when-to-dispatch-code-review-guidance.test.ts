@@ -3,7 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const review = readFileSync(
-  path.join(process.cwd(), 'skills/when-to-dispatch-code-review/SKILL.md'),
+  path.join(process.cwd(), 'skills/using-superpowers/SKILL.md'),
   'utf8'
 );
 

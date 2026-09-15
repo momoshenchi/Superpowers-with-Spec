@@ -216,8 +216,59 @@ Old instructions content
         await FileSystemUtils.fileExists(
           path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
         )
-      ).toBe(true);
+      ).toBe(false);
       expect(await FileSystemUtils.directoryExists(obsoleteReviewSkillDir)).toBe(false);
+    });
+
+    it('removes leftover retired skill dirs even when SKILL.md is missing', async () => {
+      const skillsDir = path.join(testDir, '.claude', 'skills');
+      await fs.mkdir(path.join(skillsDir, 'superpowers-explore'), { recursive: true });
+      await fs.writeFile(path.join(skillsDir, 'superpowers-explore', 'SKILL.md'), 'old');
+
+      for (const name of [
+        'verification-before-completion',
+        'subagent-driven-development',
+        'when-to-dispatch-code-review',
+      ]) {
+        await fs.mkdir(path.join(skillsDir, name), { recursive: true });
+      }
+      await fs.writeFile(
+        path.join(skillsDir, 'verification-before-completion', 'SKILL.md'),
+        'leftover'
+      );
+
+      await updateCommand.execute(testDir);
+
+      for (const name of [
+        'verification-before-completion',
+        'subagent-driven-development',
+        'when-to-dispatch-code-review',
+      ]) {
+        expect(await FileSystemUtils.directoryExists(path.join(skillsDir, name))).toBe(false);
+      }
+    });
+
+    it('removes leftover host-map and debug debris from installed live skills', async () => {
+      const skillsDir = path.join(testDir, '.claude', 'skills');
+      await fs.mkdir(path.join(skillsDir, 'superpowers-explore'), { recursive: true });
+      await fs.writeFile(path.join(skillsDir, 'superpowers-explore', 'SKILL.md'), 'old');
+
+      const leftovers = [
+        path.join(skillsDir, 'using-superpowers', 'reference', 'codex-tools.md'),
+        path.join(skillsDir, 'using-superpowers', 'reference', 'gemini-tools.md'),
+        path.join(skillsDir, 'systematic-debugging', 'CREATION-LOG.md'),
+        path.join(skillsDir, 'systematic-debugging', 'test-pressure-1.md'),
+      ];
+      for (const filePath of leftovers) {
+        await fs.mkdir(path.dirname(filePath), { recursive: true });
+        await fs.writeFile(filePath, 'leftover');
+      }
+
+      await updateCommand.execute(testDir);
+
+      for (const filePath of leftovers) {
+        expect(await FileSystemUtils.fileExists(filePath)).toBe(false);
+      }
     });
   });
 
@@ -331,7 +382,7 @@ Old instructions content
           await FileSystemUtils.fileExists(
             path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
           )
-        ).toBe(true);
+        ).toBe(false);
         expect(
           await FileSystemUtils.directoryExists(path.join(skillsDir, 'requesting-code-review'))
         ).toBe(false);
@@ -663,7 +714,7 @@ Old instructions content
         await FileSystemUtils.fileExists(
           path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
         )
-      ).toBe(true);
+      ).toBe(false);
     });
 
     it('should refresh bundled static skills for commands-only up-to-date tools', async () => {
@@ -687,7 +738,7 @@ Old instructions content
         await FileSystemUtils.fileExists(
           path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
         )
-      ).toBe(true);
+      ).toBe(false);
     });
 
     it('should refresh bundled static skills for every up-to-date configured tool', async () => {
@@ -716,7 +767,7 @@ Old instructions content
           await FileSystemUtils.fileExists(
             path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
           )
-        ).toBe(true);
+        ).toBe(false);
       }
     });
 
@@ -742,7 +793,7 @@ Old instructions content
         await FileSystemUtils.fileExists(
           path.join(cursorSkillsDir, 'when-to-dispatch-code-review', 'SKILL.md')
         )
-      ).toBe(true);
+      ).toBe(false);
     });
 
     it('should detect update needed when generatedBy is missing', async () => {
@@ -1622,10 +1673,18 @@ More user content after markers.
         path.join(commandsDir, 'explore.md')
       )).toBe(true);
 
-      // Skills should be removed for commands-only delivery
+      // Catalog skills should be removed for commands-only delivery
       expect(await FileSystemUtils.fileExists(
         path.join(skillsDir, 'superpowers-explore', 'SKILL.md')
       )).toBe(false);
+
+      const applyHardening = path.join(
+        skillsDir,
+        'superpowers-apply-change',
+        'reference',
+        'test-hardening.md'
+      );
+      expect(await FileSystemUtils.fileExists(applyHardening)).toBe(true);
     });
 
     it('should remove skills for configured tools without command adapters in commands-only delivery', async () => {

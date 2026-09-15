@@ -62,7 +62,7 @@ const expectContract = (content: string) => {
 
 describe('debug investigation checkpoint guidance', () => {
   it('defines the evidence-rich checkpoint contract in systematic debugging', () => {
-    const skill = readWorkspaceFile('skills', 'systematic-debugging', 'SKILL.md');
+    const skill = readWorkspaceFile('skills', 'systematic-debugging', 'reference', 'four-phase-and-checkpoint.md');
 
     expectContract(skill);
     expect(skill).toContain('Track statuses');
@@ -120,7 +120,7 @@ describe('debug investigation checkpoint guidance', () => {
     const sourceReference = path.resolve(checkpointRoot, '..', 'src', 'mapper.ts');
     const imageReference = path.resolve(checkpointRoot, '..', 'artifacts', 'status.png');
     const windowsDisplayPath = String.raw`C:\workspace\debug-checkpoints\incident\checkpoint.md`;
-    const skill = readWorkspaceFile('skills', 'systematic-debugging', 'SKILL.md');
+    const skill = readWorkspaceFile('skills', 'systematic-debugging', 'reference', 'four-phase-and-checkpoint.md');
 
     expect(checkpointPath).toBe(path.join('debug-checkpoints', 'incident', 'checkpoint.md'));
     expect(path.isAbsolute(sourceReference)).toBe(true);
@@ -138,8 +138,9 @@ describe('debug investigation checkpoint guidance', () => {
   it('includes a compaction/no-progress pressure scenario', () => {
     const scenarioPath = path.join(
       process.cwd(),
-      'skills',
-      'systematic-debugging',
+      'docs',
+      'archive',
+      'systematic-debugging-authoring',
       'test-pressure-4.md'
     );
 

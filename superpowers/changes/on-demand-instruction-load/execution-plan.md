@@ -98,6 +98,9 @@
 4. **Step 4: Run focused verification** — Re-run Step 2. Then Git-related tests when the runner supports Git-aware selection; do not require the full suite. Record the passing result (this task: failing tests exist). If a new failure appears outside this task's test, name it — do not silently expand the diff to chase it.
 5. **Step 5: Self-review and handoff** — Confirm the Step 1 assertions fail for the right reason (old descriptions/hook/Apply still present).
 
+#### Implementation Notes
+SessionStart source never contained the router body; the live defect was `cat SKILL.md`. The 1.1 suite asserts both the cat path and the mode-selection string so the pin fails for the right reason.
+
 #### Task 1.2: Narrow remaining catalog descriptions
 
 **Files:**
@@ -334,6 +337,9 @@
 4. **Step 4: Run focused verification** — Re-run Step 2.
 5. **Step 5: Self-review and handoff** — Router still contains Direct vs Proposal.
 
+#### Implementation Notes
+Companions are emitted from TS via `writeGeneratedSkill` / `skillReferenceDest` (`path.join` on split segments). Missing companions stay `blocked` in the Apply index; they are not inlined. TDD/debug/router roots keep when-to-use; procedure bodies live under `reference/`.
+
 ### 3. Collapse overlapping owners
 
 #### Task 3.1: Add failing retirement and conflict tests
@@ -441,6 +447,9 @@
 4. **Step 4: Run focused verification** — Re-run Step 2.
 5. **Step 5: Self-review and handoff** — `skills/using-superpowers/reference/` still has `schema-and-workload.md` and `code-reviewer.md`.
 
+#### Implementation Notes
+Retired VBC/SDD/when-to-dispatch live under `docs/archive/retired-skills/`. Host maps and debug authoring debris moved to `docs/archive/`. `OBSOLETE_BUNDLED_SKILL_DIRS` is shared by init and update. Apply Guardrails lost the two conflict sentences with no replacement clarification.
+
 ### 4. Pins and projections
 
 #### Task 4.1: Retarget guidance tests to new owners
@@ -496,5 +505,8 @@
    - **Out of scope:** DRY rewrite.
 4. **Step 4: Run focused verification** — Re-run parity, stage-file-disclosure, ownership-collapse, skill-trigger-narrowing, then Git-aware related tests.
 5. **Step 5: Self-review and handoff** — I1–I8 green; D leftovers still present on purpose.
+
+#### Implementation Notes
+Parity now asserts Apply/Propose/Verify contracts against root + `references` catalog so companions can hold recipes without dumping them back into the index. Cursor projections refreshed through the existing generate path; `.cursor/skills/full-qa-test/SKILL.md` was not edited.
 
 Workers MAY append `#### Implementation Notes` under any Step 1–5 when the implementation produces a useful finding. Notes are non-normative and do not replace `tasks.md` checkboxes.

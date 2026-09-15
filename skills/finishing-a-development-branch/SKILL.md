@@ -1,6 +1,6 @@
 ---
 name: finishing-a-development-branch
-description: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup
+description: Use when the user asks to merge, open a PR, keep the branch, or discard it. Do not use solely because tests passed or Apply finished.
 ---
 
 # Finishing a Development Branch
@@ -17,7 +17,7 @@ Guide completion of development work by presenting clear options and handling ch
 
 ### Step 1: Verify Tests
 
-**Before presenting options, verify matching-stage tests pass.** Use Git-aware related tests when the runner supports them. If Git-aware selection is unavailable, use the same recorded non-`test-plan` suite stage as Hardening/Verify and record that limitation. Do not require a complete project-wide test command. See `verification-before-completion` for matching-stage evidence. Empty related selection is not a pass.
+**Before presenting options, verify matching-stage tests pass.** Use Git-aware related tests when the runner supports them. If Git-aware selection is unavailable, use the same recorded non-`test-plan` suite stage as Hardening/Verify and record that limitation. Do not require a complete project-wide test command. See `using-superpowers` for matching-stage evidence. Empty related selection is not a pass.
 
 **If related tests fail:**
 ```
@@ -188,7 +188,6 @@ git worktree remove <worktree-path>
 ## Integration
 
 **Called by:**
-- **subagent-driven-development**  - After all tasks complete
 - **apply-change**  - After all batches complete
 
 **Pairs with:**

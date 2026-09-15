@@ -22,8 +22,11 @@ import {
   getToolVersionStatus,
   getSkillTemplates,
   getCommandContents,
-  generateSkillContent,
+  writeGeneratedSkills,
+  companionSkillTemplates,
   getToolsWithSkillsDir,
+  removeObsoleteBundledSkillDirs,
+  removeObsoleteBundledSkillFiles,
   type ToolVersionStatus,
 } from './shared/index.js';
 import {
@@ -51,7 +54,6 @@ import {
 
 const require = createRequire(import.meta.url);
 const { version: SUPERPOWERS_VERSION } = require('../../package.json');
-const OBSOLETE_BUNDLED_SKILL_DIRS = ['requesting-code-review'] as const;
 
 /**
  * Options for the update command.
@@ -184,7 +186,7 @@ export class UpdateCommand {
     console.log();
 
     // 9. Determine what to generate based on delivery
-    const skillTemplates = shouldGenerateSkills ? getSkillTemplates(desiredWorkflows) : [];
+    const skillTemplates = getSkillTemplates(desiredWorkflows);
     const commandContents = shouldGenerateCommands ? getCommandContents(desiredWorkflows) : [];
 
     // 10. Update tools (all if force, otherwise only those needing update)
@@ -205,24 +207,25 @@ export class UpdateCommand {
       try {
         const skillsDir = path.join(resolvedProjectPath, tool.skillsDir, 'skills');
 
-        // Generate skill files if delivery includes skills
-        if (shouldGenerateSkills) {
-          for (const { template, dirName } of skillTemplates) {
-            const skillDir = path.join(skillsDir, dirName);
-            const skillFile = path.join(skillDir, 'SKILL.md');
+        const templatesToWrite = shouldGenerateSkills
+          ? skillTemplates
+          : companionSkillTemplates(skillTemplates);
 
-            // Use hyphen-based command references for OpenCode
-            const transformer = tool.value === 'opencode' ? transformToHyphenCommands : undefined;
-            const skillContent = generateSkillContent(template, SUPERPOWERS_VERSION, transformer);
-            await FileSystemUtils.writeFile(skillFile, skillContent);
-          }
-
-          removedDeselectedSkillCount += await this.removeUnselectedSkillDirs(skillsDir, desiredWorkflows);
-        }
-
-        // Delete skill directories if delivery is commands-only
         if (!shouldGenerateSkills) {
           removedSkillCount += await this.removeSkillDirs(skillsDir);
+        }
+        if (templatesToWrite.length > 0) {
+          await writeGeneratedSkills(
+            skillsDir,
+            templatesToWrite,
+            SUPERPOWERS_VERSION,
+            FileSystemUtils.writeFile.bind(FileSystemUtils),
+            tool.value === 'opencode' ? transformToHyphenCommands : undefined
+          );
+        }
+
+        if (shouldGenerateSkills) {
+          removedDeselectedSkillCount += await this.removeUnselectedSkillDirs(skillsDir, desiredWorkflows);
         }
 
         // Generate commands if delivery includes commands
@@ -420,15 +423,11 @@ export class UpdateCommand {
     if (!fs.existsSync(bundledSkillsDir)) return;
 
     const destSkillsDir = path.join(projectPath, toolSkillsDir, 'skills');
-    for (const obsoleteDirName of OBSOLETE_BUNDLED_SKILL_DIRS) {
-      await fs.promises.rm(path.join(destSkillsDir, obsoleteDirName), {
-        recursive: true,
-        force: true,
-      });
-    }
+    await removeObsoleteBundledSkillDirs(destSkillsDir);
 
     await fs.promises.mkdir(destSkillsDir, { recursive: true });
     await fs.promises.cp(bundledSkillsDir, destSkillsDir, { recursive: true });
+    await removeObsoleteBundledSkillFiles(destSkillsDir);
   }
 
   private async refreshBundledStaticSkills(
@@ -704,7 +703,7 @@ export class UpdateCommand {
     const newlyConfigured: string[] = [];
     const shouldGenerateSkills = delivery !== 'commands';
     const shouldGenerateCommands = delivery !== 'skills';
-    const skillTemplates = shouldGenerateSkills ? getSkillTemplates(desiredWorkflows) : [];
+    const skillTemplates = getSkillTemplates(desiredWorkflows);
     const commandContents = shouldGenerateCommands ? getCommandContents(desiredWorkflows) : [];
 
     for (const toolId of selectedTools) {
@@ -715,18 +714,18 @@ export class UpdateCommand {
 
       try {
         const skillsDir = path.join(projectPath, tool.skillsDir, 'skills');
+        const templatesToWrite = shouldGenerateSkills
+          ? skillTemplates
+          : companionSkillTemplates(skillTemplates);
 
-        // Create skill files when delivery includes skills
-        if (shouldGenerateSkills) {
-          for (const { template, dirName } of skillTemplates) {
-            const skillDir = path.join(skillsDir, dirName);
-            const skillFile = path.join(skillDir, 'SKILL.md');
-
-            // Use hyphen-based command references for OpenCode
-            const transformer = tool.value === 'opencode' ? transformToHyphenCommands : undefined;
-            const skillContent = generateSkillContent(template, SUPERPOWERS_VERSION, transformer);
-            await FileSystemUtils.writeFile(skillFile, skillContent);
-          }
+        if (templatesToWrite.length > 0) {
+          await writeGeneratedSkills(
+            skillsDir,
+            templatesToWrite,
+            SUPERPOWERS_VERSION,
+            FileSystemUtils.writeFile.bind(FileSystemUtils),
+            tool.value === 'opencode' ? transformToHyphenCommands : undefined
+          );
         }
 
         // Create commands when delivery includes commands

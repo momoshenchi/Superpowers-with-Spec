@@ -65,6 +65,21 @@ describe('profile sync drift detection', () => {
     expect(hasDrift).toBe(true);
   });
 
+  it('does not treat Apply/Propose/Verify companions as commands-only drift', () => {
+    setupCoreCommands(tempDir);
+    writeSkill(tempDir, 'apply');
+    writeSkill(tempDir, 'propose');
+    writeSkill(tempDir, 'verify');
+
+    expect(hasProjectConfigDrift(tempDir, CORE_WORKFLOWS, 'commands')).toBe(false);
+  });
+
+  it('detects commands-only drift when required companions are missing', () => {
+    setupCoreCommands(tempDir);
+
+    expect(hasProjectConfigDrift(tempDir, CORE_WORKFLOWS, 'commands')).toBe(true);
+  });
+
   it('detects drift when required profile workflow files are missing', () => {
     writeSkill(tempDir, 'explore');
 

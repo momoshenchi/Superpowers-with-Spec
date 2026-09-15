@@ -6,6 +6,7 @@ import {
 } from '../../../src/core/templates/workflows/final-quality-gates.js';
 import {
   getSpVerifyCommandTemplate,
+  getVerifyChangeReferences,
   getVerifyChangeSkillTemplate,
 } from '../../../src/core/templates/workflows/verify-change.js';
 
@@ -92,7 +93,10 @@ describe('final quality gate suite and spawn fallback', () => {
   });
 
   it('standalone verify always preflights', () => {
-    const verify = getSpVerifyCommandTemplate().content;
+    const verify = [
+      getSpVerifyCommandTemplate().content,
+      ...getVerifyChangeReferences().map((file) => file.content),
+    ].join('\n');
     expect(verify).toMatch(/canonical non-visual/i);
     expect(verify).not.toMatch(/reuse Hardening suite-stage/i);
     expect(verify).toMatch(/When this invocation is an Apply Final Quality Gate/);

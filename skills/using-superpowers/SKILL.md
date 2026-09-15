@@ -13,7 +13,7 @@ Then select the work mode from risk, scope, workload, ambiguity, reversibility, 
 
 Exactly two work modes exist:
 
-1. **Direct Modification** — Implement low-risk, local, unambiguous, reversible work directly, then run relevant checks and apply `verification-before-completion` before claiming success.
+1. **Direct Modification** — Implement low-risk, local, unambiguous, reversible work directly, then run relevant checks. Before claiming success, require a fresh matching-stage evidence run.
 2. **Proposal → Review → Apply** — Create the required artifacts, review them, and run `/sp:apply`. Apply retains schema-aware review, Test Hardening, and Apply's Final Quality Gates (`/sp:apply`).
 
 A requested plan is an execution aid inside the selected mode, not a third mode. If the work still qualifies for Direct Modification after a plan is written or approved, execute it directly. Do not add a Plan Mode artifact or schema.
@@ -29,6 +29,8 @@ Prompt length and file count are not selection rules. A short request can be hig
 - Its workload remains below the Proposal boundary and has a clear verification path.
 
 Direct work still requires applicable unit, integration, E2E, and visual checks. For automated tests, prefer Git-related tests when the runner supports Git-aware selection. If Git-aware selection is unavailable, record that limitation and use the matching-stage focused command; do not require a complete suite. For a direct UI change, exercise the runnable user journey and inspect applicable visual-design rules without pretending that an Apply artifact lifecycle was completed.
+
+Small local Direct Modification edits do not require automatic code review unless the user asks, the work is merge-ready high risk, or repository policy requires it. On Proposal → Review → Apply, Apply's final code-review gate is the single integrated code review.
 
 ### Require Proposal → Review → Apply for any override
 
@@ -56,6 +58,8 @@ When the user asks to implement, fix, check, or continue, keep going until that 
 
 Pause for confirmation when the next step would rewrite Git history, force-push, change production, publish something that cannot be easily withdrawn, or when missing information would change a product, security, billing, or public-contract decision. Do not pause for read-only search, in-scope code edits, local build, tests, repairing failures caused by this change, or already authorized git add/commit/push.
 
+Before claiming a Direct Modification or Apply task is complete, run a fresh matching-stage command this turn (focused, Git-aware, or registered test-plan rows) and read the output. Empty related selection is not a pass. Do not define evidence as a complete canonical suite.
+
 ## Keep Change Proposals and Dispatch Units distinct
 
 A **Change Proposal** is the context, workload, acceptance, and archive boundary. It groups a coherent outcome that can be reviewed and completed without context rot.
@@ -66,17 +70,4 @@ First partition the request into workload-bounded Proposals. Only then define ea
 
 Do not promote an implementation slice to a Proposal merely to assign a different worker. Promote it only when it needs its own workload/context and acceptance/archive boundary.
 
-## Decompose long-running work
-
-For a large or multi-session request:
-
-1. Inventory logical capabilities and score each across all six dimensions (see [reference/schema-and-workload.md](reference/schema-and-workload.md)).
-2. Apply risk/contract overrides before numeric grouping.
-3. Combine compatible bounded work and split multiple large capabilities.
-4. Find stable, independently testable milestones for every very large capability; document any atomic single-Proposal exception.
-5. For every Proposal in the set, record its **prerequisite**, what it **unblocks**, and the **stable interface** or artifact handed to dependents.
-6. Put a shared foundation in its own Proposal only when independently testable and substantial; otherwise implement it in the first dependent Proposal and reference that prerequisite later.
-7. Define Dispatch Units within each Proposal by owned paths, dependency waves, and integration handoffs.
-8. Run Proposals in parallel only when there is no unmet dependency and no shared mutable ownership. If integration or shared files introduce a dependency, serialize the affected work.
-
-Reassess boundaries when estimates materially change. Update an active Proposal when intent stays the same and the revised work still fits; create or stage another Proposal when the workload/context boundary no longer holds.
+For a large or multi-session request, follow the eight-step decompose in [reference/schema-and-workload.md](reference/schema-and-workload.md).

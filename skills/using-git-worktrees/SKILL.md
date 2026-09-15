@@ -1,6 +1,6 @@
 ---
 name: using-git-worktrees
-description: Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart directory selection and safety verification
+description: Use when creating an isolated git worktree. Do not use merely because Apply started or implementation is about to begin.
 ---
 
 # Using Git Worktrees
@@ -197,7 +197,6 @@ Ready to implement auth feature
 ## Integration
 
 **Called by:**
-- **superpowers:subagent-driven-development** — REQUIRED before executing any tasks
-- `/sp:apply` — REQUIRED before executing any tasks
+- `/sp:apply` when creating an isolated worktree
 - Any skill needing isolated workspace
 

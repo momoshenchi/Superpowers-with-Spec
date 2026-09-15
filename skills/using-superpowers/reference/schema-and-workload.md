@@ -137,3 +137,18 @@ superpowers schema init research-first
 # Or fork an existing one
 superpowers schema fork spec-driven research-first
 ```
+
+## Decompose long-running work
+
+For a large or multi-session request:
+
+1. Inventory logical capabilities and score each across all six dimensions (see [Size Proposals by workload](#size-proposals-by-workload)).
+2. Apply risk/contract overrides before numeric grouping.
+3. Combine compatible bounded work and split multiple large capabilities.
+4. Find stable, independently testable milestones for every very large capability; document any atomic single-Proposal exception.
+5. For every Proposal in the set, record its **prerequisite**, what it **unblocks**, and the **stable interface** or artifact handed to dependents.
+6. Put a shared foundation in its own Proposal only when independently testable and substantial; otherwise implement it in the first dependent Proposal and reference that prerequisite later.
+7. Define Dispatch Units within each Proposal by owned paths, dependency waves, and integration handoffs.
+8. Run Proposals in parallel only when there is no unmet dependency and no shared mutable ownership. If integration or shared files introduce a dependency, serialize the affected work.
+
+Reassess boundaries when estimates materially change. Update an active Proposal when intent stays the same and the revised work still fits; create or stage another Proposal when the workload/context boundary no longer holds.

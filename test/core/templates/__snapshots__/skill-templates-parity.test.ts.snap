@@ -2,7 +2,7 @@
 
 exports[`skill templates split parity > preserves all template function payloads exactly 1`] = `
 {
-  "getApplyChangeSkillTemplate": "70cc16b4e7a3cf6a96090a7d8004d97881bb490b803a9fd7c7807c5616a5c6be",
+  "getApplyChangeSkillTemplate": "4c8e4c78f4d7147125568f0a0e9ce0d3320c39f679bbc9a6a71a6cad6214a222",
   "getArchiveChangeSkillTemplate": "c46a11730f78055569c318815f47e5836ed9551cc1dbf870a60cf24ca63476f0",
   "getBulkArchiveChangeSkillTemplate": "aced7d6542d49b8f0ccf5aee9b9ccc670c30f959c2ec96365e21560b478727fc",
   "getChangeReviewSkillTemplate": "9b1ac22c02c558bd5ed58f8b0e569f93cc6ec58773cfa615441e549103c32264",
@@ -15,7 +15,7 @@ exports[`skill templates split parity > preserves all template function payloads
   "getOnboardSkillTemplate": "9fa216bc1c979352eeab3c5afb782e901e406bfe68a4db0e2f6908e5644acd25",
   "getShapeReviewSkillTemplate": "4439381a0755beb3ceb4ed073fa46303d28d37212d21b2c2c74cdc2ca229ae5c",
   "getSimplifySkillTemplate": "5d26571f977ae20e01afeec54037a6fabeb84fdb8a492a18f4acdfbcb1551ca5",
-  "getSpApplyCommandTemplate": "d5e04b3cbdb1543b43a552f5e019184ea6bb5795ed6b15e530b9b080fdf30a3f",
+  "getSpApplyCommandTemplate": "0a6adf5f6902f8ea5ea60721271fa23e020e468549738ee67d5d7c0b22e32144",
   "getSpArchiveCommandTemplate": "ee5a7f4445b907bdb946be85b74731f68f54cadc9eba45f7f3ec7f1f559bca3f",
   "getSpBulkArchiveCommandTemplate": "b2af9c3a94c9be75dfff249fcf747abaef308bc64d2f292594a796f0bf0b125a",
   "getSpContinueCommandTemplate": "a5bff71ba5ea053d61aad846d9d39053a185ba3aeb993bcadfe15b00779b158e",
@@ -24,21 +24,21 @@ exports[`skill templates split parity > preserves all template function payloads
   "getSpFfCommandTemplate": "a1f27b1120565937907ed8bd7209bfd3682e23aa07cc1b4da0a501bd8cd8d158",
   "getSpNewCommandTemplate": "5804ef98248eb0361cfd06f92a99417c9fcca4c41caa588ab8827f65b99747f1",
   "getSpOnboardCommandTemplate": "518b91ad574cd89de0c7a4024cbd4e2a11c20f96e23fef8c7c8a0e52053440a7",
-  "getSpProposeCommandTemplate": "a2f04a15d759003c8a72163cd5c0ffc7204cc009e36f0bd85f21a443f92db0f4",
-  "getSpProposeSkillTemplate": "1c2e879bd46a08e86ef53ef7991a191463ac0cea218ee6e580d1ed5ddeb45760",
+  "getSpProposeCommandTemplate": "de984d986487202d6e44082121b17cf1e47cfe20ba73900f861c37686b4a50c8",
+  "getSpProposeSkillTemplate": "e0f28a48611848a3f9937c71d6123b9e8932196f6148b0cd485e7580a7a7f17a",
   "getSpReviewCommandTemplate": "dc7f25d7edd6367b4a1647bc13ef439e26a6b708b504d546a83f3a69963752e9",
   "getSpShapeReviewCommandTemplate": "a49d8a35e1a370ae4c17dc9d97ae95caa9a07fbbc920f155ed2b2f0476ae8c5e",
   "getSpSimplifyCommandTemplate": "ea0ca542aff154ff51bbf2d6169540dc4d8d51d1d3fd1676bd9c09e1313d592a",
   "getSpSyncCommandTemplate": "606792a4143775897ddf8c880aad3254a1d3b4ce8e81291192a96e1f2d32d31a",
-  "getSpVerifyCommandTemplate": "12e0af39d936f1235598350373745eef0d71564e985eebfcb60d2b201c4cd6cd",
+  "getSpVerifyCommandTemplate": "acaa2cdcd5fc3626e4deb56248032701a275dbf0f4dcdc799ae9db75a1a383c4",
   "getSyncSpecsSkillTemplate": "5535c4a9a8908ad2c8109d0791b2e83d5cf83b175216295e29dd1fa05a4b38df",
-  "getVerifyChangeSkillTemplate": "acd71f0164fc817a5b3b985843d491445cf70a298824dfa44c3574a97d51335a",
+  "getVerifyChangeSkillTemplate": "e50667e615e2efd4282e36fbf0275e2eccf9d8b3de807377dfa7395ce7897d25",
 }
 `;
 
 exports[`skill templates split parity > preserves generated skill file content exactly 1`] = `
 {
-  "superpowers-apply-change": "b2b5cb53364facdf4285f6a2f4c466cf67a45b228013e4ee5e368787913e8b75",
+  "superpowers-apply-change": "63e33c81d726213b6097f112a82915868a00e557678e270f74c498ce78adecf7",
   "superpowers-archive-change": "0419fdfc9cae743f3e52689b0870dad6aa73ade162c9157b518c8f45bd904b51",
   "superpowers-bulk-archive-change": "d8ac6194c481963430dff928843533a0e99817b8677e4b8afdacccacf7bf40bd",
   "superpowers-change-review": "6e120e20e0c912785f7eec448d67bf75aa1b1a1b99854e88e6eb76e9c0e38837",
@@ -48,10 +48,10 @@ exports[`skill templates split parity > preserves generated skill file content e
   "superpowers-ff-change": "0ceb62124b4b26a9fe00edcff8576d1e27bb00197794ca4228ab61534a18a299",
   "superpowers-new-change": "74e6fc6809b287130812466d98103b6703932292e2500c3a8cb6e1375a471f7f",
   "superpowers-onboard": "1766f149df0768b86a1d8e7607befaacb8945a00662c40c42858c1e5c25d7072",
-  "superpowers-propose": "138934c29b1ab25e97f8d496303c7212b2857d0b85d5d3bf5722c16f044d5e6e",
+  "superpowers-propose": "00e8d15bf5b8f9c9b54b4388c4441e59a5fc4b0235c1dc1d6205a8ae00862e4e",
   "superpowers-shape-review": "e3c4ccb454f2e2fa3778d0de2769a79aa887fd6f8f6964a76ea2611cba9d6ddc",
   "superpowers-simplify": "85d6860d6567fe2ad1738f9f4648e074f6793c670de1aa07b2466447e293505d",
   "superpowers-sync-specs": "11b14a3de441ff743ff458d870ce94d0a60ccad789f7de27d7d82ae0a89efd48",
-  "superpowers-verify-change": "3e6c2e06c790e438c8557c6bedf54d6a6fd9bd4b0ef46a0682d5a320149f378b",
+  "superpowers-verify-change": "56d7a4367b57490ae72f09bc5827c8bf3e8da4dc258b3018735a615c3a4b430b",
 }
 `;

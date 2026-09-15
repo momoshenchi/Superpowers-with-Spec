@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  getApplyChangeReferences,
   getApplyChangeSkillTemplate,
   getSpApplyCommandTemplate,
 } from '../../../src/core/templates/workflows/apply-change.js';
@@ -9,11 +10,20 @@ function applyContents(): string[] {
   return [getApplyChangeSkillTemplate().instructions, getSpApplyCommandTemplate().content];
 }
 
+function hardeningContent(): string {
+  return (
+    getApplyChangeReferences().find((file) => file.relativePath.endsWith('test-hardening.md'))
+      ?.content ?? ''
+  );
+}
+
 describe('Apply autonomy templates', () => {
   it('still invokes full-qa-test during Test Hardening', () => {
+    const hardening = hardeningContent();
+    expect(hardening).toContain('full-qa-test');
+    expect(hardening).toMatch(/6 dimensions|six coverage dimensions|10\*\* test cases/);
     for (const text of applyContents()) {
       expect(text).toContain('full-qa-test');
-      expect(text).toMatch(/6 dimensions|six coverage dimensions|10\*\* test cases/);
     }
   });
 
@@ -40,8 +50,7 @@ describe('Apply autonomy templates', () => {
   });
 
   it('runs full-qa-test expansion before Git-aware selection', () => {
-    const text = getApplyChangeSkillTemplate().instructions;
-    const hardening = text.slice(text.indexOf('Run Test Hardening'));
+    const hardening = hardeningContent();
     const land = hardening.search(
       /land (new |those )?tests|write.*executable `form=unit`|before (running )?Git-aware/i,
     );

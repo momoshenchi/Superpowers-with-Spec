@@ -5,8 +5,11 @@ import { describe, expect, it } from 'vitest';
 
 import {
   type SkillTemplate,
+  getApplyChangeReferences,
   getApplyChangeSkillTemplate,
   getArchiveChangeSkillTemplate,
+  getProposeReferences,
+  getVerifyChangeReferences,
   getBulkArchiveChangeSkillTemplate,
   getChangeReviewSkillTemplate,
   getContinueChangeSkillTemplate,
@@ -65,10 +68,26 @@ function hash(value: string): string {
   return createHash('sha256').update(value).digest('hex');
 }
 
+function withReferences(root: string, files: Array<{ content: string }>): string {
+  return [root, ...files.map((file) => file.content)].join('\n');
+}
+
+function applyCatalog(root: string): string {
+  return withReferences(root, getApplyChangeReferences());
+}
+
+function proposeCatalog(root: string): string {
+  return withReferences(root, getProposeReferences());
+}
+
+function verifyCatalog(root: string): string {
+  return withReferences(root, getVerifyChangeReferences());
+}
+
 describe('skill templates split parity', () => {
   it('describes the adaptive Propose interview gate in both projections', () => {
     for (const template of [getSpProposeSkillTemplate(), getSpProposeCommandTemplate()]) {
-      const content = 'instructions' in template ? template.instructions : template.content;
+      const content = proposeCatalog('instructions' in template ? template.instructions : template.content);
 
       expect(content).toContain('Before any change creation or artifact write');
       expect(content).toContain('A clear low-risk request may have zero interview questions');
@@ -174,7 +193,7 @@ describe('skill templates split parity', () => {
     }
 
     for (const template of [getApplyChangeSkillTemplate(), getSpApplyCommandTemplate()]) {
-      const content = 'instructions' in template ? template.instructions : template.content;
+      const content = applyCatalog('instructions' in template ? template.instructions : template.content);
       expect(content).toContain('superpowers instructions apply --change "<name>" --json');
       expect(content).toContain('execution-plan');
       expect(content).toContain('context');
@@ -215,7 +234,7 @@ describe('skill templates split parity', () => {
 
   it('describes Test Hardening in generated apply workflow instructions', () => {
     for (const template of [getApplyChangeSkillTemplate(), getSpApplyCommandTemplate()]) {
-      const content = 'instructions' in template ? template.instructions : template.content;
+      const content = applyCatalog('instructions' in template ? template.instructions : template.content);
       expect(content).toContain('test-plan.md');
       expect(content).toContain('Task completion transitions into Test Hardening');
       expect(content).toContain('worker-level verification in detailed `tasks.md`');
@@ -324,7 +343,9 @@ describe('skill templates split parity', () => {
     expect(designVerify).toContain('If round four still reports a visual nonconformance');
     expect(designVerify).toContain('**Design verify round:** <1-4 when delegated by apply, otherwise standalone>');
 
-    const verify = [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n');
+    const verify = verifyCatalog(
+      [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n')
+    );
     expect(verify).toContain('git-aware-unavailable-recorded');
     expect(verify).not.toMatch(/otherwise the complete suite/);
     expect(verify).toContain('failed-network signals');
@@ -501,7 +522,7 @@ describe('skill templates split parity', () => {
 
   it('requires apply fail-closed runtime Before capture before UI edits', () => {
     for (const template of [getApplyChangeSkillTemplate(), getSpApplyCommandTemplate()]) {
-      const content = 'instructions' in template ? template.instructions : template.content;
+      const content = applyCatalog('instructions' in template ? template.instructions : template.content);
       expect(content).toContain('attachments/visual-diff/before/');
       expect(content).toContain('path.join');
       expect(content).toContain('.html');
@@ -546,7 +567,9 @@ describe('skill templates split parity', () => {
   });
 
   it('embeds visual-diff rules in the apply-delegated Design verify gate', () => {
-    const apply = [getApplyChangeSkillTemplate().instructions, getSpApplyCommandTemplate().content].join('\n');
+    const apply = applyCatalog(
+      [getApplyChangeSkillTemplate().instructions, getSpApplyCommandTemplate().content].join('\n')
+    );
     const dvGate = apply.split('3. **Design verify (rounds 1–4).**')[1].split('4. **Verify (rounds 1–4).**')[0];
     expect(dvGate).toContain('attachments/visual-diff/after/');
     expect(dvGate).toContain('attachments/visual-diff/before/');
@@ -598,18 +621,25 @@ describe('skill templates split parity', () => {
       getApplyChangeSkillTemplate(),
       getSpApplyCommandTemplate(),
     ]) {
-      const content = 'instructions' in template ? template.instructions : template.content;
+      const root = 'instructions' in template ? template.instructions : template.content;
+      const content = template.name.includes('Apply') || template.name.includes('apply')
+        ? applyCatalog(root)
+        : verifyCatalog(root);
       for (const phrase of huntPhrases) {
         expect(content).toContain(phrase);
       }
     }
 
-    const verify = [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n');
+    const verify = verifyCatalog(
+      [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n')
+    );
     expect(verify).toContain('prefer `P2` over `P1`, and `P1` over `P0`');
   });
 
   it('defines report-first gate workers and coordinator-owned repairs', () => {
-    const apply = [getApplyChangeSkillTemplate().instructions, getSpApplyCommandTemplate().content].join('\n');
+    const apply = applyCatalog(
+      [getApplyChangeSkillTemplate().instructions, getSpApplyCommandTemplate().content].join('\n')
+    );
     expect(apply).toContain('Code review, Verify, and Design Verify workers are read-only by default');
     expect(apply).toContain('The coordinator evaluates and repairs accepted findings');
     expect(apply).toContain('Simplify is the only gate authorized to edit by default');
@@ -624,7 +654,9 @@ describe('skill templates split parity', () => {
     expect(simplify).toContain('Do not repair product correctness, requirements, architecture, or visual-design findings');
     expect(simplify).toContain('revert or skip it and report the reason');
 
-    const verify = [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n');
+    const verify = verifyCatalog(
+      [getVerifyChangeSkillTemplate().instructions, getSpVerifyCommandTemplate().content].join('\n')
+    );
     expect(verify).toContain('The Verify worker is read-only by default');
     expect(verify).toContain('Report findings and evidence before any implementation changes');
     expect(verify).toContain('The coordinator evaluates and repairs accepted product, architecture, or workflow findings');
@@ -645,11 +677,11 @@ describe('skill templates split parity', () => {
     expect(receiving).toContain('not a code-review worker or an additional final-quality gate');
 
     const completion = readFileSync(
-      path.join(process.cwd(), 'skills', 'verification-before-completion', 'SKILL.md'),
+      path.join(process.cwd(), 'skills', 'using-superpowers', 'SKILL.md'),
       'utf8'
     );
-    expect(completion).toContain('evidence-before-claims guardrail');
-    expect(completion).toContain('not a substitute for substantive Verify, code review, or any Apply final-quality gate');
+    expect(completion).toContain('matching-stage');
+    expect(completion).toContain('Empty related selection is not a pass');
   });
 
   it('describes test-plan in default spec-driven artifact flows', () => {
@@ -709,6 +741,9 @@ describe('skill templates split parity', () => {
 
   it('pins I1–I9 autonomy contracts on generated templates', () => {
     const apply = getApplyChangeSkillTemplate().instructions;
+    const hardening =
+      getApplyChangeReferences().find((file) => file.relativePath.endsWith('test-hardening.md'))
+        ?.content ?? '';
     const usingSuperpowers = readFileSync(
       path.join(process.cwd(), 'skills', 'using-superpowers', 'SKILL.md'),
       'utf8'
@@ -728,7 +763,9 @@ describe('skill templates split parity', () => {
     const agents = readFileSync(path.join(process.cwd(), 'AGENTS.md'), 'utf8');
 
     expect(apply).toContain('full-qa-test');
-    expect(apply).toContain('**10** test cases');
+    expect(apply).not.toMatch(/≥2 meaningfully different Solutions/);
+    expect(hardening).toContain('full-qa-test');
+    expect(hardening).toContain('**10** test cases');
     expect(getCanonicalNonVisualSuiteInstructions('Test Hardening')).not.toMatch(
       /fail-closed and run the complete canonical non-visual suite/
     );

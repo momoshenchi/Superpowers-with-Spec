@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { getApplyChangeReferences } from '../../src/core/templates/skill-templates.js';
 
 const readGuidance = (...parts: string[]) =>
   readFileSync(path.join(process.cwd(), ...parts), 'utf8');
@@ -25,36 +26,30 @@ describe('implementation-notes guidance', () => {
   });
 
   it('requires workers to capture insights and coordinators to review them', () => {
-    const development = readGuidance('skills', 'subagent-driven-development', 'SKILL.md');
-    const prompt = readGuidance(
-      'skills',
-      'subagent-driven-development',
-      'implementer-prompt.md'
-    );
     const apply = readGuidance('src', 'core', 'templates', 'workflows', 'apply-change.ts');
+    const dispatch =
+      getApplyChangeReferences().find((file) => file.relativePath.endsWith('dispatch-units.md'))
+        ?.content ?? '';
 
-    for (const content of [development, prompt, apply]) {
+    for (const content of [apply, dispatch]) {
       expect(content).toContain('Implementation Notes');
-      expect(content).toContain('non-normative');
-      expect(content).toContain('tasks.md');
     }
 
-    expect(development).toContain('main agent reviews');
-    expect(prompt).toContain('Findings');
-    expect(prompt).toContain('Reasoning');
-    expect(prompt).toContain('Viewpoints / Trade-offs');
-    expect(prompt).toContain('Summary / Takeaway');
+    expect(apply).toContain('non-normative');
+    expect(apply).toContain('tasks.md');
+    expect(dispatch).toContain('Findings');
+    expect(dispatch).toContain('Reasoning');
+    expect(dispatch).toContain('Viewpoints / Trade-offs');
+    expect(dispatch).toContain('Summary / Takeaway');
   });
 
   it('protects shared execution-plan notes when dispatch units run in parallel', () => {
-    const development = readGuidance('skills', 'subagent-driven-development', 'SKILL.md');
-    const prompt = readGuidance(
-      'skills',
-      'subagent-driven-development',
-      'implementer-prompt.md'
-    );
+    const apply = readGuidance('src', 'core', 'templates', 'workflows', 'apply-change.ts');
+    const dispatch =
+      getApplyChangeReferences().find((file) => file.relativePath.endsWith('dispatch-units.md'))
+        ?.content ?? '';
 
-    expect(development).toMatch(/serialize writes to shared execution-plan\.md/i);
-    expect(prompt).toContain('do not overwrite another dispatch unit\'s notes');
+    expect(apply).toMatch(/serialized when dispatch units run in parallel/i);
+    expect(dispatch).toMatch(/do not overwrite another dispatch unit's notes/i);
   });
 });

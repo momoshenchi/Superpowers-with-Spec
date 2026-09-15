@@ -4,6 +4,7 @@
  * Shared utilities for generating skill and command files.
  */
 
+import path from 'node:path';
 import {
   getExploreSkillTemplate,
   getNewChangeSkillTemplate,
@@ -86,6 +87,12 @@ export function getSkillTemplates(workflowFilter?: readonly string[]): SkillTemp
   return all.filter(entry => filterSet.has(entry.workflowId));
 }
 
+export function companionSkillTemplates(
+  templates: readonly SkillTemplateEntry[]
+): SkillTemplateEntry[] {
+  return templates.filter((entry) => (entry.template.references?.length ?? 0) > 0);
+}
+
 /**
  * Gets command templates with their IDs, optionally filtered by workflow IDs.
  *
@@ -162,4 +169,47 @@ metadata:
 
 ${instructions}
 `;
+}
+
+export function skillReferenceDest(skillDir: string, relativePath: string): string {
+  return path.join(skillDir, ...relativePath.split('/'));
+}
+
+export async function writeGeneratedSkill(
+  skillDir: string,
+  template: SkillTemplate,
+  generatedByVersion: string,
+  writeFile: (filePath: string, content: string) => Promise<void>,
+  transformInstructions?: (instructions: string) => string
+): Promise<void> {
+  await writeFile(
+    path.join(skillDir, 'SKILL.md'),
+    generateSkillContent(template, generatedByVersion, transformInstructions)
+  );
+  await Promise.all(
+    (template.references ?? []).map((ref) =>
+      writeFile(
+        skillReferenceDest(skillDir, ref.relativePath),
+        transformInstructions ? transformInstructions(ref.content) : ref.content
+      )
+    )
+  );
+}
+
+export async function writeGeneratedSkills(
+  skillsDir: string,
+  skillTemplates: readonly SkillTemplateEntry[],
+  generatedByVersion: string,
+  writeFile: (filePath: string, content: string) => Promise<void>,
+  transformInstructions?: (instructions: string) => string
+): Promise<void> {
+  for (const { template, dirName } of skillTemplates) {
+    await writeGeneratedSkill(
+      path.join(skillsDir, dirName),
+      template,
+      generatedByVersion,
+      writeFile,
+      transformInstructions
+    );
+  }
 }

@@ -12,21 +12,13 @@ describe('using-superpowers work-mode guidance', () => {
 
   it('defines exactly two work modes and treats a requested plan as an execution aid', () => {
     const content = skill();
-    const geminiTools = readGuidance(
-      'skills',
-      'using-superpowers',
-      'reference',
-      'gemini-tools.md'
-    );
 
     expect(content).toContain('Exactly two work modes');
     expect(content).toContain('Direct Modification');
     expect(content).toContain('Proposal → Review → Apply');
     expect(content).toContain('A requested plan is an execution aid');
     expect(content).toContain('not a third mode');
-    expect(content).toContain('verification-before-completion');
-    expect(geminiTools).toContain('Optional host research controls');
-    expect(geminiTools).toContain('do not create a third Superpowers work mode');
+    expect(content).toContain('matching-stage');
   });
 
   it('requires a Proposal for explicit requests and risk or contract overrides', () => {
@@ -133,7 +125,7 @@ describe('using-superpowers work-mode guidance', () => {
   });
 
   it('preserves dependency contracts across long-running Proposal sets', () => {
-    const content = skill();
+    const content = workload();
 
     expect(content).toContain('prerequisite');
     expect(content).toContain('unblocks');

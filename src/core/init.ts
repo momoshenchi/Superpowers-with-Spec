@@ -39,7 +39,10 @@ import {
   getToolStates,
   getSkillTemplates,
   getCommandContents,
-  generateSkillContent,
+  writeGeneratedSkills,
+  companionSkillTemplates,
+  removeObsoleteBundledSkillDirs,
+  removeObsoleteBundledSkillFiles,
   type ToolSkillStatus,
 } from './shared/index.js';
 import { getGlobalConfig, type Delivery, type Profile } from './global-config.js';
@@ -55,7 +58,6 @@ const { version: SUPERPOWERS_VERSION } = require('../../package.json');
 // -----------------------------------------------------------------------------
 
 const DEFAULT_SCHEMA = 'spec-driven';
-const OBSOLETE_BUNDLED_SKILL_DIRS = ['requesting-code-review'] as const;
 
 const PROGRESS_SPINNER = {
   interval: 80,
@@ -524,7 +526,7 @@ export class InitCommand {
     // Get skill and command templates filtered by profile workflows
     const shouldGenerateSkills = delivery !== 'commands';
     const shouldGenerateCommands = delivery !== 'skills';
-    const skillTemplates = shouldGenerateSkills ? getSkillTemplates(workflows) : [];
+    const skillTemplates = getSkillTemplates(workflows);
     const commandContents = shouldGenerateCommands ? getCommandContents(workflows) : [];
 
     // Process each tool
@@ -532,28 +534,22 @@ export class InitCommand {
       const spinner = ora(`Setting up ${tool.name}...`).start();
 
       try {
-        // Generate skill files if delivery includes skills
-        if (shouldGenerateSkills) {
-          // Use tool-specific skillsDir
-          const skillsDir = path.join(projectPath, tool.skillsDir, 'skills');
+        const skillsDir = path.join(projectPath, tool.skillsDir, 'skills');
+        const templatesToWrite = shouldGenerateSkills
+          ? skillTemplates
+          : companionSkillTemplates(skillTemplates);
 
-          // Create skill directories and SKILL.md files
-          for (const { template, dirName } of skillTemplates) {
-            const skillDir = path.join(skillsDir, dirName);
-            const skillFile = path.join(skillDir, 'SKILL.md');
-
-            // Generate SKILL.md content with YAML frontmatter including generatedBy
-            // Use hyphen-based command references for OpenCode
-            const transformer = tool.value === 'opencode' ? transformToHyphenCommands : undefined;
-            const skillContent = generateSkillContent(template, SUPERPOWERS_VERSION, transformer);
-
-            // Write the skill file
-            await FileSystemUtils.writeFile(skillFile, skillContent);
-          }
-        }
         if (!shouldGenerateSkills) {
-          const skillsDir = path.join(projectPath, tool.skillsDir, 'skills');
           removedSkillCount += await this.removeSkillDirs(skillsDir);
+        }
+        if (templatesToWrite.length > 0) {
+          await writeGeneratedSkills(
+            skillsDir,
+            templatesToWrite,
+            SUPERPOWERS_VERSION,
+            FileSystemUtils.writeFile.bind(FileSystemUtils),
+            tool.value === 'opencode' ? transformToHyphenCommands : undefined
+          );
         }
 
         // Generate commands if delivery includes commands
@@ -665,7 +661,10 @@ export class InitCommand {
       const delivery: Delivery = globalConfig.delivery ?? 'both';
       const workflows = getProfileWorkflows(profile, globalConfig.workflows);
       const toolDirs = [...new Set(successfulTools.map((t) => t.skillsDir))].join(', ');
-      const skillCount = delivery !== 'commands' ? getSkillTemplates(workflows).length : 0;
+      const skillCount =
+        delivery !== 'commands'
+          ? getSkillTemplates(workflows).length
+          : companionSkillTemplates(getSkillTemplates(workflows)).length;
       const commandCount = delivery !== 'skills' ? getCommandContents(workflows).length : 0;
       if (skillCount > 0 && commandCount > 0) {
         console.log(`${skillCount} skills and ${commandCount} commands in ${toolDirs}/`);
@@ -775,13 +774,9 @@ export class InitCommand {
     const bundledSkillsDir = path.join(pkgRoot, 'skills');
     if (fs.existsSync(bundledSkillsDir)) {
       const destSkillsDir = path.join(projectPath, tool.skillsDir, 'skills');
-      for (const obsoleteDirName of OBSOLETE_BUNDLED_SKILL_DIRS) {
-        await fs.promises.rm(path.join(destSkillsDir, obsoleteDirName), {
-          recursive: true,
-          force: true,
-        });
-      }
+      await removeObsoleteBundledSkillDirs(destSkillsDir);
       await this.copyDir(bundledSkillsDir, destSkillsDir);
+      await removeObsoleteBundledSkillFiles(destSkillsDir);
     }
 
     // Copy hooks and agents for tools that support them (Claude Code and Codex)

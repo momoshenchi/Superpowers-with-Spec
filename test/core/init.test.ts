@@ -120,6 +120,29 @@ describe('InitCommand', () => {
       }
     });
 
+    it('writes apply reference companions', async () => {
+      const initCommand = new InitCommand({ tools: 'claude', force: true });
+      await initCommand.execute(testDir);
+
+      const applyDir = path.join(testDir, '.claude', 'skills', 'superpowers-apply-change');
+      expect(await fileExists(path.join(applyDir, 'reference', 'final-quality-gates.md'))).toBe(true);
+      expect(await fileExists(path.join(applyDir, 'reference', 'test-hardening.md'))).toBe(true);
+      expect(await fileExists(path.join(applyDir, 'reference', 'runtime-before.md'))).toBe(true);
+      expect(await fileExists(path.join(applyDir, 'reference', 'dispatch-units.md'))).toBe(true);
+    });
+
+    it('transforms OpenCode apply companions away from colon slash commands', async () => {
+      const initCommand = new InitCommand({ tools: 'opencode', force: true });
+      await initCommand.execute(testDir);
+
+      const fqg = await fs.readFile(
+        path.join(testDir, '.opencode', 'skills', 'superpowers-apply-change', 'reference', 'final-quality-gates.md'),
+        'utf8'
+      );
+      expect(fqg).toMatch(/\/sp-simplify/);
+      expect(fqg).not.toMatch(/\/sp:/);
+    });
+
     it('should create core profile commands for Claude Code by default', async () => {
       const initCommand = new InitCommand({ tools: 'claude', force: true });
 
@@ -732,9 +755,20 @@ describe('InitCommand - profile and detection features', () => {
     const initCommand = new InitCommand({ tools: 'claude', force: true });
     await initCommand.execute(testDir);
 
-    // Skills should NOT exist
+    // Skills should NOT exist for catalog workflows without companions
     const skillFile = path.join(testDir, '.claude', 'skills', 'superpowers-explore', 'SKILL.md');
     expect(await fileExists(skillFile)).toBe(false);
+
+    const applyHardening = path.join(
+      testDir,
+      '.claude',
+      'skills',
+      'superpowers-apply-change',
+      'reference',
+      'test-hardening.md'
+    );
+    expect(await fileExists(applyHardening)).toBe(true);
+    expect(await fs.readFile(applyHardening, 'utf8')).toMatch(/full-qa-test/);
 
     // Commands should exist
     const cmdFile = path.join(testDir, '.claude', 'commands', 'sp', 'explore.md');
@@ -812,7 +846,7 @@ describe('InitCommand copyBundledAssets', () => {
       'requesting-code-review'
     );
     expect(await fileExists(usingSuperpowersSkill)).toBe(true);
-    expect(await fileExists(reviewDispatchSkill)).toBe(true);
+    expect(await fileExists(reviewDispatchSkill)).toBe(false);
     expect(await directoryExists(obsoleteReviewSkill)).toBe(false);
   });
 
@@ -838,10 +872,10 @@ describe('InitCommand copyBundledAssets', () => {
     expect(await directoryExists(obsoleteReviewSkill)).toBe(false);
     expect(
       await fileExists(path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md'))
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  it('should synchronize the renamed review skill for multiple tools', async () => {
+  it('should remove retired review skills for multiple tools', async () => {
     const initCommand = new InitCommand({ tools: 'claude,opencode', force: true });
     await initCommand.execute(testDir);
 
@@ -849,7 +883,7 @@ describe('InitCommand copyBundledAssets', () => {
       const skillsDir = path.join(testDir, toolRoot, 'skills');
       expect(
         await fileExists(path.join(skillsDir, 'when-to-dispatch-code-review', 'SKILL.md'))
-      ).toBe(true);
+      ).toBe(false);
       expect(await directoryExists(path.join(skillsDir, 'requesting-code-review'))).toBe(false);
     }
   });

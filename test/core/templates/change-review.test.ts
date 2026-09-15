@@ -88,7 +88,7 @@ describe('change review workflow templates', () => {
     for (const template of [getApplyChangeSkillTemplate(), getSpApplyCommandTemplate()]) {
       const content = 'instructions' in template ? template.instructions : template.content;
       expect(content).toContain('Do not automatically repeat proposal review before starting');
-      expect(content).toContain('Keep the final integration review separate');
+      expect(content).not.toContain('Keep the final integration review separate');
     }
   });
 

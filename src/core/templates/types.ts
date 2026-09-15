@@ -2,6 +2,11 @@
  * Core template types for skills and slash commands.
  */
 
+export interface SkillReferenceFile {
+  relativePath: string;
+  content: string;
+}
+
 export interface SkillTemplate {
   name: string;
   description: string;
@@ -9,6 +14,7 @@ export interface SkillTemplate {
   license?: string;
   compatibility?: string;
   metadata?: Record<string, string>;
+  references?: SkillReferenceFile[];
 }
 
 export interface CommandTemplate {

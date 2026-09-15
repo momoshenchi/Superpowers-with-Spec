@@ -4,7 +4,7 @@ import { AI_TOOLS } from './config.js';
 import type { Delivery } from './global-config.js';
 import { ALL_WORKFLOWS } from './profiles.js';
 import { CommandAdapterRegistry } from './command-generation/index.js';
-import { COMMAND_IDS, getConfiguredTools } from './shared/index.js';
+import { COMMAND_IDS, companionSkillTemplates, getConfiguredTools, getSkillTemplates } from './shared/index.js';
 
 type WorkflowId = (typeof ALL_WORKFLOWS)[number];
 
@@ -124,10 +124,19 @@ export function hasToolProfileOrDeliveryDrift(
       }
     }
   } else {
+    const allowedCompanionDirs = new Set(
+      companionSkillTemplates(getSkillTemplates(knownDesiredWorkflows)).map((entry) => entry.dirName)
+    );
     for (const workflow of ALL_WORKFLOWS) {
       const dirName = WORKFLOW_TO_SKILL_DIR[workflow];
       const skillDir = path.join(skillsDir, dirName);
-      if (fs.existsSync(skillDir)) {
+      if (!fs.existsSync(skillDir)) continue;
+      if (!allowedCompanionDirs.has(dirName)) {
+        return true;
+      }
+    }
+    for (const dirName of allowedCompanionDirs) {
+      if (!fs.existsSync(path.join(skillsDir, dirName, 'SKILL.md'))) {
         return true;
       }
     }
